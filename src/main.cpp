@@ -1,5 +1,5 @@
-#include <cstdlib>
 #include <cstdio>
+#include <cstdlib>
 
 #include <iostream>
 #include <string_view>
@@ -42,7 +42,7 @@ public:
 class Lexer
 {
 public:
-    explicit Lexer(std::string_view text) : m_text(text) {}
+    explicit Lexer(std::string_view text) noexcept : m_text(text) {}
 
     SyntaxToken GetNextToken()
     {
@@ -62,7 +62,7 @@ public:
             }
 
             auto const length = m_position - start;
-            auto const text = m_text.substr(start, length);
+            auto const text   = m_text.substr(start, length);
 
             return SyntaxToken{SyntaxToken::Type::Number, start, text};
         }
@@ -77,7 +77,7 @@ public:
             }
 
             auto const length = m_position - start;
-            auto const text = m_text.substr(start, length);
+            auto const text   = m_text.substr(start, length);
 
             return SyntaxToken{SyntaxToken::Type::WhiteSpace, start, text};
         }
@@ -103,7 +103,7 @@ public:
     }
 
 private:
-    char current() const
+    char current() const noexcept
     {
         if (m_position > m_text.size())
         {
@@ -113,11 +113,28 @@ private:
         return m_text[m_position];
     }
 
-    void next() { m_position++; }
+    void next() noexcept { m_position++; }
 
 private:
     int64_t m_position{0};
     std::string_view const m_text;
+};
+
+class SyntaxNode
+{
+public:
+    virtual ~SyntaxNode()               = default;
+    virtual SyntaxToken::Type GetType() = 0;
+};
+
+class ExpressionSyntax : public SyntaxNode
+{
+};
+class NumberExpressionSyntax : public ExpressionSyntax
+{
+public:
+    ~NumberExpressionSyntax() override = default;
+    virtual SyntaxToken::Type GetType() override { return SyntaxToken::Type::Number; }
 };
 
 class Parser
@@ -126,12 +143,12 @@ public:
     Parser(std::string_view const source)
     {
         auto lexer = tcc::Lexer(source);
-        auto type = tcc::SyntaxToken::Type{};
+        auto type  = tcc::SyntaxToken::Type{};
 
         do
         {
             auto const token = lexer.GetNextToken();
-            type = token.type;
+            type             = token.type;
             if (token.type != SyntaxToken::Type::WhiteSpace && token.type != SyntaxToken::Type::Unknown)
             {
                 m_tokens.push_back(token);
@@ -151,10 +168,7 @@ public:
         return m_tokens.at(index);
     }
 
-    SyntaxToken Current()
-    {
-        return Peek(0);
-    }
+    SyntaxToken Current() { return Peek(0); }
 
     std::vector<SyntaxToken> m_tokens;
 
@@ -162,40 +176,30 @@ private:
     int64_t m_position{0};
 };
 
-std::ostream &operator<<(std::ostream &out, SyntaxToken::Type const type)
+std::ostream& operator<<(std::ostream& out, SyntaxToken::Type const type)
 {
     switch (type)
     {
-    case SyntaxToken::Type::Unknown:
-        return out << "UNKNOWN";
-    case SyntaxToken::Type::EndOfFile:
-        return out << "EOF";
-    case SyntaxToken::Type::WhiteSpace:
-        return out << "WHITESPACE";
-    case SyntaxToken::Type::Number:
-        return out << "NUMBER";
-    case SyntaxToken::Type::Plus:
-        return out << "PLUS";
-    case SyntaxToken::Type::Minus:
-        return out << "MINUS";
-    case SyntaxToken::Type::Star:
-        return out << "STAR";
-    case SyntaxToken::Type::Slash:
-        return out << "SLASH";
+        case SyntaxToken::Type::Unknown: return out << "UNKNOWN";
+        case SyntaxToken::Type::EndOfFile: return out << "EOF";
+        case SyntaxToken::Type::WhiteSpace: return out << "WHITESPACE";
+        case SyntaxToken::Type::Number: return out << "NUMBER";
+        case SyntaxToken::Type::Plus: return out << "PLUS";
+        case SyntaxToken::Type::Minus: return out << "MINUS";
+        case SyntaxToken::Type::Star: return out << "STAR";
+        case SyntaxToken::Type::Slash: return out << "SLASH";
     }
     return out << "";
 }
-} // namespace tcc
+}  // namespace tcc
 
 int main()
 {
-    auto srcView = std::string_view(src);
-    // auto srcView = std::string_view("0123 456 789 +-*/");
-    auto lexer = tcc::Lexer(srcView);
+    // auto srcView = std::string_view(src);
+    auto srcView = std::string_view("0123 456 789 +-*/");
+    auto parser  = tcc::Parser{srcView};
 
-    auto parser = tcc::Parser{srcView};
-
-    for (auto const &token : parser.m_tokens)
+    for (auto const& token : parser.m_tokens)
     {
         std::cout << token.type << ": " << token.position << '\n';
     }

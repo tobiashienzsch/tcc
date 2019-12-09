@@ -2,12 +2,9 @@
 #include <cstdlib>
 
 #include <iostream>
+#include <memory>
 #include <string_view>
 #include <vector>
-
-constexpr auto src = R"(
-    int main();
-)";
 
 namespace tcc
 {
@@ -148,7 +145,8 @@ private:
 class BinaryExpressionSyntax : public ExpressionSyntax
 {
 public:
-    BinaryExpressionSyntax(ExpressionSyntax const& left, ExpressionSyntax const& right, SyntaxToken const token)
+    BinaryExpressionSyntax(std::shared_ptr<ExpressionSyntax const> left, std::shared_ptr<ExpressionSyntax const> right,
+                           SyntaxToken const token)
         : m_left(left), m_right(right), m_operatorToken(token)
     {
     }
@@ -158,8 +156,8 @@ public:
     SyntaxToken::Type GetType() override { return SyntaxToken::Type::BinaryExpression; }
 
 private:
-    ExpressionSyntax const& m_left;
-    ExpressionSyntax const& m_right;
+    std::shared_ptr<ExpressionSyntax const> m_left;
+    std::shared_ptr<ExpressionSyntax const> m_right;
     SyntaxToken const m_operatorToken;
 };
 
@@ -186,7 +184,7 @@ public:
         } while (type != SyntaxToken::Type::EndOfFile);
     }
 
-    ExpressionSyntax* Parse()
+    std::shared_ptr<ExpressionSyntax> Parse()
     {
         auto const current = currentToken();
         auto left          = parsePrimaryExpression();
@@ -195,7 +193,7 @@ public:
         {
             auto const operatorToken = nextToken();
             auto const right         = parsePrimaryExpression();
-            left                     = new BinaryExpressionSyntax{*left, *right, operatorToken};
+            left                     = std::make_shared<BinaryExpressionSyntax>(left, right, operatorToken);
         }
 
         return left;
@@ -204,10 +202,10 @@ public:
     TokenList& GetTokens() { return m_tokens; }
 
 private:
-    ExpressionSyntax* parsePrimaryExpression()
+    std::shared_ptr<ExpressionSyntax> parsePrimaryExpression()
     {
         auto const numberToken = matchTokenType(SyntaxToken::Type::Number);
-        return new NumberExpressionSyntax{numberToken};
+        return std::make_shared<NumberExpressionSyntax>(numberToken);
     }
 
     SyntaxToken matchTokenType(SyntaxToken::Type type)
@@ -266,17 +264,16 @@ std::ostream& operator<<(std::ostream& out, SyntaxToken::Type const type)
 
 int main()
 {
-    // auto srcView = std::string_view(src);
-    auto srcView = std::string_view("0123 456 789 +-*/");
-    auto parser  = tcc::Parser{srcView};
+    constexpr auto src     = R"(int main();)";
+    constexpr auto srcView = std::string_view("0123 456 789 +-*/");
+    auto parser            = tcc::Parser{srcView};
 
     for (auto const& token : parser.GetTokens())
     {
         std::cout << token.type << ": " << token.position << '\n';
     }
 
-    auto* parseTree = parser.Parse();
-    delete parseTree;
+    auto parseTree = parser.Parse();
 
     return EXIT_SUCCESS;
 }

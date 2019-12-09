@@ -27,11 +27,15 @@ public:
         Unknown,
         EndOfFile,
         WhiteSpace,
+
         Number,
         Plus,
         Minus,
         Star,
         Slash,
+
+        NumberExpression,
+        BinaryExpression,
     };
 
     Type const type;
@@ -42,7 +46,7 @@ public:
 class Lexer
 {
 public:
-    explicit Lexer(std::string_view text) noexcept : m_text(text) {}
+    explicit Lexer(std::string_view text) : m_text(text) {}
 
     SyntaxToken GetNextToken()
     {
@@ -133,12 +137,37 @@ class ExpressionSyntax : public SyntaxNode
 class NumberExpressionSyntax : public ExpressionSyntax
 {
 public:
+    NumberExpressionSyntax(SyntaxToken token) : m_token(token) {}
     ~NumberExpressionSyntax() override = default;
-    virtual SyntaxToken::Type GetType() override { return SyntaxToken::Type::Number; }
+    SyntaxToken::Type GetType() override { return SyntaxToken::Type::NumberExpression; }
+
+private:
+    SyntaxToken m_token;
+};
+
+class BinaryExpressionSyntax : public ExpressionSyntax
+{
+public:
+    BinaryExpressionSyntax(ExpressionSyntax const& left, ExpressionSyntax const& right, SyntaxToken const token)
+        : m_left(left), m_right(right), m_operatorToken(token)
+    {
+    }
+
+    ~BinaryExpressionSyntax() override = default;
+
+    SyntaxToken::Type GetType() override { return SyntaxToken::Type::BinaryExpression; }
+
+private:
+    ExpressionSyntax const& m_left;
+    ExpressionSyntax const& m_right;
+    SyntaxToken const m_operatorToken;
 };
 
 class Parser
 {
+public:
+    using TokenList = std::vector<SyntaxToken>;
+
 public:
     Parser(std::string_view const source)
     {
@@ -157,7 +186,49 @@ public:
         } while (type != SyntaxToken::Type::EndOfFile);
     }
 
-    SyntaxToken Peek(int64_t offset)
+    ExpressionSyntax* Parse()
+    {
+        auto const current = currentToken();
+        auto left          = parsePrimaryExpression();
+
+        while (current.type == SyntaxToken::Type::Plus || current.type == SyntaxToken::Type::Minus)
+        {
+            auto const operatorToken = nextToken();
+            auto const right         = parsePrimaryExpression();
+            left                     = new BinaryExpressionSyntax{*left, *right, operatorToken};
+        }
+
+        return left;
+    }
+
+    TokenList& GetTokens() { return m_tokens; }
+
+private:
+    ExpressionSyntax* parsePrimaryExpression()
+    {
+        auto const numberToken = matchTokenType(SyntaxToken::Type::Number);
+        return new NumberExpressionSyntax{numberToken};
+    }
+
+    SyntaxToken matchTokenType(SyntaxToken::Type type)
+    {
+        auto const current = currentToken();
+        if (current.type == type)
+        {
+            return nextToken();
+        }
+
+        return SyntaxToken{type, current.position, ""};
+    }
+
+    SyntaxToken nextToken()
+    {
+        auto const current = currentToken();
+        m_position++;
+        return current;
+    }
+
+    SyntaxToken peekToken(int64_t offset)
     {
         auto const index = m_position + offset;
         if (index >= m_tokens.size())
@@ -168,11 +239,10 @@ public:
         return m_tokens.at(index);
     }
 
-    SyntaxToken Current() { return Peek(0); }
-
-    std::vector<SyntaxToken> m_tokens;
+    SyntaxToken currentToken() { return peekToken(0); }
 
 private:
+    TokenList m_tokens;
     int64_t m_position{0};
 };
 
@@ -189,6 +259,7 @@ std::ostream& operator<<(std::ostream& out, SyntaxToken::Type const type)
         case SyntaxToken::Type::Star: return out << "STAR";
         case SyntaxToken::Type::Slash: return out << "SLASH";
     }
+
     return out << "";
 }
 }  // namespace tcc
@@ -199,10 +270,13 @@ int main()
     auto srcView = std::string_view("0123 456 789 +-*/");
     auto parser  = tcc::Parser{srcView};
 
-    for (auto const& token : parser.m_tokens)
+    for (auto const& token : parser.GetTokens())
     {
         std::cout << token.type << ": " << token.position << '\n';
     }
+
+    auto* parseTree = parser.Parse();
+    delete parseTree;
 
     return EXIT_SUCCESS;
 }

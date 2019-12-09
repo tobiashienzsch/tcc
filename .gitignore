@@ -1,0 +1,10 @@
+# EDITORS
+.atom
+.idea
+.vs
+.vscode
+
+# BUILD
+build
+build-*
+build_*

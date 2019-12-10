@@ -27,6 +27,28 @@ TEST_CASE("lexer: Number", "[lexer]")
     REQUIRE(token.type == tcc::SyntaxToken::Type::Number);
 }
 
+TEST_CASE("lexer: Identifier", "[lexer]")
+{
+    auto lexer = tcc::Lexer{"int main"};
+
+    {
+        auto token = lexer.GetNextToken();
+        REQUIRE(token.type == tcc::SyntaxToken::Type::Identifier);
+    }
+    {
+        auto token = lexer.GetNextToken();
+        REQUIRE(token.type == tcc::SyntaxToken::Type::WhiteSpace);
+    }
+    {
+        auto token = lexer.GetNextToken();
+        REQUIRE(token.type == tcc::SyntaxToken::Type::Identifier);
+    }
+    {
+        auto token = lexer.GetNextToken();
+        REQUIRE(token.type == tcc::SyntaxToken::Type::EndOfFile);
+    }
+}
+
 TEST_CASE("lexer: Simple Combination", "[lexer]")
 {
     auto lexer = tcc::Lexer{"42 + 123"};

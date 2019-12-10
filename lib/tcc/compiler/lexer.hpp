@@ -14,8 +14,22 @@ namespace tcc
 class StringHelpers
 {
 public:
-    static constexpr bool CharIsDigit(char c) noexcept { return (c > 47 && c < 58); }
-    static constexpr bool CharIsWhiteSpace(char c) noexcept { return (c == ' ' || c == '\n' || c == '\r'); }
+    static constexpr bool CharIsDigit(char const c) noexcept { return (c > 47 && c < 58); }
+
+    static constexpr bool CharIsWhiteSpace(char const c) noexcept
+    {
+        return (c == ' ' || c == '\n' || c == '\r' || c == '\t');
+    }
+
+    static constexpr bool CharIsAlphabetical(char const c) noexcept
+    {
+        return ((c > 64 && c < 91) || (c > 96 && c < 123));
+    }
+
+    static constexpr bool CharIsAlphaNumeric(char const c) noexcept
+    {
+        return CharIsDigit(c) || CharIsAlphabetical(c) || c == '_';
+    }
 };
 
 class SyntaxToken
@@ -28,6 +42,8 @@ public:
         WhiteSpace,
 
         Number,
+        Identifier,
+
         Plus,
         Minus,
         Star,

@@ -10,9 +10,10 @@
 
 using TokenList = std::vector<tcc::SyntaxToken>;
 
-constexpr auto source  = std::string_view("1 + 2");
-constexpr auto src     = std::string_view(R"(int main();)");
-constexpr auto srcView = std::string_view("0123 456 789 +-*/");
+// constexpr auto source = std::string_view("1 + 2");
+// constexpr auto source = std::string_view(R"(int main();)");
+// constexpr auto source = std::string_view("0123 456 789 +-*/");
+constexpr auto source = std::string_view("int foo_bar() 888");
 int main()
 {
     auto lexer  = tcc::Lexer(source);

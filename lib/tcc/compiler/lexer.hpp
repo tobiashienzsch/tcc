@@ -48,6 +48,10 @@ public:
         Minus,
         Star,
         Slash,
+        Percent,
+        And,
+        Hash,
+        ExclamationMark,
 
     };
 

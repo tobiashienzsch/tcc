@@ -17,6 +17,10 @@ std::ostream& operator<<(std::ostream& out, SyntaxToken::Type const type)
         case SyntaxToken::Type::Minus: return out << "MINUS";
         case SyntaxToken::Type::Star: return out << "STAR";
         case SyntaxToken::Type::Slash: return out << "SLASH";
+        case SyntaxToken::Type::Percent: return out << "PERCENT";
+        case SyntaxToken::Type::And: return out << "AND";
+        case SyntaxToken::Type::Hash: return out << "HASH";
+        case SyntaxToken::Type::ExclamationMark: return out << "EXCLAMATIONMARK";
     }
 
     return out << "";
@@ -80,22 +84,20 @@ SyntaxToken Lexer::GetNextToken()
         return SyntaxToken{SyntaxToken::Type::Identifier, start, text};
     }
 
-    if (current() == '+')
-    {
-        return SyntaxToken{SyntaxToken::Type::Plus, m_position++, "+"};
+#define TCC_SINGLE_CHAR_SYNTAX_TOKEN(token, type)                                                                      \
+    if (current() == token[0])                                                                                         \
+    {                                                                                                                  \
+        return SyntaxToken{SyntaxToken::Type::type, m_position++, token};                                              \
     }
-    if (current() == '-')
-    {
-        return SyntaxToken{SyntaxToken::Type::Minus, m_position++, "-"};
-    }
-    if (current() == '*')
-    {
-        return SyntaxToken{SyntaxToken::Type::Star, m_position++, "*"};
-    }
-    if (current() == '/')
-    {
-        return SyntaxToken{SyntaxToken::Type::Slash, m_position++, "/"};
-    }
+
+    TCC_SINGLE_CHAR_SYNTAX_TOKEN("+", Plus);
+    TCC_SINGLE_CHAR_SYNTAX_TOKEN("-", Minus);
+    TCC_SINGLE_CHAR_SYNTAX_TOKEN("*", Star);
+    TCC_SINGLE_CHAR_SYNTAX_TOKEN("/", Slash);
+    TCC_SINGLE_CHAR_SYNTAX_TOKEN("%", Percent);
+    TCC_SINGLE_CHAR_SYNTAX_TOKEN("&", And);
+    TCC_SINGLE_CHAR_SYNTAX_TOKEN("#", Hash);
+    TCC_SINGLE_CHAR_SYNTAX_TOKEN("!", ExclamationMark);
 
     return SyntaxToken{SyntaxToken::Type::Unknown, m_position++, m_text.substr(m_position - 1, 1)};
 }

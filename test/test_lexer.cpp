@@ -49,6 +49,44 @@ TEST_CASE("lexer: Identifier", "[lexer]")
     }
 }
 
+TEST_CASE("lexer: Special Characters", "[lexer]")
+{
+    auto lexer = tcc::Lexer{"+-*/%&#!"};
+
+    {
+        auto token = lexer.GetNextToken();
+        REQUIRE(token.type == tcc::SyntaxToken::Type::Plus);
+    }
+    {
+        auto token = lexer.GetNextToken();
+        REQUIRE(token.type == tcc::SyntaxToken::Type::Minus);
+    }
+    {
+        auto token = lexer.GetNextToken();
+        REQUIRE(token.type == tcc::SyntaxToken::Type::Star);
+    }
+    {
+        auto token = lexer.GetNextToken();
+        REQUIRE(token.type == tcc::SyntaxToken::Type::Slash);
+    }
+    {
+        auto token = lexer.GetNextToken();
+        REQUIRE(token.type == tcc::SyntaxToken::Type::Percent);
+    }
+    {
+        auto token = lexer.GetNextToken();
+        REQUIRE(token.type == tcc::SyntaxToken::Type::And);
+    }
+    {
+        auto token = lexer.GetNextToken();
+        REQUIRE(token.type == tcc::SyntaxToken::Type::Hash);
+    }
+    {
+        auto token = lexer.GetNextToken();
+        REQUIRE(token.type == tcc::SyntaxToken::Type::ExclamationMark);
+    }
+}
+
 TEST_CASE("lexer: Simple Combination", "[lexer]")
 {
     auto lexer = tcc::Lexer{"42 + 123"};

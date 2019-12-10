@@ -2,6 +2,8 @@ project(tcc-tests)
 
 set (TEST_SRC
     test_main.cpp
+    
+    test_lexer.cpp
     test_warnings.cpp
 )
 

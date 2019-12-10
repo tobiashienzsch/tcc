@@ -1,14 +1,14 @@
 project(tcc-lib)
 
 # Add library
-add_library(${PROJECT_NAME} INTERFACE)
+add_library(${PROJECT_NAME} STATIC 
+    ${PROJECT_SOURCE_DIR}/tcc/compiler/lexer.cpp
+)
+
 add_library(tcc::Library ALIAS ${PROJECT_NAME})
-
-# Add include directories
-target_include_directories( ${PROJECT_NAME} INTERFACE ${PROJECT_SOURCE_DIR})
-
-# Link
-target_link_libraries(${PROJECT_NAME} INTERFACE
+target_include_directories(${PROJECT_NAME} PUBLIC ${PROJECT_SOURCE_DIR})
+target_compile_features(${PROJECT_NAME} PUBLIC cxx_std_17)
+target_link_libraries(${PROJECT_NAME} PUBLIC
     # tcc::CodeCoverage
     # tcc::CompilerOptions          # Language standard, etc...
 )

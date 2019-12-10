@@ -19,6 +19,8 @@ std::ostream& operator<<(std::ostream& out, SyntaxToken::Type const type)
     return out << "";
 }
 
+std::ostream& operator<<(std::ostream& out, SyntaxToken const token) { return out << "TOKEN::" << token.type; }
+
 SyntaxToken Lexer::GetNextToken()
 {
 

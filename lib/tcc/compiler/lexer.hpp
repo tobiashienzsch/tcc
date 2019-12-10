@@ -21,7 +21,7 @@ public:
 class SyntaxToken
 {
 public:
-    enum class Type : int64_t
+    enum class Type
     {
         Unknown,
         EndOfFile,
@@ -40,7 +40,8 @@ public:
     std::string_view const text;
 };
 
-std::ostream& operator<<(std::ostream& out, SyntaxToken::Type const type);
+std::ostream& operator<<(std::ostream& out, SyntaxToken::Type type);
+std::ostream& operator<<(std::ostream& out, SyntaxToken token);
 
 class Lexer
 {
@@ -67,4 +68,4 @@ private:
     std::string_view const m_text;
 };
 
-}
+}  // namespace tcc

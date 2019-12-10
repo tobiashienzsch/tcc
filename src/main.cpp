@@ -32,7 +32,7 @@ int main()
 
     for (auto const& token : tokens)
     {
-        std::cout << token.type << '\n';
+        std::cout << token << '\n';
     }
 
     return EXIT_SUCCESS;

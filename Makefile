@@ -1,4 +1,4 @@
-default: config build
+default: config build test
 
 CONFIG ?= Release
 BUILD_DIR = build_$(CONFIG)

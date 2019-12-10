@@ -6,6 +6,13 @@
 
 #include "tcc/compiler/lexer.hpp"
 
+TEST_CASE("lexer: EndOfFile", "[lexer]")
+{
+    auto lexer = tcc::Lexer{""};
+    auto token = lexer.GetNextToken();
+    REQUIRE(token.type == tcc::SyntaxToken::Type::EndOfFile);
+}
+
 TEST_CASE("lexer: Whitespace", "[lexer]")
 {
     auto lexer = tcc::Lexer{" "};

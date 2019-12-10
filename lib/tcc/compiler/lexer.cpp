@@ -2,6 +2,23 @@
 
 namespace tcc
 {
+std::ostream& operator<<(std::ostream& out, SyntaxToken::Type const type)
+{
+    switch (type)
+    {
+        case SyntaxToken::Type::Unknown: return out << "UNKNOWN";
+        case SyntaxToken::Type::EndOfFile: return out << "EOF";
+        case SyntaxToken::Type::WhiteSpace: return out << "WHITESPACE";
+        case SyntaxToken::Type::Number: return out << "NUMBER";
+        case SyntaxToken::Type::Plus: return out << "PLUS";
+        case SyntaxToken::Type::Minus: return out << "MINUS";
+        case SyntaxToken::Type::Star: return out << "STAR";
+        case SyntaxToken::Type::Slash: return out << "SLASH";
+    }
+
+    return out << "";
+}
+
 SyntaxToken Lexer::GetNextToken()
 {
 
@@ -17,6 +34,7 @@ SyntaxToken Lexer::GetNextToken()
         while (StringHelpers::CharIsDigit(current()))
         {
             next();
+            if (m_position >= m_text.size() - 1) break;
         }
 
         auto const length = m_position - start;
@@ -32,6 +50,7 @@ SyntaxToken Lexer::GetNextToken()
         while (StringHelpers::CharIsWhiteSpace(current()))
         {
             next();
+            if (m_position >= m_text.size() - 1) break;
         }
 
         auto const length = m_position - start;

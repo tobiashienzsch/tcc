@@ -8,8 +8,6 @@
 #include <string_view>
 #include <vector>
 
-#include "tcc/tcc.hpp"
-
 namespace tcc
 {
 
@@ -38,9 +36,11 @@ public:
     };
 
     Type const type;
-    int64_t const position;
+    uint64_t const position;
     std::string_view const text;
 };
+
+std::ostream& operator<<(std::ostream& out, SyntaxToken::Type const type);
 
 class Lexer
 {
@@ -63,7 +63,7 @@ private:
     void next() noexcept { m_position++; }
 
 private:
-    int64_t m_position{0};
+    uint64_t m_position{0};
     std::string_view const m_text;
 };
 

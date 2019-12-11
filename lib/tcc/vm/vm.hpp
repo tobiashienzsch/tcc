@@ -2,7 +2,9 @@
 
 #include <cstdint>
 
+#include <algorithm>
 #include <iostream>
+#include <sstream>
 #include <string_view>
 #include <vector>
 
@@ -123,6 +125,24 @@ public:
                     std::printf("%lld\n", val);
                     break;
                 }
+                case ByteCode::GLOAD:
+                {
+                    auto const addr = m_code.at(m_instructionPointer);
+                    m_instructionPointer++;
+                    auto const val = m_data.at(addr);
+                    m_stackPointer++;
+                    m_stack.at(m_stackPointer) = val;
+                    break;
+                }
+                case ByteCode::GSTORE:
+                {
+                    auto const val = m_stack.at(m_stackPointer);
+                    m_stackPointer--;
+                    auto const addr = m_code.at(m_instructionPointer);
+                    m_instructionPointer++;
+                    m_data.at(addr) = val;
+                    break;
+                }
                 case ByteCode::HALT: return;
             }
         }
@@ -135,7 +155,9 @@ private:
     {
         auto const instruction = Instructions[opcode];
         std::printf("%04lld: ", m_instructionPointer);
-        std::cout << ByteCode{opcode};
+        std::stringstream byteCodeStr{};
+        byteCodeStr << ByteCode{opcode};
+        std::printf("%s", byteCodeStr.str().c_str());
         if (instruction.numberOfOperands == 1) std::printf(" %lld", m_code.at(m_instructionPointer + 1));
         if (instruction.numberOfOperands == 2)
         {
@@ -144,7 +166,25 @@ private:
             std::printf(" %lld, %lld", firstOperand, secondOperand);
         }
 
-        std::cout << '\n';
+        printGlobalMemory();
+        printStack();
+        std::puts("");
+    }
+    void printStack()
+    {
+        std::printf("\t STACK: [ ");
+        for (auto i = 0; i <= m_stackPointer; i++)
+        {
+            auto const var = m_stack.at(i);
+            std::printf("%04lld ", var);
+        }
+        std::printf("]");
+    }
+    void printGlobalMemory()
+    {
+        std::printf("\t\t GLOBALS: [ ");
+        for (auto const& global : m_data) std::printf("%04lld ", global);
+        std::printf("]");
     }
 
 private:

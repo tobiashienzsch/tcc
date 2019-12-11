@@ -30,47 +30,52 @@ class VirtualMachine
 {
 public:
     VirtualMachine(std::vector<int64_t> c, int64_t main, int64_t datasize)
-        : ip(main), code(std::move(c)), data(datasize), stack(100)
+        : m_instructionPointer(main), m_code(std::move(c)), m_data(datasize), m_stack(100)
     {
     }
 
     void Cpu()
     {
 
-        while (ip < code.size())
+        while (static_cast<size_t>(m_instructionPointer) < m_code.size())
         {
-            auto const opcode = code.at(ip);  // fetch instructions
-            ip++;                             // advance instruction pointer
+            auto const opcode = m_code.at(m_instructionPointer);  // fetch instructions
+            if (m_isDebug) std::printf("%04lld: %lld\n", m_instructionPointer, opcode);
+
+            m_instructionPointer++;  // advance instruction pointer
 
             switch (opcode)
             {
                 case ByteCode::ICONST:
                 {
-                    auto const val = code.at(ip);  // read operand from code
-                    ip++;
-                    sp++;
-                    stack[sp] = val;  // push to stack
+                    auto const val = m_code.at(m_instructionPointer);  // read operand from code
+                    m_instructionPointer++;
+                    m_stackPointer++;
+                    m_stack[m_stackPointer] = val;  // push to stack
                     break;
                 }
                 case ByteCode::PRINT:
                 {
-                    auto const val = stack.at(sp);
-                    sp--;
+                    auto const val = m_stack.at(m_stackPointer);
+                    m_stackPointer--;
                     std::printf("%lld\n", val);
                     break;
                 }
-                case ByteCode::HALT: std::puts("HALT"); return;
+                case ByteCode::HALT: return;
             }
         }
     }
 
 private:
-    int64_t ip;  // instruction pointer
-    int64_t sp{-1};
-    int64_t fp;
+    int64_t m_stackPointer{-1};
+    int64_t m_instructionPointer;
+    int64_t m_framePointer;
 
-    std::vector<int64_t> code;
-    std::vector<int64_t> data;
-    std::vector<int64_t> stack;
+    std::vector<int64_t> m_code;
+    std::vector<int64_t> m_data;
+    std::vector<int64_t> m_stack;
+
+private:
+    bool m_isDebug{true};
 };
 }  // namespace tcc

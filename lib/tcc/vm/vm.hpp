@@ -87,8 +87,9 @@ constexpr Instruction Instructions[] = {
 class VirtualMachine
 {
 public:
-    VirtualMachine(std::vector<int64_t> c, int64_t main, int64_t datasize)
-        : m_instructionPointer(main), m_code(std::move(c)), m_data(datasize), m_stack(100)
+    explicit VirtualMachine(std::vector<int64_t> code, int64_t const main, int64_t const dataSize,
+                            int64_t const stackSize = 100)
+        : m_instructionPointer(main), m_code(std::move(code)), m_data(dataSize), m_stack(stackSize)
     {
     }
 
@@ -98,7 +99,7 @@ public:
         while (static_cast<size_t>(m_instructionPointer) < m_code.size())
         {
             auto const opcode = m_code.at(m_instructionPointer);  // fetch instructions
-            if (m_isTrace)
+            if (m_shouldTrace)
             {
                 disassemble(opcode);
             }
@@ -127,8 +128,10 @@ public:
         }
     }
 
+    void EnableTracing(bool const shouldTrace) { m_shouldTrace = shouldTrace; }
+
 private:
-    void disassemble(int64_t opcode)
+    void disassemble(int64_t const opcode)
     {
         auto const instruction = Instructions[opcode];
         std::printf("%04lld: ", m_instructionPointer);
@@ -154,6 +157,6 @@ private:
     std::vector<int64_t> m_stack;
 
 private:
-    bool m_isTrace{true};
+    bool m_shouldTrace{true};
 };
 }  // namespace tcc

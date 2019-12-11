@@ -63,6 +63,8 @@ public:
 std::ostream& operator<<(std::ostream& out, SyntaxToken::Type type);
 std::ostream& operator<<(std::ostream& out, SyntaxToken token);
 
+using SyntaxTokenList = std::vector<SyntaxToken>;
+
 class Lexer
 {
 public:

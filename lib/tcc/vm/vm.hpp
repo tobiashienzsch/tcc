@@ -27,7 +27,9 @@ enum ByteCode : int64_t
     GSTORE = 13,
     PRINT  = 14,
     POP    = 15,
-    HALT   = 16,
+    CALL   = 16,
+    RET    = 17,
+    HALT   = 18,
 };
 
 std::ostream& operator<<(std::ostream& out, ByteCode byteCode)
@@ -49,6 +51,8 @@ std::ostream& operator<<(std::ostream& out, ByteCode byteCode)
         case ByteCode::GSTORE: return out << "GSTORE";
         case ByteCode::PRINT: return out << "PRINT";
         case ByteCode::POP: return out << "POP";
+        case ByteCode::CALL: return out << "CALL";
+        case ByteCode::RET: return out << "RET";
         case ByteCode::HALT: return out << "HALT";
     }
     return out;
@@ -83,6 +87,8 @@ constexpr Instruction Instructions[] = {
     Instruction{"gstore", 1},  //
     Instruction{"print"},      //
     Instruction{"pop"},        //
+    Instruction{"call"},       //
+    Instruction{"ret"},        //
     Instruction{"halt"},       //
 };
 
@@ -182,6 +188,30 @@ public:
                 case ByteCode::POP:
                 {
                     --m_stackPointer;
+                    break;
+                }
+
+                case ByteCode::CALL:
+                {
+                    // expects all args on stack
+                    auto const addr           = m_code[m_instructionPointer++];  // addr of function
+                    auto const numArgs        = m_code[m_instructionPointer++];  // how many args git pushed
+                    m_stack[++m_stackPointer] = numArgs;                         // save num args
+                    m_stack[++m_stackPointer] = m_framePointer;                  // save frame pointer
+                    m_stack[++m_stackPointer] = m_instructionPointer;            // save instruction pointer
+                    m_framePointer            = m_stackPointer;                  // fp points to return addr on stack
+                    m_instructionPointer      = addr;                            // jump to function
+                    break;
+                }
+                case ByteCode::RET:
+                {
+                    auto const returnVal = m_stack.at(m_stackPointer--);  // pop return value
+                    m_stackPointer       = m_framePointer;                // jump over locals to frame pointer
+                    m_instructionPointer = m_stack.at(m_stackPointer--);  // pop return addr
+                    m_framePointer       = m_stack.at(m_stackPointer--);  // restore frame pointer
+                    auto const numArgs   = m_stack.at(m_stackPointer--);  // how many args to throw away
+                    m_stackPointer -= numArgs;                            // pop args
+                    m_stack.at(++m_stackPointer) = returnVal;             // leave result on stack
                     break;
                 }
 

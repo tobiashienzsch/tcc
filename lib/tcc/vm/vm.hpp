@@ -110,6 +110,24 @@ public:
 
             switch (opcode)
             {
+                case ByteCode::BR:
+                {
+                    m_instructionPointer = m_code[m_instructionPointer++];
+                    break;
+                }
+
+                case ByteCode::BRT:
+                {
+                    auto const addr = m_code[m_instructionPointer++];
+                    if (m_stack[m_stackPointer--]) m_instructionPointer = addr;
+                }
+
+                case ByteCode::BRF:
+                {
+                    auto const addr = m_code[m_instructionPointer++];
+                    if (!m_stack[m_stackPointer--]) m_instructionPointer = addr;
+                }
+
                 case ByteCode::ICONST:
                 {
                     auto const val = m_code.at(m_instructionPointer);  // read operand from code
@@ -118,13 +136,14 @@ public:
                     m_stack[m_stackPointer] = val;  // push to stack
                     break;
                 }
-                case ByteCode::PRINT:
+
+                case ByteCode::LOAD:
                 {
-                    auto const val = m_stack.at(m_stackPointer);
-                    m_stackPointer--;
-                    std::printf("%lld\n", val);
+                    auto const offset         = m_code[m_instructionPointer++];
+                    m_stack[++m_stackPointer] = m_stack[m_framePointer + offset];
                     break;
                 }
+
                 case ByteCode::GLOAD:
                 {
                     auto const addr = m_code.at(m_instructionPointer);
@@ -134,6 +153,14 @@ public:
                     m_stack.at(m_stackPointer) = val;
                     break;
                 }
+
+                case ByteCode::STORE:
+                {
+                    auto const offset                = m_code[m_instructionPointer++];
+                    m_stack[m_framePointer + offset] = m_stack[m_stackPointer--];
+                    break;
+                }
+
                 case ByteCode::GSTORE:
                 {
                     auto const val = m_stack.at(m_stackPointer);
@@ -143,6 +170,21 @@ public:
                     m_data.at(addr) = val;
                     break;
                 }
+
+                case ByteCode::PRINT:
+                {
+                    auto const val = m_stack.at(m_stackPointer);
+                    m_stackPointer--;
+                    std::printf("%lld\n", val);
+                    break;
+                }
+
+                case ByteCode::POP:
+                {
+                    --m_stackPointer;
+                    break;
+                }
+
                 case ByteCode::HALT: return;
             }
         }
@@ -176,7 +218,7 @@ private:
         for (auto i = 0; i <= m_stackPointer; i++)
         {
             auto const var = m_stack.at(i);
-            std::printf("%04lld ", var);
+            std::printf("%lld ", var);
         }
         std::printf("]");
     }

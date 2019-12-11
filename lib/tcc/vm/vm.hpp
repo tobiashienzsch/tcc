@@ -52,6 +52,38 @@ std::ostream& operator<<(std::ostream& out, ByteCode byteCode)
     return out;
 }
 
+struct Instruction
+{
+    std::string_view name;
+    int8_t numberOfOperands;
+
+    constexpr explicit Instruction(std::string_view _name) : name(_name), numberOfOperands(0) {}
+    constexpr explicit Instruction(std::string_view _name, int8_t numOperands)
+        : name(_name), numberOfOperands(numOperands)
+    {
+    }
+};
+
+constexpr Instruction Instructions[] = {
+    Instruction{"invalid"},    //
+    Instruction{"iadd"},       //
+    Instruction{"isub"},       //
+    Instruction{"imul"},       //
+    Instruction{"ilt"},        //
+    Instruction{"ieq"},        //
+    Instruction{"br", 1},      //
+    Instruction{"brt", 1},     //
+    Instruction{"brf", 1},     //
+    Instruction{"iconst", 1},  //
+    Instruction{"load", 1},    //
+    Instruction{"gload", 1},   //
+    Instruction{"store", 1},   //
+    Instruction{"gstore", 1},  //
+    Instruction{"print"},      //
+    Instruction{"pop"},        //
+    Instruction{"halt"},       //
+};
+
 class VirtualMachine
 {
 public:
@@ -66,10 +98,9 @@ public:
         while (static_cast<size_t>(m_instructionPointer) < m_code.size())
         {
             auto const opcode = m_code.at(m_instructionPointer);  // fetch instructions
-            if (m_isDebug)
+            if (m_isTrace)
             {
-                std::printf("%04lld: ", m_instructionPointer);
-                std::cout << ByteCode{opcode} << '\n';
+                disassemble(opcode);
             }
 
             m_instructionPointer++;  // advance instruction pointer
@@ -97,6 +128,23 @@ public:
     }
 
 private:
+    void disassemble(int64_t opcode)
+    {
+        auto const instruction = Instructions[opcode];
+        std::printf("%04lld: ", m_instructionPointer);
+        std::cout << ByteCode{opcode};
+        if (instruction.numberOfOperands == 1) std::printf(" %lld", m_code.at(m_instructionPointer + 1));
+        if (instruction.numberOfOperands == 2)
+        {
+            auto const firstOperand  = m_code.at(m_instructionPointer + 1);
+            auto const secondOperand = m_code.at(m_instructionPointer + 2);
+            std::printf(" %lld, %lld", firstOperand, secondOperand);
+        }
+
+        std::cout << '\n';
+    }
+
+private:
     int64_t m_stackPointer{-1};
     int64_t m_instructionPointer;
     int64_t m_framePointer;
@@ -106,6 +154,6 @@ private:
     std::vector<int64_t> m_stack;
 
 private:
-    bool m_isDebug{true};
+    bool m_isTrace{true};
 };
 }  // namespace tcc

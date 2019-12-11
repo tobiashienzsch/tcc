@@ -5,28 +5,20 @@
 #include <vector>
 
 #include "tcc/tcc.hpp"
-
-#include "tcc/compiler/parser.hpp"
-
-using TokenList = std::vector<tcc::SyntaxToken>;
-
-constexpr auto source = std::string_view("1 + 2");
-// constexpr auto source = std::string_view(R"(int main();)");
-// constexpr auto source = std::string_view("0123 456 789 +-*/");
-// constexpr auto source = std::string_view("int foo_bar() 888");
+#include "tcc/vm/vm.hpp"
 
 int main()
 {
-    auto parser  = tcc::Parser(source);
-    auto& tokens = parser.GetTokens();
+    using namespace tcc;
 
-    for (auto const& token : tokens)
-    {
-        std::cout << token << '\n';
-    }
+    auto const instructions = std::vector<int64_t>{
+        ByteCode::ICONST, 99,  //
+        ByteCode::PRINT,       //
+        ByteCode::HALT,        //
+    };
 
-    auto expression = parser.Parse();
-    expression->Print();
+    auto vm = VirtualMachine(instructions, 0, 0);
+    vm.Cpu();
 
     return EXIT_SUCCESS;
 }

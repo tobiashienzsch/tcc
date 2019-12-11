@@ -116,6 +116,46 @@ public:
 
             switch (opcode)
             {
+                case ByteCode::IADD:
+                {
+                    auto const b              = m_stack[m_stackPointer--];  // 2nd operand
+                    auto const a              = m_stack[m_stackPointer--];  // 1st operand
+                    m_stack[++m_stackPointer] = a + b;                      // push result
+                    break;
+                }
+
+                case ByteCode::ISUB:
+                {
+                    auto const b              = m_stack[m_stackPointer--];  // 2nd operand
+                    auto const a              = m_stack[m_stackPointer--];  // 1st operand
+                    m_stack[++m_stackPointer] = a - b;                      // push result
+                    break;
+                }
+
+                case ByteCode::IMUL:
+                {
+                    auto const b              = m_stack[m_stackPointer--];  // 2nd operand
+                    auto const a              = m_stack[m_stackPointer--];  // 1st operand
+                    m_stack[++m_stackPointer] = a * b;                      // push result
+                    break;
+                }
+
+                case ByteCode::ILT:
+                {
+                    auto const b              = m_stack[m_stackPointer--];  // 2nd operand
+                    auto const a              = m_stack[m_stackPointer--];  // 1st operand
+                    m_stack[++m_stackPointer] = a < b ? 1 : 0;              // push result
+                    break;
+                }
+
+                case ByteCode::IEQ:
+                {
+                    auto const b              = m_stack[m_stackPointer--];  // 2nd operand
+                    auto const a              = m_stack[m_stackPointer--];  // 1st operand
+                    m_stack[++m_stackPointer] = a == b ? 1 : 0;             // push result
+                    break;
+                }
+
                 case ByteCode::BR:
                 {
                     m_instructionPointer = m_code[m_instructionPointer++];
@@ -195,7 +235,7 @@ public:
                 {
                     // expects all args on stack
                     auto const addr           = m_code[m_instructionPointer++];  // addr of function
-                    auto const numArgs        = m_code[m_instructionPointer++];  // how many args git pushed
+                    auto const numArgs        = m_code[m_instructionPointer++];  // how many args got pushed
                     m_stack[++m_stackPointer] = numArgs;                         // save num args
                     m_stack[++m_stackPointer] = m_framePointer;                  // save frame pointer
                     m_stack[++m_stackPointer] = m_instructionPointer;            // save instruction pointer
@@ -203,6 +243,7 @@ public:
                     m_instructionPointer      = addr;                            // jump to function
                     break;
                 }
+
                 case ByteCode::RET:
                 {
                     auto const returnVal = m_stack.at(m_stackPointer--);  // pop return value

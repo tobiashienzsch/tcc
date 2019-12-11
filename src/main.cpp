@@ -56,16 +56,14 @@ int main()
         ByteCode::RET,         // 21
 
         // .def main: args=0, locals=0
-        ByteCode::ICONST, 5,   // 22 <-- MAIN
+        ByteCode::ICONST, 1,   // 22 <-- MAIN
         ByteCode::CALL, 0, 1,  // 24
         ByteCode::PRINT,       // 27
         ByteCode::HALT,        // 28
     };
 
-    auto const dataSize                = 4;
-    auto const startInstructionPointer = 0;
-
-    auto vm = VirtualMachine(instructions, startInstructionPointer, dataSize);
+    // auto vm = VirtualMachine(instructions, 0, 4);
+    auto vm = VirtualMachine(factorial, 22, 0);
     vm.Cpu();
 
     return EXIT_SUCCESS;

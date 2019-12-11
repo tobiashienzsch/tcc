@@ -37,6 +37,31 @@ int main()
         ByteCode::HALT,        //
     };
 
+    auto const factorial = std::vector<int64_t>{
+        // .def fact: args=1, locals=0
+        // if n < 2 return 1
+        ByteCode::LOAD, -3,   // 0
+        ByteCode::ICONST, 2,  // 2
+        ByteCode::ILT,        // 4
+        ByteCode::BRF, 10,    // 5
+        ByteCode::ICONST, 0,  // 7
+        ByteCode::RET,        // 9
+        // return n * fact(n-1)
+        ByteCode::LOAD, -3,    // 10
+        ByteCode::LOAD, -3,    // 12
+        ByteCode::ICONST, 1,   // 14
+        ByteCode::ISUB,        // 16
+        ByteCode::CALL, 0, 1,  // 17
+        ByteCode::IMUL,        // 20
+        ByteCode::RET,         // 21
+
+        // .def main: args=0, locals=0
+        ByteCode::ICONST, 5,   // 22 <-- MAIN
+        ByteCode::CALL, 0, 1,  // 24
+        ByteCode::PRINT,       // 27
+        ByteCode::HALT,        // 28
+    };
+
     auto const dataSize                = 4;
     auto const startInstructionPointer = 0;
 

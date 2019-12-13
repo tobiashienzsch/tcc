@@ -87,7 +87,7 @@ constexpr Instruction Instructions[] = {
     Instruction{"gstore", 1},  //
     Instruction{"print"},      //
     Instruction{"pop"},        //
-    Instruction{"call"},       //
+    Instruction{"call", 2},    //
     Instruction{"ret"},        //
     Instruction{"halt"},       //
 };
@@ -280,6 +280,7 @@ private:
         }
 
         printGlobalMemory();
+        std::printf("\t STACK_PTR: %2lld", m_stackPointer);
         printStack();
         std::puts("");
     }
@@ -303,7 +304,7 @@ private:
 private:
     int64_t m_stackPointer{-1};
     int64_t m_instructionPointer;
-    int64_t m_framePointer;
+    int64_t m_framePointer{0};
 
     std::vector<int64_t> m_code;
     std::vector<int64_t> m_data;

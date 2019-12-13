@@ -7,7 +7,16 @@ language: cpp
 script-anchors:
   - &script-linux
     - cd $TRAVIS_BUILD_DIR
-    - CONFIG=Debug make
+    - mkdir build && cd build
+    # DEBUG
+    - cmake -GNinja -DCMAKE_BUILD_TYPE:STRING=Debug ..
+    - cmake --build .
+    - ctest
+    - rm -rf *
+    # RELEASE
+    - cmake -GNinja -DCMAKE_BUILD_TYPE:STRING=Release ..
+    - cmake --build .
+    - ctest
 
 matrix:
   include:

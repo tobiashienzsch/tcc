@@ -15,13 +15,11 @@ matrix:
       dist: bionic
       addons:
         apt:
-          sources:
-            - ubuntu-toolchain-r-test
           packages:
-            - g++-8
+            - clang
             - ninja-build
       env:
-        - MATRIX_EVAL="CC=gcc-8 && CXX=g++-8"
+        - MATRIX_EVAL="CC=clang && CXX=clang++"
       script: *script-linux
 
 before_install:

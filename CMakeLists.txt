@@ -1,9 +1,12 @@
 cmake_minimum_required(VERSION 3.13)
+
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+set(CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake" ${CMAKE_MODULE_PATH})
+set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 
 # Options
 option(TOBANTE_CRAPPY_COMPILER_BUILD_TESTS "Build the unit tests with Catch2" ON)
-project(TobanteCrappyCompiler)
+project(TobanteCrappyCompiler CXX C)
 
 add_subdirectory(lib)
 add_subdirectory(src)

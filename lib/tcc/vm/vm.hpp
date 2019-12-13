@@ -39,6 +39,6 @@ private:
     std::vector<Integer> m_stack;
 
 private:
-    bool m_shouldTrace{false};
+    bool m_shouldTrace{true};
 };
 }  // namespace tcc

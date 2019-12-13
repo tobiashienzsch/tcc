@@ -166,12 +166,14 @@ public:
                 {
                     auto const addr = m_code[m_instructionPointer++];
                     if (m_stack[m_stackPointer--]) m_instructionPointer = addr;
+                    break;
                 }
 
                 case ByteCode::BRF:
                 {
                     auto const addr = m_code[m_instructionPointer++];
                     if (!m_stack[m_stackPointer--]) m_instructionPointer = addr;
+                    break;
                 }
 
                 case ByteCode::ICONST:

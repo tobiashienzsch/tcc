@@ -4,9 +4,11 @@
 #include <iostream>
 #include <string_view>
 
+#include "tcc/tcc.hpp"
+
 namespace tcc
 {
-enum ByteCode : int64_t
+enum ByteCode : Integer
 {
     IADD   = 1,
     ISUB   = 2,

@@ -8,6 +8,8 @@
 #include <string_view>
 #include <vector>
 
+#include "tcc/tcc.hpp"
+
 namespace tcc
 {
 
@@ -56,7 +58,7 @@ public:
     };
 
     Type const type;
-    uint64_t const position;
+    UInteger const position;
     std::string_view const text;
 };
 
@@ -86,7 +88,7 @@ private:
     void next() noexcept { m_position++; }
 
 private:
-    uint64_t m_position{0};
+    UInteger m_position{0};
     std::string_view const m_text;
 };
 

@@ -2,13 +2,13 @@
 
 namespace tcc
 {
-VirtualMachine::VirtualMachine(std::vector<int64_t> code, int64_t const main, int64_t const dataSize,
-                               int64_t const stackSize)
+VirtualMachine::VirtualMachine(std::vector<Integer> code, Integer const main, Integer const dataSize,
+                               Integer const stackSize)
     : m_instructionPointer(main), m_code(std::move(code)), m_data(dataSize), m_stack(stackSize)
 {
 }
 
-int64_t VirtualMachine::Cpu()
+Integer VirtualMachine::Cpu()
 {
 
     while (static_cast<size_t>(m_instructionPointer) < m_code.size())
@@ -175,7 +175,7 @@ int64_t VirtualMachine::Cpu()
 
 void VirtualMachine::EnableTracing(bool const shouldTrace) { m_shouldTrace = shouldTrace; }
 
-void VirtualMachine::disassemble(int64_t const opcode)
+void VirtualMachine::disassemble(Integer const opcode)
 {
     auto const instruction = Instructions[opcode];
     std::printf("%04lld: ", m_instructionPointer);

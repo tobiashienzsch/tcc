@@ -12,7 +12,7 @@ using tcc::ByteCode;
 
 TEST_CASE("vm: Halt", "[vm]")
 {
-    auto const assembly = std::vector<int64_t>{
+    auto const assembly = std::vector<tcc::Integer>{
         ByteCode::ICONST, 2,  //
         ByteCode::HALT,       //
     };
@@ -25,7 +25,7 @@ TEST_CASE("vm: Halt", "[vm]")
 
 TEST_CASE("vm: Exit", "[vm]")
 {
-    auto const assembly = std::vector<int64_t>{
+    auto const assembly = std::vector<tcc::Integer>{
         ByteCode::ICONST, 2,  //
         ByteCode::EXIT,       //
     };
@@ -38,7 +38,7 @@ TEST_CASE("vm: Exit", "[vm]")
 
 TEST_CASE("vm: GlobalMemory", "[vm]")
 {
-    auto const assembly = std::vector<int64_t>{
+    auto const assembly = std::vector<tcc::Integer>{
         ByteCode::ICONST, 143,  // push constant to stack
         ByteCode::GSTORE, 0,    // save to global
         ByteCode::ICONST, 2,    // do other stuff
@@ -75,7 +75,7 @@ TEST_CASE("vm: Simple Expression", "[vm]")
 TEST_CASE("vm: Factorial", "[vm]")
 {
     auto const argument  = 3;
-    auto const factorial = std::vector<int64_t>{
+    auto const factorial = std::vector<tcc::Integer>{
         // .def fact: args=1, locals=0
         // if n < 2 return 1
         ByteCode::LOAD, -3,   // 0
@@ -107,7 +107,7 @@ TEST_CASE("vm: Factorial", "[vm]")
 
 TEST_CASE("vm: MultipleFunctions", "[vm]")
 {
-    auto const assembly = std::vector<int64_t>{
+    auto const assembly = std::vector<tcc::Integer>{
         // .def func1: args=1, locals=0
         // return x * 3;
         ByteCode::LOAD, -3,   // 0

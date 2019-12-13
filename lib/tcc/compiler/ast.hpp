@@ -9,27 +9,27 @@
 
 namespace tcc
 {
-using InstructionList = std::vector<int64_t>;
+using InstructionList = std::vector<Integer>;
 class Expression
 {
 public:
     Expression()                                = default;
     virtual ~Expression()                       = default;
-    virtual int64_t GetResult()                 = 0;
+    virtual Integer GetResult()                 = 0;
     virtual InstructionList GetAssembly() const = 0;
 };
 
 class ConstantExpression : public Expression
 {
 public:
-    ConstantExpression(int64_t val) : value(val){};
+    ConstantExpression(Integer val) : value(val){};
     ~ConstantExpression() override = default;
 
-    int64_t GetResult() override { return value; }
+    Integer GetResult() override { return value; }
     InstructionList GetAssembly() const override { return {ByteCode::ICONST, value}; }
 
 private:
-    int64_t value;
+    Integer value;
 };
 
 class BinaryExpression : public Expression
@@ -50,7 +50,7 @@ public:
     BinaryExpression(Expression* l, Expression* r, Type type) : left(l), right(r), m_type(type) {}
     ~BinaryExpression() override = default;
 
-    int64_t GetResult() override
+    Integer GetResult() override
     {
         switch (m_type)
         {

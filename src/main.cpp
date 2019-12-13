@@ -11,7 +11,7 @@
 
 int main(int const argc, char const** const argv)
 {
-    int64_t fac = 1;
+    tcc::Integer fac = 1;
     if (argc == 2)
     {
         try
@@ -26,13 +26,13 @@ int main(int const argc, char const** const argv)
         }
         catch (std::out_of_range const&)
         {
-            std::cout << "Integer overflow: std::out_of_range thrown" << '\n';
+            std::cout << "tcc::Integer overflow: std::out_of_range thrown" << '\n';
         }
     }
 
     using namespace tcc;
 
-    auto const factorial = std::vector<int64_t>{
+    auto const factorial = std::vector<tcc::Integer>{
         // .def fact: args=1, locals=0
         // if n < 2 return 1
         ByteCode::LOAD, -3,   // 0

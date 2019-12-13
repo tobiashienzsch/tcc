@@ -13,10 +13,10 @@ using InstructionList = std::vector<int64_t>;
 class Expression
 {
 public:
-    Expression()                          = default;
-    virtual ~Expression()                 = default;
-    virtual int64_t GetResult()           = 0;
-    virtual InstructionList GetAssembly() = 0;
+    Expression()                                = default;
+    virtual ~Expression()                       = default;
+    virtual int64_t GetResult()                 = 0;
+    virtual InstructionList GetAssembly() const = 0;
 };
 
 class ConstantExpression : public Expression
@@ -26,7 +26,7 @@ public:
     ~ConstantExpression() override = default;
 
     int64_t GetResult() override { return value; }
-    InstructionList GetAssembly() override { return {ByteCode::ICONST, value}; }
+    InstructionList GetAssembly() const override { return {ByteCode::ICONST, value}; }
 
 private:
     int64_t value;
@@ -59,7 +59,7 @@ public:
         }
     }
 
-    InstructionList GetAssembly() override
+    InstructionList GetAssembly() const override
     {
         switch (m_type)
         {

@@ -6,9 +6,6 @@ language: cpp
 
 script-anchors:
   - &script-linux
-    - which gcov
-    - which gcov-7
-    - which gcov-8
     - cd $TRAVIS_BUILD_DIR
     - mkdir build && cd build
     # COVERAGE

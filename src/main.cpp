@@ -14,39 +14,22 @@ int main()
     using namespace tcc;
 
     auto const instructions = std::vector<int64_t>{
-        ByteCode::ICONST, 99,  //
-        ByteCode::GSTORE, 0,   //
-        ByteCode::GLOAD,  0,   //
-        ByteCode::GSTORE, 1,   //
-        ByteCode::GLOAD,  1,   //
-        ByteCode::ICONST, 42,  //
-        ByteCode::GSTORE, 3,   //
-        ByteCode::GLOAD,  3,   //
-        ByteCode::GLOAD,  1,   //
-        ByteCode::PRINT,       //
-        ByteCode::GLOAD,  3,   //
-        ByteCode::PRINT,       //
-        ByteCode::PRINT,       //
-        ByteCode::PRINT,       //
-        ByteCode::HALT,        //
+        ByteCode::ICONST, 99,  // 0
+        ByteCode::GSTORE, 0,   // 2
+        ByteCode::GLOAD,  0,   // 4
+        ByteCode::ICONST, 2,   // 6
+        ByteCode::ILT,         // 8
+        ByteCode::BRT,    13,  // 9
+        ByteCode::ICONST, 42,  // 11
+        ByteCode::ICONST, 54,  // 13
+        ByteCode::PRINT,       // 15
+        ByteCode::HALT,        // 16
+
+        ByteCode::ICONST, 143,  // 15
+        ByteCode::PRINT,        // 17
+        ByteCode::HALT,         // 18
+
     };
-
-    // auto const instructions = std::vector<int64_t>{
-    //     ByteCode::ICONST, 99,  // 0
-    //     ByteCode::GSTORE, 0,   // 2
-    //     ByteCode::GLOAD,  0,   // 4
-    //     ByteCode::ICONST, 2,   // 6
-    //     ByteCode::ILT,         // 8
-    //     ByteCode::BRT,    13,  // 9
-    //     ByteCode::ICONST, 42,  // 11
-    //     ByteCode::PRINT,       // 13
-    //     ByteCode::HALT,        // 14
-
-    //     ByteCode::ICONST, 143,  // 15
-    //     ByteCode::PRINT,        // 17
-    //     ByteCode::HALT,         // 18
-
-    // };
 
     auto const factorial = std::vector<int64_t>{
         // .def fact: args=1, locals=0
@@ -55,7 +38,7 @@ int main()
         ByteCode::ICONST, 2,  // 2
         ByteCode::ILT,        // 4
         ByteCode::BRF, 10,    // 5
-        ByteCode::ICONST, 0,  // 7
+        ByteCode::ICONST, 1,  // 7
         ByteCode::RET,        // 9
         // return n * fact(n-1)
         ByteCode::LOAD, -3,    // 10
@@ -67,7 +50,7 @@ int main()
         ByteCode::RET,         // 21
 
         // .def main: args=0, locals=0
-        ByteCode::ICONST, 2,   // 22 <-- MAIN
+        ByteCode::ICONST, 3,   // 22 <-- MAIN
         ByteCode::CALL, 0, 1,  // 24
         ByteCode::PRINT,       // 27
         ByteCode::HALT,        // 28
@@ -93,8 +76,8 @@ int main()
     assembly.push_back(tcc::ByteCode::PRINT);
     assembly.push_back(tcc::ByteCode::HALT);
 
-    auto vm = VirtualMachine(instructions, 0, 4);
-    // auto vm = VirtualMachine(factorial, 22, 0);
+    // auto vm = VirtualMachine(instructions, 0, 4);
+    auto vm = VirtualMachine(factorial, 22, 0);
     // auto vm = VirtualMachine(assembly, 0, 0);
     vm.Cpu();
 

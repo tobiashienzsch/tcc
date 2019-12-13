@@ -22,7 +22,7 @@ add_library(${PROJECT_NAME} STATIC ${TCC_LIB_SOURCES})
 add_library(tcc::Library ALIAS ${PROJECT_NAME})
 target_include_directories(${PROJECT_NAME} PUBLIC ${PROJECT_SOURCE_DIR})
 target_compile_features(${PROJECT_NAME} PUBLIC cxx_std_17)
-target_link_libraries(${PROJECT_NAME} PUBLIC
+target_link_libraries(${PROJECT_NAME} PRIVATE
     tcc::CodeCoverage
     # tcc::CompilerOptions          # Language standard, etc...
 )

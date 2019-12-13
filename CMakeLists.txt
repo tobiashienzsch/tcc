@@ -12,7 +12,6 @@ option(TCC_BUILD_COVERAGE   "Build with code coverage"          OFF)
 
 set(CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake" ${CMAKE_MODULE_PATH})
 include(tccCodeCoverage)
-include(tccCompilerOptions)
 
 add_subdirectory(lib)
 add_subdirectory(src)

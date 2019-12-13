@@ -2,7 +2,7 @@
 
 #include "tcc/vm/vm.hpp"
 
-constexpr auto factorial(int32_t val) -> int32_t
+constexpr auto factorial(int64_t val) -> int64_t
 {
     if (val <= 1) return 1;
     return val * factorial(val - 1);

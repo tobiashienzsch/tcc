@@ -13,7 +13,7 @@ static_assert(factorial(2) == 2);
 static_assert(factorial(3) == 6);
 static_assert(factorial(4) == 24);
 
-constexpr static auto ARGUMENT = 10;
+constexpr static auto ARGUMENT = 12;
 
 static void BM_CppFactorial(benchmark::State& state)
 {
@@ -53,10 +53,11 @@ static void BM_StackMachineFactorial(benchmark::State& state)
         ByteCode::CALL, 0, 1,        // 24
         ByteCode::EXIT,              // 27
     };
+    auto vm = tcc::VirtualMachine(factorial, 22, 0, 200, false);
 
     for (auto _ : state)
     {
-        auto vm             = tcc::VirtualMachine(factorial, 22, 0, 200, false);
+        vm.Reset(22);
         auto const exitCode = vm.Cpu();
         benchmark::DoNotOptimize(exitCode);
     }

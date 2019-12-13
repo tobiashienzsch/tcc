@@ -1,9 +1,8 @@
 cmake_minimum_required(VERSION 3.12)
+project(TobanteCrappyCompiler CXX C)
 
 set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
-# Options
-project(TobanteCrappyCompiler CXX C)
 
 option(TCC_BUILD_TESTS      "Build the unit tests with Catch2"  ON)
 option(TCC_BUILD_BENCHMARK  "Build benchmark tests"             ON)

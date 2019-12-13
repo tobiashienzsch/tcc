@@ -23,7 +23,15 @@ public:
     );
 
     Integer Cpu();
+
     void EnableTracing(bool const shouldTrace);
+
+    void Reset(Integer const entryPoint)
+    {
+        m_stackPointer       = -1;
+        m_instructionPointer = entryPoint;
+        m_framePointer       = 0;
+    }
 
 private:
     void disassemble(Integer const opcode);

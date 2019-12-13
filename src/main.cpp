@@ -56,11 +56,22 @@ int main(int const argc, char const** const argv)
         ByteCode::EXIT,         // 27
     };
 
+    auto const assembly = std::vector<tcc::Integer>{
+        ByteCode::ICONST, 10,  // 0 <-- MAIN
+        ByteCode::GSTORE, 0,   // 2
+        ByteCode::ICONST, 1,   //
+        ByteCode::ICONST, 2,   //
+        ByteCode::ICONST, 3,   //
+        ByteCode::GLOAD,  0,   //
+        ByteCode::EXIT,        //
+    };
+
     auto const entryPoint       = 22;
-    auto const globalMemorySize = 0;
+    auto const globalMemorySize = 1;
     auto const stackSize        = 200;
 
-    auto vm = VirtualMachine(factorial, entryPoint, globalMemorySize, stackSize);
+    // auto vm = VirtualMachine(factorial, entryPoint, globalMemorySize, stackSize);
+    auto vm = VirtualMachine(assembly, 0, globalMemorySize, stackSize);
     vm.EnableTracing(true);
     auto const exitCode = vm.Cpu();
 

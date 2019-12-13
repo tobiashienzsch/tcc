@@ -10,6 +10,52 @@
 
 using tcc::ByteCode;
 
+TEST_CASE("vm: Halt", "[vm]")
+{
+    auto const assembly = std::vector<int64_t>{
+        ByteCode::ICONST, 2,  //
+        ByteCode::HALT,       //
+    };
+
+    auto vm             = tcc::VirtualMachine(assembly, 0, 0, 200);
+    auto const exitCode = vm.Cpu();
+
+    REQUIRE(exitCode == -1);
+}
+
+TEST_CASE("vm: Exit", "[vm]")
+{
+    auto const assembly = std::vector<int64_t>{
+        ByteCode::ICONST, 2,  //
+        ByteCode::EXIT,       //
+    };
+
+    auto vm             = tcc::VirtualMachine(assembly, 0, 0, 200);
+    auto const exitCode = vm.Cpu();
+
+    REQUIRE(exitCode == 2);
+}
+
+TEST_CASE("vm: GlobalMemory", "[vm]")
+{
+    auto const assembly = std::vector<int64_t>{
+        ByteCode::ICONST, 143,  // push constant to stack
+        ByteCode::GSTORE, 0,    // save to global
+        ByteCode::ICONST, 2,    // do other stuff
+        ByteCode::PRINT,        // ...
+        ByteCode::GLOAD,  0,    // load from global
+        ByteCode::EXIT,         // exit
+    };
+
+    auto const entryPoint = 0;
+    auto const stackSize  = 50;
+    auto const globalSize = 1;
+    auto vm               = tcc::VirtualMachine(assembly, entryPoint, globalSize, stackSize);
+    auto const exitCode   = vm.Cpu();
+
+    REQUIRE(exitCode == 143);
+}
+
 TEST_CASE("vm: Simple Expression", "[vm]")
 {
     tcc::BinaryExpression expression = {

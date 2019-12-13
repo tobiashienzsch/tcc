@@ -8,7 +8,10 @@ set(TCC_LIB_SOURCES
 
     "${PROJECT_SOURCE_DIR}/tcc/core/warnings.hpp"
 
+    "${PROJECT_SOURCE_DIR}/tcc/vm/byte_code.hpp"
+    "${PROJECT_SOURCE_DIR}/tcc/vm/byte_code.cpp"
     "${PROJECT_SOURCE_DIR}/tcc/vm/vm.hpp"
+    "${PROJECT_SOURCE_DIR}/tcc/vm/vm.cpp"
 
     "${PROJECT_SOURCE_DIR}/tcc/tcc.hpp"
 )

@@ -13,7 +13,7 @@ Everything is in development. See test files for details.
 ### Dependencies
 
 - C++17
-- CMake 3.13
+- CMake 3.12
 
 ### Clone
 

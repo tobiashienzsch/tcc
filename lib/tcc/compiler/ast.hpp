@@ -41,6 +41,9 @@ public:
         Subtract,
         Multiply,
         Divide,
+
+        Less,
+        Equal,
     };
 
 public:
@@ -61,32 +64,52 @@ public:
 
     InstructionList GetAssembly() const override
     {
+        auto result = InstructionList{};
+
+        auto const leftAssembly = left->GetAssembly();
+        for (auto const& x : leftAssembly) result.push_back(x);
+
+        auto const rightAssembly = right->GetAssembly();
+        for (auto const& x : rightAssembly) result.push_back(x);
+
         switch (m_type)
         {
             case Type::Add:
             {
-                auto result             = InstructionList{};
-                auto const leftAssembly = left->GetAssembly();
-                for (auto const& x : leftAssembly) result.push_back(x);
-                auto const rightAssembly = right->GetAssembly();
-                for (auto const& x : rightAssembly) result.push_back(x);
                 result.push_back(ByteCode::IADD);
                 return result;
             }
 
             case Type::Subtract:
             {
-                auto result             = InstructionList{};
-                auto const leftAssembly = left->GetAssembly();
-                for (auto const& x : leftAssembly) result.push_back(x);
-                auto const rightAssembly = right->GetAssembly();
-                for (auto const& x : rightAssembly) result.push_back(x);
                 result.push_back(ByteCode::ISUB);
                 return result;
             }
 
-            // case Type::Multiply: return left->GetResult() * right->GetResult();
-            // case Type::Divide: return left->GetResult() / right->GetResult();
+            case Type::Multiply:
+            {
+                result.push_back(ByteCode::ISUB);
+                return result;
+            }
+
+            case Type::Divide:
+            {
+                result.push_back(ByteCode::ISUB);
+                return result;
+            }
+
+            case Type::Less:
+            {
+                result.push_back(ByteCode::ILT);
+                return result;
+            }
+
+            case Type::Equal:
+            {
+                result.push_back(ByteCode::IEQ);
+                return result;
+            }
+
             default: return {};
         }
     }

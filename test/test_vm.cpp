@@ -58,3 +58,36 @@ TEST_CASE("vm: Factorial", "[vm]")
 
     REQUIRE(exitCode == 6);
 }
+
+TEST_CASE("vm: MultipleFunctions", "[vm]")
+{
+    auto const assembly = std::vector<int64_t>{
+        // .def func1: args=1, locals=0
+        // return x * 3;
+        ByteCode::LOAD, -3,   // 0
+        ByteCode::ICONST, 3,  // 2
+        ByteCode::IMUL,       // 4
+        ByteCode::RET,        // 5
+
+        // .def func2: args=1, locals=0
+        // return x + 10;
+        ByteCode::LOAD, -3,    // 6
+        ByteCode::ICONST, 10,  // 8
+        ByteCode::IADD,        // 10
+        ByteCode::RET,         // 11
+
+        // .def main: args=0, locals=0
+        // x = func1(2);
+        // y = func2(x);
+        // exit y;
+        ByteCode::ICONST, 2,   // 12 <-- MAIN
+        ByteCode::CALL, 0, 1,  // 14 <-- func1(2)
+        ByteCode::CALL, 6, 1,  // 17 <-- func2(func1(2))
+        ByteCode::EXIT,        // 21
+    };
+
+    auto vm             = tcc::VirtualMachine(assembly, 12, 0, 200);
+    auto const exitCode = vm.Cpu();
+
+    REQUIRE(exitCode == 16);
+}

@@ -9,8 +9,27 @@
 #include "tcc/compiler/ast.hpp"
 #include "tcc/vm/vm.hpp"
 
-int main()
+int main(int const argc, char const** const argv)
 {
+    int64_t fac = 1;
+    if (argc == 2)
+    {
+        try
+        {
+            int i = std::stoi(argv[1]);
+            fac   = i;
+            std::cout << i << '\n';
+        }
+        catch (std::invalid_argument const&)
+        {
+            std::cout << "Bad input: std::invalid_argument thrown" << '\n';
+        }
+        catch (std::out_of_range const&)
+        {
+            std::cout << "Integer overflow: std::out_of_range thrown" << '\n';
+        }
+    }
+
     using namespace tcc;
 
     auto const instructions = std::vector<int64_t>{
@@ -50,10 +69,10 @@ int main()
         ByteCode::RET,         // 21
 
         // .def main: args=0, locals=0
-        ByteCode::ICONST, 3,   // 22 <-- MAIN
-        ByteCode::CALL, 0, 1,  // 24
-        ByteCode::PRINT,       // 27
-        ByteCode::HALT,        // 28
+        ByteCode::ICONST, fac,  // 22 <-- MAIN
+        ByteCode::CALL, 0, 1,   // 24
+        ByteCode::PRINT,        // 27
+        ByteCode::HALT,         // 28
     };
 
     tcc::BinaryExpression binary = {
@@ -76,9 +95,10 @@ int main()
     assembly.push_back(tcc::ByteCode::PRINT);
     assembly.push_back(tcc::ByteCode::HALT);
 
-    // auto vm = VirtualMachine(instructions, 0, 4);
-    auto vm = VirtualMachine(factorial, 22, 0);
-    // auto vm = VirtualMachine(assembly, 0, 0);
+    auto const stackSize = 200;
+    // auto vm = VirtualMachine(instructions, 0, 4, stackSize);
+    auto vm = VirtualMachine(factorial, 22, 0, stackSize);
+    // auto vm = VirtualMachine(assembly, 0, 0, stackSize);
     vm.Cpu();
 
     return EXIT_SUCCESS;

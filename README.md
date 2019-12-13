@@ -1,5 +1,11 @@
 # tobante's crappy compiler
 
+## Status
+
+|                                                License                                                |                                                       Linux/macOS                                                       |                                    Issues                                     |
+| :---------------------------------------------------------------------------------------------------: | :---------------------------------------------------------------------------------------------------------------------: | :---------------------------------------------------------------------------: |
+| [![MIT license](https://img.shields.io/badge/License-MIT-blue.svg)](https://lbesson.mit-license.org/) | [![Build Status](https://travis-ci.org/tobiashienzsch/tcc.svg?branch=master)](https://travis-ci.org/tobiashienzsch/tcc) | ![GitHub issues](https://img.shields.io/github/issues/tobiashienzsch/tcc.svg) |
+
 ## Features
 
 Everything is in development. See test files for details.

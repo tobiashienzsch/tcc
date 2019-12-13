@@ -7,7 +7,7 @@ constexpr auto factorial(int32_t val) -> int32_t
     return val * factorial(val - 1);
 }
 
-// static_assert(factorial(3) == 6);
+static_assert(factorial(3) == 6);
 
 static void BM_CppFactorial(benchmark::State& state)
 {

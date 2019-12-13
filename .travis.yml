@@ -1,0 +1,28 @@
+branches:
+  only:
+    - master
+
+language: cpp
+
+script-anchors:
+  - &script-linux
+    - cd $TRAVIS_BUILD_DIR
+    - CONFIG=Debug make
+
+matrix:
+  include:
+    - os: linux
+      dist: bionic
+      addons:
+        apt:
+          sources:
+            - ubuntu-toolchain-r-test
+          packages:
+            - g++-8
+            - ninja-build
+      env:
+        - MATRIX_EVAL="CC=gcc-8 && CXX=g++-8"
+      script: *script-linux
+
+before_install:
+  - eval "${MATRIX_EVAL}"

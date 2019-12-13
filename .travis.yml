@@ -15,7 +15,7 @@ script-anchors:
     - cmake -GNinja -DTCC_BUILD_COVERAGE=ON ..
     - cmake --build .
     - ctest
-    - bash <(curl -s https://codecov.io/bash) -x /usr/bin/gcov-8
+    - bash <(curl -s https://codecov.io/bash) -x /usr/bin/gcov-7
 
 matrix:
   include:

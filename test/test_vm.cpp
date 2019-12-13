@@ -86,7 +86,8 @@ TEST_CASE("vm: MultipleFunctions", "[vm]")
         ByteCode::EXIT,        // 21
     };
 
-    auto vm             = tcc::VirtualMachine(assembly, 12, 0, 200);
+    auto vm = tcc::VirtualMachine(assembly, 12, 0, 200);
+    vm.EnableTracing(true);
     auto const exitCode = vm.Cpu();
 
     REQUIRE(exitCode == 16);

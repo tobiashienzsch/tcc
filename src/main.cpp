@@ -60,7 +60,8 @@ int main(int const argc, char const** const argv)
     auto const globalMemorySize = 0;
     auto const stackSize        = 200;
 
-    auto vm             = VirtualMachine(factorial, entryPoint, globalMemorySize, stackSize);
+    auto vm = VirtualMachine(factorial, entryPoint, globalMemorySize, stackSize);
+    vm.EnableTracing(true);
     auto const exitCode = vm.Cpu();
 
     return EXIT_SUCCESS;

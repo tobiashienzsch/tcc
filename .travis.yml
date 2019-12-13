@@ -6,13 +6,16 @@ language: cpp
 
 script-anchors:
   - &script-linux
+    - which gcov
+    - which gcov-7
+    - which gcov-8
     - cd $TRAVIS_BUILD_DIR
     - mkdir build && cd build
     # COVERAGE
     - cmake -GNinja -DTCC_BUILD_COVERAGE=ON ..
     - cmake --build .
     - ctest
-    - bash <(curl -s https://codecov.io/bash) -x /usr/bin/gcov
+    - bash <(curl -s https://codecov.io/bash) -x /usr/bin/gcov-8
 
 matrix:
   include:
@@ -21,10 +24,9 @@ matrix:
       addons:
         apt:
           packages:
-            - clang
             - ninja-build
       env:
-        - MATRIX_EVAL="CC=clang && CXX=clang++"
+        - MATRIX_EVAL="CC=gcc && CXX=g++"
       script: *script-linux
 
 before_install:

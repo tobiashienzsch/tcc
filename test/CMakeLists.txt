@@ -4,7 +4,7 @@ set (TEST_SRC
     test_main.cpp
     
     test_warnings.cpp
-    
+
     test_ast.cpp
     test_lexer.cpp
     test_vm.cpp
@@ -12,7 +12,7 @@ set (TEST_SRC
 
 add_executable(${PROJECT_NAME} ${TEST_SRC})
 target_link_libraries(${PROJECT_NAME}
-    # tcc::CodeCoverage
+    tcc::CodeCoverage
     # tcc::CompilerWarnings
     tcc::Library
 

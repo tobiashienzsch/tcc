@@ -3,9 +3,11 @@ project(tcc-tests)
 set (TEST_SRC
     test_main.cpp
     
+    test_warnings.cpp
+    
     test_ast.cpp
     test_lexer.cpp
-    test_warnings.cpp
+    test_vm.cpp
 )
 
 add_executable(${PROJECT_NAME} ${TEST_SRC})

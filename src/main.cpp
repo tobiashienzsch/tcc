@@ -72,11 +72,9 @@ int main(int const argc, char const** const argv)
         ByteCode::ICONST, fac,  // 22 <-- MAIN
         ByteCode::CALL, 0, 1,   // 24
         ByteCode::EXIT,         // 27
-        // ByteCode::PRINT,        // 27
-        // ByteCode::HALT,         // 28
     };
 
-    tcc::BinaryExpression binary = {
+    tcc::BinaryExpression expression = {
         new tcc::ConstantExpression(10),
         new tcc::BinaryExpression(            //
             new tcc::ConstantExpression(5),   //
@@ -86,19 +84,14 @@ int main(int const argc, char const** const argv)
         tcc::BinaryExpression::Type::Add  //
     };
 
-    tcc::BinaryExpression expression = {
-        new tcc::ConstantExpression(4),        //
-        new tcc::ConstantExpression(2),        //
-        tcc::BinaryExpression::Type::Subtract  //
-    };
-
     auto assembly = expression.GetAssembly();
     assembly.push_back(tcc::ByteCode::PRINT);
     assembly.push_back(tcc::ByteCode::HALT);
 
     auto const stackSize = 200;
-    // auto vm = VirtualMachine(instructions, 0, 4, stackSize);
+
     auto vm = VirtualMachine(factorial, 22, 0, stackSize);
+    // auto vm = VirtualMachine(instructions, 0, 4, stackSize);
     // auto vm = VirtualMachine(assembly, 0, 0, stackSize);
     auto const exitCode = vm.Cpu();
 

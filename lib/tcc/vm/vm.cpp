@@ -8,7 +8,7 @@ VirtualMachine::VirtualMachine(std::vector<int64_t> code, int64_t const main, in
 {
 }
 
-void VirtualMachine::Cpu()
+int64_t VirtualMachine::Cpu()
 {
 
     while (static_cast<size_t>(m_instructionPointer) < m_code.size())
@@ -165,9 +165,12 @@ void VirtualMachine::Cpu()
                 break;
             }
 
-            case ByteCode::HALT: return;
+            case ByteCode::EXIT: return m_stack.at(m_stackPointer);
+            case ByteCode::HALT: return -1;
         }
     }
+
+    return -1;
 }
 
 void VirtualMachine::EnableTracing(bool const shouldTrace) { m_shouldTrace = shouldTrace; }

@@ -24,6 +24,7 @@ std::ostream& operator<<(std::ostream& out, ByteCode byteCode)
         case ByteCode::POP: return out << "POP";
         case ByteCode::CALL: return out << "CALL";
         case ByteCode::RET: return out << "RET";
+        case ByteCode::EXIT: return out << "EXIT";
         case ByteCode::HALT: return out << "HALT";
     }
     return out;

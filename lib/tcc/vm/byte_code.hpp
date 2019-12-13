@@ -25,7 +25,8 @@ enum ByteCode : int64_t
     POP    = 15,
     CALL   = 16,
     RET    = 17,
-    HALT   = 18,
+    EXIT   = 18,
+    HALT   = 19,
 };
 
 std::ostream& operator<<(std::ostream& out, ByteCode byteCode);
@@ -61,6 +62,7 @@ constexpr Instruction Instructions[] = {
     Instruction{"pop"},        //
     Instruction{"call", 2},    //
     Instruction{"ret"},        //
+    Instruction{"exit"},       //
     Instruction{"halt"},       //
 };
 

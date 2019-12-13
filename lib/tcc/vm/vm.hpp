@@ -21,7 +21,7 @@ public:
                             int64_t const stackSize = 100  //
     );
 
-    void Cpu();
+    int64_t Cpu();
     void EnableTracing(bool const shouldTrace);
 
 private:

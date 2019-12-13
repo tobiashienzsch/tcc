@@ -71,8 +71,9 @@ int main(int const argc, char const** const argv)
         // .def main: args=0, locals=0
         ByteCode::ICONST, fac,  // 22 <-- MAIN
         ByteCode::CALL, 0, 1,   // 24
-        ByteCode::PRINT,        // 27
-        ByteCode::HALT,         // 28
+        ByteCode::EXIT,         // 27
+        // ByteCode::PRINT,        // 27
+        // ByteCode::HALT,         // 28
     };
 
     tcc::BinaryExpression binary = {
@@ -99,7 +100,7 @@ int main(int const argc, char const** const argv)
     // auto vm = VirtualMachine(instructions, 0, 4, stackSize);
     auto vm = VirtualMachine(factorial, 22, 0, stackSize);
     // auto vm = VirtualMachine(assembly, 0, 0, stackSize);
-    vm.Cpu();
+    auto const exitCode = vm.Cpu();
 
     return EXIT_SUCCESS;
 }

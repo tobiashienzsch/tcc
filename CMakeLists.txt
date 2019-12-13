@@ -1,18 +1,23 @@
 cmake_minimum_required(VERSION 3.12)
 
-set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
-set(CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake" ${CMAKE_MODULE_PATH})
 set_property(GLOBAL PROPERTY USE_FOLDERS ON)
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 # Options
-option(TOBANTE_CRAPPY_COMPILER_BUILD_TESTS "Build the unit tests with Catch2" ON)
 project(TobanteCrappyCompiler CXX C)
+
+option(TCC_BUILD_TESTS      "Build the unit tests with Catch2"  ON)
+option(TCC_BUILD_COVERAGE   "Build with code coverage"          OFF)
+
+
+set(CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake" ${CMAKE_MODULE_PATH})
+include(tccCodeCoverage)
 
 add_subdirectory(lib)
 add_subdirectory(src)
 
 # Testing
-if(TOBANTE_CRAPPY_COMPILER_BUILD_TESTS)
+if(TCC_BUILD_TESTS)
     list (APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/3rd_party/Catch2/contrib")
     enable_testing()
     add_subdirectory(3rd_party/Catch2 EXCLUDE_FROM_ALL)

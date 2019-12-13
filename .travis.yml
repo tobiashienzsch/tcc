@@ -8,15 +8,11 @@ script-anchors:
   - &script-linux
     - cd $TRAVIS_BUILD_DIR
     - mkdir build && cd build
-    # DEBUG
-    - cmake -GNinja -DCMAKE_BUILD_TYPE:STRING=Debug ..
+    # COVERAGE
+    - cmake -GNinja -DTCC_BUILD_COVERAGE=ON ..
     - cmake --build .
     - ctest
-    - rm -rf *
-    # RELEASE
-    - cmake -GNinja -DCMAKE_BUILD_TYPE:STRING=Release ..
-    - cmake --build .
-    - ctest
+    - bash <(curl -s https://codecov.io/bash) -x /usr/bin/gcov
 
 matrix:
   include:

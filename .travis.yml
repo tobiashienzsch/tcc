@@ -9,7 +9,7 @@ script-anchors:
     - cd $TRAVIS_BUILD_DIR
     - mkdir build && cd build
     # COVERAGE
-    - cmake -GNinja -DTCC_BUILD_COVERAGE=ON ..
+    - cmake -GNinja -DTCC_BUILD_COVERAGE=ON -DTCC_BUILD_BENCHMARK=OFF ..
     - cmake --build .
     - ctest
     - bash <(curl -s https://codecov.io/bash) -x /usr/bin/gcov-7

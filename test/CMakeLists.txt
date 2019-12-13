@@ -10,7 +10,7 @@ set (TEST_SRC
 
 add_executable(${PROJECT_NAME} ${TEST_SRC})
 target_link_libraries(${PROJECT_NAME}
-    tcc::CodeCoverage
+    # tcc::CodeCoverage
     # tcc::CompilerWarnings
     tcc::Library
 

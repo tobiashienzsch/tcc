@@ -2,11 +2,11 @@ cmake_minimum_required(VERSION 3.12)
 
 set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
-
 # Options
 project(TobanteCrappyCompiler CXX C)
 
 option(TCC_BUILD_TESTS      "Build the unit tests with Catch2"  ON)
+option(TCC_BUILD_BENCHMARK  "Build benchmark tests"             ON)
 option(TCC_BUILD_COVERAGE   "Build with code coverage"          OFF)
 
 
@@ -24,4 +24,11 @@ if(TCC_BUILD_TESTS)
     include(CTest)
     include(Catch)
     add_subdirectory(test)
+endif()
+
+# Benchmark
+if(TCC_BUILD_BENCHMARK)
+    set(ALLOW_DOWNLOADING_GOOGLETEST FALSE)
+    add_subdirectory(3rd_party/google-benchmark EXCLUDE_FROM_ALL) 
+    add_subdirectory(benchmark)
 endif()

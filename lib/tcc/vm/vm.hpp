@@ -15,10 +15,11 @@ namespace tcc
 class VirtualMachine
 {
 public:
-    explicit VirtualMachine(std::vector<Integer> code,     //
-                            Integer const main,            //
-                            Integer const dataSize,        //
-                            Integer const stackSize = 100  //
+    explicit VirtualMachine(std::vector<Integer> code,  //
+                            Integer main,               //
+                            Integer dataSize,           //
+                            Integer stackSize = 100,    //
+                            bool shouldTrace  = true    //
     );
 
     Integer Cpu();

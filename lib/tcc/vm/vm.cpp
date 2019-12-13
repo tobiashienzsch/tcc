@@ -3,8 +3,12 @@
 namespace tcc
 {
 VirtualMachine::VirtualMachine(std::vector<Integer> code, Integer const main, Integer const dataSize,
-                               Integer const stackSize)
-    : m_instructionPointer(main), m_code(std::move(code)), m_data(dataSize), m_stack(stackSize)
+                               Integer const stackSize, bool shouldTrace)
+    : m_instructionPointer(main)
+    , m_code(std::move(code))
+    , m_data(dataSize)
+    , m_stack(stackSize)
+    , m_shouldTrace(shouldTrace)
 {
 }
 

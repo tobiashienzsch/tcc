@@ -6,6 +6,7 @@ set (TEST_SRC
     test_warnings.cpp
 
     test_ast.cpp
+    test_byte_code.cpp
     test_lexer.cpp
     test_vm.cpp
 )

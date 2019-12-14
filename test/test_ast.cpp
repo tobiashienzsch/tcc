@@ -58,3 +58,40 @@ TEST_CASE("ast: TenerayExpression", "[ast]")
     REQUIRE(static_cast<tcc::ByteCode>(assembly.at(6)) == tcc::ByteCode::ICONST);
     REQUIRE(assembly.at(7) == 42);
 }
+
+TEST_CASE("ast: ExpressionStatement", "[ast]")
+{
+    auto statement      = tcc::ExpressionStatement(std::make_unique<tcc::LiteralExpression>(true));
+    auto const assembly = statement.GetAssembly();
+
+    REQUIRE(static_cast<tcc::ByteCode>(assembly.at(0)) == tcc::ByteCode::ICONST);
+    REQUIRE(assembly.at(1) == 1);
+}
+
+TEST_CASE("ast: ReturnStatement", "[ast]")
+{
+    auto statement      = tcc::ReturnStatement(std::make_unique<tcc::LiteralExpression>(true));
+    auto const assembly = statement.GetAssembly();
+
+    REQUIRE(static_cast<tcc::ByteCode>(assembly.at(0)) == tcc::ByteCode::ICONST);
+    REQUIRE(assembly.at(1) == 1);
+    REQUIRE(static_cast<tcc::ByteCode>(assembly.at(2)) == tcc::ByteCode::RET);
+}
+
+TEST_CASE("ast: ConditionalStatement", "[ast]")
+{
+    auto statement      = tcc::ConditionalStatement(             //
+        std::make_unique<tcc::LiteralExpression>(true),     // condition
+        std::make_unique<tcc::ExpressionStatement>(         // true case
+            std::make_unique<tcc::LiteralExpression>(true)  //
+            )                                               //
+    );
+    auto const assembly = statement.GetAssembly();
+
+    REQUIRE(static_cast<tcc::ByteCode>(assembly.at(0)) == tcc::ByteCode::ICONST);
+    REQUIRE(assembly.at(1) == 1);
+    REQUIRE(static_cast<tcc::ByteCode>(assembly.at(2)) == tcc::ByteCode::BRF);
+    REQUIRE(assembly.at(3) == 99);
+    REQUIRE(static_cast<tcc::ByteCode>(assembly.at(4)) == tcc::ByteCode::ICONST);
+    REQUIRE(assembly.at(5) == 1);
+}

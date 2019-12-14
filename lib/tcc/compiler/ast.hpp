@@ -14,7 +14,7 @@ using InstructionList = std::vector<Integer>;
 class Expression
 {
 public:
-    using Ptr = std::unique_ptr<Expression>;
+    using Ptr = std::unique_ptr<Expression const>;
 
 public:
     Expression()                                = default;
@@ -156,6 +156,92 @@ private:
     Expression::Ptr condition;
     Expression::Ptr trueCase;
     Expression::Ptr falseCase;
+};
+
+class Statement
+{
+public:
+    using Ptr = std::unique_ptr<Statement>;
+
+    enum class Type
+    {
+        Compound,
+        Expression,
+
+        Conditional,
+        Loop,
+
+        VariableDefinition,
+
+        Return,
+        Noop,
+    };
+
+public:
+    Statement()                                 = default;
+    virtual ~Statement()                        = default;
+    virtual Type GetType() const                = 0;
+    virtual InstructionList GetAssembly() const = 0;
+};
+
+class ExpressionStatement : public Statement
+{
+public:
+    ExpressionStatement(Expression::Ptr exp) : expression(std::move(exp)) {}
+    ~ExpressionStatement() override = default;
+
+    Statement::Type GetType() const override { return Statement::Type::Expression; };
+    InstructionList GetAssembly() const override { return expression->GetAssembly(); };
+
+private:
+    Expression::Ptr expression;
+};
+
+class ReturnStatement : public Statement
+{
+public:
+    ReturnStatement(Expression::Ptr exp) : expression(std::move(exp)) {}
+    ~ReturnStatement() override = default;
+
+    Statement::Type GetType() const override { return Statement::Type::Return; };
+    InstructionList GetAssembly() const override
+    {
+        auto result = expression->GetAssembly();
+        result.push_back(ByteCode::RET);
+        return result;
+    };
+
+private:
+    Expression::Ptr expression;
+};
+
+class ConditionalStatement : public Statement
+{
+public:
+    ConditionalStatement(Expression::Ptr cond, Statement::Ptr trueCase)
+        : m_condition(std::move(cond)), m_trueCase(std::move(trueCase))
+    {
+    }
+
+    ~ConditionalStatement() override = default;
+
+    Statement::Type GetType() const override { return Statement::Type::Conditional; };
+
+    InstructionList GetAssembly() const override
+    {
+        auto result = m_condition->GetAssembly();
+        result.push_back(ByteCode::BRF);
+        result.push_back(99);  // todo where to branch to
+
+        auto const trueCaseAsm = m_trueCase->GetAssembly();
+        result.insert(std::end(result), std::begin(trueCaseAsm), std::end(trueCaseAsm));
+
+        return result;
+    };
+
+private:
+    Expression::Ptr m_condition;
+    Statement::Ptr m_trueCase;
 };
 
 }  // namespace tcc

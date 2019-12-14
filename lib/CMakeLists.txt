@@ -3,6 +3,7 @@ project(tcc-lib)
 # Add library
 set(TCC_LIB_SOURCES
     "${PROJECT_SOURCE_DIR}/tcc/compiler/ast.hpp"
+    "${PROJECT_SOURCE_DIR}/tcc/compiler/ast.cpp"
     "${PROJECT_SOURCE_DIR}/tcc/compiler/lexer.hpp"
     "${PROJECT_SOURCE_DIR}/tcc/compiler/lexer.cpp"
     "${PROJECT_SOURCE_DIR}/tcc/compiler/parser.hpp"

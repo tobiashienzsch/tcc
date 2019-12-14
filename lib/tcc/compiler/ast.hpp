@@ -10,14 +10,16 @@
 namespace tcc
 {
 using InstructionList = std::vector<Integer>;
+
 class Expression
 {
 public:
     Expression()                                = default;
     virtual ~Expression()                       = default;
-    virtual Integer GetResult()                 = 0;
     virtual InstructionList GetAssembly() const = 0;
 };
+
+Integer AppendExpression(InstructionList& dest, Expression* source);
 
 class LiteralExpression : public Expression
 {
@@ -25,7 +27,6 @@ public:
     LiteralExpression(Integer val) : value(val){};
     ~LiteralExpression() override = default;
 
-    Integer GetResult() override { return value; }
     InstructionList GetAssembly() const override { return {ByteCode::ICONST, value}; }
 
 private:
@@ -50,27 +51,12 @@ public:
     BinaryExpression(Expression* l, Expression* r, Type type) : left(l), right(r), m_type(type) {}
     ~BinaryExpression() override = default;
 
-    Integer GetResult() override
-    {
-        switch (m_type)
-        {
-            case Type::Add: return left->GetResult() + right->GetResult();
-            case Type::Subtract: return left->GetResult() - right->GetResult();
-            case Type::Multiply: return left->GetResult() * right->GetResult();
-            case Type::Divide: return left->GetResult() / right->GetResult();
-            default: return 0;
-        }
-    }
-
     InstructionList GetAssembly() const override
     {
         auto result = InstructionList{};
 
-        auto const leftAssembly = left->GetAssembly();
-        for (auto const& x : leftAssembly) result.push_back(x);
-
-        auto const rightAssembly = right->GetAssembly();
-        for (auto const& x : rightAssembly) result.push_back(x);
+        AppendExpression(result, left);
+        AppendExpression(result, right);
 
         switch (m_type)
         {
@@ -118,6 +104,50 @@ private:
     Expression* left;
     Expression* right;
     Type m_type;
+};
+
+class TenerayExpression : public Expression
+{
+public:
+    TenerayExpression(Expression* cond, Expression* t, Expression* f) : condition(cond), trueCase(t), falseCase(f){};
+    ~TenerayExpression() override = default;
+
+    InstructionList GetAssembly() const override
+    {
+        // true ? print(42) : print(2)
+        // .condition
+        // ICONST 1         // 0
+        // BRT 7            // 2
+
+        // .false case
+        // ICONST 2         // 4
+        // PRINT            // 6
+
+        // .true case
+        // ICONST 42        // 7
+        // PRINT            // 9
+
+        auto result = InstructionList{};
+        AppendExpression(result, condition);
+        result.push_back(ByteCode::BRT);
+
+        auto const placeholderIdx = result.size();
+        result.push_back(-9999);
+
+        AppendExpression(result, falseCase);
+
+        auto const trueCaseIdx = result.size();
+        AppendExpression(result, trueCase);
+
+        result.at(placeholderIdx) = trueCaseIdx;
+
+        return result;
+    }
+
+private:
+    Expression* condition;
+    Expression* trueCase;
+    Expression* falseCase;
 };
 
 }  // namespace tcc

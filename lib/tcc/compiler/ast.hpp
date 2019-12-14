@@ -19,11 +19,11 @@ public:
     virtual InstructionList GetAssembly() const = 0;
 };
 
-class ConstantExpression : public Expression
+class LiteralExpression : public Expression
 {
 public:
-    ConstantExpression(Integer val) : value(val){};
-    ~ConstantExpression() override = default;
+    LiteralExpression(Integer val) : value(val){};
+    ~LiteralExpression() override = default;
 
     Integer GetResult() override { return value; }
     InstructionList GetAssembly() const override { return {ByteCode::ICONST, value}; }

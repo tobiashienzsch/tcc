@@ -6,10 +6,10 @@
 
 #include "tcc/compiler/ast.hpp"
 
-TEST_CASE("ast: ConstantExpression", "[ast]")
+TEST_CASE("ast: LiteralExpression", "[ast]")
 {
     auto const val        = 5;
-    auto const expression = tcc::ConstantExpression(val);
+    auto const expression = tcc::LiteralExpression(val);
     auto const assembly   = expression.GetAssembly();
     REQUIRE(static_cast<tcc::ByteCode>(assembly.at(0)) == tcc::ByteCode::ICONST);
     REQUIRE(assembly.at(1) == val);
@@ -18,8 +18,8 @@ TEST_CASE("ast: ConstantExpression", "[ast]")
 TEST_CASE("ast: BinaryExpression", "[ast]")
 {
     tcc::BinaryExpression expression = {
-        new tcc::ConstantExpression(4),   //
-        new tcc::ConstantExpression(2),   //
+        new tcc::LiteralExpression(4),   //
+        new tcc::LiteralExpression(2),   //
         tcc::BinaryExpression::Type::Add  //
     };
 

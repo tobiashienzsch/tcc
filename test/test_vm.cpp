@@ -59,8 +59,8 @@ TEST_CASE("vm: GlobalMemory", "[vm]")
 TEST_CASE("vm: Simple Expression", "[vm]")
 {
     tcc::BinaryExpression expression = {
-        new tcc::ConstantExpression(3),        //
-        new tcc::ConstantExpression(2),        //
+        new tcc::LiteralExpression(3),        //
+        new tcc::LiteralExpression(2),        //
         tcc::BinaryExpression::Type::Subtract  //
     };
     auto assembly = expression.GetAssembly();

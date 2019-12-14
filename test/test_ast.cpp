@@ -102,3 +102,26 @@ TEST_CASE("ast: ConditionalStatement", "[ast]")
     REQUIRE(static_cast<tcc::ByteCode>(assembly.at(4)) == tcc::ByteCode::ICONST);
     REQUIRE(assembly.at(5) == 1);
 }
+
+TEST_CASE("ast: CompoundStatement", "[ast]")
+{
+    auto statement = tcc::CompoundStatement(                 //
+        std::make_unique<tcc::ExpressionStatement>(          // first statement
+            std::make_unique<tcc::LiteralExpression>(true)   //
+            ),                                               //
+        std::make_unique<tcc::ExpressionStatement>(          // second statement
+            std::make_unique<tcc::LiteralExpression>(false)  //
+            )                                                //
+    );
+
+    auto const assembly = statement.GetAssembly(0);
+
+    // ICONST, 1    // 0 condition
+    // ICONST, 0    // 2 condition
+
+    REQUIRE(assembly.size() == 4);
+    REQUIRE(static_cast<tcc::ByteCode>(assembly.at(0)) == tcc::ByteCode::ICONST);
+    REQUIRE(assembly.at(1) == 1);
+    REQUIRE(static_cast<tcc::ByteCode>(assembly.at(2)) == tcc::ByteCode::ICONST);
+    REQUIRE(assembly.at(3) == 0);
+}

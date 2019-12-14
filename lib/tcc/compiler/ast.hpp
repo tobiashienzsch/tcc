@@ -244,4 +244,38 @@ private:
     Statement::Ptr m_trueCase;
 };
 
+class CompoundStatement : public Statement
+{
+public:
+    template<typename... SatementPointer>
+    explicit CompoundStatement(SatementPointer... statement)
+    {
+        // static_assert((std::is_constructible_v<T, Args&&> && ...));
+        (m_statements.push_back(std::move(statement)), ...);
+    }
+
+    ~CompoundStatement() override = default;
+
+    Statement::Type GetType() const override { return Statement::Type::Compound; };
+
+    InstructionList GetAssembly(Integer const offset = 0) const override
+    {
+        auto result         = InstructionList{};
+        auto internalOffset = offset;
+
+        for (Statement::Ptr const& statement : m_statements)
+        {
+            auto const assembly = statement->GetAssembly(internalOffset);
+            internalOffset += assembly.size();
+
+            result.insert(std::end(result), std::begin(assembly), std::end(assembly));
+        }
+
+        return result;
+    };
+
+private:
+    std::vector<Statement::Ptr> m_statements;
+};
+
 }  // namespace tcc

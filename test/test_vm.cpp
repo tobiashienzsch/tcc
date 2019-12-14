@@ -104,6 +104,34 @@ TEST_CASE("vm: Factorial", "[vm]")
     REQUIRE(exitCode == 6);
 }
 
+TEST_CASE("vm: MultipleArguments", "[vm]")
+{
+    auto const assembly = std::vector<tcc::Integer>{
+        // .def sub: args=2, locals=0
+        // return x + y;
+        ByteCode::LOAD, -4,  // 0 <-- load x
+        ByteCode::LOAD, -3,  // 2 <-- load y
+        ByteCode::ISUB,      // 4
+        ByteCode::RET,       // 5
+
+        // .def main: args=0, locals=0
+        // x = sub(10, 2);
+        // y = sub(x, 5);
+        // exit x;
+        ByteCode::ICONST, 10,  // 6 <-- MAIN
+        ByteCode::ICONST, 2,   // 8
+        ByteCode::CALL, 0, 2,  // 10 <-- sub(10, 2)
+        ByteCode::ICONST, 5,   // 13
+        ByteCode::CALL, 0, 2,  // 13 <-- sub(x, 5)
+        ByteCode::EXIT,        // 13
+    };
+
+    auto vm             = tcc::VirtualMachine(assembly, 6, 0, 100, false);
+    auto const exitCode = vm.Cpu();
+
+    REQUIRE(exitCode == 3);
+}
+
 TEST_CASE("vm: MultipleFunctions", "[vm]")
 {
     auto const assembly = std::vector<tcc::Integer>{

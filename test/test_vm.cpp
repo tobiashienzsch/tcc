@@ -58,12 +58,11 @@ TEST_CASE("vm: GlobalMemory", "[vm]")
 
 TEST_CASE("vm: Simple Expression", "[vm]")
 {
-    tcc::BinaryExpression expression = {
-        new tcc::LiteralExpression(3),         //
-        new tcc::LiteralExpression(2),         //
-        tcc::BinaryExpression::Type::Subtract  //
-    };
-    auto assembly = expression.GetAssembly();
+    auto const expression = tcc::BinaryExpression(std::make_unique<tcc::LiteralExpression>(3),  //
+                                                  std::make_unique<tcc::LiteralExpression>(2),  //
+                                                  tcc::BinaryExpression::Type::Subtract         //
+    );
+    auto assembly         = expression.GetAssembly();
     assembly.push_back(ByteCode::EXIT);
 
     auto vm             = tcc::VirtualMachine(assembly, 0, 0, 100, false);

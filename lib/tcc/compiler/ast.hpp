@@ -14,12 +14,15 @@ using InstructionList = std::vector<Integer>;
 class Expression
 {
 public:
+    using Ptr = std::unique_ptr<Expression>;
+
+public:
     Expression()                                = default;
     virtual ~Expression()                       = default;
     virtual InstructionList GetAssembly() const = 0;
 };
 
-Integer AppendExpression(InstructionList& dest, Expression* source);
+Integer AppendExpression(InstructionList& dest, Expression const& source);
 
 class LiteralExpression : public Expression
 {
@@ -48,15 +51,18 @@ public:
     };
 
 public:
-    BinaryExpression(Expression* l, Expression* r, Type type) : left(l), right(r), m_type(type) {}
+    BinaryExpression(Expression::Ptr l, Expression::Ptr r, Type type)
+        : left(std::move(l)), right(std::move(r)), m_type(type)
+    {
+    }
     ~BinaryExpression() override = default;
 
     InstructionList GetAssembly() const override
     {
         auto result = InstructionList{};
 
-        AppendExpression(result, left);
-        AppendExpression(result, right);
+        AppendExpression(result, *left.get());
+        AppendExpression(result, *right.get());
 
         switch (m_type)
         {
@@ -101,15 +107,17 @@ public:
     }
 
 private:
-    Expression* left;
-    Expression* right;
+    Expression::Ptr left;
+    Expression::Ptr right;
     Type m_type;
 };
 
 class TenerayExpression : public Expression
 {
 public:
-    TenerayExpression(Expression* cond, Expression* t, Expression* f) : condition(cond), trueCase(t), falseCase(f){};
+    TenerayExpression(Expression::Ptr cond, Expression::Ptr t, Expression::Ptr f)
+        : condition(std::move(cond)), trueCase(std::move(t)), falseCase(std::move(f)){};
+
     ~TenerayExpression() override = default;
 
     InstructionList GetAssembly() const override
@@ -128,16 +136,16 @@ public:
         // PRINT            // 9
 
         auto result = InstructionList{};
-        AppendExpression(result, condition);
+        AppendExpression(result, *condition.get());
         result.push_back(ByteCode::BRT);
 
         auto const placeholderIdx = result.size();
-        result.push_back(-9999);
+        result.push_back(0);
 
-        AppendExpression(result, falseCase);
+        AppendExpression(result, *falseCase.get());
 
         auto const trueCaseIdx = result.size();
-        AppendExpression(result, trueCase);
+        AppendExpression(result, *trueCase.get());
 
         result.at(placeholderIdx) = trueCaseIdx;
 
@@ -145,9 +153,9 @@ public:
     }
 
 private:
-    Expression* condition;
-    Expression* trueCase;
-    Expression* falseCase;
+    Expression::Ptr condition;
+    Expression::Ptr trueCase;
+    Expression::Ptr falseCase;
 };
 
 }  // namespace tcc

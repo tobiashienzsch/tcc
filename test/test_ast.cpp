@@ -17,11 +17,10 @@ TEST_CASE("ast: LiteralExpression", "[ast]")
 
 TEST_CASE("ast: BinaryExpression", "[ast]")
 {
-    tcc::BinaryExpression expression = {
-        new tcc::LiteralExpression(4),    //
-        new tcc::LiteralExpression(2),    //
-        tcc::BinaryExpression::Type::Add  //
-    };
+    auto const expression = tcc::BinaryExpression(std::make_unique<tcc::LiteralExpression>(4),  //
+                                                  std::make_unique<tcc::LiteralExpression>(2),  //
+                                                  tcc::BinaryExpression::Type::Add              //
+    );
 
     auto const assembly = expression.GetAssembly();
     REQUIRE(static_cast<tcc::ByteCode>(assembly.at(0)) == tcc::ByteCode::ICONST);
@@ -33,11 +32,10 @@ TEST_CASE("ast: BinaryExpression", "[ast]")
 
 TEST_CASE("ast: TenerayExpression", "[ast]")
 {
-    tcc::TenerayExpression expression = {
-        new tcc::LiteralExpression(true),  // condition
-        new tcc::LiteralExpression(42),    // true case
-        new tcc::LiteralExpression(2),     // false case
-    };
+    auto expression = tcc::TenerayExpression(std::make_unique<tcc::LiteralExpression>(true),  // condition
+                                             std::make_unique<tcc::LiteralExpression>(42),    // true case
+                                             std::make_unique<tcc::LiteralExpression>(2)      // false case
+    );
 
     // true ? 42 : 2
     // .condition

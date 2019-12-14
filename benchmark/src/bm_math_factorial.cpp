@@ -2,6 +2,8 @@
 
 #include "tcc/vm/vm.hpp"
 
+namespace
+{
 constexpr auto factorial(int64_t val) -> int64_t
 {
     if (val <= 1) return 1;
@@ -13,23 +15,11 @@ static_assert(factorial(2) == 2);
 static_assert(factorial(3) == 6);
 static_assert(factorial(4) == 24);
 
-constexpr static auto ARGUMENT = 12;
-
-static void BM_CppFactorial(benchmark::State& state)
-{
-    for (auto _ : state)
-    {
-        auto result = factorial(ARGUMENT);
-        benchmark::DoNotOptimize(result);
-    }
-}
-BENCHMARK(BM_CppFactorial);
-
-static void BM_StackMachineFactorial(benchmark::State& state)
+auto createFactorialAssembly(tcc::Integer argument)
 {
     using tcc::ByteCode;
 
-    auto const factorial = std::vector<tcc::Integer>{
+    return std::vector<tcc::Integer>{
         // .def fact: args=1, locals=0
         // if n < 2 return 1
         ByteCode::LOAD, -3,   // 0
@@ -49,19 +39,38 @@ static void BM_StackMachineFactorial(benchmark::State& state)
         ByteCode::RET,         // 21
 
         // .def main: args=0, locals=0
-        ByteCode::ICONST, ARGUMENT,  // 22 <-- MAIN
+        ByteCode::ICONST, argument,  // 22 <-- MAIN
         ByteCode::CALL, 0, 1,        // 24
         ByteCode::EXIT,              // 27
     };
-    auto vm = tcc::VirtualMachine(factorial, 22, 0, 200, false);
+}
+}  // namespace
+
+static void BM_CppFactorial(benchmark::State& state)
+{
+    auto const arg = state.range(0);
+    for (auto _ : state)
+    {
+        auto result = factorial(arg);
+        benchmark::DoNotOptimize(result);
+    }
+}
+BENCHMARK(BM_CppFactorial)->Arg(3)->Arg(12)->Arg(15);
+;
+
+static void BM_StackMachineFactorial(benchmark::State& state)
+{
+    auto const entryPoint = 22;
+    auto const factorial  = createFactorialAssembly(state.range(0));
+    auto vm               = tcc::VirtualMachine(factorial, entryPoint, 0, 200, false);
 
     for (auto _ : state)
     {
-        vm.Reset(22);
+        vm.Reset(entryPoint);
         auto const exitCode = vm.Cpu();
         benchmark::DoNotOptimize(exitCode);
     }
 }
-BENCHMARK(BM_StackMachineFactorial);
+BENCHMARK(BM_StackMachineFactorial)->Arg(3)->Arg(12)->Arg(15);
 
 BENCHMARK_MAIN();

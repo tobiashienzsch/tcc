@@ -20,3 +20,8 @@ test:
 .PHONY: clean
 clean:
 	rm -rf $(BUILD_DIR)
+
+.PHONY: stats
+stats:
+	cloc --exclude-dir=3rd_party,build_Debug,build_Release,.vscode .
+	

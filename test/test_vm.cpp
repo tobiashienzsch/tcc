@@ -17,7 +17,7 @@ TEST_CASE("vm: Halt", "[vm]")
         ByteCode::HALT,       //
     };
 
-    auto vm             = tcc::VirtualMachine(assembly, 0, 0, 200);
+    auto vm             = tcc::VirtualMachine(assembly, 0, 0, 200, false);
     auto const exitCode = vm.Cpu();
 
     REQUIRE(exitCode == -1);
@@ -30,7 +30,7 @@ TEST_CASE("vm: Exit", "[vm]")
         ByteCode::EXIT,       //
     };
 
-    auto vm             = tcc::VirtualMachine(assembly, 0, 0, 200);
+    auto vm             = tcc::VirtualMachine(assembly, 0, 0, 200, false);
     auto const exitCode = vm.Cpu();
 
     REQUIRE(exitCode == 2);
@@ -50,7 +50,7 @@ TEST_CASE("vm: GlobalMemory", "[vm]")
     auto const entryPoint = 0;
     auto const stackSize  = 50;
     auto const globalSize = 1;
-    auto vm               = tcc::VirtualMachine(assembly, entryPoint, globalSize, stackSize);
+    auto vm               = tcc::VirtualMachine(assembly, entryPoint, globalSize, stackSize, false);
     auto const exitCode   = vm.Cpu();
 
     REQUIRE(exitCode == 143);
@@ -59,14 +59,14 @@ TEST_CASE("vm: GlobalMemory", "[vm]")
 TEST_CASE("vm: Simple Expression", "[vm]")
 {
     tcc::BinaryExpression expression = {
-        new tcc::LiteralExpression(3),        //
-        new tcc::LiteralExpression(2),        //
+        new tcc::LiteralExpression(3),         //
+        new tcc::LiteralExpression(2),         //
         tcc::BinaryExpression::Type::Subtract  //
     };
     auto assembly = expression.GetAssembly();
     assembly.push_back(ByteCode::EXIT);
 
-    auto vm             = tcc::VirtualMachine(assembly, 0, 0, 100);
+    auto vm             = tcc::VirtualMachine(assembly, 0, 0, 100, false);
     auto const exitCode = vm.Cpu();
 
     REQUIRE(exitCode == 1);
@@ -99,7 +99,7 @@ TEST_CASE("vm: Factorial", "[vm]")
         ByteCode::EXIT,              // 27
     };
 
-    auto vm             = tcc::VirtualMachine(factorial, 22, 0, 200);
+    auto vm             = tcc::VirtualMachine(factorial, 22, 0, 200, false);
     auto const exitCode = vm.Cpu();
 
     REQUIRE(exitCode == 6);
@@ -132,8 +132,7 @@ TEST_CASE("vm: MultipleFunctions", "[vm]")
         ByteCode::EXIT,        // 21
     };
 
-    auto vm = tcc::VirtualMachine(assembly, 12, 0, 200);
-    vm.EnableTracing(true);
+    auto vm             = tcc::VirtualMachine(assembly, 12, 0, 200, false);
     auto const exitCode = vm.Cpu();
 
     REQUIRE(exitCode == 16);

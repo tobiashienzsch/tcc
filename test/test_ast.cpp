@@ -88,10 +88,17 @@ TEST_CASE("ast: ConditionalStatement", "[ast]")
     );
     auto const assembly = statement.GetAssembly();
 
+    // ICONST, 1    // 0 condition
+    // BRF, 99      // 2 branch if false
+    // ICONST, 1    // 4 true case
+    // ICONST, 2    // 6 false case
+
+    REQUIRE(assembly.size() == 6);
+
     REQUIRE(static_cast<tcc::ByteCode>(assembly.at(0)) == tcc::ByteCode::ICONST);
     REQUIRE(assembly.at(1) == 1);
     REQUIRE(static_cast<tcc::ByteCode>(assembly.at(2)) == tcc::ByteCode::BRF);
-    REQUIRE(assembly.at(3) == 99);
+    REQUIRE(assembly.at(3) == 6);
     REQUIRE(static_cast<tcc::ByteCode>(assembly.at(4)) == tcc::ByteCode::ICONST);
     REQUIRE(assembly.at(5) == 1);
 }

@@ -161,7 +161,7 @@ private:
 class Statement
 {
 public:
-    using Ptr = std::unique_ptr<Statement>;
+    using Ptr = std::unique_ptr<Statement const>;
 
     enum class Type
     {
@@ -178,10 +178,10 @@ public:
     };
 
 public:
-    Statement()                                 = default;
-    virtual ~Statement()                        = default;
-    virtual Type GetType() const                = 0;
-    virtual InstructionList GetAssembly() const = 0;
+    Statement()                                                         = default;
+    virtual ~Statement()                                                = default;
+    virtual Type GetType() const                                        = 0;
+    virtual InstructionList GetAssembly(Integer const offset = 0) const = 0;
 };
 
 class ExpressionStatement : public Statement
@@ -191,7 +191,7 @@ public:
     ~ExpressionStatement() override = default;
 
     Statement::Type GetType() const override { return Statement::Type::Expression; };
-    InstructionList GetAssembly() const override { return expression->GetAssembly(); };
+    InstructionList GetAssembly(Integer const offset = 0) const override { return expression->GetAssembly(); };
 
 private:
     Expression::Ptr expression;
@@ -204,7 +204,7 @@ public:
     ~ReturnStatement() override = default;
 
     Statement::Type GetType() const override { return Statement::Type::Return; };
-    InstructionList GetAssembly() const override
+    InstructionList GetAssembly(Integer const offset = 0) const override
     {
         auto result = expression->GetAssembly();
         result.push_back(ByteCode::RET);
@@ -227,13 +227,13 @@ public:
 
     Statement::Type GetType() const override { return Statement::Type::Conditional; };
 
-    InstructionList GetAssembly() const override
+    InstructionList GetAssembly(Integer const offset = 0) const override
     {
         auto result = m_condition->GetAssembly();
         result.push_back(ByteCode::BRF);
-        result.push_back(99);  // todo where to branch to
 
         auto const trueCaseAsm = m_trueCase->GetAssembly();
+        result.push_back(trueCaseAsm.size() + result.size() + 1 + offset);
         result.insert(std::end(result), std::begin(trueCaseAsm), std::end(trueCaseAsm));
 
         return result;

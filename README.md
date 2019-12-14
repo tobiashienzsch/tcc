@@ -36,3 +36,10 @@ CONFIG=Debug make config build test
 # visual studio (git-bash)
 CONFIG=Debug CM_GENERATOR="Visual Studio 16 2019" make
 ```
+
+## Resources
+
+- YouTube
+  - [Terence Parr: Build a VM (stack machine)](https://www.youtube.com/watch?v=OjaAToVkoTw&list=LLss9ftQbmdAAgeOgJ0nSoWA&index=3&t=5344s)
+  - [Bisqwit: Compiler series](https://www.youtube.com/watch?v=KwpcOYKfXZc&list=PLzLzYGEbdY5n9ITKUqOuRjXkRU5tMW2Sd)
+    - [GitHub](https://github.com/bisqwit/compiler_series/tree/master/ep1)

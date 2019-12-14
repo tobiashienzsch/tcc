@@ -190,7 +190,7 @@ public:
     ExpressionStatement(Expression::Ptr exp) : expression(std::move(exp)) {}
     ~ExpressionStatement() override = default;
 
-    Statement::Type GetType() const override { return Statement::Type::Expression; };
+    Statement::Type GetType() const noexcept override { return Statement::Type::Expression; };
     InstructionList GetAssembly(Integer const offset = 0) const override { return expression->GetAssembly(); };
 
 private:
@@ -203,7 +203,7 @@ public:
     ReturnStatement(Expression::Ptr exp) : expression(std::move(exp)) {}
     ~ReturnStatement() override = default;
 
-    Statement::Type GetType() const override { return Statement::Type::Return; };
+    Statement::Type GetType() const noexcept override { return Statement::Type::Return; };
     InstructionList GetAssembly(Integer const offset = 0) const override
     {
         auto result = expression->GetAssembly();
@@ -225,7 +225,7 @@ public:
 
     ~ConditionalStatement() override = default;
 
-    Statement::Type GetType() const override { return Statement::Type::Conditional; };
+    Statement::Type GetType() const noexcept override { return Statement::Type::Conditional; };
 
     InstructionList GetAssembly(Integer const offset = 0) const override
     {
@@ -256,7 +256,7 @@ public:
 
     ~CompoundStatement() override = default;
 
-    Statement::Type GetType() const override { return Statement::Type::Compound; };
+    Statement::Type GetType() const noexcept override { return Statement::Type::Compound; };
 
     InstructionList GetAssembly(Integer const offset = 0) const override
     {

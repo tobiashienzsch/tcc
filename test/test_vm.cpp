@@ -104,6 +104,67 @@ TEST_CASE("vm: Factorial", "[vm]")
     REQUIRE(exitCode == 6);
 }
 
+TEST_CASE("vm: Fibonacci", "[vm]")
+{
+    // int fib(int zahl) {
+    //   if (zahl < 2) return zahl;
+
+    //   return fib(zahl - 1) + fib(zahl - 2);
+    // }
+
+    auto const createFibonacciAssembly = [](tcc::Integer const arg) {
+        return std::vector<tcc::Integer>{
+            // .def fib: args=1, locals=0
+            // if (x < 2) return x;
+            ByteCode::LOAD, -3,   // 0
+            ByteCode::ICONST, 2,  // 2
+            ByteCode::ILT,        // 4
+            ByteCode::BRF, 10,    // 5
+            ByteCode::LOAD, -3,   // 7
+            ByteCode::RET,        // 9
+
+            // return fib(x - 1) + fib(x - 2)
+            ByteCode::LOAD, -3,    // 10
+            ByteCode::ICONST, 1,   // 12
+            ByteCode::ISUB,        // 14
+            ByteCode::CALL, 0, 1,  // 15 <-- fib(x-1)
+            ByteCode::LOAD, -3,    // 18
+            ByteCode::ICONST, 2,   // 20
+            ByteCode::ISUB,        // 22
+            ByteCode::CALL, 0, 1,  // 23 <-- fib(x-2)
+            ByteCode::IADD,        // 26
+            ByteCode::RET,         // 27
+
+            // .def main: args=0, locals=0
+            // return fib(arg);
+            ByteCode::ICONST, arg,  // 28 <-- MAIN
+            ByteCode::CALL, 0, 1,   // 30 <-- fib(arg)
+            ByteCode::EXIT,         // 33
+        };
+    };
+
+    SECTION("1")
+    {
+        auto const assembly = createFibonacciAssembly(1);
+        auto vm             = tcc::VirtualMachine(assembly, 28, 0, 200, false);
+        REQUIRE(vm.Cpu() == 1);
+    }
+
+    SECTION("5")
+    {
+        auto const assembly = createFibonacciAssembly(5);
+        auto vm             = tcc::VirtualMachine(assembly, 28, 0, 200, false);
+        REQUIRE(vm.Cpu() == 5);
+    }
+
+    SECTION("12")
+    {
+        auto const assembly = createFibonacciAssembly(12);
+        auto vm             = tcc::VirtualMachine(assembly, 28, 0, 200, false);
+        REQUIRE(vm.Cpu() == 144);
+    }
+}
+
 TEST_CASE("vm: MultipleArguments", "[vm]")
 {
     auto const assembly = std::vector<tcc::Integer>{

@@ -125,3 +125,33 @@ TEST_CASE("ast: CompoundStatement", "[ast]")
     REQUIRE(static_cast<tcc::ByteCode>(assembly.at(2)) == tcc::ByteCode::ICONST);
     REQUIRE(assembly.at(3) == 0);
 }
+
+TEST_CASE("ast: CompoundStatementNested", "[ast]")
+{
+    auto statement = tcc::CompoundStatement(                    //
+        std::make_unique<tcc::ExpressionStatement>(             // first statement
+            std::make_unique<tcc::LiteralExpression>(true)      //
+            ),                                                  //
+        std::make_unique<tcc::ExpressionStatement>(             // second statement
+            std::make_unique<tcc::LiteralExpression>(false)     //
+            ),                                                  //
+        std::make_unique<tcc::CompoundStatement>(               // nested compund statement
+            std::make_unique<tcc::ExpressionStatement>(         //     first statement
+                std::make_unique<tcc::LiteralExpression>(true)  //
+                ),                                              //
+            std::make_unique<tcc::ExpressionStatement>(         //     second statement
+                std::make_unique<tcc::LiteralExpression>(42)    //
+                )                                               //
+            )                                                   //
+    );
+
+    // ICONST, 1    // 0
+    // ICONST, 0    // 2
+    // ICONST, 1    // 4
+    // ICONST, 42   // 6
+
+    auto const assembly = statement.GetAssembly(0);
+
+    REQUIRE(assembly.size() == 8);
+    REQUIRE(assembly.at(7) == 42);
+}

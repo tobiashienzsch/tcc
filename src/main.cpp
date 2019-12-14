@@ -56,15 +56,26 @@ int main(int const argc, char const** const argv)
         ByteCode::EXIT,         // 27
     };
 
-    auto const assembly = std::vector<tcc::Integer>{
-        ByteCode::ICONST, 10,  // 0 <-- MAIN
-        ByteCode::GSTORE, 0,   // 2
-        ByteCode::ICONST, 1,   //
-        ByteCode::ICONST, 2,   //
-        ByteCode::ICONST, 3,   //
-        ByteCode::GLOAD,  0,   //
-        ByteCode::EXIT,        //
-    };
+    auto statement = tcc::CompoundStatement(                    //
+        std::make_unique<tcc::ExpressionStatement>(             // first statement
+            std::make_unique<tcc::LiteralExpression>(true)      //
+            ),                                                  //
+        std::make_unique<tcc::ExpressionStatement>(             // second statement
+            std::make_unique<tcc::LiteralExpression>(false)     //
+            ),                                                  //
+        std::make_unique<tcc::CompoundStatement>(               // nested compund statement
+            std::make_unique<tcc::ExpressionStatement>(         //     first statement
+                std::make_unique<tcc::LiteralExpression>(true)  //
+                ),                                              //
+            std::make_unique<tcc::ExpressionStatement>(         //     second statement
+                std::make_unique<tcc::LiteralExpression>(42)    //
+                )                                               //
+            )                                                   //
+    );
+
+    auto assembly = statement.GetAssembly(0);
+    assembly.push_back(ByteCode::PRINT);
+    assembly.push_back(ByteCode::EXIT);
 
     auto const entryPoint       = 22;
     auto const globalMemorySize = 1;

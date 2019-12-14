@@ -106,12 +106,6 @@ TEST_CASE("vm: Factorial", "[vm]")
 
 TEST_CASE("vm: Fibonacci", "[vm]")
 {
-    // int fib(int zahl) {
-    //   if (zahl < 2) return zahl;
-
-    //   return fib(zahl - 1) + fib(zahl - 2);
-    // }
-
     auto const createFibonacciAssembly = [](tcc::Integer const arg) {
         return std::vector<tcc::Integer>{
             // .def fib: args=1, locals=0

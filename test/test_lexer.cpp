@@ -29,11 +29,11 @@ TEST_CASE("lexer: Number", "[lexer]")
 
 TEST_CASE("lexer: Identifier", "[lexer]")
 {
-    auto lexer = tcc::Lexer{"int main"};
+    auto lexer = tcc::Lexer{"auto main"};
 
     {
         auto token = lexer.GetNextToken();
-        REQUIRE(token.type == tcc::SyntaxToken::Type::Identifier);
+        REQUIRE(token.type == tcc::SyntaxToken::Type::Auto);
     }
     {
         auto token = lexer.GetNextToken();

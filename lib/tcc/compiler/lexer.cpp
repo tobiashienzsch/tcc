@@ -81,6 +81,10 @@ SyntaxToken Lexer::GetNextToken()
         auto const length = m_position - start;
         auto const text   = m_text.substr(start, length);
 
+        if (text == "auto") return SyntaxToken{SyntaxToken::Type::Auto, start, text};
+        if (text == "return") return SyntaxToken{SyntaxToken::Type::Return, start, text};
+        if (text == "if") return SyntaxToken{SyntaxToken::Type::If, start, text};
+
         return SyntaxToken{SyntaxToken::Type::Identifier, start, text};
     }
 

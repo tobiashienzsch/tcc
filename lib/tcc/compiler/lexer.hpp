@@ -39,13 +39,16 @@ class SyntaxToken
 public:
     enum class Type
     {
+        // Empty
         Unknown,
         EndOfFile,
         WhiteSpace,
 
+        // Constants
         Number,
         Identifier,
 
+        // Single character
         Plus,
         Minus,
         Star,
@@ -55,6 +58,10 @@ public:
         Hash,
         ExclamationMark,
 
+        // Keywords
+        Auto,
+        Return,
+        If,
     };
 
     Type const type;

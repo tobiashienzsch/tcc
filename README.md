@@ -39,7 +39,11 @@ CONFIG=Debug CM_GENERATOR="Visual Studio 16 2019" make
 
 ## Resources
 
-- YouTube
+- **YouTube**
+  - [Compilation:](https://www.youtube.com/watch?v=0A079QpDAzY&list=PLTd6ceoshpreZuklA7RBMubSmhE0OHWh_)
+    - [Compilation - Part Four: Intermediate Code](https://www.youtube.com/watch?v=xtouovp9kvQ)
   - [Terence Parr: Build a VM (stack machine)](https://www.youtube.com/watch?v=OjaAToVkoTw&list=LLss9ftQbmdAAgeOgJ0nSoWA&index=3&t=5344s)
   - [Bisqwit: Compiler series](https://www.youtube.com/watch?v=KwpcOYKfXZc&list=PLzLzYGEbdY5n9ITKUqOuRjXkRU5tMW2Sd)
     - [GitHub](https://github.com/bisqwit/compiler_series/tree/master/ep1)
+  - [GopherCon 2017: Keith Randall - Generating Better Machine Code with SSA](https://www.youtube.com/watch?v=uTMvKVma5ms)
+  - [GopherCon 2015: Ben Johnson - Static Code Analysis Using SSA](https://www.youtube.com/watch?v=D2-gaMvWfQY)

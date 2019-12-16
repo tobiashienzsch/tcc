@@ -57,6 +57,14 @@ public:
         And,
         Hash,
         ExclamationMark,
+        Equal,
+
+        OpenBrace,
+        CloseBrace,
+        OpenBracket,
+        CloseBracket,
+        OpenAngleBracket,
+        CloseAngleBracket,
 
         // Keywords
         Auto,

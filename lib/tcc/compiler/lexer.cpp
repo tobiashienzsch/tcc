@@ -21,6 +21,18 @@ std::ostream& operator<<(std::ostream& out, SyntaxToken::Type const type)
         case SyntaxToken::Type::And: return out << "AND";
         case SyntaxToken::Type::Hash: return out << "HASH";
         case SyntaxToken::Type::ExclamationMark: return out << "EXCLAMATIONMARK";
+        case SyntaxToken::Type::Equal: return out << "EQUAL";
+
+        case SyntaxToken::Type::OpenBrace: return out << "OPENBRACE";
+        case SyntaxToken::Type::CloseBrace: return out << "CLOSEBRACE";
+        case SyntaxToken::Type::OpenBracket: return out << "OPENBRACKET";
+        case SyntaxToken::Type::CloseBracket: return out << "CLOSEBRACKET";
+        case SyntaxToken::Type::OpenAngleBracket: return out << "OPENANGLEBRACKET";
+        case SyntaxToken::Type::CloseAngleBracket: return out << "CLOSEANGLEBRACKET";
+
+        case SyntaxToken::Type::Auto: return out << "AUTO";
+        case SyntaxToken::Type::Return: return out << "RETURN";
+        case SyntaxToken::Type::If: return out << "IF";
     }
 
     return out << "";

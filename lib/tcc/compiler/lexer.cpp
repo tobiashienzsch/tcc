@@ -114,6 +114,13 @@ SyntaxToken Lexer::GetNextToken()
     TCC_SINGLE_CHAR_SYNTAX_TOKEN("&", And);
     TCC_SINGLE_CHAR_SYNTAX_TOKEN("#", Hash);
     TCC_SINGLE_CHAR_SYNTAX_TOKEN("!", ExclamationMark);
+    TCC_SINGLE_CHAR_SYNTAX_TOKEN("=", Equal);
+    TCC_SINGLE_CHAR_SYNTAX_TOKEN("(", OpenBrace);
+    TCC_SINGLE_CHAR_SYNTAX_TOKEN(")", CloseBrace);
+    TCC_SINGLE_CHAR_SYNTAX_TOKEN("{", OpenBracket);
+    TCC_SINGLE_CHAR_SYNTAX_TOKEN("}", CloseBracket);
+    TCC_SINGLE_CHAR_SYNTAX_TOKEN("[", OpenAngleBracket);
+    TCC_SINGLE_CHAR_SYNTAX_TOKEN("]", CloseAngleBracket);
 
     return SyntaxToken{SyntaxToken::Type::Unknown, m_position++, m_text.substr(m_position - 1, 1)};
 }

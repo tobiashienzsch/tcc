@@ -6,6 +6,7 @@
 #include <string_view>
 #include <vector>
 
+#include "tcc/compiler/ast.hpp"
 #include "tcc/compiler/lexer.hpp"
 
 namespace tcc
@@ -32,31 +33,78 @@ public:
 
     tcc::SyntaxTokenList& GetTokens() { return m_tokens; }
 
-    // std::shared_ptr<ExpressionSyntax> Parse()
-    // {
-    //     auto const current = currentToken();
-    //     auto left          = parsePrimaryExpression();
-    //     left->Print();
+    std::vector<Statement::Ptr> Parse()
+    {
+        auto result = std::vector<Statement::Ptr>{};
 
-    //     while (current.type == SyntaxToken::Type::Plus || current.type == SyntaxToken::Type::Minus)
-    //     {
-    //         auto const operatorToken = nextToken();
-    //         auto const right         = parsePrimaryExpression();
-    //         right->Print();
+        while (m_position < m_tokens.size())
+        {
+            auto const current = currentToken();
+            switch (current.type)
+            {
+                case SyntaxToken::Type::Auto:
+                {
+                    // auto must be followed by an identifier
+                    nextToken();
+                    if (currentToken().type != SyntaxToken::Type::Identifier)
+                    {
+                        std::cerr << "Expected identifier after keyword: " << current.type << '\n';
+                        return result;
+                    }
 
-    //         left = std::make_shared<BinaryExpressionSyntax>(left, right, operatorToken);
-    //     }
+                    // var declaration
+                    nextToken();
+                    if (currentToken().type == SyntaxToken::Type::Equal)
+                    {
+                        return result;
+                    }
 
-    //     return left;
-    // }
+                    // function declaration
+                    if (currentToken().type == SyntaxToken::Type::OpenBrace)
+                    {
+                        return result;
+                    }
+
+                    break;
+                }
+
+                case SyntaxToken::Type::Number:
+                {
+                    std::stringstream numberStr(std::string(current.text));
+                    int val = 0;
+                    numberStr >> val;
+
+                    // addition
+                    if (peekToken(2).type == SyntaxToken::Type::Plus)
+                    {
+                        result.push_back(std::make_unique<tcc::ExpressionStatement>(  // first statement
+                            std::make_unique<tcc::LiteralExpression>(val)             //
+                            ));
+                    }
+
+                    // function declaration
+                    if (peekToken(2).type == SyntaxToken::Type::OpenBrace)
+                    {
+                        return result;
+                    }
+
+                    break;
+                }
+
+                default:
+                {
+                    std::cerr << "Unknown token type with id: " << current.type << '\n';
+                    break;
+                }
+            }
+
+            auto _ = nextToken();
+        }
+
+        return {};
+    }
 
 private:
-    // std::shared_ptr<ExpressionSyntax> parsePrimaryExpression()
-    // {
-    //     auto const numberToken = matchTokenType(SyntaxToken::Type::Number);
-    //     return std::make_shared<NumberExpressionSyntax>(numberToken);
-    // }
-
     SyntaxToken matchTokenType(SyntaxToken::Type type)
     {
         auto const current = currentToken();

@@ -198,7 +198,7 @@ public:
         Conditional,
         Loop,
 
-        VariableDefinition,
+        Assignment,
 
         Return,
         Noop,
@@ -235,6 +235,28 @@ public:
 
 private:
     Expression::Ptr expression;
+};
+
+class AssignmentStatement : public Statement
+{
+public:
+    AssignmentStatement(std::string_view name, Expression::Ptr exp, bool isDefinition = false)
+        : m_variableName(name), m_expression(std::move(exp)), m_isDefinition(isDefinition)
+    {
+    }
+    ~AssignmentStatement() override = default;
+
+    Statement::Type GetType() const noexcept override { return Statement::Type::Assignment; };
+    InstructionList GetAssembly(Integer const offset = 0) const override { return m_expression->GetAssembly(); };
+    void Print(std::ostream& str) const override
+    {
+        str << "ASSIGNMENT_STATEMENT: NAME: " << m_variableName << " " << *m_expression.get();
+    }
+
+private:
+    std::string_view m_variableName;
+    Expression::Ptr m_expression;
+    bool m_isDefinition;
 };
 
 class ReturnStatement : public Statement

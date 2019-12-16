@@ -20,6 +20,18 @@ public:
     Expression()                                = default;
     virtual ~Expression()                       = default;
     virtual InstructionList GetAssembly() const = 0;
+
+protected:
+    virtual void Print(std::ostream& str) const = 0;
+
+public:
+    friend std::ostream& operator<<(std::ostream& str, Expression const& data)
+    {
+        data.Print(str);
+        return str;
+    }
+
+    friend std::ostream& operator<<(std::ostream& str, Expression const* const data) { return str << *data; }
 };
 
 Integer AppendExpression(InstructionList& dest, Expression const& source);
@@ -31,6 +43,7 @@ public:
     ~LiteralExpression() override = default;
 
     InstructionList GetAssembly() const override { return {ByteCode::ICONST, value}; }
+    void Print(std::ostream& str) const override { str << "LITERAL_EXPRESSION: " << value; }
 
 private:
     Integer value;
@@ -106,6 +119,13 @@ public:
         }
     }
 
+    void Print(std::ostream& str) const override
+    {
+        str << "BINARY_EXPRESSION: " << (int)m_type << " "  //
+            << "\tLEFT: " << left.get()                     //
+            << "\tRIGHT: " << right.get();
+    }
+
 private:
     Expression::Ptr left;
     Expression::Ptr right;
@@ -152,6 +172,13 @@ public:
         return result;
     }
 
+    void Print(std::ostream& str) const override
+    {
+        str << "TERNARY_EXPRESSION: CONDITION: " << condition.get()  //
+            << "TRUE_CASE: " << trueCase.get()                       //
+            << "FALSE_CASE: " << falseCase.get();
+    }
+
 private:
     Expression::Ptr condition;
     Expression::Ptr trueCase;
@@ -182,6 +209,18 @@ public:
     virtual ~Statement()                                                = default;
     virtual Type GetType() const                                        = 0;
     virtual InstructionList GetAssembly(Integer const offset = 0) const = 0;
+
+protected:
+    virtual void Print(std::ostream& str) const = 0;
+
+public:
+    friend std::ostream& operator<<(std::ostream& str, Statement const& data)
+    {
+        data.Print(str);
+        return str;
+    }
+
+    friend std::ostream& operator<<(std::ostream& str, Statement const* const data) { return str << *data; }
 };
 
 class ExpressionStatement : public Statement
@@ -192,6 +231,7 @@ public:
 
     Statement::Type GetType() const noexcept override { return Statement::Type::Expression; };
     InstructionList GetAssembly(Integer const offset = 0) const override { return expression->GetAssembly(); };
+    void Print(std::ostream& str) const override { str << "EXPRESSION_STATEMENT: " << *expression.get(); }
 
 private:
     Expression::Ptr expression;
@@ -210,6 +250,8 @@ public:
         result.push_back(ByteCode::RET);
         return result;
     };
+
+    void Print(std::ostream& str) const override { str << "RETURN_STATEMENT: " << *expression.get(); }
 
 private:
     Expression::Ptr expression;
@@ -238,6 +280,11 @@ public:
 
         return result;
     };
+
+    void Print(std::ostream& str) const override
+    {
+        str << "CONDITIONAL_STATEMENT: \n\tCONDITION: " << *m_condition.get() << "\n\t" << *m_trueCase.get();
+    }
 
 private:
     Expression::Ptr m_condition;
@@ -273,6 +320,16 @@ public:
 
         return result;
     };
+
+    void Print(std::ostream& str) const override
+    {
+        str << "\rCOMPOUND_STATEMENT: \n";
+
+        for (auto const& statement : m_statements)
+        {
+            str << "\r\t" << *statement.get() << "\n";
+        }
+    }
 
 private:
     std::vector<Statement::Ptr> m_statements;

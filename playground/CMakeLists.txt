@@ -7,7 +7,7 @@ if (WIN32)
 else()
 endif()
 
-find_package(Boost 1.69 REQUIRED)
+find_package(Boost 1.65 REQUIRED)
 
 # BOOST SIRIT X3
 add_executable(${PROJECT_NAME}_boost_spirit_x3 main_spirit_parser.cpp)

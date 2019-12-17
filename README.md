@@ -39,6 +39,8 @@ CONFIG=Debug CM_GENERATOR="Visual Studio 16 2019" make
 
 ## Resources
 
+- **Parsing**
+  - [Boost Spirit X3](https://ciere.com/cppnow15/using_x3.pdf)
 - **YouTube**
   - [Compilation:](https://www.youtube.com/watch?v=0A079QpDAzY&list=PLTd6ceoshpreZuklA7RBMubSmhE0OHWh_)
     - [Compilation - Part Four: Intermediate Code](https://www.youtube.com/watch?v=xtouovp9kvQ)

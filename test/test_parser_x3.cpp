@@ -19,15 +19,44 @@ TEST_CASE("parser_x3: Identifier", "[parser_x3]")
     for (auto const& test : testCases)
     {
         std::string result;
-        tcc::parser::x3::phrase_parse(std::begin(test),  //
-                                      std::end(test),    //
-                                      // START GRAMMER
+        tcc::parser::x3::phrase_parse(std::begin(test),         //
+                                      std::end(test),           //
                                       tcc::parser::identifier,  //
-                                      // END GRAMMER
-                                      tcc::parser::x3::space,  //
-                                      result                   //
+                                      tcc::parser::x3::space,   //
+                                      result                    //
         );
 
         REQUIRE(result == test);
+    }
+}
+
+TEST_CASE("parser_x3: PackageDeclaration", "[parser_x3]")
+{
+    struct TestCase
+    {
+        std::string input;
+        std::string expected;
+    };
+
+    auto testCases = std::vector<TestCase>{
+        {std::string{"package main;"}, std::string{"main"}},            //
+        {std::string{"package math;"}, std::string{"math"}},            //
+        {std::string{"package math_test;"}, std::string{"math_test"}},  //
+        {std::string{"package tobi_est;"}, std::string{"tobi_est"}},    //
+        {std::string{"package fmt8;"}, std::string{"fmt8"}},            //
+
+    };
+
+    for (auto const& test : testCases)
+    {
+        tcc::parser::packageDeclaration_t result;
+        tcc::parser::x3::phrase_parse(std::begin(test.input),           //
+                                      std::end(test.input),             //
+                                      tcc::parser::packageDeclaration,  //
+                                      tcc::parser::x3::space,           //
+                                      result                            //
+        );
+
+        REQUIRE(result == test.expected);
     }
 }

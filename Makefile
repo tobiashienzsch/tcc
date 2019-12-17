@@ -25,6 +25,13 @@ test:
 clean:
 	rm -rf $(BUILD_DIR)
 
+.PHONY: format
+format:
+	find lib -iname '*.hpp' -o -iname '*.cpp' | xargs clang-format -i
+	find playground -iname '*.hpp' -o -iname '*.cpp' | xargs clang-format -i
+	find src -iname '*.hpp' -o -iname '*.cpp' | xargs clang-format -i
+	find test -iname '*.hpp' -o -iname '*.cpp' | xargs clang-format -i
+	
 .PHONY: stats
 stats:
 	cloc --exclude-dir=3rd_party,build_Debug,build_Release,.vscode .

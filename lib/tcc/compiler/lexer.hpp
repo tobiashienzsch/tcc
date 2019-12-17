@@ -103,7 +103,7 @@ private:
     void next() noexcept { m_position++; }
 
 private:
-    UInteger m_position{0};
+    UInteger m_position {0};
     std::string_view const m_text;
 };
 

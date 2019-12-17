@@ -39,7 +39,7 @@ Integer AppendExpression(InstructionList& dest, Expression const& source);
 class LiteralExpression : public Expression
 {
 public:
-    LiteralExpression(Integer val) : value(val){};
+    LiteralExpression(Integer val) : value(val) {};
     ~LiteralExpression() override = default;
 
     InstructionList GetAssembly() const override { return {ByteCode::ICONST, value}; }
@@ -72,7 +72,7 @@ public:
 
     InstructionList GetAssembly() const override
     {
-        auto result = InstructionList{};
+        auto result = InstructionList {};
 
         AppendExpression(result, *left.get());
         AppendExpression(result, *right.get());
@@ -136,7 +136,7 @@ class TenerayExpression : public Expression
 {
 public:
     TenerayExpression(Expression::Ptr cond, Expression::Ptr t, Expression::Ptr f)
-        : condition(std::move(cond)), trueCase(std::move(t)), falseCase(std::move(f)){};
+        : condition(std::move(cond)), trueCase(std::move(t)), falseCase(std::move(f)) {};
 
     ~TenerayExpression() override = default;
 
@@ -155,7 +155,7 @@ public:
         // ICONST 42        // 7
         // PRINT            // 9
 
-        auto result = InstructionList{};
+        auto result = InstructionList {};
         AppendExpression(result, *condition.get());
         result.push_back(ByteCode::BRT);
 
@@ -329,7 +329,7 @@ public:
 
     InstructionList GetAssembly(Integer const offset = 0) const override
     {
-        auto result         = InstructionList{};
+        auto result         = InstructionList {};
         auto internalOffset = offset;
 
         for (Statement::Ptr const& statement : m_statements)

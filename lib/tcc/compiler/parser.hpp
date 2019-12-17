@@ -17,7 +17,7 @@ public:
     Parser(std::string_view const source)
     {
         auto lexer = tcc::Lexer(source);
-        auto type  = tcc::SyntaxToken::Type{};
+        auto type  = tcc::SyntaxToken::Type {};
 
         do
         {
@@ -35,7 +35,7 @@ public:
 
     std::vector<Statement::Ptr> Parse()
     {
-        auto result = std::vector<Statement::Ptr>{};
+        auto result = std::vector<Statement::Ptr> {};
 
         while (m_position < m_tokens.size())
         {
@@ -113,7 +113,7 @@ private:
             return nextToken();
         }
 
-        return SyntaxToken{type, current.position, ""};
+        return SyntaxToken {type, current.position, ""};
     }
 
     SyntaxToken nextToken()
@@ -138,7 +138,7 @@ private:
 
 private:
     tcc::SyntaxTokenList m_tokens;
-    UInteger m_position{0};
+    UInteger m_position {0};
 };
 
 }  // namespace tcc

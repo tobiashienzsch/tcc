@@ -23,7 +23,6 @@ struct ssa_builder
 struct printer
 {
 
-
     using result_type        = bool;
     using error_handler_type = std::function<void(x3::position_tagged, std::string const&)>;
 
@@ -149,9 +148,10 @@ struct printer
         return true;
     }
 
-    bool operator()(ast::statement const& x) const { 
+    bool operator()(ast::statement const& x) const
+    {
         tcc::Expression* expression = nullptr;
-        return boost::apply_visitor(*this, x); 
+        return boost::apply_visitor(*this, x);
     }
 
     bool operator()(ast::if_statement const& x) const { return true; }

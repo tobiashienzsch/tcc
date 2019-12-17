@@ -45,7 +45,7 @@ SyntaxToken Lexer::GetNextToken()
 
     if (m_position >= m_text.size())
     {
-        return SyntaxToken{SyntaxToken::Type::EndOfFile, m_position, std::string_view{}};
+        return SyntaxToken {SyntaxToken::Type::EndOfFile, m_position, std::string_view {}};
     }
 
     if (StringHelpers::CharIsWhiteSpace(current()))
@@ -61,7 +61,7 @@ SyntaxToken Lexer::GetNextToken()
         auto const length = m_position - start;
         auto const text   = m_text.substr(start, length);
 
-        return SyntaxToken{SyntaxToken::Type::WhiteSpace, start, text};
+        return SyntaxToken {SyntaxToken::Type::WhiteSpace, start, text};
     }
 
     if (StringHelpers::CharIsDigit(current()))
@@ -77,7 +77,7 @@ SyntaxToken Lexer::GetNextToken()
         auto const length = m_position - start;
         auto const text   = m_text.substr(start, length);
 
-        return SyntaxToken{SyntaxToken::Type::Number, start, text};
+        return SyntaxToken {SyntaxToken::Type::Number, start, text};
     }
 
     if (StringHelpers::CharIsAlphabetical(current()) || current() == '_')
@@ -93,17 +93,17 @@ SyntaxToken Lexer::GetNextToken()
         auto const length = m_position - start;
         auto const text   = m_text.substr(start, length);
 
-        if (text == "auto") return SyntaxToken{SyntaxToken::Type::Auto, start, text};
-        if (text == "return") return SyntaxToken{SyntaxToken::Type::Return, start, text};
-        if (text == "if") return SyntaxToken{SyntaxToken::Type::If, start, text};
+        if (text == "auto") return SyntaxToken {SyntaxToken::Type::Auto, start, text};
+        if (text == "return") return SyntaxToken {SyntaxToken::Type::Return, start, text};
+        if (text == "if") return SyntaxToken {SyntaxToken::Type::If, start, text};
 
-        return SyntaxToken{SyntaxToken::Type::Identifier, start, text};
+        return SyntaxToken {SyntaxToken::Type::Identifier, start, text};
     }
 
 #define TCC_SINGLE_CHAR_SYNTAX_TOKEN(token, type)                                                                      \
     if (current() == token[0])                                                                                         \
     {                                                                                                                  \
-        return SyntaxToken{SyntaxToken::Type::type, m_position++, token};                                              \
+        return SyntaxToken {SyntaxToken::Type::type, m_position++, token};                                             \
     }
 
     TCC_SINGLE_CHAR_SYNTAX_TOKEN("+", Plus);
@@ -122,6 +122,6 @@ SyntaxToken Lexer::GetNextToken()
     TCC_SINGLE_CHAR_SYNTAX_TOKEN("[", OpenAngleBracket);
     TCC_SINGLE_CHAR_SYNTAX_TOKEN("]", CloseAngleBracket);
 
-    return SyntaxToken{SyntaxToken::Type::Unknown, m_position++, m_text.substr(m_position - 1, 1)};
+    return SyntaxToken {SyntaxToken::Type::Unknown, m_position++, m_text.substr(m_position - 1, 1)};
 }
 }  // namespace tcc

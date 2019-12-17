@@ -39,15 +39,15 @@ private:
     void printGlobalMemory();
 
 private:
-    Integer m_stackPointer{-1};
+    Integer m_stackPointer {-1};
     Integer m_instructionPointer;
-    Integer m_framePointer{0};
+    Integer m_framePointer {0};
 
     std::vector<Integer> m_code;
     std::vector<Integer> m_data;
     std::vector<Integer> m_stack;
 
 private:
-    bool m_shouldTrace{true};
+    bool m_shouldTrace {true};
 };
 }  // namespace tcc

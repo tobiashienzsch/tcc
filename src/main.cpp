@@ -12,7 +12,7 @@ int main(int const, char const** const)
 {
     using namespace tcc;
 
-    auto parser = tcc::Parser{"auto main(){}"};
+    auto parser = tcc::Parser {"auto main(){}"};
     // auto parser = tcc::Parser{"auto 8(){}"};
     auto result = parser.Parse();
 

@@ -8,7 +8,7 @@
 
 TEST_CASE("parser: Simple", "[parser]")
 {
-    auto parser = tcc::Parser{"auto main(){}"};
+    auto parser = tcc::Parser {"auto main(){}"};
     // auto token  = parser.Parse();
     // REQUIRE(token.type == tcc::SyntaxToken::Type::EndOfFile);
 }

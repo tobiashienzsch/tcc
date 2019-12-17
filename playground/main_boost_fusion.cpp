@@ -57,7 +57,7 @@ struct print_xml
 
 int main(int, char**)
 {
-    auto stuff = fusion::vector<Foo, char, int64_t>(Foo{143, 0, 2.3}, 'x', 123);
+    auto stuff = fusion::vector<Foo, char, int64_t>(Foo {143, 0, 2.3}, 'x', 123);
     fusion::for_each(stuff, print_xml());
 
     return EXIT_SUCCESS;

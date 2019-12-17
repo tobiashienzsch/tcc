@@ -8,28 +8,28 @@
 
 TEST_CASE("lexer: EndOfFile", "[lexer]")
 {
-    auto lexer = tcc::Lexer{""};
+    auto lexer = tcc::Lexer {""};
     auto token = lexer.GetNextToken();
     REQUIRE(token.type == tcc::SyntaxToken::Type::EndOfFile);
 }
 
 TEST_CASE("lexer: Whitespace", "[lexer]")
 {
-    auto lexer = tcc::Lexer{" "};
+    auto lexer = tcc::Lexer {" "};
     auto token = lexer.GetNextToken();
     REQUIRE(token.type == tcc::SyntaxToken::Type::WhiteSpace);
 }
 
 TEST_CASE("lexer: Number", "[lexer]")
 {
-    auto lexer = tcc::Lexer{"123"};
+    auto lexer = tcc::Lexer {"123"};
     auto token = lexer.GetNextToken();
     REQUIRE(token.type == tcc::SyntaxToken::Type::Number);
 }
 
 TEST_CASE("lexer: Identifier", "[lexer]")
 {
-    auto lexer = tcc::Lexer{"auto main"};
+    auto lexer = tcc::Lexer {"auto main"};
 
     {
         auto token = lexer.GetNextToken();
@@ -51,7 +51,7 @@ TEST_CASE("lexer: Identifier", "[lexer]")
 
 TEST_CASE("lexer: Special Characters", "[lexer]")
 {
-    auto lexer = tcc::Lexer{"+-*/%&#!"};
+    auto lexer = tcc::Lexer {"+-*/%&#!"};
 
     {
         auto token = lexer.GetNextToken();
@@ -89,7 +89,7 @@ TEST_CASE("lexer: Special Characters", "[lexer]")
 
 TEST_CASE("lexer: Simple Combination", "[lexer]")
 {
-    auto lexer = tcc::Lexer{"42 + 123"};
+    auto lexer = tcc::Lexer {"42 + 123"};
 
     {
         auto token = lexer.GetNextToken();

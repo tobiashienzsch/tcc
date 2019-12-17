@@ -42,6 +42,7 @@ CONFIG=Debug CM_GENERATOR="Visual Studio 16 2019" make
 - **Parsing**
   - [Boost Spirit X3](https://ciere.com/cppnow15/using_x3.pdf)
 - **IR**
+  - [Three-adrdress code](https://en.wikipedia.org/wiki/Three-address_code)
   - [SSA](https://www.cs.cmu.edu/~fp/courses/15411-f08/lectures/09-ssa.pdf)
 - **YouTube**
   - [Compilation:](https://www.youtube.com/watch?v=0A079QpDAzY&list=PLTd6ceoshpreZuklA7RBMubSmhE0OHWh_)

@@ -4,12 +4,13 @@
     Distributed under the Boost Software License, Version 1.0. (See accompanying
     file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 =============================================================================*/
-#if !defined(BOOST_SPIRIT_X3_CALC8_AST_HPP)
-#define BOOST_SPIRIT_X3_CALC8_AST_HPP
+#if !defined(BOOST_SPIRIT_X3_CALC9_AST_HPP)
+#define BOOST_SPIRIT_X3_CALC9_AST_HPP
 
 #include <boost/spirit/home/x3/support/ast/variant.hpp>
 #include <boost/spirit/home/x3/support/ast/position_tagged.hpp>
 #include <boost/fusion/include/io.hpp>
+#include <boost/optional.hpp>
 #include <list>
 
 namespace client { namespace ast
@@ -20,7 +21,7 @@ namespace client { namespace ast
     namespace x3 = boost::spirit::x3;
 
     struct nil {};
-    struct signed_;
+    struct unary;
     struct expression;
 
     struct variable : x3::position_tagged
@@ -34,23 +35,42 @@ namespace client { namespace ast
             nil
           , unsigned int
           , variable
-          , x3::forward_ast<signed_>
+          , x3::forward_ast<unary>
           , x3::forward_ast<expression>
         >
     {
         using base_type::base_type;
         using base_type::operator=;
     };
-
-    struct signed_
+    
+    enum optoken
     {
-        char sign;
+        op_plus,
+        op_minus,
+        op_times,
+        op_divide,
+        op_positive,
+        op_negative,
+        op_not,
+        op_equal,
+        op_not_equal,
+        op_less,
+        op_less_equal,
+        op_greater,
+        op_greater_equal,
+        op_and,
+        op_or
+    };
+
+    struct unary
+    {
+        optoken operator_;
         operand operand_;
     };
 
     struct operation : x3::position_tagged
     {
-        char operator_;
+        optoken operator_;
         operand operand_;
     };
 
@@ -70,17 +90,38 @@ namespace client { namespace ast
     {
         assignment assign;
     };
+    
+    struct if_statement;
+    struct while_statement;
+    struct statement_list;
 
     struct statement :
         x3::variant<
             variable_declaration
-          , assignment>
+          , assignment
+          , boost::recursive_wrapper<if_statement>
+          , boost::recursive_wrapper<while_statement>
+          , boost::recursive_wrapper<statement_list>
+        >
     {
         using base_type::base_type;
         using base_type::operator=;
     };
+    
+    struct statement_list : std::list<statement> {};
 
-    typedef std::list<statement> statement_list;
+    struct if_statement
+    {
+        expression condition;
+        statement then;
+        boost::optional<statement> else_;
+    };
+
+    struct while_statement
+    {
+        expression condition;
+        statement body;
+    };
 
     // print functions for debugging
     inline std::ostream& operator<<(std::ostream& out, nil)

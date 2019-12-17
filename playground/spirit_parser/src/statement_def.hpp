@@ -4,8 +4,8 @@
     Distributed under the Boost Software License, Version 1.0. (See accompanying
     file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 =============================================================================*/
-#if !defined(BOOST_SPIRIT_X3_CALC8_STATEMENT_DEF_HPP)
-#define BOOST_SPIRIT_X3_CALC8_STATEMENT_DEF_HPP
+#if !defined(BOOST_SPIRIT_X3_CALC9_STATEMENT_DEF_HPP)
+#define BOOST_SPIRIT_X3_CALC9_STATEMENT_DEF_HPP
 
 #include <boost/spirit/home/x3.hpp>
 #include <boost/spirit/home/x3/support/utility/annotate_on_success.hpp>
@@ -32,11 +32,11 @@ namespace client { namespace parser
     typedef x3::rule<assignment_class, ast::assignment> assignment_type;
     typedef x3::rule<variable_class, ast::variable> variable_type;
 
-    statement_type const statement = "statement";
-    statement_list_type const statement_list = "statement_list";
-    variable_declaration_type const variable_declaration = "variable_declaration";
-    assignment_type const assignment = "assignment";
-    variable_type const variable = "variable";
+    statement_type const statement("statement");
+    statement_list_type const statement_list("statement_list");
+    variable_declaration_type const variable_declaration("variable_declaration");
+    assignment_type const assignment("assignment");
+    variable_type const variable("variable");
 
     // Import the expression rule
     namespace { auto const& expression = client::expression(); }

@@ -60,3 +60,23 @@ TEST_CASE("parser_x3: PackageDeclaration", "[parser_x3]")
         REQUIRE(result == test.expected);
     }
 }
+
+TEST_CASE("parser_x3: PackageDefinition", "[parser_x3]")
+{
+    auto const input = std::string(R"(
+        package main;
+        auto main() -> int {}
+    )");
+
+    tcc::parser::packageDefinition_t result;
+    tcc::parser::x3::phrase_parse(std::begin(input),               //
+                                  std::end(input),                 //
+                                  tcc::parser::packageDefinition,  //
+                                  tcc::parser::x3::space,          //
+                                  result                           //
+    );
+
+    REQUIRE(std::get<0>(result) == "main");
+    REQUIRE(std::get<1>(result)[0] == "main");
+    REQUIRE(std::get<1>(result)[1] == "int");
+}

@@ -8,7 +8,7 @@ if (WIN32)
 else()
 endif()
 
-find_package(Boost 1.65 REQUIRED COMPONENTS filesystem)
+find_package(Boost 1.65 REQUIRED COMPONENTS system)
 
 # BOOST FUSION
 add_executable(${PROJECT_NAME}_boost_fusion  main_boost_fusion.cpp)

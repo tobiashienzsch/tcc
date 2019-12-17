@@ -6,9 +6,28 @@
 
 #include "tcc/compiler/parser_x3.hpp"
 
-TEST_CASE("parser_x3: Simple", "[parser_x3]")
+TEST_CASE("parser_x3: Identifier", "[parser_x3]")
 {
-    auto parser = std::string{"auto main(){}"};
-    // auto token  = parser.Parse();
-    // REQUIRE(token.type == tcc::SyntaxToken::Type::EndOfFile);
+    auto testCases = std::vector<std::string>{
+        std::string{"_test"},     //
+        std::string{"_TEST_"},    //
+        std::string{"test"},      //
+        std::string{"tesT42"},    //
+        std::string{"test_143"},  //
+    };
+
+    for (auto const& test : testCases)
+    {
+        std::string result;
+        tcc::parser::x3::phrase_parse(std::begin(test),  //
+                                      std::end(test),    //
+                                      // START GRAMMER
+                                      tcc::parser::identifier,  //
+                                      // END GRAMMER
+                                      tcc::parser::x3::space,  //
+                                      result                   //
+        );
+
+        REQUIRE(result == test);
+    }
 }

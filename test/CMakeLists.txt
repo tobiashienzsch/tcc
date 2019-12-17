@@ -9,6 +9,7 @@ set (TEST_SRC
     test_byte_code.cpp
     test_lexer.cpp
     test_parser.cpp
+    test_parser_x3.cpp
     test_vm.cpp
 )
 

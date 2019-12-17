@@ -18,7 +18,7 @@ int main(int const, char const** const)
 
     for (auto& statement : result)
     {
-        std::cout << statement << '\n';
+        std::cout << *statement.get() << '\n';
     }
 
     auto statement = tcc::CompoundStatement(                    //

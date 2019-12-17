@@ -6,6 +6,6 @@
 
 namespace tcc
 {
-using Integer  = int64_t;
-using UInteger = uint64_t;
+using Integer  = int32_t;
+using UInteger = uint32_t;
 }  // namespace tcc

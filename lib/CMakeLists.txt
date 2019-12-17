@@ -1,13 +1,14 @@
 project(tcc-lib)
 
 if (WIN32)
-  set(BOOST_INCLUDEDIR          "C:\\Developer\\lib\\boost"         CACHE PATH "Boost include path" )
-  set(BOOST_ROOT                "C:\\Developer\\lib\\boost\\boost"  CACHE PATH "Boost library path" )
-  set(Boost_NO_SYSTEM_PATHS     on                                  CACHE BOOL "Do not search system for Boost" )
+  set(BOOST_INCLUDEDIR          "C:\\Developer\\lib\\boost"         CACHE PATH "Boost include path")
+  set(BOOST_LIBRARYDIR          "C:\\Developer\\lib\\boost"         CACHE PATH "Boost lib path")
+  set(BOOST_ROOT                "C:\\Developer\\lib\\boost\\boost"  CACHE PATH "Boost library path")
+  set(Boost_NO_SYSTEM_PATHS     on                                  CACHE BOOL "Do not search system for Boost")
 else()
 endif()
 
-find_package(Boost 1.65 REQUIRED)
+find_package(Boost 1.65 REQUIRED COMPONENTS system)
 
 # Add library
 set(TCC_LIB_SOURCES

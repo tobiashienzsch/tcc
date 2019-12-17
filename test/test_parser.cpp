@@ -1,6 +1,6 @@
 /**
  * @file test_parser.cpp
- * @copyright Copyright 2019 Modern Circuits. All rights reserved.
+ * @copyright Copyright 2019 Tobias Hienzsch. All rights reserved.
  */
 #include "catch2/catch.hpp"
 

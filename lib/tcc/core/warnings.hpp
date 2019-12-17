@@ -1,6 +1,6 @@
 /**
  * @file warnings.hpp
- * @copyright Copyright 2019 Modern Circuits. All rights reserved.
+ * @copyright Copyright 2019 Tobias Hienzsch. All rights reserved.
  */
 
 #pragma once

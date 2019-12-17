@@ -7,6 +7,7 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 option(TCC_BUILD_TESTS      "Build the unit tests with Catch2"  ON)
 option(TCC_BUILD_BENCHMARK  "Build benchmark tests"             ON)
 option(TCC_BUILD_COVERAGE   "Build with code coverage"          OFF)
+option(TCC_BUILD_PLAYGROUND "Build playground subprojects"      OFF)
 
 
 set(CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake" ${CMAKE_MODULE_PATH})
@@ -30,4 +31,8 @@ if(TCC_BUILD_BENCHMARK)
     set(ALLOW_DOWNLOADING_GOOGLETEST FALSE)
     add_subdirectory(3rd_party/google-benchmark EXCLUDE_FROM_ALL) 
     add_subdirectory(benchmark)
+endif()
+
+if(TCC_BUILD_PLAYGROUND)
+    add_subdirectory(playground)
 endif()

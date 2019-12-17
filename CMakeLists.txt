@@ -26,13 +26,10 @@ if(CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME)
     endif()
 endif()
 
-
-
 option(TCC_BUILD_TESTS      "Build the unit tests with Catch2"  ON)
 option(TCC_BUILD_BENCHMARK  "Build benchmark tests"             ON)
+option(TCC_BUILD_PLAYGROUND "Build playground subprojects"      ON)
 option(TCC_BUILD_COVERAGE   "Build with code coverage"          OFF)
-option(TCC_BUILD_PLAYGROUND "Build playground subprojects"      OFF)
-
 
 set(CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake" ${CMAKE_MODULE_PATH})
 include(tccCodeCoverage)

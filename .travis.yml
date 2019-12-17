@@ -22,6 +22,7 @@ matrix:
         apt:
           packages:
             - ninja-build
+            - libboost-all-dev
       env:
         - MATRIX_EVAL="CC=gcc && CXX=g++"
       script: *script-linux

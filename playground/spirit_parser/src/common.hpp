@@ -9,20 +9,25 @@
 
 #include <boost/spirit/home/x3.hpp>
 
-namespace client { namespace parser
+namespace client
 {
-    using x3::raw;
-    using x3::lexeme;
-    using x3::alpha;
-    using x3::alnum;
+namespace parser
+{
+namespace x3 = boost::spirit::x3;
 
-    struct identifier_class;
-    typedef x3::rule<identifier_class, std::string> identifier_type;
-    identifier_type const identifier = "identifier";
+using x3::alnum;
+using x3::alpha;
+using x3::lexeme;
+using x3::raw;
 
-    auto const identifier_def = raw[lexeme[(alpha | '_') >> *(alnum | '_')]];
+struct identifier_class;
+typedef x3::rule<identifier_class, std::string> identifier_type;
+identifier_type const identifier = "identifier";
 
-    BOOST_SPIRIT_DEFINE(identifier);
-}}
+auto const identifier_def = raw[lexeme[(alpha | '_') >> *(alnum | '_')]];
+
+BOOST_SPIRIT_DEFINE(identifier);
+}  // namespace parser
+}  // namespace client
 
 #endif

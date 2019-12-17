@@ -8,6 +8,7 @@
 #include <ios>
 #include <iostream>
 #include <map>
+#include <variant>
 #include <vector>
 
 namespace client
@@ -21,14 +22,9 @@ struct ssa_builder
 };
 struct printer
 {
-    struct ParseResult
-    {
-        bool success;
-        explicit operator bool() const { return success; }
-    };
 
-    // using result_type        = bool;
-    using result_type        = ParseResult;
+
+    using result_type        = bool;
     using error_handler_type = std::function<void(x3::position_tagged, std::string const&)>;
 
     template<typename ErrorHandler>
@@ -38,36 +34,37 @@ struct printer
     {
     }
 
-    ParseResult start(ast::statement_list const& x) const
+    bool start(ast::statement_list const& x) const
     {
         if (!(*this)(x))
         {
-            return {false};
+            return false;
         }
-        return {true};
+        return true;
     }
 
-    ParseResult operator()(unsigned int x) const
+    bool operator()(unsigned int x) const
     {
         std::cout << x << " ";
-        return {true};
+        return true;
     }
 
-    ParseResult operator()(bool x) const
+    bool operator()(bool x) const
     {
         std::cout << std::boolalpha << x << " ";
-        return {true};
+        return true;
     }
 
-    ParseResult operator()(ast::variable const& x) const
+    bool operator()(ast::variable const& x) const
     {
         std::cout << "var: " << x.name << '\n';
-        return {true};
+        return true;
     }
 
-    ParseResult operator()(ast::operation const& x) const
+    bool operator()(ast::operation const& x) const
     {
-        if (!boost::apply_visitor(*this, x.operand_)) return {false};
+        if (!boost::apply_visitor(*this, x.operand_)) return false;
+        auto result = tcc::BinaryExpression::Type {};
         switch (x.operator_)
         {
             case ast::op_plus: std::cout << "+ "; break;
@@ -84,38 +81,38 @@ struct printer
 
             case ast::op_and: std::cout << "& "; break;
             case ast::op_or: std::cout << "| "; break;
-            default: BOOST_ASSERT(0); return {false};
+            default: BOOST_ASSERT(0); return false;
         }
-
-        return {true};
+        return true;
     }
 
-    ParseResult operator()(ast::unary const& x) const
+    bool operator()(ast::unary const& x) const
     {
-        if (!boost::apply_visitor(*this, x.operand_)) return {false};
+        if (!boost::apply_visitor(*this, x.operand_)) return false;
         std::cout << "unary: ";
-        return {true};
+        return true;
     }
 
-    ParseResult operator()(ast::expression const& x) const
+    bool operator()(ast::expression const& x) const
     {
+        auto lhs = boost::apply_visitor(*this, x.first);
+        if (!lhs) return false;
         for (ast::operation const& oper : x.rest)
         {
-            if (!(*this)(oper)) return {false};
+            if (!(*this)(oper)) return false;
         }
-        if (!boost::apply_visitor(*this, x.first)) return {false};
-        return {true};
+        return true;
     }
 
-    ParseResult operator()(ast::assignment const& x) const
+    bool operator()(ast::assignment const& x) const
     {
-        if (!(*this)(x.rhs)) return {false};
+        if (!(*this)(x.rhs)) return false;
         auto const lhs = x.lhs.name;
         std::cout << lhs << " " << '\n';
-        return {true};
+        return true;
     }
 
-    ParseResult operator()(ast::variable_declaration const& x) const
+    bool operator()(ast::variable_declaration const& x) const
     {
 
         auto const lhs = x.assign.lhs.name;
@@ -143,24 +140,27 @@ struct printer
         return r;
     }
 
-    ParseResult operator()(ast::statement_list const& x) const
+    bool operator()(ast::statement_list const& x) const
     {
         for (auto const& s : x)
         {
-            if (!(*this)(s)) return {false};
+            if (!(*this)(s)) return false;
         }
-        return {true};
+        return true;
     }
 
-    ParseResult operator()(ast::statement const& x) const { return boost::apply_visitor(*this, x); }
+    bool operator()(ast::statement const& x) const { 
+        tcc::Expression* expression = nullptr;
+        return boost::apply_visitor(*this, x); 
+    }
 
-    ParseResult operator()(ast::if_statement const& x) const { return {true}; }
+    bool operator()(ast::if_statement const& x) const { return true; }
 
-    ParseResult operator()(ast::while_statement const& x) const { return {true}; }
-    ParseResult operator()(ast::nil) const
+    bool operator()(ast::while_statement const& x) const { return true; }
+    bool operator()(ast::nil) const
     {
         BOOST_ASSERT(0);
-        return {false};
+        return false;
     }
 
     ssa_builder& ssaBuilder;

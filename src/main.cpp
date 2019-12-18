@@ -6,20 +6,11 @@
 
 #include "tcc/tcc.hpp"
 
-#include "tcc/compiler/parser.hpp"
+#include "tcc/compiler/ast.hpp"
 
 int main(int const, char const** const)
 {
     using namespace tcc;
-
-    auto parser = tcc::Parser {"auto main(){}"};
-    // auto parser = tcc::Parser{"auto 8(){}"};
-    auto result = parser.Parse();
-
-    for (auto& statement : result)
-    {
-        std::cout << *statement.get() << '\n';
-    }
 
     auto statement = tcc::CompoundStatement(                    //
         std::make_unique<tcc::ExpressionStatement>(             // first statement
@@ -46,7 +37,7 @@ int main(int const, char const** const)
     // ICONST, 1    // 4
     // ICONST, 42   // 6
 
-    // std::cout << statement << '\n';
+    std::cout << statement << '\n';
 
     return EXIT_SUCCESS;
 }

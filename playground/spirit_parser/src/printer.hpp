@@ -139,10 +139,7 @@ struct printer
         return true;
     }
 
-    bool operator()(ast::statement const& x) const
-    {
-        return boost::apply_visitor(*this, x);
-    }
+    bool operator()(ast::statement const& x) const { return boost::apply_visitor(*this, x); }
 
     bool operator()(ast::if_statement const& x) const { return true; }
 

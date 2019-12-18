@@ -88,7 +88,6 @@ int main()
     return 0;
 }
 
-
 // #include <boost/config/warning_disable.hpp>
 // #include <boost/fusion/include/adapt_struct.hpp>
 // #include <boost/spirit/home/x3.hpp>

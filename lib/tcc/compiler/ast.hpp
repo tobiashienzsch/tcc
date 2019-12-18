@@ -278,7 +278,7 @@ public:
     void Print(std::ostream& str) const override
     {
         auto const header = m_isDefinition ? "var_defintion: " : "var_assignment: ";
-        str << header << m_variableName<<"= "  << *m_expression.get();
+        str << header << m_variableName << "= " << *m_expression.get();
     }
 
 private:

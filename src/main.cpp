@@ -18,9 +18,14 @@ int main(int const, char const** const)
             std::make_unique<tcc::CompoundStatement>(                                                     //
                 std::make_unique<tcc::AssignmentStatement>(                                               //
                     "x",                                                                                  //
-                    std::make_unique<tcc::BinaryExpression>(std::make_unique<tcc::LiteralExpression>(4),  //
-                                                            std::make_unique<tcc::LiteralExpression>(2),  //
-                                                            tcc::BinaryExpression::Type::Add)             //
+                    std::make_unique<tcc::BinaryExpression>(                                              //
+                        std::make_unique<tcc::LiteralExpression>(4),                                      //
+                        std::make_unique<tcc::BinaryExpression>(                                          //
+                            std::make_unique<tcc::LiteralExpression>(4),                                  //
+                            std::make_unique<tcc::LiteralExpression>(2),                                  //
+                            tcc::BinaryExpression::Type::Add),                                            //
+                        tcc::BinaryExpression::Type::Add),                                                //
+                    true                                                                                  //
                     ),                                                                                    //
                 std::make_unique<tcc::ExpressionStatement>(                                               //
                     std::make_unique<tcc::BinaryExpression>(std::make_unique<tcc::LiteralExpression>(4),  //

@@ -21,7 +21,6 @@ public:
     Expression()                                = default;
     virtual ~Expression()                       = default;
     virtual InstructionList GetAssembly() const = 0;
-    // virtual InstructionList GetSSA() const = 0;
 
 protected:
     virtual void Print(std::ostream& str) const = 0;
@@ -211,7 +210,6 @@ public:
     virtual ~Statement()                                                = default;
     virtual Type GetType() const                                        = 0;
     virtual InstructionList GetAssembly(Integer const offset = 0) const = 0;
-    virtual void GetSSA() const = 0;
 
 protected:
     virtual void Print(std::ostream& str) const = 0;
@@ -234,7 +232,6 @@ public:
 
     Statement::Type GetType() const noexcept override { return Statement::Type::Expression; };
     InstructionList GetAssembly(Integer const offset = 0) const override { return expression->GetAssembly(); };
-    void GetSSA() const override { std::cout << "Expression\n"; };
     void Print(std::ostream& str) const override { str << "EXPRESSION_STATEMENT: " << *expression.get(); }
 
 private:
@@ -252,7 +249,6 @@ public:
 
     Statement::Type GetType() const noexcept override { return Statement::Type::Assignment; };
     InstructionList GetAssembly(Integer const offset = 0) const override { return m_expression->GetAssembly(); };
-    void GetSSA() const override { std::cout << "Assignment\n"; };
 
     
     void Print(std::ostream& str) const override
@@ -279,7 +275,6 @@ public:
         result.push_back(ByteCode::RET);
         return result;
     };
-    void GetSSA() const override { std::cout << "Return\n"; };
 
     void Print(std::ostream& str) const override { str << "RETURN_STATEMENT: " << *expression.get(); }
 

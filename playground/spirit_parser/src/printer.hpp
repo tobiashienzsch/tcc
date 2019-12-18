@@ -56,7 +56,7 @@ struct printer
 
     bool operator()(ast::variable const& x) const
     {
-        std::cout << "var: " << x.name << '\n';
+        std::cout << x.name;
         return true;
     }
 
@@ -94,20 +94,23 @@ struct printer
 
     bool operator()(ast::expression const& x) const
     {
-        auto lhs = boost::apply_visitor(*this, x.first);
-        if (!lhs) return false;
+        std::cout << '(';
         for (ast::operation const& oper : x.rest)
         {
             if (!(*this)(oper)) return false;
         }
+        auto lhs = boost::apply_visitor(*this, x.first);
+        if (!lhs) return false;
+        std::cout << ')';
         return true;
     }
 
     bool operator()(ast::assignment const& x) const
     {
-        if (!(*this)(x.rhs)) return false;
         auto const lhs = x.lhs.name;
-        std::cout << lhs << " " << '\n';
+        std::cout << lhs << " = ";
+        if (!(*this)(x.rhs)) return false;
+        std::cout << '\n';
         return true;
     }
 
@@ -115,24 +118,12 @@ struct printer
     {
 
         auto const lhs = x.assign.lhs.name;
-        std::cout << "var " << lhs << "= ";
-        auto r          = (*this)(x.assign.rhs);
-        auto expression = std::make_unique<tcc::BinaryExpression>(  //
-            std::make_unique<tcc::LiteralExpression>(5),            //
-            std::make_unique<tcc::LiteralExpression>(5),            //
-            tcc::BinaryExpression::Type::Add                        //
-        );
-
-        auto declaration = std::make_unique<tcc::AssignmentStatement>(  //
-            lhs,                                                        //
-            std::move(expression),
-            true  //
-        );
+        std::cout << "var " << lhs << " = ";
+        auto r = (*this)(x.assign.rhs);
 
         // don't add the variable if the RHS fails
         if (r)
         {
-            ssaBuilder.statementList.push_back(std::move(declaration));
         }
 
         std::cout << '\n';
@@ -150,7 +141,6 @@ struct printer
 
     bool operator()(ast::statement const& x) const
     {
-        tcc::Expression* expression = nullptr;
         return boost::apply_visitor(*this, x);
     }
 

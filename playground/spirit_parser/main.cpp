@@ -22,7 +22,7 @@ int main()
     //     source += str + '\n';
     // }
 
-    source = "var x = 1+2;\n\n";
+    source = "var x = 1+(2+7*8/2)*3;x=x*2;var y=x+2*2;\n\n";
 
     using client::parser::iterator_type;
     iterator_type iter(source.begin());
@@ -88,287 +88,244 @@ int main()
     return 0;
 }
 
-//
-//
-//
 
 // #include <boost/config/warning_disable.hpp>
+// #include <boost/fusion/include/adapt_struct.hpp>
 // #include <boost/spirit/home/x3.hpp>
 // #include <boost/spirit/home/x3/support/ast/variant.hpp>
-// #include <boost/fusion/include/adapt_struct.hpp>
 
 // #include <iostream>
-// #include <string>
 // #include <list>
 // #include <numeric>
+// #include <string>
 
 // namespace x3 = boost::spirit::x3;
 
-// namespace client { namespace ast
+// namespace tcc
 // {
-//     ///////////////////////////////////////////////////////////////////////////
-//     //  The AST
-//     ///////////////////////////////////////////////////////////////////////////
-//     struct nil {};
-//     struct signed_;
-//     struct program;
-
-//     struct operand : x3::variant<
-//             nil
-//           , unsigned int
-//           , x3::forward_ast<signed_>
-//           , x3::forward_ast<program>
-//         >
-//     {
-//         using base_type::base_type;
-//         using base_type::operator=;
-//     };
-
-//     struct signed_
-//     {
-//         char sign;
-//         operand operand_;
-//     };
-
-//     struct operation
-//     {
-//         char operator_;
-//         operand operand_;
-//     };
-
-//     struct program
-//     {
-//         operand first;
-//         std::list<operation> rest;
-//     };
-
-//     // print function for debugging
-//     inline std::ostream& operator<<(std::ostream& out, nil) { out << "nil"; return out; }
-// }}
-
-// BOOST_FUSION_ADAPT_STRUCT(client::ast::signed_,
-//     sign, operand_
-// )
-
-// BOOST_FUSION_ADAPT_STRUCT(client::ast::operation,
-//     operator_, operand_
-// )
-
-// BOOST_FUSION_ADAPT_STRUCT(client::ast::program,
-//     first, rest
-// )
-
-// namespace client { namespace ast
+// namespace ast
 // {
-//     ///////////////////////////////////////////////////////////////////////////
-//     //  The AST Printer
-//     ///////////////////////////////////////////////////////////////////////////
-//     struct printer
-//     {
-//         typedef void result_type;
-
-//         void operator()(nil) const {}
-//         void operator()(unsigned int n) const { std::cout << n; }
-
-//         void operator()(operation const& x) const
-//         {
-//             boost::apply_visitor(*this, x.operand_);
-//             switch (x.operator_)
-//             {
-//                 case '+': std::cout << " add"; break;
-//                 case '-': std::cout << " subt"; break;
-//                 case '*': std::cout << " mult"; break;
-//                 case '/': std::cout << " div"; break;
-//             }
-//         }
-
-//         void operator()(signed_ const& x) const
-//         {
-//             boost::apply_visitor(*this, x.operand_);
-//             switch (x.sign)
-//             {
-//                 case '-': std::cout << " neg"; break;
-//                 case '+': std::cout << " pos"; break;
-//             }
-//         }
-
-//         void operator()(program const& x) const
-//         {
-//             boost::apply_visitor(*this, x.first);
-//             for (operation const& oper : x.rest)
-//             {
-//                 std::cout << ' ';
-//                 (*this)(oper);
-//             }
-//         }
-//     };
-
-//     ///////////////////////////////////////////////////////////////////////////
-//     //  The AST evaluator
-//     ///////////////////////////////////////////////////////////////////////////
-//     struct eval
-//     {
-//         typedef int result_type;
-
-//         int operator()(nil) const { BOOST_ASSERT(0); return 0; }
-//         int operator()(unsigned int n) const { return n; }
-
-//         int operator()(operation const& x, int lhs) const
-//         {
-//             int rhs = boost::apply_visitor(*this, x.operand_);
-//             switch (x.operator_)
-//             {
-//                 case '+': return lhs + rhs;
-//                 case '-': return lhs - rhs;
-//                 case '*': return lhs * rhs;
-//                 case '/': return lhs / rhs;
-//             }
-//             BOOST_ASSERT(0);
-//             return 0;
-//         }
-
-//         int operator()(signed_ const& x) const
-//         {
-//             int rhs = boost::apply_visitor(*this, x.operand_);
-//             switch (x.sign)
-//             {
-//                 case '-': return -rhs;
-//                 case '+': return +rhs;
-//             }
-//             BOOST_ASSERT(0);
-//             return 0;
-//         }
-
-//         int operator()(program const& x) const
-//         {
-//             int state = boost::apply_visitor(*this, x.first);
-//             for (operation const& oper : x.rest)
-//             {
-//                 state = (*this)(oper, state);
-//             }
-//             return state;
-//         }
-//     };
-// }}
-
-// namespace client
+// ///////////////////////////////////////////////////////////////////////////
+// //  The AST
+// ///////////////////////////////////////////////////////////////////////////
+// struct nil
 // {
-//     ///////////////////////////////////////////////////////////////////////////////
-//     //  The calculator grammar
-//     ///////////////////////////////////////////////////////////////////////////////
-//     namespace calculator_grammar
+// };
+// struct signed_;
+// struct expression;
+
+// struct operand : x3::variant<nil, unsigned int, x3::forward_ast<signed_>, x3::forward_ast<expression>>
+// {
+//     using base_type::base_type;
+//     using base_type::operator=;
+// };
+
+// struct signed_
+// {
+//     char sign;
+//     operand operand_;
+// };
+
+// struct operation
+// {
+//     char operator_;
+//     operand operand_;
+// };
+
+// struct expression
+// {
+//     operand first;
+//     std::list<operation> rest;
+// };
+
+// // print function for debugging
+// inline std::ostream& operator<<(std::ostream& out, nil)
+// {
+//     out << "nil";
+//     return out;
+// }
+// }  // namespace ast
+// }  // namespace tcc
+
+// BOOST_FUSION_ADAPT_STRUCT(tcc::ast::signed_, sign, operand_)
+// BOOST_FUSION_ADAPT_STRUCT(tcc::ast::operation, operator_, operand_)
+// BOOST_FUSION_ADAPT_STRUCT(tcc::ast::expression, first, rest)
+
+// namespace tcc
+// {
+// namespace ast
+// {
+// ///////////////////////////////////////////////////////////////////////////
+// //  The AST Printer
+// ///////////////////////////////////////////////////////////////////////////
+// struct printer
+// {
+//     typedef void result_type;
+
+//     void operator()(nil) const {}
+//     void operator()(unsigned int n) const { std::cout << n; }
+
+//     void operator()(operation const& x) const
 //     {
-//         using x3::uint_;
-//         using x3::char_;
-
-//         struct expression_class;
-//         struct term_class;
-//         struct factor_class;
-
-//         x3::rule<expression_class, ast::program> const expression("expression");
-//         x3::rule<term_class, ast::program> const term("term");
-//         x3::rule<factor_class, ast::operand> const factor("factor");
-
-//         auto const expression_def =
-//             term
-//             >> *(   (char_('+') > term)
-//                 |   (char_('-') > term)
-//                 )
-//             ;
-
-//         auto const term_def =
-//             factor
-//             >> *(   (char_('*') > factor)
-//                 |   (char_('/') > factor)
-//                 )
-//             ;
-
-//         auto const factor_def =
-//                 uint_
-//             |   '(' > expression > ')'
-//             |   (char_('-') > factor)
-//             |   (char_('+') > factor)
-//             ;
-
-//         BOOST_SPIRIT_DEFINE(
-//             expression
-//           , term
-//           , factor
-//         );
-
-//         struct expression_class
+//         boost::apply_visitor(*this, x.operand_);
+//         switch (x.operator_)
 //         {
-//             //  Our error handler
-//             template <typename Iterator, typename Exception, typename Context>
-//             x3::error_handler_result
-//             on_error(Iterator&, Iterator const& last, Exception const& x, Context const& context)
-//             {
-//                 std::cout
-//                     << "Error! Expecting: "
-//                     << x.which()
-//                     << " here: \""
-//                     << std::string(x.where(), last)
-//                     << "\""
-//                     << std::endl
-//                     ;
-//                 return x3::error_handler_result::fail;
-//             }
-//         };
-
-//         auto calculator = expression;
+//             case '+': std::cout << " add"; break;
+//             case '-': std::cout << " subt"; break;
+//             case '*': std::cout << " mult"; break;
+//             case '/': std::cout << " div"; break;
+//         }
 //     }
 
-//     using calculator_grammar::calculator;
-// }
+//     void operator()(signed_ const& x) const
+//     {
+//         boost::apply_visitor(*this, x.operand_);
+//         switch (x.sign)
+//         {
+//             case '-': std::cout << " neg"; break;
+//             case '+': std::cout << " pos"; break;
+//         }
+//     }
 
-// ///////////////////////////////////////////////////////////////////////////////
-// //  Main program
-// ///////////////////////////////////////////////////////////////////////////////
-// int
-// main()
+//     void operator()(expression const& x) const
+//     {
+//         boost::apply_visitor(*this, x.first);
+//         for (operation const& oper : x.rest)
+//         {
+//             std::cout << ' ';
+//             (*this)(oper);
+//         }
+//     }
+// };
+
+// ///////////////////////////////////////////////////////////////////////////
+// //  The AST evaluator
+// ///////////////////////////////////////////////////////////////////////////
+// struct eval
 // {
-//     std::cout << "/////////////////////////////////////////////////////////\n\n";
-//     std::cout << "Expression parser...\n\n";
-//     std::cout << "/////////////////////////////////////////////////////////\n\n";
-//     std::cout << "Type an expression...or [q or Q] to quit\n\n";
+//     using result_type = int;
 
-//     typedef std::string::const_iterator iterator_type;
-//     typedef client::ast::program ast_program;
-//     typedef client::ast::printer ast_print;
-//     typedef client::ast::eval ast_eval;
+//     result_type operator()(nil) const
+//     {
+//         BOOST_ASSERT(0);
+//         return 0;
+//     }
+//     result_type operator()(unsigned int n) const { return n; }
+
+//     result_type operator()(operation const& x, int lhs) const
+//     {
+//         int rhs = boost::apply_visitor(*this, x.operand_);
+//         switch (x.operator_)
+//         {
+//             case '+': return lhs + rhs;
+//             case '-': return lhs - rhs;
+//             case '*': return lhs * rhs;
+//             case '/': return lhs / rhs;
+//         }
+//         BOOST_ASSERT(0);
+//         return 0;
+//     }
+
+//     result_type operator()(signed_ const& x) const
+//     {
+//         int rhs = boost::apply_visitor(*this, x.operand_);
+//         switch (x.sign)
+//         {
+//             case '-': return -rhs;
+//             case '+': return +rhs;
+//         }
+//         BOOST_ASSERT(0);
+//         return 0;
+//     }
+
+//     result_type operator()(expression const& x) const
+//     {
+//         int state = boost::apply_visitor(*this, x.first);
+//         for (operation const& oper : x.rest)
+//         {
+//             state = (*this)(oper, state);
+//         }
+//         return state;
+//     }
+// };
+// }  // namespace ast
+// }  // namespace tcc
+
+// namespace tcc
+// {
+// ///////////////////////////////////////////////////////////////////////////////
+// //  The calculator grammar
+// ///////////////////////////////////////////////////////////////////////////////
+// namespace calculator_grammar
+// {
+// using x3::char_;
+// using x3::uint_;
+
+// struct expression_class;
+// struct term_class;
+// struct factor_class;
+
+// x3::rule<expression_class, ast::expression> const expression("expression");
+// x3::rule<term_class, ast::expression> const term("term");
+// x3::rule<factor_class, ast::operand> const factor("factor");
+
+// auto const expression_def = term >> *((char_('+') > term) | (char_('-') > term));
+
+// auto const term_def = factor >> *((char_('*') > factor) | (char_('/') > factor));
+
+// auto const factor_def = uint_ | '(' > expression > ')' | (char_('-') > factor) | (char_('+') > factor);
+
+// BOOST_SPIRIT_DEFINE(expression, term, factor);
+
+// struct expression_class
+// {
+//     //  Our error handler
+//     template<typename Iterator, typename Exception, typename Context>
+//     x3::error_handler_result on_error(Iterator&, Iterator const& last, Exception const& x, Context const& context)
+//     {
+//         std::cout << "Error! Expecting: " << x.which() << " here: \"" << std::string(x.where(), last) << "\""
+//                   << std::endl;
+//         return x3::error_handler_result::fail;
+//     }
+// };
+
+// auto calculator = expression;
+// }  // namespace calculator_grammar
+
+// using calculator_grammar::calculator;
+// }  // namespace tcc
+
+// int main()
+// {
+//     using ast_expression = tcc::ast::expression;
+//     using ast_print      = tcc::ast::printer;
+//     using ast_eval       = tcc::ast::eval;
 
 //     std::string str;
 //     while (std::getline(std::cin, str))
 //     {
-//         if (str.empty() || str[0] == 'q' || str[0] == 'Q')
-//             break;
+//         if (str.empty() || str[0] == 'q' || str[0] == 'Q') break;
 
-//         auto& calc = client::calculator;    // Our grammar
-//         ast_program program;                // Our program (AST)
-//         ast_print print;                    // Prints the program
-//         ast_eval eval;                      // Evaluates the program
+//         auto& calc   = tcc::calculator;    // Our grammar
+//         auto program = ast_expression {};  // Our program (AST)
+//         auto print   = ast_print {};       // Prints the program
+//         auto eval    = ast_eval {};        // Evaluates the program
 
-//         iterator_type iter = str.begin();
-//         iterator_type end = str.end();
-//         boost::spirit::x3::ascii::space_type space;
-//         bool r = phrase_parse(iter, end, calc, space, program);
+//         auto iter        = str.begin();
+//         auto end         = str.end();
+//         auto space       = boost::spirit::x3::ascii::space_type {};
+//         bool parseResult = phrase_parse(iter, end, calc, space, program);
 
-//         if (r && iter == end)
+//         if (parseResult && iter == end)
 //         {
-//             std::cout << "-------------------------\n";
-//             std::cout << "Parsing succeeded\n";
 //             print(program);
-//             std::cout << "\nResult: " << eval(program) << std::endl;
-//             std::cout << "-------------------------\n";
+//             std::cout << "\nResult: " << eval(program) << '\n';
 //         }
 //         else
 //         {
-//             std::cout << "-------------------------\n";
 //             std::cout << "Parsing failed\n";
-//             std::cout << "-------------------------\n";
 //         }
 //     }
 
-//     std::cout << "Bye... :-) \n\n";
 //     return 0;
 // }

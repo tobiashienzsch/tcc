@@ -23,7 +23,7 @@ struct program
 {
     void op(int a);
     void op(int a, int b);
-    void op(int a, int b, int c);
+    // void op(int a, int b, int c);
 
     int& operator[](std::size_t i) { return code[i]; }
     int operator[](std::size_t i) const { return code[i]; }

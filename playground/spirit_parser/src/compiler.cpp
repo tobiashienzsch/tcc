@@ -23,12 +23,12 @@ void program::op(int a, int b)
     code.push_back(b);
 }
 
-void program::op(int a, int b, int c)
-{
-    code.push_back(a);
-    code.push_back(b);
-    code.push_back(c);
-}
+// void program::op(int a, int b, int c)
+// {
+//     code.push_back(a);
+//     code.push_back(b);
+//     code.push_back(c);
+// }
 
 int const* program::find_var(std::string const& name) const
 {

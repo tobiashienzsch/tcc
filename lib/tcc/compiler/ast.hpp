@@ -2,9 +2,9 @@
 #include <cstdio>
 #include <cstdlib>
 
+#include <iostream>
 #include <memory>
 #include <vector>
-#include <iostream>
 
 #include "tcc/vm/vm.hpp"
 
@@ -44,10 +44,23 @@ public:
     ~LiteralExpression() override = default;
 
     InstructionList GetAssembly() const override { return {ByteCode::ICONST, value}; }
-    void Print(std::ostream& str) const override { str << "LITERAL_EXPRESSION: " << value; }
+    void Print(std::ostream& str) const override { str << value; }
 
 private:
     Integer value;
+};
+
+class VariableExpression : public Expression
+{
+public:
+    VariableExpression(std::string_view name) : m_name(name) {};
+    ~VariableExpression() override = default;
+
+    InstructionList GetAssembly() const override { return {}; }
+    void Print(std::ostream& str) const override { str << "%" << m_name; }
+
+private:
+    std::string_view m_name;
 };
 
 class BinaryExpression : public Expression
@@ -62,7 +75,23 @@ public:
 
         Less,
         Equal,
+
     };
+
+    friend std::ostream& operator<<(std::ostream& str, BinaryExpression::Type const& data)
+    {
+        switch (data)
+        {
+            case BinaryExpression::Type::Add: return str << "+";
+            case BinaryExpression::Type::Subtract: return str << "-";
+            case BinaryExpression::Type::Multiply: return str << "*";
+            case BinaryExpression::Type::Divide: return str << "/";
+            case BinaryExpression::Type::Less: return str << "<";
+            case BinaryExpression::Type::Equal: return str << "=";
+            default: return str;
+        }
+        return str;
+    }
 
 public:
     BinaryExpression(Expression::Ptr l, Expression::Ptr r, Type type)
@@ -120,12 +149,7 @@ public:
         }
     }
 
-    void Print(std::ostream& str) const override
-    {
-        str << "BINARY_EXPRESSION: " << (int)m_type << " "  //
-            << "\tLEFT: " << left.get()                     //
-            << "\tRIGHT: " << right.get();
-    }
+    void Print(std::ostream& str) const override { str << left.get() << " " << m_type << " " << right.get(); }
 
 private:
     Expression::Ptr left;
@@ -175,8 +199,8 @@ public:
 
     void Print(std::ostream& str) const override
     {
-        str << "TERNARY_EXPRESSION: CONDITION: " << condition.get()  //
-            << "TRUE_CASE: " << trueCase.get()                       //
+        str << "TERNARY: " << condition.get()   //
+            << "TRUE_CASE: " << trueCase.get()  //
             << "FALSE_CASE: " << falseCase.get();
     }
 
@@ -193,6 +217,7 @@ public:
 
     enum class Type
     {
+        Function,
         Compound,
         Expression,
 
@@ -232,7 +257,7 @@ public:
 
     Statement::Type GetType() const noexcept override { return Statement::Type::Expression; };
     InstructionList GetAssembly(Integer const offset = 0) const override { return expression->GetAssembly(); };
-    void Print(std::ostream& str) const override { str << "EXPRESSION_STATEMENT: " << *expression.get(); }
+    void Print(std::ostream& str) const override { str << "expression: " << *expression.get(); }
 
 private:
     Expression::Ptr expression;
@@ -250,10 +275,10 @@ public:
     Statement::Type GetType() const noexcept override { return Statement::Type::Assignment; };
     InstructionList GetAssembly(Integer const offset = 0) const override { return m_expression->GetAssembly(); };
 
-    
     void Print(std::ostream& str) const override
     {
-        str << "ASSIGNMENT_STATEMENT: NAME: " << m_variableName << " " << *m_expression.get();
+        auto const header = m_isDefinition ? "var_defintion: " : "var_assignment: ";
+        str << header << m_variableName<<"= "  << *m_expression.get();
     }
 
 private:
@@ -276,7 +301,7 @@ public:
         return result;
     };
 
-    void Print(std::ostream& str) const override { str << "RETURN_STATEMENT: " << *expression.get(); }
+    void Print(std::ostream& str) const override { str << "return " << *expression.get(); }
 
 private:
     Expression::Ptr expression;
@@ -308,7 +333,7 @@ public:
 
     void Print(std::ostream& str) const override
     {
-        str << "CONDITIONAL_STATEMENT: \n\tCONDITION: " << *m_condition.get() << "\n\t" << *m_trueCase.get();
+        str << "condition: " << *m_condition.get() << "\tTRUE_CASE: " << *m_trueCase.get() << '\n';
     }
 
 private:
@@ -348,7 +373,7 @@ public:
 
     void Print(std::ostream& str) const override
     {
-        str << "\rCOMPOUND_STATEMENT: \n";
+        str << "\rcompound: \n";
 
         for (auto const& statement : m_statements)
         {
@@ -358,6 +383,35 @@ public:
 
 private:
     std::vector<Statement::Ptr> m_statements;
+};
+
+class FunctionStatement : public Statement
+{
+public:
+    FunctionStatement(std::string_view name, std::unique_ptr<CompoundStatement> comp)
+        : m_name(name)                           //
+        , m_compoundStatements(std::move(comp))  //
+    {
+    }
+
+    ~FunctionStatement() override = default;
+
+    Statement::Type GetType() const noexcept override { return Statement::Type::Function; };
+
+    InstructionList GetAssembly(Integer const offset = 0) const override
+    {
+        auto result = m_compoundStatements->GetAssembly();
+        return result;
+    };
+
+    void Print(std::ostream& str) const override
+    {
+        str << "function: " << m_name << '\n' << m_compoundStatements.get();
+    }
+
+private:
+    std::string_view m_name;
+    std::unique_ptr<CompoundStatement> m_compoundStatements;
 };
 
 }  // namespace tcc

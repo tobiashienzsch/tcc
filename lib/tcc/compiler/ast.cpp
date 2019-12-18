@@ -2,6 +2,7 @@
 
 namespace tcc
 {
+
 Integer AppendExpression(InstructionList& dest, Expression const& source)
 {
     auto const assembly = source.GetAssembly();

@@ -12,32 +12,28 @@ int main(int const, char const** const)
 {
     using namespace tcc;
 
-    auto statement = tcc::CompoundStatement(                    //
-        std::make_unique<tcc::ExpressionStatement>(             // first statement
-            std::make_unique<tcc::LiteralExpression>(true)      //
-            ),                                                  //
-        std::make_unique<tcc::ExpressionStatement>(             // second statement
-            std::make_unique<tcc::LiteralExpression>(false)     //
-            ),                                                  //
-        std::make_unique<tcc::CompoundStatement>(               // nested compund statement
-            std::make_unique<tcc::ExpressionStatement>(         //     first statement
-                std::make_unique<tcc::LiteralExpression>(true)  //
-                ),                                              //
-            std::make_unique<tcc::ExpressionStatement>(         //     second statement
-                std::make_unique<tcc::BinaryExpression>(std::make_unique<tcc::LiteralExpression>(4),  //
-                                                        std::make_unique<tcc::LiteralExpression>(2),  //
-                                                        tcc::BinaryExpression::Type::Add)             //
-                )                                                                                     //
-            )                                                                                         //
-                                                                                                      //
-    );
+    auto statement =                                                                                      //
+        std::make_unique<tcc::FunctionStatement>(                                                         //
+            "main",                                                                                       //
+            std::make_unique<tcc::CompoundStatement>(                                                     //
+                std::make_unique<tcc::AssignmentStatement>(                                               //
+                    "x",                                                                                  //
+                    std::make_unique<tcc::BinaryExpression>(std::make_unique<tcc::LiteralExpression>(4),  //
+                                                            std::make_unique<tcc::LiteralExpression>(2),  //
+                                                            tcc::BinaryExpression::Type::Add)             //
+                    ),                                                                                    //
+                std::make_unique<tcc::ExpressionStatement>(                                               //
+                    std::make_unique<tcc::BinaryExpression>(std::make_unique<tcc::LiteralExpression>(4),  //
+                                                            std::make_unique<tcc::LiteralExpression>(2),  //
+                                                            tcc::BinaryExpression::Type::Add)             //
+                    ),                                                                                    //
+                std::make_unique<tcc::ReturnStatement>(                                                   //
+                    std::make_unique<tcc::VariableExpression>("x")                                        //
+                    )                                                                                     //
+                )                                                                                         //
+        );
 
-    // ICONST, 1    // 0
-    // ICONST, 0    // 2
-    // ICONST, 1    // 4
-    // ICONST, 42   // 6
-
-    std::cout << statement << '\n';
+    std::cout << statement.get() << '\n';
 
     return EXIT_SUCCESS;
 }

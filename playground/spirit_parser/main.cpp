@@ -25,6 +25,7 @@ int main()
     // source = "var x = 1+(2+7*8/2)*3;x=x*2;var y=x+2*2;\n\n";
     source = "var x=4*(1+2)*5; var y=x+3;\n\n";
     source = "var y=(1-2*3)*(7+3-1);\n\n";
+    source = "var y=(1-2*3)*(7+3-1); var z = y;\n\n";
 
     using client::parser::iterator_type;
     iterator_type iter(source.begin());

@@ -33,14 +33,14 @@ struct ir_builder
 
         auto secondStr = std::string {};
         if (std::holds_alternative<int>(second)) secondStr = std::to_string(std::get<int>(second));
-        if (std::holds_alternative<temp>(second)) secondStr = fmt::format("%{}",std::get<temp>(second).name);
+        if (std::holds_alternative<temp>(second)) secondStr = fmt::format("%{}", std::get<temp>(second).name);
 
         auto first = m_stack.back();
         m_stack.pop_back();
 
         auto firstStr = std::string {};
         if (std::holds_alternative<int>(first)) firstStr = std::to_string(std::get<int>(first));
-        if (std::holds_alternative<temp>(first)) firstStr =fmt::format("%{}",std::get<temp>(first).name);
+        if (std::holds_alternative<temp>(first)) firstStr = fmt::format("%{}", std::get<temp>(first).name);
 
         auto tmpName = std::string {"t"}.append(std::to_string(m_varCounter++));
         auto tmp     = temp {tmpName};
@@ -48,7 +48,7 @@ struct ir_builder
 
         std::stringstream opCodeStr;
         opCodeStr << static_cast<byte_code>(op);
-        fmt::print("{0}: {1} {2} {3}\n", tmp.name, firstStr, opCodeStr.str(), secondStr);
+        fmt::print("{0}\t:=\t{1}\t{2}\t{3}\n", tmp.name, firstStr, opCodeStr.str(), secondStr);
     }
 
     void CreateUnaryOperation(int op)
@@ -57,6 +57,26 @@ struct ir_builder
         m_stack.pop_back();
 
         std::cout << "unary: " << std::get<int>(first) << " " << op << '\n';
+    }
+
+    void CreateStoreOperation(std::string name)
+    {
+        auto first = m_stack.back();
+        m_stack.pop_back();
+        auto firstStr = std::string {};
+        if (std::holds_alternative<int>(first)) firstStr = std::to_string(std::get<int>(first));
+        if (std::holds_alternative<temp>(first)) firstStr = fmt::format("%{}", std::get<temp>(first).name);
+
+        fmt::print("{0}\t:=\t{1}\tstore\n", name, firstStr);
+    }
+
+    void CreateLoadOperation(std::string name)
+    {
+        auto tmpName = std::string {"t"}.append(std::to_string(m_varCounter++));
+        auto tmp     = temp {tmpName};
+        m_stack.push_back(tmp);
+
+        fmt::print("{0}\t:=\t%{1}\tload\n", tmpName, name);
     }
 
 private:

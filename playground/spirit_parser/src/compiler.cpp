@@ -185,6 +185,7 @@ bool compiler::operator()(ast::variable const& x) const
         return false;
     }
     program.op(op_load, *p);
+    m_builder.CreateLoadOperation(x.name);
     return true;
 }
 
@@ -305,6 +306,7 @@ bool compiler::operator()(ast::assignment const& x) const
         return false;
     }
     program.op(op_store, *p);
+    m_builder.CreateStoreOperation(x.lhs.name);
     return true;
 }
 
@@ -319,6 +321,7 @@ bool compiler::operator()(ast::variable_declaration const& x) const
     bool r = (*this)(x.assign.rhs);
     if (r)  // don't add the variable if the RHS fails
     {
+        m_builder.CreateStoreOperation(x.assign.lhs.name);
         program.add_var(x.assign.lhs.name);
         program.op(op_store, *program.find_var(x.assign.lhs.name));
     }

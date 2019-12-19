@@ -20,6 +20,10 @@ Everything is in development. See test files for details.
 
 - C++17
 - CMake 3.12
+- Boost
+  - System
+  - Spirit X3
+  - Program Options
 
 ### Clone
 
@@ -36,6 +40,29 @@ CONFIG=Debug make config build test
 # visual studio (git-bash)
 CONFIG=Debug CM_GENERATOR="Visual Studio 16 2019" make
 ```
+
+## Project Structure
+
+```sh
+$PROJECT_ROOT
+  3rd_party     # external code
+  benchmark     # benchmarks using google bm
+  cmake         # cmake modules
+  docs          # documentation
+  lib           # shared code
+  tcc           # compiler
+  tcvm          # virtual machine
+  test          # unit tests using catch2
+  test_data     # files for testing
+```
+
+### Compiler
+
+Source code is parsed using the `boost spirit x3` library. It creates an intermediate representation which generates the assembly.
+
+### Virtual Machine
+
+Current implementation is a stack only based virtual machine.
 
 ## Resources
 

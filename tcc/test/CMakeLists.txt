@@ -1,0 +1,21 @@
+project(tcc-test)
+
+set (TEST_SRC
+    test_main.cpp
+    test_ssa.cpp
+)
+
+add_executable(${PROJECT_NAME} ${TEST_SRC})
+target_link_libraries(${PROJECT_NAME}
+PRIVATE
+    tcc::CompilerOptions
+    tcc::CompilerWarnings
+    tcc::CodeCoverage
+    tcc::tcc
+    
+    Catch2::Catch2
+)
+
+include(CTest)
+include(Catch)
+catch_discover_tests(${PROJECT_NAME})

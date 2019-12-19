@@ -48,7 +48,7 @@ enum optoken
     op_greater_equal,
     op_and,
     op_or
-    
+
 };
 
 struct unary

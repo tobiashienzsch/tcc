@@ -46,10 +46,6 @@ find_package(Boost 1.65 REQUIRED COMPONENTS system program_options)
 
 add_subdirectory(3rd_party/fmt EXCLUDE_FROM_ALL)
 
-add_subdirectory(lib)
-add_subdirectory(tcc)
-add_subdirectory(tcvm)
-
 # Testing
 if(TCC_BUILD_TESTS)
     list (APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/3rd_party/Catch2/contrib")
@@ -57,6 +53,14 @@ if(TCC_BUILD_TESTS)
     add_subdirectory(3rd_party/Catch2 EXCLUDE_FROM_ALL)
     include(CTest)
     include(Catch)
+endif()
+
+add_subdirectory(lib)
+add_subdirectory(tcc)
+add_subdirectory(tcvm)
+
+# Testing
+if(TCC_BUILD_TESTS)
     add_subdirectory(test)
 endif()
 

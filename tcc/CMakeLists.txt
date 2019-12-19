@@ -1,6 +1,6 @@
 project(tcc)
 
-add_executable(${PROJECT_NAME}
+set(tcc_lib_source
     src/ast.hpp
     src/ast_adapted.hpp
     src/common.hpp
@@ -19,29 +19,36 @@ add_executable(${PROJECT_NAME}
 
     main.cpp
 )
+source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} FILES ${tcc_lib_source})
 
-target_include_directories(${PROJECT_NAME} 
-    PRIVATE 
+add_library(tcc_lib STATIC ${tcc_lib_source})
+add_library(tcc::tcc ALIAS tcc_lib)
+
+target_include_directories(tcc_lib 
+    PUBLIC 
         src
 )
 
-target_link_libraries(${PROJECT_NAME} 
-    PRIVATE 
-        tcc::Library
-        tcc::CompilerOptions
-        tcc::CompilerWarnings
-
+target_link_libraries(tcc_lib 
+    PUBLIC 
         Boost::boost 
         Boost::program_options 
         Boost::system 
         fmt
+    PRIVATE
+        tcc::CompilerOptions
+        tcc::CompilerWarnings
+
 )
 
-# # Testing
-# if(TCC_BUILD_TESTS)
-#     enable_testing()
-#     add_subdirectory(3rd_party/Catch2 EXCLUDE_FROM_ALL)
-#     include(CTest)
-#     include(Catch)
-#     add_subdirectory(test)
-# endif()
+add_executable(${PROJECT_NAME} main.cpp)
+target_link_libraries(${PROJECT_NAME} 
+    PRIVATE 
+        tcc::tcc
+        tcc::CompilerOptions
+        tcc::CompilerWarnings
+)
+
+if(TCC_BUILD_TESTS)
+    add_subdirectory(test)
+endif()

@@ -14,4 +14,3 @@ BOOST_SPIRIT_DECLARE(expression_type);
 
 parser::expression_type const& expression();
 }  // namespace client
-

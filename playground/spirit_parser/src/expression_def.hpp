@@ -50,7 +50,7 @@ void add_keywords()
     additive_op.add("+", ast::op_plus)("-", ast::op_minus);
     multiplicative_op.add("*", ast::op_times)("/", ast::op_divide);
     unary_op.add("+", ast::op_positive)("-", ast::op_negative)("!", ast::op_not);
-    keywords.add("var")("true")("false")("if")("else")("while");
+    keywords.add("auto")("true")("false")("if")("else")("while");
 }
 
 ////////////////////////////////////////////////////////////////////////////

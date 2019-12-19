@@ -48,7 +48,7 @@ auto const& expression = client::expression();
 }
 
 auto const statement_list_def       = +(variable_declaration | assignment);
-auto const variable_declaration_def = lexeme["var" >> !(alnum | '_')] > assignment;
+auto const variable_declaration_def = lexeme["auto" >> !(alnum | '_')] > assignment;
 auto const assignment_def           = variable > '=' > expression > ';';
 auto const variable_def             = identifier;
 auto const statement_def            = statement_list;

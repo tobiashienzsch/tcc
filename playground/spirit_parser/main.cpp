@@ -6,17 +6,32 @@
 #include "statement.hpp"
 #include "vm.hpp"
 
+#include <fstream>
 #include <iostream>
+
+auto readSourceFile(std::string path) -> std::string
+{
+    std::ifstream f(path);
+    std::string str;
+
+    if (f)
+    {
+        std::ostringstream ss;
+        ss << f.rdbuf();  // reading data
+        str = ss.str();
+    }
+    return str;
+}
 
 int main(int argc, char** argv)
 {
     std::string source;
-    source = "var x=4*(1+2)*5; var y=x+3;\n\n";
-    source = "var y=(1-2*3)*(7+3-1);\n\n";
-    source = "var y=(3)*(7+3-1); var z = y+2;\n\n";
-    source = "var x = 1+(2+7*8/2)*3;x=x*2;var y=x+2*2;\n\n";
-    if (argc == 2) source = argv[1];
-    std::cout << '\n' << source <<'\n';
+    source = "auto x=4*(1+2)*5; auto y=x+3;\n\n";
+    source = "auto y=(1-2*3)*(7+3-1);\n\n";
+    source = "auto y=(3)*(7+3-1); auto z = y+2;\n\n";
+    source = "auto x = 1+(2+7*8/2)*3;x=x*2;auto y=x+2*2;\n\n";
+    if (argc == 2) source = readSourceFile(argv[1]);
+    std::cout << '\n' << source << '\n';
 
     // std::string str;
     // while (std::getline(std::cin, str))

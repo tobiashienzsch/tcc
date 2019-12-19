@@ -59,7 +59,7 @@ struct IRBuilder
             std::stringstream opCodeStr;
             opCodeStr << static_cast<byte_code>(data.type);
             auto const str
-                = fmt::format("{0}  :=\t{1}\t{2}\t{3}", data.destination, firstStr, opCodeStr.str(), secondStr);
+                = fmt::format("{0}\t:=\t{1}\t{2}\t{3}", data.destination, firstStr, opCodeStr.str(), secondStr);
 
             return out << str;
         }
@@ -128,7 +128,7 @@ struct IRBuilder
     void PrintStatementList() const
     {
         fmt::print("#locals: {}\n", m_variables.size());
-        
+
         for (auto const& x : m_statements)
         {
             std::cout << x << '\n';

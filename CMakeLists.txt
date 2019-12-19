@@ -41,7 +41,7 @@ if (WIN32)
   set(Boost_NO_SYSTEM_PATHS     on                                  CACHE BOOL "Do not search system for Boost")
 endif()
 
-find_package(Boost 1.65 REQUIRED COMPONENTS system)
+find_package(Boost 1.65 REQUIRED COMPONENTS system program_options)
 
 add_subdirectory(3rd_party/fmt EXCLUDE_FROM_ALL)
 

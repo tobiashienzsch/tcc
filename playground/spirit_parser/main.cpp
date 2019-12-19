@@ -6,8 +6,12 @@
 #include "statement.hpp"
 #include "vm.hpp"
 
+#include <boost/program_options.hpp>
+namespace po = boost::program_options;
+
 #include <fstream>
 #include <iostream>
+#include <iterator>
 
 auto readSourceFile(std::string path) -> std::string
 {
@@ -23,22 +27,47 @@ auto readSourceFile(std::string path) -> std::string
     return str;
 }
 
-int main(int argc, char** argv)
+auto main(int argc, char** argv) -> int
 {
     std::string source;
     source = "auto x=4*(1+2)*5; auto y=x+3;\n\n";
     source = "auto y=(1-2*3)*(7+3-1);\n\n";
     source = "auto y=(3)*(7+3-1); auto z = y+2;\n\n";
     source = "auto x = 1+(2+7*8/2)*3;x=x*2;auto y=x+2*2;\n\n";
-    if (argc == 2) source = readSourceFile(argv[1]);
-    std::cout << '\n' << source << '\n';
 
-    // std::string str;
-    // while (std::getline(std::cin, str))
-    // {
-    //     if (str.empty()) break;
-    //     source += str + '\n';
-    // }
+    try
+    {
+        po::options_description desc("tcc: tobante's crappy compiler");
+        desc.add_options()                                      //
+            ("help,h", "produce this help message")             //
+            ("file,f", po::value<std::string>(), "input file")  //
+            ;
+
+        po::variables_map vm;
+        po::store(po::parse_command_line(argc, argv, desc), vm);
+        po::notify(vm);
+
+        if (vm.count("help"))
+        {
+            std::cout << desc << "\n";
+            return 0;
+        }
+
+        if (vm.count("file"))
+        {
+            auto const path = vm["file"].as<std::string>();
+            source          = readSourceFile(path);
+        }
+    }
+    catch (std::exception& e)
+    {
+        std::cerr << "error: " << e.what() << "\n";
+        return 1;
+    }
+    catch (...)
+    {
+        std::cerr << "Exception of unknown type!\n";
+    }
 
     using client::parser::iterator_type;
     iterator_type iter(source.begin());

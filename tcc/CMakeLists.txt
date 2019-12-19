@@ -31,6 +31,8 @@ target_include_directories(tcc_lib
 
 target_link_libraries(tcc_lib 
     PUBLIC 
+        tcc::Core
+        
         Boost::boost 
         Boost::program_options 
         Boost::system 

@@ -1,12 +1,11 @@
-/**
- * @file warnings.hpp
- * @copyright Copyright 2019 Tobias Hienzsch. All rights reserved.
- */
-
 #pragma once
+
+#include <cstdint>
 
 namespace tcc
 {
+using Integer  = int32_t;
+using UInteger = uint32_t;
 
 /**
  * @brief Handy function for avoiding unused variable warnings.

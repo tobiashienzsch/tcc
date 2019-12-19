@@ -1,6 +1,7 @@
 #pragma once
 
-#include "tcc/tcc.hpp"
+#include "tcc/core/core.hpp"
+
 #include "tcc/vm/vm.hpp"
 
 namespace tcvm

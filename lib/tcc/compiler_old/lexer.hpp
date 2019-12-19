@@ -8,7 +8,7 @@
 #include <string_view>
 #include <vector>
 
-#include "tcc/tcc.hpp"
+#include "tcc/core/core.hpp"
 
 namespace tcc
 {

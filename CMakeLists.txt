@@ -55,6 +55,7 @@ if(TCC_BUILD_TESTS)
     include(Catch)
 endif()
 
+add_subdirectory(lib/core)
 add_subdirectory(lib)
 add_subdirectory(tcc)
 add_subdirectory(tcvm)

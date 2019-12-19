@@ -4,7 +4,7 @@
  */
 #include "catch2/catch.hpp"
 
-#include "tcc/compiler/parser_x3.hpp"
+#include "tcc/compiler_old/parser_x3.hpp"
 
 TEST_CASE("parser_x3: Identifier", "[parser_x3]")
 {

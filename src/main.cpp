@@ -6,7 +6,7 @@
 
 #include "tcc/tcc.hpp"
 
-#include "tcc/compiler/ast.hpp"
+#include "tcc/compiler_old/ast.hpp"
 
 int main(int const, char const** const)
 {

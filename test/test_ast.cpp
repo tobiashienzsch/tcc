@@ -4,7 +4,7 @@
  */
 #include "catch2/catch.hpp"
 
-#include "tcc/compiler/ast.hpp"
+#include "tcc/compiler_old/ast.hpp"
 
 TEST_CASE("ast: LiteralExpression", "[ast]")
 {

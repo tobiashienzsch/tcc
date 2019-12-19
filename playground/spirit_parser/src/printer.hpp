@@ -3,7 +3,7 @@
 #include "ast.hpp"
 #include "error_handler.hpp"
 
-#include "tcc/compiler/ast.hpp"
+#include "tcc/compiler_old/ast.hpp"
 
 #include <ios>
 #include <iostream>

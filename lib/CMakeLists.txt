@@ -2,12 +2,12 @@ project(tcc-lib)
 
 # Add library
 set(TCC_LIB_SOURCES
-    "${PROJECT_SOURCE_DIR}/tcc/compiler/ast.hpp"
-    "${PROJECT_SOURCE_DIR}/tcc/compiler/ast.cpp"
-    "${PROJECT_SOURCE_DIR}/tcc/compiler/lexer.hpp"
-    "${PROJECT_SOURCE_DIR}/tcc/compiler/lexer.cpp"
-    "${PROJECT_SOURCE_DIR}/tcc/compiler/parser.hpp"
-    "${PROJECT_SOURCE_DIR}/tcc/compiler/parser_x3.hpp"
+    "${PROJECT_SOURCE_DIR}/tcc/compiler_old/ast.hpp"
+    "${PROJECT_SOURCE_DIR}/tcc/compiler_old/ast.cpp"
+    "${PROJECT_SOURCE_DIR}/tcc/compiler_old/lexer.hpp"
+    "${PROJECT_SOURCE_DIR}/tcc/compiler_old/lexer.cpp"
+    "${PROJECT_SOURCE_DIR}/tcc/compiler_old/parser.hpp"
+    "${PROJECT_SOURCE_DIR}/tcc/compiler_old/parser_x3.hpp"
 
     "${PROJECT_SOURCE_DIR}/tcc/core/warnings.hpp"
 

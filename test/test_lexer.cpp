@@ -4,7 +4,7 @@
  */
 #include "catch2/catch.hpp"
 
-#include "tcc/compiler/lexer.hpp"
+#include "tcc/compiler_old/lexer.hpp"
 
 TEST_CASE("lexer: EndOfFile", "[lexer]")
 {

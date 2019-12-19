@@ -4,7 +4,7 @@
  */
 #include "catch2/catch.hpp"
 
-#include "tcc/compiler/parser.hpp"
+#include "tcc/compiler_old/parser.hpp"
 
 TEST_CASE("parser: Simple", "[parser]")
 {

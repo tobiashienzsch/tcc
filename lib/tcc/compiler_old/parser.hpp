@@ -6,8 +6,8 @@
 #include <string_view>
 #include <vector>
 
-#include "tcc/compiler/ast.hpp"
-#include "tcc/compiler/lexer.hpp"
+#include "tcc/compiler_old/ast.hpp"
+#include "tcc/compiler_old/lexer.hpp"
 
 namespace tcc
 {

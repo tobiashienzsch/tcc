@@ -18,36 +18,48 @@ namespace client
 namespace code_gen
 {
 
-struct ir_builder
+template<class... Ts>
+struct overloaded : Ts...
+{
+    using Ts::operator()...;
+};
+
+template<class... Ts>
+overloaded(Ts...)->overloaded<Ts...>;
+struct IRBuilder
 {
 
-    struct ir_statement
+    struct TacStatement
     {
         byte_code type;
         std::string destination;
         std::variant<int, std::string> first;
         std::optional<std::variant<int, std::string>> second;
 
-        friend std::ostream& operator<<(std::ostream& out, ir_statement const& data)
+        friend auto operator<<(std::ostream& out, TacStatement const& data) -> std::ostream&
         {
             auto firstStr = std::string {};
-            if (std::holds_alternative<int>(data.first)) firstStr = std::to_string(std::get<int>(data.first));
-            if (std::holds_alternative<std::string>(data.first))
-                firstStr = fmt::format("%{}", std::get<std::string>(data.first));
+            std::visit(overloaded {
+                           [&firstStr](int arg) { firstStr = fmt::format("{}", arg); },
+                           [&firstStr](const std::string& arg) { firstStr = fmt::format("%{}", arg); },
+                       },
+                       data.first);
 
             auto secondStr = std::string {};
             if (data.second.has_value())
             {
-                auto const second = data.second.value();
-                if (std::holds_alternative<int>(second)) secondStr = std::to_string(std::get<int>(second));
-                if (std::holds_alternative<std::string>(second))
-                    secondStr = fmt::format("%{}", std::get<std::string>(second));
+                auto const& second = data.second.value();
+                std::visit(overloaded {
+                               [&secondStr](int arg) { secondStr = fmt::format("{}", arg); },
+                               [&secondStr](const std::string& arg) { secondStr = fmt::format("%{}", arg); },
+                           },
+                           second);
             }
 
             std::stringstream opCodeStr;
             opCodeStr << static_cast<byte_code>(data.type);
             auto const str
-                = fmt::format("{0}\t:=\t{1}\t{2}\t{3}", data.destination, firstStr, opCodeStr.str(), secondStr);
+                = fmt::format("{0}  :=\t{1}\t{2}\t{3}", data.destination, firstStr, opCodeStr.str(), secondStr);
 
             return out << str;
         }
@@ -62,32 +74,55 @@ struct ir_builder
         return result;
     }
 
+    auto AddVariable(std::string name) -> void
+    {
+        auto search = m_variables.find(name);
+        if (search == m_variables.end())
+            m_variables.insert({name, 0});
+        else
+            fmt::print("Tried to add {} twice to variable map\n", name);
+    }
+
     void CreateBinaryOperation(byte_code op)
     {
         auto const second  = PopFromStack();
         auto const first   = PopFromStack();
         auto const tmpName = CreateTemporaryOnStack();
 
-        m_statements.push_back(ir_statement {op, tmpName, first, second});
+        m_statements.push_back(TacStatement {op, tmpName, first, second});
     }
 
     void CreateUnaryOperation(byte_code op)
     {
         auto const first   = PopFromStack();
         auto const tmpName = CreateTemporaryOnStack();
-        m_statements.push_back(ir_statement {op, tmpName, first});
+        m_statements.push_back(TacStatement {op, tmpName, first});
     }
 
-    void CreateStoreOperation(std::string name)
+    void CreateStoreOperation(std::string key)
     {
         auto const first = PopFromStack();
-        m_statements.push_back(ir_statement {op_store, name, first});
+        m_statements.push_back(TacStatement {op_store, key, first});
     }
 
-    void CreateLoadOperation(std::string name)
+    void CreateLoadOperation(std::string key)
     {
         auto const tmpName = CreateTemporaryOnStack();
-        m_statements.push_back(ir_statement {op_load, tmpName, name});
+        m_statements.push_back(TacStatement {op_load, tmpName, key});
+    }
+
+    auto CreateAssignment(std::string const& key) -> std::string
+    {
+        auto search = m_variables.find(key);
+        auto newId  = search->second++;
+        return fmt::format("{}{}", key, newId);
+    }
+
+    auto GetLastVariable(std::string const& key) -> std::string
+    {
+        auto search = m_variables.find(key);
+        auto newId  = search->second - 1;
+        return fmt::format("{}{}", key, newId);
     }
 
     void PrintStatementList() const
@@ -96,23 +131,21 @@ struct ir_builder
         {
             std::cout << x << '\n';
         }
-        std::cout << "\n\n";
+        std::cout << "-------\n\n";
     }
 
     auto CreateTemporaryOnStack() -> std::string
     {
-
-        auto tmpName = std::string {"t"}.append(std::to_string(m_varCounter++));
-        auto tmp     = tmpName;
+        auto tmp = std::string("t").append(std::to_string(m_varCounter++));
         m_stack.push_back(tmp);
-        return tmpName;
+        return tmp;
     }
 
 private:
     int m_varCounter = 0;
-    std::map<std::string, int> variables;
+    std::map<std::string, int> m_variables;
     std::vector<std::variant<int, std::string>> m_stack;
-    std::vector<ir_statement> m_statements;
+    std::vector<TacStatement> m_statements;
 };
 
 ///////////////////////////////////////////////////////////////////////////
@@ -155,7 +188,7 @@ struct compiler
     typedef std::function<void(x3::position_tagged, std::string const&)> error_handler_type;
 
     template<typename ErrorHandler>
-    compiler(client::code_gen::program& program, ir_builder& builder, ErrorHandler const& error_handler)
+    compiler(client::code_gen::program& program, IRBuilder& builder, ErrorHandler const& error_handler)
         : program(program)
         , m_builder(builder)
         , error_handler([&](x3::position_tagged pos, std::string const& msg) { error_handler(pos, msg); })
@@ -183,7 +216,7 @@ struct compiler
     bool start(ast::statement_list const& x) const;
 
     client::code_gen::program& program;
-    ir_builder& m_builder;
+    IRBuilder& m_builder;
     error_handler_type error_handler;
 };
 }  // namespace code_gen

@@ -15,10 +15,10 @@ int main(int argc, char** argv)
     source = "var y=(1-2*3)*(7+3-1);\n\n";
     source = "var y=(3)*(7+3-1); var z = y+2;\n\n";
     source = "var x = 1+(2+7*8/2)*3;x=x*2;var y=x+2*2;\n\n";
-    source = "if(0);\n\n";
     if (argc == 2) source = argv[1];
+    std::cout << '\n' << source;
 
-    std::string str;
+    // std::string str;
     // while (std::getline(std::cin, str))
     // {
     //     if (str.empty()) break;
@@ -29,10 +29,10 @@ int main(int argc, char** argv)
     iterator_type iter(source.begin());
     iterator_type end(source.end());
 
-    client::vmachine vm;                   // Our virtual machine
-    client::code_gen::program program;     // Our VM program
-    client::code_gen::ir_builder builder;  // IR builder
-    client::ast::statement_list ast;       // Our AST
+    client::vmachine vm;                  // Our virtual machine
+    client::code_gen::program program;    // Our VM program
+    client::code_gen::IRBuilder builder;  // IR builder
+    client::ast::statement_list ast;      // Our AST
 
     using boost::spirit::x3::with;
     using client::parser::error_handler_type;

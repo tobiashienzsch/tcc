@@ -185,7 +185,8 @@ bool compiler::operator()(ast::variable const& x) const
         return false;
     }
     program.op(op_load, *p);
-    m_builder.CreateLoadOperation(x.name);
+    auto const last = m_builder.GetLastVariable(x.name);
+    m_builder.CreateLoadOperation(last);
     return true;
 }
 
@@ -318,7 +319,8 @@ bool compiler::operator()(ast::assignment const& x) const
         return false;
     }
     program.op(op_store, *p);
-    m_builder.CreateStoreOperation(x.lhs.name);
+    auto const newKey = m_builder.CreateAssignment(x.lhs.name);
+    m_builder.CreateStoreOperation(newKey);
     return true;
 }
 
@@ -333,7 +335,9 @@ bool compiler::operator()(ast::variable_declaration const& x) const
     bool r = (*this)(x.assign.rhs);
     if (r)  // don't add the variable if the RHS fails
     {
-        m_builder.CreateStoreOperation(x.assign.lhs.name);
+        m_builder.AddVariable(x.assign.lhs.name);
+        auto const newKey = m_builder.CreateAssignment(x.assign.lhs.name);
+        m_builder.CreateStoreOperation(newKey);
         program.add_var(x.assign.lhs.name);
         program.op(op_store, *program.find_var(x.assign.lhs.name));
     }

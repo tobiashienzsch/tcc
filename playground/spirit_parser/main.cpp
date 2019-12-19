@@ -16,7 +16,7 @@ int main(int argc, char** argv)
     source = "var y=(3)*(7+3-1); var z = y+2;\n\n";
     source = "var x = 1+(2+7*8/2)*3;x=x*2;var y=x+2*2;\n\n";
     if (argc == 2) source = argv[1];
-    std::cout << '\n' << source;
+    std::cout << '\n' << source <<'\n';
 
     // std::string str;
     // while (std::getline(std::cin, str))

@@ -65,7 +65,7 @@ struct IRBuilder
         }
     };
 
-    void PushToStack(int x) { m_stack.push_back(x); }
+    auto PushToStack(int x) -> void { m_stack.push_back(x); }
 
     auto PopFromStack() -> std::variant<int, std::string>
     {
@@ -83,7 +83,7 @@ struct IRBuilder
             fmt::print("Tried to add {} twice to variable map\n", name);
     }
 
-    void CreateBinaryOperation(byte_code op)
+    auto CreateBinaryOperation(byte_code op) -> void
     {
         auto const second  = PopFromStack();
         auto const first   = PopFromStack();
@@ -92,20 +92,20 @@ struct IRBuilder
         m_statements.push_back(TacStatement {op, tmpName, first, second});
     }
 
-    void CreateUnaryOperation(byte_code op)
+    auto CreateUnaryOperation(byte_code op) -> void
     {
         auto const first   = PopFromStack();
         auto const tmpName = CreateTemporaryOnStack();
         m_statements.push_back(TacStatement {op, tmpName, first});
     }
 
-    void CreateStoreOperation(std::string key)
+    auto CreateStoreOperation(std::string key) -> void
     {
         auto const first = PopFromStack();
         m_statements.push_back(TacStatement {op_store, key, first});
     }
 
-    void CreateLoadOperation(std::string key)
+    auto CreateLoadOperation(std::string key) -> void
     {
         auto const tmpName = CreateTemporaryOnStack();
         m_statements.push_back(TacStatement {op_load, tmpName, key});
@@ -127,11 +127,14 @@ struct IRBuilder
 
     void PrintStatementList() const
     {
+        fmt::print("#locals: {}\n", m_variables.size());
+        
         for (auto const& x : m_statements)
         {
             std::cout << x << '\n';
         }
-        std::cout << "-------\n\n";
+
+        fmt::print("-------\n\n", m_variables.size());
     }
 
     auto CreateTemporaryOnStack() -> std::string
@@ -148,14 +151,10 @@ private:
     std::vector<TacStatement> m_statements;
 };
 
-///////////////////////////////////////////////////////////////////////////
-//  The Program
-///////////////////////////////////////////////////////////////////////////
 struct program
 {
     void op(int a);
     void op(int a, int b);
-    // void op(int a, int b, int c);
 
     int& operator[](std::size_t i) { return code[i]; }
     int operator[](std::size_t i) const { return code[i]; }

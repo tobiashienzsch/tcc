@@ -43,6 +43,8 @@ endif()
 
 find_package(Boost 1.65 REQUIRED COMPONENTS system)
 
+add_subdirectory(3rd_party/fmt)
+
 add_subdirectory(lib)
 add_subdirectory(src)
 

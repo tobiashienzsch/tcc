@@ -1,21 +1,70 @@
-/*=============================================================================
-    Copyright (c) 2001-2014 Joel de Guzman
-
-    Distributed under the Boost Software License, Version 1.0. (See accompanying
-    file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
-=============================================================================*/
-#if !defined(BOOST_SPIRIT_X3_CALC9_COMPILER_HPP)
-#define BOOST_SPIRIT_X3_CALC9_COMPILER_HPP
+#pragma once
 
 #include "ast.hpp"
 #include "error_handler.hpp"
+#include "vm.hpp"
+
+#include "fmt/format.h"
+
+#include <iostream>
 #include <map>
+#include <string>
+#include <variant>
 #include <vector>
 
 namespace client
 {
 namespace code_gen
 {
+
+struct ir_builder
+{
+    struct temp
+    {
+        std::string name;
+    };
+
+    void PushToStack(int x) { m_stack.push_back(x); }
+
+    void CreateBinaryOperation(int op)
+    {
+        auto second = m_stack.back();
+        m_stack.pop_back();
+
+        auto secondStr = std::string {};
+        if (std::holds_alternative<int>(second)) secondStr = std::to_string(std::get<int>(second));
+        if (std::holds_alternative<temp>(second)) secondStr = fmt::format("%{}",std::get<temp>(second).name);
+
+        auto first = m_stack.back();
+        m_stack.pop_back();
+
+        auto firstStr = std::string {};
+        if (std::holds_alternative<int>(first)) firstStr = std::to_string(std::get<int>(first));
+        if (std::holds_alternative<temp>(first)) firstStr =fmt::format("%{}",std::get<temp>(first).name);
+
+        auto tmpName = std::string {"t"}.append(std::to_string(m_varCounter++));
+        auto tmp     = temp {tmpName};
+        m_stack.push_back(tmp);
+
+        std::stringstream opCodeStr;
+        opCodeStr << static_cast<byte_code>(op);
+        fmt::print("{0}: {1} {2} {3}\n", tmp.name, firstStr, opCodeStr.str(), secondStr);
+    }
+
+    void CreateUnaryOperation(int op)
+    {
+        auto first = m_stack.back();
+        m_stack.pop_back();
+
+        std::cout << "unary: " << std::get<int>(first) << " " << op << '\n';
+    }
+
+private:
+    int m_varCounter = 0;
+    std::map<std::string, int> variables;
+    std::vector<std::variant<int, temp>> m_stack;
+};
+
 ///////////////////////////////////////////////////////////////////////////
 //  The Program
 ///////////////////////////////////////////////////////////////////////////
@@ -56,8 +105,9 @@ struct compiler
     typedef std::function<void(x3::position_tagged, std::string const&)> error_handler_type;
 
     template<typename ErrorHandler>
-    compiler(client::code_gen::program& program, ErrorHandler const& error_handler)
+    compiler(client::code_gen::program& program, ir_builder& builder, ErrorHandler const& error_handler)
         : program(program)
+        , m_builder(builder)
         , error_handler([&](x3::position_tagged pos, std::string const& msg) { error_handler(pos, msg); })
     {
     }
@@ -83,9 +133,8 @@ struct compiler
     bool start(ast::statement_list const& x) const;
 
     client::code_gen::program& program;
+    ir_builder& m_builder;
     error_handler_type error_handler;
 };
 }  // namespace code_gen
 }  // namespace client
-
-#endif

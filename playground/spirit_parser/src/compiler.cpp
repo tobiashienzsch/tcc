@@ -166,6 +166,7 @@ void program::print_assembler() const
 bool compiler::operator()(unsigned int x) const
 {
     program.op(op_int, x);
+    m_builder.PushToStack(x);
     return true;
 }
 
@@ -192,20 +193,80 @@ bool compiler::operator()(ast::operation const& x) const
     if (!boost::apply_visitor(*this, x.operand_)) return false;
     switch (x.operator_)
     {
-        case ast::op_plus: program.op(op_add); break;
-        case ast::op_minus: program.op(op_sub); break;
-        case ast::op_times: program.op(op_mul); break;
-        case ast::op_divide: program.op(op_div); break;
+        case ast::op_plus:
+        {
+            program.op(op_add);
+            m_builder.CreateBinaryOperation(op_add);
+            break;
+        }
+        case ast::op_minus:
+        {
+            program.op(op_sub);
+            m_builder.CreateBinaryOperation(op_sub);
+            break;
+        }
+        case ast::op_times:
+        {
+            program.op(op_mul);
+            m_builder.CreateBinaryOperation(op_mul);
+            break;
+        }
+        case ast::op_divide:
+        {
+            program.op(op_div);
+            m_builder.CreateBinaryOperation(op_div);
+            break;
+        }
 
-        case ast::op_equal: program.op(op_eq); break;
-        case ast::op_not_equal: program.op(op_neq); break;
-        case ast::op_less: program.op(op_lt); break;
-        case ast::op_less_equal: program.op(op_lte); break;
-        case ast::op_greater: program.op(op_gt); break;
-        case ast::op_greater_equal: program.op(op_gte); break;
+        case ast::op_equal:
+        {
+            program.op(op_eq);
+            m_builder.CreateBinaryOperation(op_eq);
+            break;
+        }
+        case ast::op_not_equal:
+        {
+            program.op(op_neq);
+            m_builder.CreateBinaryOperation(op_neq);
+            break;
+        }
+        case ast::op_less:
+        {
+            program.op(op_lt);
+            m_builder.CreateBinaryOperation(op_lt);
+            break;
+        }
+        case ast::op_less_equal:
+        {
+            program.op(op_lte);
+            m_builder.CreateBinaryOperation(op_lte);
+            break;
+        }
+        case ast::op_greater:
+        {
+            program.op(op_gt);
+            m_builder.CreateBinaryOperation(op_gt);
+            break;
+        }
+        case ast::op_greater_equal:
+        {
+            program.op(op_gte);
+            m_builder.CreateBinaryOperation(op_gte);
+            break;
+        }
 
-        case ast::op_and: program.op(op_and); break;
-        case ast::op_or: program.op(op_or); break;
+        case ast::op_and:
+        {
+            program.op(op_and);
+            m_builder.CreateBinaryOperation(op_and);
+            break;
+        }
+        case ast::op_or:
+        {
+            program.op(op_or);
+            m_builder.CreateBinaryOperation(op_or);
+            break;
+        }
         default: BOOST_ASSERT(0); return false;
     }
     return true;

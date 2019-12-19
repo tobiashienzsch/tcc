@@ -1,12 +1,6 @@
-/*=============================================================================
-    Copyright (c) 2001-2014 Joel de Guzman
+#pragma once
 
-    Distributed under the Boost Software License, Version 1.0. (See accompanying
-    file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
-=============================================================================*/
-#if !defined(BOOST_SPIRIT_X3_CALC9_VM_HPP)
-#define BOOST_SPIRIT_X3_CALC9_VM_HPP
-
+#include <iostream>
 #include <vector>
 
 namespace client
@@ -49,6 +43,37 @@ enum byte_code
     op_return    // return from function
 };
 
+inline std::ostream& operator<<(std::ostream& out, byte_code const data)
+{
+    switch (data)
+    {
+        case op_neg: return out << "op_neg";
+        case op_add: return out << "op_add";
+        case op_sub: return out << "op_sub";
+        case op_mul: return out << "op_mul";
+        case op_div: return out << "op_div";
+        case op_not: return out << "op_not";
+        case op_eq: return out << "op_eq";
+        case op_neq: return out << "op_neq";
+        case op_lt: return out << "op_lt";
+        case op_lte: return out << "op_lte";
+        case op_gt: return out << "op_gt";
+        case op_gte: return out << "op_gte";
+        case op_and: return out << "op_and";
+        case op_or: return out << "op_or";
+        case op_load: return out << "op_load";
+        case op_store: return out << "op_store";
+        case op_int: return out << "op_int";
+        case op_true: return out << "op_true";
+        case op_false: return out << "op_false";
+        case op_jump_if: return out << "op_jump_if";
+        case op_jump: return out << "op_jump";
+        case op_stk_adj: return out << "op_stk_adj";
+        case op_call: return out << "op_call";
+        case op_return: return out << "op_return";
+    }
+}
+
 class vmachine
 {
 public:
@@ -69,5 +94,3 @@ private:
     std::vector<int> stack;
 };
 }  // namespace client
-
-#endif

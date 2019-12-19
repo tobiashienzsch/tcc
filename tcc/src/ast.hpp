@@ -1,25 +1,16 @@
-/*=============================================================================
-    Copyright (c) 2001-2014 Joel de Guzman
-
-    Distributed under the Boost Software License, Version 1.0. (See accompanying
-    file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
-=============================================================================*/
-#if !defined(BOOST_SPIRIT_X3_CALC9_AST_HPP)
-#define BOOST_SPIRIT_X3_CALC9_AST_HPP
+#pragma once
 
 #include <boost/fusion/include/io.hpp>
 #include <boost/optional.hpp>
 #include <boost/spirit/home/x3/support/ast/position_tagged.hpp>
 #include <boost/spirit/home/x3/support/ast/variant.hpp>
+
 #include <list>
 
 namespace client
 {
 namespace ast
 {
-///////////////////////////////////////////////////////////////////////////
-//  The AST
-///////////////////////////////////////////////////////////////////////////
 namespace x3 = boost::spirit::x3;
 
 struct nil
@@ -57,6 +48,7 @@ enum optoken
     op_greater_equal,
     op_and,
     op_or
+    
 };
 
 struct unary
@@ -131,5 +123,3 @@ inline std::ostream& operator<<(std::ostream& out, variable const& var)
 }
 }  // namespace ast
 }  // namespace client
-
-#endif

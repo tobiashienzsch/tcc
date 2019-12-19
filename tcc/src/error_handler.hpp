@@ -1,14 +1,9 @@
-/*=============================================================================
-    Copyright (c) 2001-2014 Joel de Guzman
+#pragma once
 
-    Distributed under the Boost Software License, Version 1.0. (See accompanying
-    file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
-=============================================================================*/
-#if !defined(BOOST_SPIRIT_X3_CALC9_ERROR_HANDLER_HPP)
-#define BOOST_SPIRIT_X3_CALC9_ERROR_HANDLER_HPP
 
 #include "expression.hpp"
 #include "statement.hpp"
+
 #include <boost/spirit/home/x3.hpp>
 #include <boost/spirit/home/x3/support/ast/position_tagged.hpp>
 #include <boost/spirit/home/x3/support/utility/error_reporting.hpp>
@@ -41,5 +36,3 @@ struct error_handler_base
 };
 }  // namespace parser
 }  // namespace client
-
-#endif

@@ -2,7 +2,6 @@
 #include "compiler.hpp"
 #include "config.hpp"
 #include "error_handler.hpp"
-#include "printer.hpp"
 #include "statement.hpp"
 #include "vm.hpp"
 
@@ -84,8 +83,6 @@ auto main(int argc, char** argv) -> int
 
     // Our compiler
     client::code_gen::compiler compile(program, builder, error_handler);
-    client::code_gen::ssa_builder ssaBuilder {};
-    client::code_gen::printer printer(ssaBuilder, error_handler);
 
     // Our parser
     auto const parser =
@@ -118,14 +115,6 @@ auto main(int argc, char** argv) -> int
             std::cout << "Compile failure\n";
         }
 
-        // if (printer.start(ast))
-        // {
-        //     for (auto& x : printer.ssaBuilder.statementList) std::cout << x.get() << '\n';
-        // }
-        // else
-        // {
-        //     std::cout << "Printer failure\n";
-        // }
     }
     else
     {

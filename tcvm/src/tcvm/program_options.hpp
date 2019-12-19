@@ -18,8 +18,9 @@ struct ProgramOptions
         try
         {
             po::options_description desc("tcc: tobante's crappy virtual machine");
-            desc.add_options()                           //
-                ("help,h", "produce this help message")  //
+            desc.add_options()                                            //
+                ("help,h", "produce this help message")                   //
+                ("input,i", po::value<std::int64_t>(), "input argument")  //
                 ;
 
             po::store(po::parse_command_line(argc, argv, desc), outputVariableMap);

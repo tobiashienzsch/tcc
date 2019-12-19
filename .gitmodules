@@ -4,3 +4,6 @@
 [submodule "3rd_party/google-benchmark"]
 	path = 3rd_party/google-benchmark
 	url = https://github.com/google/benchmark
+[submodule "3rd_party/fmt"]
+	path = 3rd_party/fmt
+	url = https://github.com/fmtlib/fmt

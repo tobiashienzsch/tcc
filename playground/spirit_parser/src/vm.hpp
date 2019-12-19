@@ -1,5 +1,7 @@
 #pragma once
 
+#include "fmt/format.h"
+
 #include <iostream>
 #include <vector>
 
@@ -47,30 +49,30 @@ inline std::ostream& operator<<(std::ostream& out, byte_code const data)
 {
     switch (data)
     {
-        case op_neg: return out << "op_neg";
-        case op_add: return out << "op_add";
-        case op_sub: return out << "op_sub";
-        case op_mul: return out << "op_mul";
-        case op_div: return out << "op_div";
-        case op_not: return out << "op_not";
-        case op_eq: return out << "op_eq";
-        case op_neq: return out << "op_neq";
-        case op_lt: return out << "op_lt";
-        case op_lte: return out << "op_lte";
-        case op_gt: return out << "op_gt";
-        case op_gte: return out << "op_gte";
-        case op_and: return out << "op_and";
-        case op_or: return out << "op_or";
-        case op_load: return out << "op_load";
-        case op_store: return out << "op_store";
-        case op_int: return out << "op_int";
-        case op_true: return out << "op_true";
-        case op_false: return out << "op_false";
-        case op_jump_if: return out << "op_jump_if";
-        case op_jump: return out << "op_jump";
-        case op_stk_adj: return out << "op_stk_adj";
-        case op_call: return out << "op_call";
-        case op_return: return out << "op_return";
+        case op_neg: return out << "neg";
+        case op_add: return out << "add";
+        case op_sub: return out << "sub";
+        case op_mul: return out << "mul";
+        case op_div: return out << "div";
+        case op_not: return out << "not";
+        case op_eq: return out << "eq";
+        case op_neq: return out << "neq";
+        case op_lt: return out << "lt";
+        case op_lte: return out << "lte";
+        case op_gt: return out << "gt";
+        case op_gte: return out << "gte";
+        case op_and: return out << "and";
+        case op_or: return out << "or";
+        case op_load: return out << "load";
+        case op_store: return out << "store";
+        case op_int: return out << "int";
+        case op_true: return out << "true";
+        case op_false: return out << "false";
+        case op_jump_if: return out << "jump_if";
+        case op_jump: return out << "jump";
+        case op_stk_adj: return out << "stk_adj";
+        case op_call: return out << "call";
+        case op_return: return out << "return";
     }
 }
 

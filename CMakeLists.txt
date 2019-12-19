@@ -46,6 +46,7 @@ add_subdirectory(3rd_party/fmt EXCLUDE_FROM_ALL)
 
 add_subdirectory(lib)
 add_subdirectory(tcc)
+add_subdirectory(tcvm)
 
 # Testing
 if(TCC_BUILD_TESTS)

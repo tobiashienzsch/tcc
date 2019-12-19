@@ -1,7 +1,5 @@
 project(tcc-lib)
 
-
-
 # Add library
 set(TCC_LIB_SOURCES
     "${PROJECT_SOURCE_DIR}/tcc/compiler/ast.hpp"

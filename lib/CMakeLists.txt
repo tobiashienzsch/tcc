@@ -11,7 +11,6 @@ set(TCC_LIB_SOURCES
     "${PROJECT_SOURCE_DIR}/tcc/compiler/parser.hpp"
     "${PROJECT_SOURCE_DIR}/tcc/compiler/parser_x3.hpp"
 
-
     "${PROJECT_SOURCE_DIR}/tcc/core/warnings.hpp"
 
     "${PROJECT_SOURCE_DIR}/tcc/vm/byte_code.hpp"

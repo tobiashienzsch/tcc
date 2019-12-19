@@ -6,6 +6,8 @@
 #include <boost/program_options.hpp>
 namespace po = boost::program_options;
 
+#include <cstdlib>
+
 namespace tcvm
 {
 
@@ -26,7 +28,7 @@ struct ProgramOptions
             if (outputVariableMap.count("help"))
             {
                 fmt::print("{}\n", desc);
-                return true;
+                std::exit(0);
             }
         }
         catch (std::exception& e)

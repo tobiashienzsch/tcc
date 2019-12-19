@@ -36,3 +36,12 @@ target_link_libraries(${PROJECT_NAME}
         Boost::system 
         fmt
 )
+
+# # Testing
+# if(TCC_BUILD_TESTS)
+#     enable_testing()
+#     add_subdirectory(3rd_party/Catch2 EXCLUDE_FROM_ALL)
+#     include(CTest)
+#     include(Catch)
+#     add_subdirectory(test)
+# endif()

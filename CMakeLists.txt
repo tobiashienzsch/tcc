@@ -30,9 +30,10 @@ option(TCC_BUILD_TESTS      "Build the unit tests with Catch2"  ON)
 option(TCC_BUILD_BENCHMARK  "Build benchmark tests"             ON)
 option(TCC_BUILD_COVERAGE   "Build with code coverage"          OFF)
 
-include("${CMAKE_CURRENT_SOURCE_DIR}/cmake/tccCodeCoverage.cmake")
-include("${CMAKE_CURRENT_SOURCE_DIR}/cmake/tccCompilerOptions.cmake")
-include("${CMAKE_CURRENT_SOURCE_DIR}/cmake/tccCompilerWarnings.cmake")
+list (APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
+include(tccCodeCoverage)
+include(tccCompilerOptions)
+include(tccCompilerWarnings)
 
 if (WIN32)
   set(BOOST_INCLUDEDIR          "C:\\Developer\\lib\\boost"         CACHE PATH "Boost include path")

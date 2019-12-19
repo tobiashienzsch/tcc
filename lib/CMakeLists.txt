@@ -30,7 +30,6 @@ PUBLIC
     Boost::system
 PRIVATE
     tcc::CompilerOptions
+    tcc::CompilerWarnings
     tcc::CodeCoverage
-        
-
 )

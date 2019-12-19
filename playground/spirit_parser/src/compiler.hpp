@@ -56,7 +56,17 @@ struct ir_builder
         auto first = m_stack.back();
         m_stack.pop_back();
 
-        std::cout << "unary: " << std::get<int>(first) << " " << op << '\n';
+        auto firstStr = std::string {};
+        if (std::holds_alternative<int>(first)) firstStr = std::to_string(std::get<int>(first));
+        if (std::holds_alternative<temp>(first)) firstStr = fmt::format("%{}", std::get<temp>(first).name);
+
+        auto tmpName = std::string {"t"}.append(std::to_string(m_varCounter++));
+        auto tmp     = temp {tmpName};
+        m_stack.push_back(tmp);
+
+        auto opCodeStr = std::stringstream {};
+        opCodeStr << static_cast<byte_code>(op);
+        fmt::print("{0}\t:=\t{1}\t{2}\n", tmp.name, firstStr, opCodeStr.str());
     }
 
     void CreateStoreOperation(std::string name)

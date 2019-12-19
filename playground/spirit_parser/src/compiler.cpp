@@ -278,9 +278,21 @@ bool compiler::operator()(ast::unary const& x) const
     if (!boost::apply_visitor(*this, x.operand_)) return false;
     switch (x.operator_)
     {
-        case ast::op_negative: program.op(op_neg); break;
-        case ast::op_not: program.op(op_not); break;
         case ast::op_positive: break;
+
+        case ast::op_negative:
+        {
+            program.op(op_neg);
+            m_builder.CreateUnaryOperation(op_neg);
+            break;
+        }
+        case ast::op_not:
+        {
+            program.op(op_not);
+            m_builder.CreateUnaryOperation(op_not);
+            break;
+        }
+
         default: BOOST_ASSERT(0); return false;
     }
     return true;

@@ -29,8 +29,10 @@ target_link_libraries(${PROJECT_NAME}
     PRIVATE 
         tcc::Library
         tcc::CompilerOptions
+        tcc::CompilerWarnings
+
         Boost::boost 
         Boost::program_options 
         Boost::system 
-        fmt-header-only 
+        fmt
 )

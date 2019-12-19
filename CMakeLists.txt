@@ -32,6 +32,7 @@ option(TCC_BUILD_COVERAGE   "Build with code coverage"          OFF)
 
 include("${CMAKE_CURRENT_SOURCE_DIR}/cmake/tccCodeCoverage.cmake")
 include("${CMAKE_CURRENT_SOURCE_DIR}/cmake/tccCompilerOptions.cmake")
+include("${CMAKE_CURRENT_SOURCE_DIR}/cmake/tccCompilerWarnings.cmake")
 
 if (WIN32)
   set(BOOST_INCLUDEDIR          "C:\\Developer\\lib\\boost"         CACHE PATH "Boost include path")

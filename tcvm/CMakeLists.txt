@@ -9,5 +9,5 @@ target_link_libraries(${PROJECT_NAME}
         Boost::boost 
         Boost::program_options 
         Boost::system 
-        fmt-header-only 
+        fmt
 )

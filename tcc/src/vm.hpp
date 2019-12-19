@@ -74,6 +74,8 @@ inline std::ostream& operator<<(std::ostream& out, byte_code const data)
         case op_call: return out << "call";
         case op_return: return out << "return";
     }
+
+    return out;
 }
 
 class vmachine

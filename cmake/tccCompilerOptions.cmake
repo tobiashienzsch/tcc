@@ -1,0 +1,4 @@
+add_library(tcc_compiler_options INTERFACE)
+add_library(tcc::CompilerOptions ALIAS tcc_compiler_options)
+
+target_compile_features(tcc_compiler_options INTERFACE cxx_std_17)

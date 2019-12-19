@@ -14,8 +14,9 @@ set (TEST_SRC
 )
 
 add_executable(${PROJECT_NAME} ${TEST_SRC})
-target_compile_features(${PROJECT_NAME} PUBLIC cxx_std_17)
 target_link_libraries(${PROJECT_NAME}
+PRIVATE
+    tcc::CompilerOptions
     tcc::CodeCoverage
     tcc::Library
     Catch2::Catch2

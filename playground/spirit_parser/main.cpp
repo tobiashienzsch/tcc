@@ -8,24 +8,22 @@
 
 #include <iostream>
 
-///////////////////////////////////////////////////////////////////////////////
-//  Main program
-///////////////////////////////////////////////////////////////////////////////
-int main()
+int main(int argc, char** argv)
 {
+    std::string source;
+    source = "var x=4*(1+2)*5; var y=x+3;\n\n";
+    source = "var y=(1-2*3)*(7+3-1);\n\n";
+    source = "var y=(3)*(7+3-1); var z = y+2;\n\n";
+    source = "var x = 1+(2+7*8/2)*3;x=x*2;var y=x+2*2;\n\n";
+    source = "if(0);\n\n";
+    if (argc == 2) source = argv[1];
 
     std::string str;
-    std::string source;
     // while (std::getline(std::cin, str))
     // {
     //     if (str.empty()) break;
     //     source += str + '\n';
     // }
-
-    // source = "var x = 1+(2+7*8/2)*3;x=x*2;var y=x+2*2;\n\n";
-    source = "var x=4*(1+2)*5; var y=x+3;\n\n";
-    source = "var y=(1-2*3)*(7+3-1);\n\n";
-    source = "var y=(3)*(7+3-1); var z = y+2;\n\n";
 
     using client::parser::iterator_type;
     iterator_type iter(source.begin());
@@ -59,16 +57,16 @@ int main()
         if (compile.start(ast))
         {
             builder.PrintStatementList();
-            std::cout << "Success\n";
-            std::cout << "-------------------------\n";
+            // std::cout << "Success\n";
+            // std::cout << "-------------------------\n";
             vm.execute(program());
 
-            std::cout << "-------------------------\n";
-            std::cout << "Assembler----------------\n\n";
-            program.print_assembler();
+            // std::cout << "-------------------------\n";
+            // std::cout << "Assembler----------------\n\n";
+            // program.print_assembler();
 
-            std::cout << "-------------------------\n";
-            std::cout << "Results------------------\n\n";
+            // std::cout << "-------------------------\n";
+            // std::cout << "Results------------------\n\n";
             program.print_variables(vm.get_stack());
         }
         else
@@ -76,14 +74,14 @@ int main()
             std::cout << "Compile failure\n";
         }
 
-        if (printer.start(ast))
-        {
-            for (auto& x : printer.ssaBuilder.statementList) std::cout << x.get() << '\n';
-        }
-        else
-        {
-            std::cout << "Printer failure\n";
-        }
+        // if (printer.start(ast))
+        // {
+        //     for (auto& x : printer.ssaBuilder.statementList) std::cout << x.get() << '\n';
+        // }
+        // else
+        // {
+        //     std::cout << "Printer failure\n";
+        // }
     }
     else
     {

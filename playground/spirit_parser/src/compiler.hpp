@@ -20,32 +20,28 @@ namespace code_gen
 
 struct ir_builder
 {
-    struct ir_temp
-    {
-        std::string name;
-    };
 
     struct ir_statement
     {
         byte_code type;
         std::string destination;
-        std::variant<int, ir_temp> first;
-        std::optional<std::variant<int, ir_temp>> second;
+        std::variant<int, std::string> first;
+        std::optional<std::variant<int, std::string>> second;
 
         friend std::ostream& operator<<(std::ostream& out, ir_statement const& data)
         {
             auto firstStr = std::string {};
             if (std::holds_alternative<int>(data.first)) firstStr = std::to_string(std::get<int>(data.first));
-            if (std::holds_alternative<ir_temp>(data.first))
-                firstStr = fmt::format("%{}", std::get<ir_temp>(data.first).name);
+            if (std::holds_alternative<std::string>(data.first))
+                firstStr = fmt::format("%{}", std::get<std::string>(data.first));
 
             auto secondStr = std::string {};
             if (data.second.has_value())
             {
                 auto const second = data.second.value();
                 if (std::holds_alternative<int>(second)) secondStr = std::to_string(std::get<int>(second));
-                if (std::holds_alternative<ir_temp>(second))
-                    secondStr = fmt::format("%{}", std::get<ir_temp>(second).name);
+                if (std::holds_alternative<std::string>(second))
+                    secondStr = fmt::format("%{}", std::get<std::string>(second));
             }
 
             std::stringstream opCodeStr;
@@ -59,40 +55,39 @@ struct ir_builder
 
     void PushToStack(int x) { m_stack.push_back(x); }
 
-    auto PopFromStack()
+    auto PopFromStack() -> std::variant<int, std::string>
     {
-        auto result = m_stack.back();
+        auto const result = m_stack.back();
         m_stack.pop_back();
         return result;
     }
 
-    void CreateBinaryOperation(int op)
+    void CreateBinaryOperation(byte_code op)
     {
         auto const second  = PopFromStack();
         auto const first   = PopFromStack();
         auto const tmpName = CreateTemporaryOnStack();
 
-        m_statements.push_back(ir_statement {static_cast<byte_code>(op), tmpName, first, second});
+        m_statements.push_back(ir_statement {op, tmpName, first, second});
     }
 
-    void CreateUnaryOperation(int op)
+    void CreateUnaryOperation(byte_code op)
     {
         auto const first   = PopFromStack();
         auto const tmpName = CreateTemporaryOnStack();
-        m_statements.push_back(ir_statement {static_cast<byte_code>(op), tmpName, first});
+        m_statements.push_back(ir_statement {op, tmpName, first});
     }
 
     void CreateStoreOperation(std::string name)
     {
-        auto first = PopFromStack();
-
+        auto const first = PopFromStack();
         m_statements.push_back(ir_statement {op_store, name, first});
     }
 
     void CreateLoadOperation(std::string name)
     {
         auto const tmpName = CreateTemporaryOnStack();
-        m_statements.push_back(ir_statement {op_load, tmpName, ir_temp {name}});
+        m_statements.push_back(ir_statement {op_load, tmpName, name});
     }
 
     void PrintStatementList() const
@@ -108,7 +103,7 @@ struct ir_builder
     {
 
         auto tmpName = std::string {"t"}.append(std::to_string(m_varCounter++));
-        auto tmp     = ir_temp {tmpName};
+        auto tmp     = tmpName;
         m_stack.push_back(tmp);
         return tmpName;
     }
@@ -116,7 +111,7 @@ struct ir_builder
 private:
     int m_varCounter = 0;
     std::map<std::string, int> variables;
-    std::vector<std::variant<int, ir_temp>> m_stack;
+    std::vector<std::variant<int, std::string>> m_stack;
     std::vector<ir_statement> m_statements;
 };
 

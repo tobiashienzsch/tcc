@@ -28,7 +28,6 @@ endif()
 
 option(TCC_BUILD_TESTS      "Build the unit tests with Catch2"  ON)
 option(TCC_BUILD_BENCHMARK  "Build benchmark tests"             ON)
-option(TCC_BUILD_PLAYGROUND "Build playground subprojects"      ON)
 option(TCC_BUILD_COVERAGE   "Build with code coverage"          OFF)
 
 set(CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake" ${CMAKE_MODULE_PATH})
@@ -46,7 +45,7 @@ find_package(Boost 1.65 REQUIRED COMPONENTS system program_options)
 add_subdirectory(3rd_party/fmt EXCLUDE_FROM_ALL)
 
 add_subdirectory(lib)
-add_subdirectory(src)
+add_subdirectory(tcc)
 
 # Testing
 if(TCC_BUILD_TESTS)
@@ -65,6 +64,3 @@ if(TCC_BUILD_BENCHMARK)
     add_subdirectory(benchmark)
 endif()
 
-if(TCC_BUILD_PLAYGROUND)
-    add_subdirectory(playground)
-endif()

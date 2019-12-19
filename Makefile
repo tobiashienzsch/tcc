@@ -9,7 +9,6 @@ CM_GENERATOR ?= Ninja
 config:
 	cmake -B$(BUILD_DIR) -S. -G"$(CM_GENERATOR)"    \
     -DCMAKE_BUILD_TYPE:STRING=$(CONFIG)             \
-    -DTCC_BUILD_PLAYGROUND=ON                       \
     -DBENCHMARK_ENABLE_GTEST_TESTS=OFF              \
     -DBENCHMARK_ENABLE_TESTING=OFF      			
 

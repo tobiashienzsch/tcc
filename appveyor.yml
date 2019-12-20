@@ -1,0 +1,33 @@
+platform: x64
+
+environment:
+  BOOST_ROOT: C:/Libraries/boost_1_71_0
+  BOOST_LIBRARYDIR_WIN32: C:/Libraries/boost_1_71_0/lib32-msvc-14.2
+  BOOST_LIBRARYDIR_WIN64: C:/Libraries/boost_1_71_0/lib64-msvc-14.2
+
+clone_folder: C:/projects/tcc
+
+configuration:
+  - Debug
+  - Release
+
+install:
+  - cd %APPVEYOR_BUILD_FOLDER%
+  - git submodule update --init --recursive
+
+build:
+  parallel: true
+
+build_script:
+  - ls -la C:Libraries/boost_1_71_0
+  - cd C:/projects/tcc
+  - mkdir build
+  - cd build
+  - cmake -G "Visual Studio 16 2019 Win64"
+    -DTCC_BUILD_BENCHMARK=OFF
+    -DBOOST_ROOT="%BOOST_ROOT%"
+    -DBOOST_LIBRARYDIR="%BOOST_LIBRARYDIR_WIN64%"
+    -DBoost_USE_STATIC_LIBS="ON"
+    ..
+  - msbuild TobanteCrappyCompiler.sln
+  - ctest

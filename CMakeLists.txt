@@ -13,7 +13,8 @@ if(CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME)
     # Let's ensure -std=c++xx instead of -std=g++xx
     set(CMAKE_CXX_EXTENSIONS OFF)
     set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
-
+    set(BUILD_SHARED_LIBS OFF)
+    
     # Let's nicely support folders in IDE's
     set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 

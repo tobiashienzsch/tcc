@@ -8,6 +8,6 @@ add_executable(benchmark_math
 target_link_libraries(benchmark_math 
 PRIVATE 
     tcc::CompilerOptions
-    tcc::Library
+    tcc::tcvm
     benchmark
 )

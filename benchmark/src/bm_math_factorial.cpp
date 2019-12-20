@@ -1,6 +1,6 @@
 #include <benchmark/benchmark.h>
 
-#include "tcc/vm/vm.hpp"
+#include "tcvm/vm/vm.hpp"
 
 namespace
 {

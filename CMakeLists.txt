@@ -73,6 +73,6 @@ if(TCC_BUILD_BENCHMARK)
     set(ALLOW_DOWNLOADING_GOOGLETEST FALSE)
     add_subdirectory(3rd_party/google-benchmark EXCLUDE_FROM_ALL) 
     set_target_properties(benchmark PROPERTIES FOLDER 3rd_party)
-    # add_subdirectory(benchmark)
+    add_subdirectory(benchmark)
 endif()
 

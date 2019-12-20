@@ -1,3 +1,8 @@
+/**
+ * @file byte_code.cpp
+ * @copyright Copyright 2019 Tobias Hienzsch. All rights reserved.
+ */
+
 #include "tcvm/vm/byte_code.hpp"
 
 namespace tcc

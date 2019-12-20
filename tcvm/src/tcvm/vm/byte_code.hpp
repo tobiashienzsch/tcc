@@ -1,10 +1,11 @@
 #pragma once
+
+#include "tcc/core/core.hpp"
+
 #include <cstdint>
 
 #include <iostream>
 #include <string_view>
-
-#include "tcc/core/core.hpp"
 
 namespace tcc
 {

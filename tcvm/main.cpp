@@ -1,3 +1,8 @@
+/**
+ * @file main.cpp
+ * @copyright Copyright 2019 Tobias Hienzsch. All rights reserved.
+ */
+
 #include "tcvm/examples.hpp"
 #include "tcvm/program_options.hpp"
 

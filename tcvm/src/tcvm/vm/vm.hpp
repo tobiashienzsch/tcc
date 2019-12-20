@@ -1,3 +1,8 @@
+/**
+ * @file vm.hpp
+ * @copyright Copyright 2019 Tobias Hienzsch. All rights reserved.
+ */
+
 #pragma once
 
 #include <cstdint>
@@ -8,7 +13,7 @@
 #include <string_view>
 #include <vector>
 
-#include "byte_code.hpp"
+#include "tcvm/vm/byte_code.hpp"
 
 namespace tcc
 {

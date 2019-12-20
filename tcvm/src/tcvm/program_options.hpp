@@ -1,3 +1,8 @@
+/**
+ * @file program_options.hpp
+ * @copyright Copyright 2019 Tobias Hienzsch. All rights reserved.
+ */
+
 #pragma once
 
 #include "fmt/format.h"
@@ -21,6 +26,7 @@ struct ProgramOptions
             desc.add_options()                                            //
                 ("help,h", "produce this help message")                   //
                 ("input,i", po::value<std::int64_t>(), "input argument")  //
+                ("version,v", "print version string")                     //
                 ;
 
             po::store(po::parse_command_line(argc, argv, desc), outputVariableMap);
@@ -29,6 +35,12 @@ struct ProgramOptions
             if (outputVariableMap.count("help"))
             {
                 fmt::print("{}\n", desc);
+                std::exit(0);
+            }
+
+            if (outputVariableMap.count("version"))
+            {
+                fmt::print("{}\n", "0.1.0");
                 std::exit(0);
             }
         }

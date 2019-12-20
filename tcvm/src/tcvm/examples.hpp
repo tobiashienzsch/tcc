@@ -1,3 +1,8 @@
+/**
+ * @file examples.hpp
+ * @copyright Copyright 2019 Tobias Hienzsch. All rights reserved.
+ */
+
 #pragma once
 
 #include "tcc/core/core.hpp"

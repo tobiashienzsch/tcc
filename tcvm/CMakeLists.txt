@@ -27,7 +27,8 @@ target_link_libraries(tcvm_lib
         fmt
     PRIVATE 
         tcc::CompilerOptions
-        tcc::CompilerWarnings   
+        tcc::CompilerWarnings  
+        tcc::CodeCoverage 
 )
 
 # Executable
@@ -41,3 +42,8 @@ target_link_libraries(${PROJECT_NAME}
         tcc::CompilerOptions
         tcc::CompilerWarnings   
 )
+
+# Test
+if(TCC_BUILD_TESTS)
+    add_subdirectory(test)
+endif()

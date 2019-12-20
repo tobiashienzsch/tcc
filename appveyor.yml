@@ -19,7 +19,7 @@ build:
   parallel: true
 
 build_script:
-  - ls -la C:Libraries/boost_1_71_0
+  - ls -la C:/Libraries/boost_1_71_0
   - cd C:/projects/tcc
   - mkdir build
   - cd build

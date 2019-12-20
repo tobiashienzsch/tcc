@@ -6,7 +6,7 @@
 
 #include <sstream>
 
-#include "tcc/vm/byte_code.hpp"
+#include "tcvm/vm/byte_code.hpp"
 
 TEST_CASE("vm: ByteCode ostream", "[vm]")
 {
@@ -32,7 +32,7 @@ TEST_CASE("vm: ByteCode ostream", "[vm]")
         tcc::ByteCode::HALT     //
     };
 
-    auto stream = std::stringstream {};
+    auto stream = std::stringstream{};
     for (auto const& x : input) stream << x;
     auto const str = stream.str();
 

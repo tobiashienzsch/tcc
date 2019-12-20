@@ -2,6 +2,8 @@ project(tcvm-test)
 
 set (TEST_SRC
     test_main.cpp
+    
+    test_byte_code.cpp
     test_vm.cpp
 )
 source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} FILES ${TEST_SRC})

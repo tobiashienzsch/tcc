@@ -1,3 +1,4 @@
+#include "asm/generator.hpp"
 #include "ast.hpp"
 #include "compiler.hpp"
 #include "config.hpp"
@@ -97,7 +98,8 @@ auto main(int argc, char** argv) -> int
     {
         if (compile.start(ast))
         {
-            irBuilder.PrintStatementList();
+            auto asmGenerator = tcc::AssemblyGenerator(irBuilder.GetStatementList());
+            asmGenerator.Generate();
             // std::cout << "Success\n";
             // std::cout << "-------------------------\n";
             vm.execute(program());

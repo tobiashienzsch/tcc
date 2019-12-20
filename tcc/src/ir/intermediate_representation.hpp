@@ -24,7 +24,7 @@ struct IntermediateRepresentation
     auto CreateAssignment(std::string const& key) -> std::string;
     auto CreateTemporaryOnStack() -> std::string;
 
-    void PrintStatementList() const;
+    auto GetStatementList() -> std::vector<ThreeAddressCode> const& { return m_statements; }
 
 private:
     int m_varCounter = 0;
@@ -32,4 +32,5 @@ private:
     std::vector<std::variant<int, std::string>> m_stack;
     std::vector<ThreeAddressCode> m_statements;
 };
+
 }  // namespace tcc

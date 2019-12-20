@@ -12,10 +12,13 @@ namespace tcc
 {
 struct ThreeAddressCode
 {
+    using Argument         = std::variant<int, std::string>;
+    using OptionalArgument = std::optional<Argument>;
+
     tcc::byte_code type;
     std::string destination;
-    std::variant<int, std::string> first;
-    std::optional<std::variant<int, std::string>> second;
+    Argument first;
+    OptionalArgument second;
 };
 
 auto operator<<(std::ostream& out, ThreeAddressCode const& data) -> std::ostream&;

@@ -63,18 +63,6 @@ auto IntermediateRepresentation::GetLastVariable(std::string const& key) const -
     return fmt::format("{}{}", key, newId);
 }
 
-void IntermediateRepresentation::PrintStatementList() const
-{
-    fmt::print("#locals: {}\n", m_variables.size());
-
-    for (auto const& x : m_statements)
-    {
-        std::cout << x << '\n';
-    }
-
-    fmt::print("-------\n\n", m_variables.size());
-}
-
 auto IntermediateRepresentation::CreateTemporaryOnStack() -> std::string
 {
     auto tmp = std::string("t").append(std::to_string(m_varCounter++));

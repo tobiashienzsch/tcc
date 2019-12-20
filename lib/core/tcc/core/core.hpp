@@ -4,6 +4,8 @@
 
 #include <cstdint>
 
+#include <iostream>
+
 namespace tcc
 {
 using Integer  = int32_t;

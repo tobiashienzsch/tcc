@@ -23,10 +23,10 @@ struct variable_declaration_class;
 struct assignment_class;
 struct variable_class;
 
-typedef x3::rule<statement_list_class, ast::statement_list> statement_list_type;
-typedef x3::rule<variable_declaration_class, ast::variable_declaration> variable_declaration_type;
-typedef x3::rule<assignment_class, ast::assignment> assignment_type;
-typedef x3::rule<variable_class, ast::variable> variable_type;
+using statement_list_type       = x3::rule<statement_list_class, ast::statement_list>;
+using variable_declaration_type = x3::rule<variable_declaration_class, ast::variable_declaration>;
+using assignment_type           = x3::rule<assignment_class, ast::assignment>;
+using variable_type             = x3::rule<variable_class, ast::variable>;
 
 statement_type const statement("statement");
 statement_list_type const statement_list("statement_list");

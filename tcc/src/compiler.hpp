@@ -177,8 +177,8 @@ private:
 ////////////////////////////////////////////////////////////////////////////
 struct compiler
 {
-    typedef bool result_type;
-    typedef std::function<void(x3::position_tagged, std::string const&)> error_handler_type;
+    using result_type        = bool;
+    using error_handler_type = std::function<void(x3::position_tagged, std::string const&)>;
 
     template<typename ErrorHandler>
     compiler(tcc::code_gen::program& prog, IRBuilder& builder, ErrorHandler const& errorHandler)

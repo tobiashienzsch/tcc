@@ -14,7 +14,7 @@ using x3::lexeme;
 using x3::raw;
 
 struct identifier_class;
-typedef x3::rule<identifier_class, std::string> identifier_type;
+using identifier_type            = x3::rule<identifier_class, std::string>;
 identifier_type const identifier = "identifier";
 
 auto const identifier_def = raw[lexeme[(alpha | '_') >> *(alnum | '_')]];

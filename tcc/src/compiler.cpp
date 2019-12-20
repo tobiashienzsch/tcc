@@ -56,8 +56,7 @@ void program::print_assembler() const
     auto pc = code.begin();
 
     std::vector<std::string> locals(variables.size());
-    typedef std::pair<std::string, int> pair;
-    for (pair const& p : variables)
+    for (auto const& p : variables)
     {
         locals[p.second] = p.first;
         std::cout << "local       " << p.first << ", @" << p.second << std::endl;

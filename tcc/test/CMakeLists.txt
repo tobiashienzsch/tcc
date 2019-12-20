@@ -3,6 +3,7 @@ project(tcc-test)
 set (TEST_SRC
     test_main.cpp
     
+    test_asm_generator.cpp
     test_parser_x3.cpp
 )
 source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} FILES ${TEST_SRC})
@@ -10,6 +11,7 @@ source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} FILES ${TEST_SRC})
 add_executable(${PROJECT_NAME} ${TEST_SRC})
 target_link_libraries(${PROJECT_NAME}
 PRIVATE
+    tcc::tcc
     tcc::CompilerOptions
     tcc::CompilerWarnings
     tcc::CodeCoverage

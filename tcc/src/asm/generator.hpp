@@ -16,26 +16,46 @@ public:
         fmt::print("Before: {} lines\n", m_ir.size());
         for (ThreeAddressCode const& x : m_ir) std::cout << x << '\n';
 
-        // OPTIMIZE
-        for (ThreeAddressCode& x : m_ir)
-        {
-            if (isBinaryOperation(x.type))
-            {
-                if (isConstant(x.first) && isConstant(x.second))
-                {
-                    x.first  = std::get<int>(x.first) + std::get<int>(x.second.value());
-                    x.second = std::nullopt;
-                    x.type   = byte_code::op_store;
-                }
-            }
-        }
+        Optimize();
 
         fmt::print("\n\nAfter: {} lines\n", m_ir.size());
         for (ThreeAddressCode const& x : m_ir) std::cout << x << '\n';
     }
 
-private:
-    auto isConstant(ThreeAddressCode::Argument const& argument) const -> bool
+    auto Optimize() -> void
+    {
+        for (ThreeAddressCode& statement : m_ir)
+        {
+            // replace constant expression with store of result.
+            if (isConstantBinaryExpression(statement))
+            {
+                statement.first  = std::get<int>(statement.first) + std::get<int>(statement.second.value());
+                statement.second = std::nullopt;
+                statement.type   = byte_code::op_store;
+            }
+
+            if (isConstantStoreExpression(statement))
+            {
+                for (auto& nextStatement : m_ir)
+                {
+                    // first
+                    std::visit(tcc::overloaded {
+                                   [](int) { ; },
+                                   [&statement, &nextStatement](std::string const& name) {
+                                       if (name == statement.destination)
+                                       {
+                                           fmt::print("{}", name);
+                                           nextStatement.first = std::get<int>(statement.first);
+                                       };
+                                   },
+                               },
+                               nextStatement.first);
+                }
+            }
+        }
+    }
+
+    static auto isConstantArgument(ThreeAddressCode::Argument const& argument) -> bool
     {
         auto returnValue = bool {false};
         std::visit(tcc::overloaded {
@@ -47,13 +67,35 @@ private:
         return returnValue;
     }
 
-    auto isConstant(ThreeAddressCode::OptionalArgument const& argument) const -> bool
+    static auto isConstantArgument(ThreeAddressCode::OptionalArgument const& argument) -> bool
     {
-        if (argument.has_value()) return isConstant(argument.value());
+        if (argument.has_value()) return isConstantArgument(argument.value());
         return false;
     }
 
-    auto isBinaryOperation(byte_code op) const -> bool
+    static auto isConstantStoreExpression(ThreeAddressCode const& statement) -> bool
+    {
+        if (statement.type == byte_code::op_store && isConstantArgument(statement.first))
+        {
+            return true;
+        }
+        return false;
+    }
+
+    static auto isConstantBinaryExpression(ThreeAddressCode const& statement) -> bool
+    {
+        if (isBinaryOperation(statement.type))
+        {
+            if (isConstantArgument(statement.first) && isConstantArgument(statement.second))
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    static auto isBinaryOperation(byte_code op) -> bool
     {
         if (op == byte_code::op_add) return true;
         if (op == byte_code::op_sub) return true;

@@ -10,7 +10,7 @@
 #include <boost/spirit/home/x3.hpp>
 #include <boost/spirit/home/x3/support/utility/annotate_on_success.hpp>
 
-namespace client
+namespace tcc
 {
 namespace parser
 {
@@ -37,7 +37,7 @@ variable_type const variable("variable");
 // Import the expression rule
 namespace
 {
-auto const& expression = client::expression();
+auto const& expression = tcc::expression();
 }
 
 auto const statement_list_def       = +(variable_declaration | assignment);
@@ -60,9 +60,9 @@ struct variable_class : x3::annotate_on_success
 {
 };
 }  // namespace parser
-}  // namespace client
+}  // namespace tcc
 
-namespace client
+namespace tcc
 {
 parser::statement_type const& statement() { return parser::statement; }
-}  // namespace client
+}  // namespace tcc

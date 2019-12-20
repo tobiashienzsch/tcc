@@ -2,7 +2,7 @@
 
 #include <boost/spirit/home/x3.hpp>
 
-namespace client
+namespace tcc
 {
 namespace parser
 {
@@ -22,4 +22,4 @@ auto const identifier_def = raw[lexeme[(alpha | '_') >> *(alnum | '_')]];
 BOOST_SPIRIT_DEFINE(identifier);
 
 }  // namespace parser
-}  // namespace client
+}  // namespace tcc

@@ -8,7 +8,7 @@
 #include <boost/spirit/home/x3.hpp>
 #include <boost/spirit/home/x3/support/utility/annotate_on_success.hpp>
 
-namespace client
+namespace tcc
 {
 namespace parser
 {
@@ -103,13 +103,13 @@ struct primary_expr_class : x3::annotate_on_success
 };
 
 }  // namespace parser
-}  // namespace client
+}  // namespace tcc
 
-namespace client
+namespace tcc
 {
 parser::expression_type const& expression()
 {
     parser::add_keywords();
     return parser::expression;
 }
-}  // namespace client
+}  // namespace tcc

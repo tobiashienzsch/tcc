@@ -68,27 +68,27 @@ auto main(int argc, char** argv) -> int
         std::cerr << "Exception of unknown type!\n";
     }
 
-    using client::parser::iterator_type;
+    using tcc::parser::iterator_type;
     iterator_type iter(source.begin());
     iterator_type end(source.end());
 
-    client::vmachine vm;                  // Our virtual machine
-    client::code_gen::program program;    // Our VM program
-    client::code_gen::IRBuilder builder;  // IR builder
-    client::ast::statement_list ast;      // Our AST
+    tcc::vmachine vm;                  // Our virtual machine
+    tcc::code_gen::program program;    // Our VM program
+    tcc::code_gen::IRBuilder builder;  // IR builder
+    tcc::ast::statement_list ast;      // Our AST
 
     using boost::spirit::x3::with;
-    using client::parser::error_handler_type;
+    using tcc::parser::error_handler_type;
     error_handler_type error_handler(iter, end, std::cerr);  // Our error handler
 
     // Our compiler
-    client::code_gen::compiler compile(program, builder, error_handler);
+    tcc::code_gen::compiler compile(program, builder, error_handler);
 
     // Our parser
     auto const parser =
         // we pass our error handler to the parser so we can access
         // it later on in our on_error and on_sucess handlers
-        with<client::parser::error_handler_tag>(std::ref(error_handler))[client::statement()];
+        with<tcc::parser::error_handler_tag>(std::ref(error_handler))[tcc::statement()];
 
     using boost::spirit::x3::ascii::space;
     bool success = phrase_parse(iter, end, parser, space, ast);

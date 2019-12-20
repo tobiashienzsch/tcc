@@ -7,7 +7,7 @@
 #include "vm.hpp"
 #include <boost/assert.hpp>
 
-namespace client
+namespace tcc
 {
 int vmachine::execute(std::vector<int> const& code, std::vector<int>::const_iterator pc,
                       std::vector<int>::iterator frame_ptr)
@@ -129,4 +129,4 @@ int vmachine::execute(std::vector<int> const& code, std::vector<int>::const_iter
     }
     return -1;
 }
-}  // namespace client
+}  // namespace tcc

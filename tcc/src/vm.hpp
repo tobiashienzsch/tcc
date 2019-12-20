@@ -5,7 +5,7 @@
 #include <iostream>
 #include <vector>
 
-namespace client
+namespace tcc
 {
 ///////////////////////////////////////////////////////////////////////////
 //  The Virtual Machine
@@ -97,4 +97,4 @@ public:
 private:
     std::vector<int> stack;
 };
-}  // namespace client
+}  // namespace tcc

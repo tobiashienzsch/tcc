@@ -11,7 +11,7 @@
 #include <iostream>
 #include <set>
 
-namespace client
+namespace tcc
 {
 namespace code_gen
 {
@@ -403,4 +403,4 @@ bool compiler::start(ast::statement_list const& x) const
     return true;
 }
 }  // namespace code_gen
-}  // namespace client
+}  // namespace tcc

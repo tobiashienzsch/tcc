@@ -3,7 +3,7 @@
 #include "ast.hpp"
 #include <boost/spirit/home/x3.hpp>
 
-namespace client
+namespace tcc
 {
 namespace x3 = boost::spirit::x3;
 namespace parser
@@ -15,4 +15,4 @@ BOOST_SPIRIT_DECLARE(statement_type);
 }  // namespace parser
 
 parser::statement_type const& statement();
-}  // namespace client
+}  // namespace tcc

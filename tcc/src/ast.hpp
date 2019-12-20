@@ -7,7 +7,7 @@
 
 #include <list>
 
-namespace client
+namespace tcc
 {
 namespace ast
 {
@@ -122,4 +122,4 @@ inline std::ostream& operator<<(std::ostream& out, variable const& var)
     return out;
 }
 }  // namespace ast
-}  // namespace client
+}  // namespace tcc

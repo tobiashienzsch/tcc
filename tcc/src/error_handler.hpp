@@ -9,7 +9,7 @@
 #include <boost/spirit/home/x3/support/ast/position_tagged.hpp>
 #include <boost/spirit/home/x3/support/utility/error_reporting.hpp>
 
-namespace client
+namespace tcc
 {
 namespace parser
 {
@@ -38,4 +38,4 @@ struct error_handler_base
     }
 };
 }  // namespace parser
-}  // namespace client
+}  // namespace tcc

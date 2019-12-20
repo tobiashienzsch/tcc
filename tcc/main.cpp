@@ -72,10 +72,10 @@ auto main(int argc, char** argv) -> int
     iterator_type iter(source.begin());
     iterator_type end(source.end());
 
-    tcc::vmachine vm;                  // Our virtual machine
-    tcc::code_gen::program program;    // Our VM program
-    tcc::code_gen::IRBuilder builder;  // IR builder
-    tcc::ast::statement_list ast;      // Our AST
+    tcc::vmachine vm;                                   // Our virtual machine
+    tcc::code_gen::program program;                     // Our VM program
+    tcc::code_gen::IntermediateRepresentation builder;  // IR builder
+    tcc::ast::statement_list ast;                       // Our AST
 
     using boost::spirit::x3::with;
     using tcc::parser::error_handler_type;

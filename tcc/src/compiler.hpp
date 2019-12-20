@@ -21,7 +21,7 @@ namespace tcc
 namespace code_gen
 {
 
-struct IRBuilder
+struct IntermediateRepresentation
 {
 
     auto PushToStack(int x) -> void { m_stack.push_back(x); }
@@ -48,26 +48,26 @@ struct IRBuilder
         auto const first   = PopFromStack();
         auto const tmpName = CreateTemporaryOnStack();
 
-        m_statements.push_back(TacStatement {op, tmpName, first, second});
+        m_statements.push_back(ThreeAddressCode {op, tmpName, first, second});
     }
 
     auto CreateUnaryOperation(byte_code op) -> void
     {
         auto const first   = PopFromStack();
         auto const tmpName = CreateTemporaryOnStack();
-        m_statements.push_back(TacStatement {op, tmpName, first, {}});
+        m_statements.push_back(ThreeAddressCode {op, tmpName, first, {}});
     }
 
     auto CreateStoreOperation(std::string key) -> void
     {
         auto const first = PopFromStack();
-        m_statements.push_back(TacStatement {op_store, key, first, {}});
+        m_statements.push_back(ThreeAddressCode {op_store, key, first, {}});
     }
 
     auto CreateLoadOperation(std::string key) -> void
     {
         auto const tmpName = CreateTemporaryOnStack();
-        m_statements.push_back(TacStatement {op_load, tmpName, key, {}});
+        m_statements.push_back(ThreeAddressCode {op_load, tmpName, key, {}});
     }
 
     auto CreateAssignment(std::string const& key) -> std::string
@@ -107,7 +107,7 @@ private:
     int m_varCounter = 0;
     std::map<std::string, int> m_variables;
     std::vector<std::variant<int, std::string>> m_stack;
-    std::vector<TacStatement> m_statements;
+    std::vector<ThreeAddressCode> m_statements;
 };
 
 struct program
@@ -146,7 +146,7 @@ struct compiler
     using error_handler_type = std::function<void(x3::position_tagged, std::string const&)>;
 
     template<typename ErrorHandler>
-    compiler(tcc::code_gen::program& prog, IRBuilder& builder, ErrorHandler const& errorHandler)
+    compiler(tcc::code_gen::program& prog, IntermediateRepresentation& builder, ErrorHandler const& errorHandler)
         : program(prog)
         , m_builder(builder)
         , error_handler([&](x3::position_tagged pos, std::string const& msg) { errorHandler(pos, msg); })
@@ -174,7 +174,7 @@ struct compiler
     bool start(ast::statement_list const& x) const;
 
     tcc::code_gen::program& program;
-    IRBuilder& m_builder;
+    IntermediateRepresentation& m_builder;
     error_handler_type error_handler;
 };
 }  // namespace code_gen

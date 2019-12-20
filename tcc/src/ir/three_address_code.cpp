@@ -4,7 +4,7 @@
 
 namespace tcc
 {
-auto operator<<(std::ostream& out, TacStatement const& data) -> std::ostream&
+auto operator<<(std::ostream& out, ThreeAddressCode const& data) -> std::ostream&
 {
     auto firstStr = std::string {};
     std::visit(tcc::overloaded {

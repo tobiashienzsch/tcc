@@ -10,7 +10,7 @@
 
 namespace tcc
 {
-struct TacStatement
+struct ThreeAddressCode
 {
     tcc::byte_code type;
     std::string destination;
@@ -18,6 +18,6 @@ struct TacStatement
     std::optional<std::variant<int, std::string>> second;
 };
 
-auto operator<<(std::ostream& out, TacStatement const& data) -> std::ostream&;
+auto operator<<(std::ostream& out, ThreeAddressCode const& data) -> std::ostream&;
 
 }  // namespace tcc

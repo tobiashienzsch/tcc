@@ -21,15 +21,14 @@ set(tcc_lib_source
 )
 source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} FILES ${tcc_lib_source})
 
-add_library(tcc_lib STATIC ${tcc_lib_source})
-add_library(tcc::tcc ALIAS tcc_lib)
+add_executable(${PROJECT_NAME} ${tcc_lib_source})
 
-target_include_directories(tcc_lib 
+target_include_directories(${PROJECT_NAME} 
     PUBLIC 
         src
 )
 
-target_link_libraries(tcc_lib 
+target_link_libraries(${PROJECT_NAME} 
     PUBLIC 
         tcc::Core
         
@@ -43,15 +42,3 @@ target_link_libraries(tcc_lib
         tcc::CompilerWarnings
 
 )
-
-add_executable(${PROJECT_NAME} main.cpp)
-target_link_libraries(${PROJECT_NAME} 
-    PRIVATE 
-        tcc::tcc
-        tcc::CompilerOptions
-        tcc::CompilerWarnings
-)
-
-if(TCC_BUILD_TESTS)
-    add_subdirectory(test)
-endif()

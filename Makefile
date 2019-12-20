@@ -12,6 +12,15 @@ config:
     -DBENCHMARK_ENABLE_GTEST_TESTS=OFF              \
     -DBENCHMARK_ENABLE_TESTING=OFF      			
 
+.PHONY: config-vs
+config-vs:
+	cmake -B$(BUILD_DIR) -S. -G "Visual Studio 16 2019" 		\
+	-DBOOST_ROOT="C:/boost/boost_1_71_0" 						\
+	-DBOOST_LIBRARYDIR="C:/boost/boost_1_71_0/lib64-msvc-14.2" 	\
+	-DBoost_USE_STATIC_LIBS="ON"								\
+	-DBENCHMARK_ENABLE_GTEST_TESTS=OFF              			\
+    -DBENCHMARK_ENABLE_TESTING=OFF      						
+
 .PHONY: build
 build:
 	cmake --build $(BUILD_DIR) --config $(CONFIG)

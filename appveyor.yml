@@ -8,7 +8,6 @@ platform: x64
 
 environment:
   BOOST_ROOT: C:/Libraries/boost_1_71_0
-  BOOST_LIBRARYDIR_WIN32: C:/Libraries/boost_1_71_0/lib32-msvc-14.2
   BOOST_LIBRARYDIR_WIN64: C:/Libraries/boost_1_71_0/lib64-msvc-14.2
 
 clone_folder: C:/projects/tcc

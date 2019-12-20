@@ -4,11 +4,21 @@
  */
 #include "catch2/catch.hpp"
 
+#include "tcvm/examples.hpp"
 #include "tcvm/vm/byte_code.hpp"
 #include "tcvm/vm/vm.hpp"
 
 using tcc::ByteCode;
 
+namespace
+{
+struct TestCase
+{
+    tcc::Integer input;
+    tcc::Integer expected;
+};
+
+}  // namespace
 TEST_CASE("vm: Halt", "[vm]")
 {
     auto const assembly = std::vector<tcc::Integer>{
@@ -57,89 +67,35 @@ TEST_CASE("vm: GlobalMemory", "[vm]")
 
 TEST_CASE("vm: Factorial", "[vm]")
 {
-    auto const argument  = 3;
-    auto const factorial = std::vector<tcc::Integer>{
-        // .def fact: args=1, locals=0
-        // if n < 2 return 1
-        ByteCode::LOAD, -3,   // 0
-        ByteCode::ICONST, 2,  // 2
-        ByteCode::ILT,        // 4
-        ByteCode::BRF, 10,    // 5
-        ByteCode::ICONST, 1,  // 7
-        ByteCode::RET,        // 9
-        // return n * fact(n-1)
-        ByteCode::LOAD, -3,    // 10
-        ByteCode::LOAD, -3,    // 12
-        ByteCode::ICONST, 1,   // 14
-        ByteCode::ISUB,        // 16
-        ByteCode::CALL, 0, 1,  // 17
-        ByteCode::IMUL,        // 20
-        ByteCode::RET,         // 21
 
-        // .def main: args=0, locals=0
-        ByteCode::ICONST, argument,  // 22 <-- MAIN
-        ByteCode::CALL, 0, 1,        // 24
-        ByteCode::EXIT,              // 27
+    auto const testCases = {
+        TestCase{1, 1},    //
+        TestCase{3, 6},    //
+        TestCase{7, 5040}  //
     };
 
-    auto vm             = tcc::VirtualMachine(factorial, 22, 0, 200, false);
-    auto const exitCode = vm.Cpu();
-
-    REQUIRE(exitCode == 6);
+    for (auto const& test : testCases)
+    {
+        auto const factorial = tcvm::createFactorialAssembly(test.input);
+        auto vm              = tcc::VirtualMachine(factorial, 22, 0, 200, false);
+        auto const exitCode  = vm.Cpu();
+        REQUIRE(exitCode == test.expected);
+    }
 }
 
 TEST_CASE("vm: Fibonacci", "[vm]")
 {
-    auto const createFibonacciAssembly = [](tcc::Integer const arg) {
-        return std::vector<tcc::Integer>{
-            // .def fib: args=1, locals=0
-            // if (x < 2) return x;
-            ByteCode::LOAD, -3,   // 0
-            ByteCode::ICONST, 2,  // 2
-            ByteCode::ILT,        // 4
-            ByteCode::BRF, 10,    // 5
-            ByteCode::LOAD, -3,   // 7
-            ByteCode::RET,        // 9
-
-            // return fib(x - 1) + fib(x - 2)
-            ByteCode::LOAD, -3,    // 10
-            ByteCode::ICONST, 1,   // 12
-            ByteCode::ISUB,        // 14
-            ByteCode::CALL, 0, 1,  // 15 <-- fib(x-1)
-            ByteCode::LOAD, -3,    // 18
-            ByteCode::ICONST, 2,   // 20
-            ByteCode::ISUB,        // 22
-            ByteCode::CALL, 0, 1,  // 23 <-- fib(x-2)
-            ByteCode::IADD,        // 26
-            ByteCode::RET,         // 27
-
-            // .def main: args=0, locals=0
-            // return fib(arg);
-            ByteCode::ICONST, arg,  // 28 <-- MAIN
-            ByteCode::CALL, 0, 1,   // 30 <-- fib(arg)
-            ByteCode::EXIT,         // 33
-        };
+    auto const testCases = {
+        TestCase{1, 1},    //
+        TestCase{5, 5},    //
+        TestCase{12, 144}  //
     };
 
-    SECTION("1")
+    for (auto const& test : testCases)
     {
-        auto const assembly = createFibonacciAssembly(1);
+        auto const assembly = tcvm::CreateFibonacciAssembly(test.input);
         auto vm             = tcc::VirtualMachine(assembly, 28, 0, 200, false);
-        REQUIRE(vm.Cpu() == 1);
-    }
-
-    SECTION("5")
-    {
-        auto const assembly = createFibonacciAssembly(5);
-        auto vm             = tcc::VirtualMachine(assembly, 28, 0, 200, false);
-        REQUIRE(vm.Cpu() == 5);
-    }
-
-    SECTION("12")
-    {
-        auto const assembly = createFibonacciAssembly(12);
-        auto vm             = tcc::VirtualMachine(assembly, 28, 0, 200, false);
-        REQUIRE(vm.Cpu() == 144);
+        REQUIRE(vm.Cpu() == test.expected);
     }
 }
 

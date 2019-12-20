@@ -63,4 +63,36 @@ auto const createFactorialAssembly = [](tcc::Integer argument) {
         ByteCode::EXIT,              // 27
     };
 };
+
+auto const CreateFibonacciAssembly = [](tcc::Integer const arg) {
+    using tcc::ByteCode;
+    return std::vector<tcc::Integer>{
+        // .def fib: args=1, locals=0
+        // if (x < 2) return x;
+        ByteCode::LOAD, -3,   // 0
+        ByteCode::ICONST, 2,  // 2
+        ByteCode::ILT,        // 4
+        ByteCode::BRF, 10,    // 5
+        ByteCode::LOAD, -3,   // 7
+        ByteCode::RET,        // 9
+
+        // return fib(x - 1) + fib(x - 2)
+        ByteCode::LOAD, -3,    // 10
+        ByteCode::ICONST, 1,   // 12
+        ByteCode::ISUB,        // 14
+        ByteCode::CALL, 0, 1,  // 15 <-- fib(x-1)
+        ByteCode::LOAD, -3,    // 18
+        ByteCode::ICONST, 2,   // 20
+        ByteCode::ISUB,        // 22
+        ByteCode::CALL, 0, 1,  // 23 <-- fib(x-2)
+        ByteCode::IADD,        // 26
+        ByteCode::RET,         // 27
+
+        // .def main: args=0, locals=0
+        // return fib(arg);
+        ByteCode::ICONST, arg,  // 28 <-- MAIN
+        ByteCode::CALL, 0, 1,   // 30 <-- fib(arg)
+        ByteCode::EXIT,         // 33
+    };
+};
 }  // namespace tcvm

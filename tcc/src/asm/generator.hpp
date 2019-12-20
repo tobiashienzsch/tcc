@@ -69,7 +69,11 @@ public:
 
     static auto isConstantArgument(ThreeAddressCode::OptionalArgument const& argument) -> bool
     {
-        if (argument.has_value()) return isConstantArgument(argument.value());
+        if (argument.has_value())
+        {
+            return isConstantArgument(argument.value());
+        }
+
         return false;
     }
 

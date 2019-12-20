@@ -1,17 +1,18 @@
 /**
- * @file test_asm_generator.cpp
+ * @file test_optimizer.cpp
  * @copyright Copyright 2019 Tobias Hienzsch. MIT license.
  */
 #include "catch2/catch.hpp"
 
 #include "tcc/core/testing.hpp"
 
-#include "asm/generator.hpp"
+#include "optimizer/optimizer.hpp"
+
+using std::string;
 
 using tcc::byte_code;
+using tcc::Optimizer;
 using tcc::ThreeAddressCode;
-using asmGen = tcc::AssemblyGenerator;
-using std::string;
 
 TEST_CASE("optimizer: BinaryOperation", "[optimizer]")
 {
@@ -27,7 +28,7 @@ TEST_CASE("optimizer: BinaryOperation", "[optimizer]")
 
     for (auto const& test : testData)
     {
-        REQUIRE(asmGen::isBinaryOperation(test.input) == test.expected);
+        REQUIRE(Optimizer::isBinaryOperation(test.input) == test.expected);
     }
 }
 
@@ -46,7 +47,7 @@ TEST_CASE("optimizer: ConstantArgument", "[optimizer]")
 
     for (auto const& test : testData)
     {
-        REQUIRE(asmGen::isConstantArgument(test.input) == test.expected);
+        REQUIRE(Optimizer::isConstantArgument(test.input) == test.expected);
     }
 }
 
@@ -66,7 +67,7 @@ TEST_CASE("optimizer: ConstantArgumentOptional", "[optimizer]")
 
     for (auto const& test : testData)
     {
-        REQUIRE(asmGen::isConstantArgument(test.input) == test.expected);
+        REQUIRE(Optimizer::isConstantArgument(test.input) == test.expected);
     }
 }
 
@@ -80,7 +81,7 @@ TEST_CASE("optimizer: ConstantStoreExpression", "[optimizer]")
 
     for (auto const& test : testData)
     {
-        REQUIRE(asmGen::isConstantStoreExpression(test.input) == test.expected);
+        REQUIRE(Optimizer::isConstantStoreExpression(test.input) == test.expected);
     }
 }
 
@@ -93,7 +94,7 @@ TEST_CASE("optimizer: ConstantBinaryExpression", "[optimizer]")
 
     for (auto const& test : testData)
     {
-        REQUIRE(asmGen::isConstantBinaryExpression(test.input) == test.expected);
+        REQUIRE(Optimizer::isConstantBinaryExpression(test.input) == test.expected);
     }
 }
 
@@ -104,8 +105,8 @@ TEST_CASE("optimizer: UnusedStatement", "[optimizer]")
         ThreeAddressCode {byte_code::op_store, string("x2"), string("x1"), std::nullopt}  //
     };
 
-    REQUIRE(asmGen::IsUnusedStatement(testData.at(0), testData) == false);
-    REQUIRE(asmGen::IsUnusedStatement(testData.at(1), testData) == true);
+    REQUIRE(Optimizer::IsUnusedStatement(testData.at(0), testData) == false);
+    REQUIRE(Optimizer::IsUnusedStatement(testData.at(1), testData) == true);
 }
 
 TEST_CASE("optimizer: DeleteUnusedStatements", "[optimizer]")
@@ -115,7 +116,7 @@ TEST_CASE("optimizer: DeleteUnusedStatements", "[optimizer]")
     };
 
     REQUIRE(testData.size() == std::size_t {1});
-    REQUIRE(asmGen::DeleteUnusedStatements(testData) == false);
+    REQUIRE(Optimizer::DeleteUnusedStatements(testData) == false);
     REQUIRE(testData.size() == std::size_t {0});
 }
 
@@ -128,7 +129,7 @@ TEST_CASE("optimizer: ReplaceVariableIfConstant", "[optimizer]")
         ThreeAddressCode {byte_code::op_add, string("t0"), 42, string("x1")}               //
     };
 
-    REQUIRE(asmGen::ReplaceVariableIfConstant(testData.at(0), testData) == true);
+    REQUIRE(Optimizer::ReplaceVariableIfConstant(testData.at(0), testData) == true);
     REQUIRE(std::get<int>(testData[1].first) == 143);
     REQUIRE(std::get<int>(testData[2].first) == 143);
     REQUIRE(std::get<int>(testData[3].second.value()) == 143);

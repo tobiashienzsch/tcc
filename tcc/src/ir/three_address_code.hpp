@@ -7,6 +7,7 @@
 #include <optional>
 #include <ostream>
 #include <variant>
+#include <vector>
 
 namespace tcc
 {
@@ -21,6 +22,8 @@ struct ThreeAddressCode
     OptionalArgument second;
     bool isTemporary {true};
 };
+
+using StatementList = std::vector<ThreeAddressCode>;
 
 auto operator<<(std::ostream& out, ThreeAddressCode const& data) -> std::ostream&;
 

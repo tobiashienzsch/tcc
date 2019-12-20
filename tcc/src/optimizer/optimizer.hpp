@@ -8,26 +8,17 @@
 
 namespace tcc
 {
-using StatementList = std::vector<ThreeAddressCode>;
 
-class AssemblyGenerator
+class Optimizer
 {
 public:
-    AssemblyGenerator(StatementList ir) : m_statementList(std::move(ir)) {}
+    Optimizer(StatementList& statements) : m_statementList(statements) {}
 
-    auto Generate() -> void
+    auto Optimize() -> void
     {
         fmt::print("Before: {} lines\n", m_statementList.size());
         for (ThreeAddressCode const& x : m_statementList) std::cout << x << '\n';
 
-        Optimize();
-
-        fmt::print("\n\nAfter: {} lines\n", m_statementList.size());
-        for (ThreeAddressCode const& x : m_statementList) std::cout << x << '\n';
-    }
-
-    auto Optimize() -> void
-    {
         for (auto x = 0u; x < 7; x++)
         {
             tcc::IgnoreUnused(x);
@@ -40,6 +31,9 @@ public:
         }
 
         DeleteUnusedStatements(m_statementList);
+
+        fmt::print("\n\nAfter: {} lines\n", m_statementList.size());
+        for (ThreeAddressCode const& x : m_statementList) std::cout << x << '\n';
     }
 
     static auto DeleteUnusedStatements(StatementList& statementList) -> bool
@@ -211,6 +205,6 @@ public:
     }
 
 private:
-    StatementList m_statementList;
+    StatementList& m_statementList;
 };
 }  // namespace tcc

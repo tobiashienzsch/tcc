@@ -1,8 +1,8 @@
-#include "asm/generator.hpp"
 #include "ast.hpp"
 #include "compiler.hpp"
 #include "config.hpp"
 #include "error_handler.hpp"
+#include "optimizer/optimizer.hpp"
 #include "statement.hpp"
 #include "vm.hpp"
 
@@ -98,8 +98,8 @@ auto main(int argc, char** argv) -> int
     {
         if (compile.start(ast))
         {
-            auto asmGenerator = tcc::AssemblyGenerator(irBuilder.GetStatementList());
-            asmGenerator.Generate();
+            auto optimizer = tcc::Optimizer(irBuilder.GetStatementList());
+            optimizer.Optimize();
             // std::cout << "Success\n";
             // std::cout << "-------------------------\n";
             vm.execute(program());

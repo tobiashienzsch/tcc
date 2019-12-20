@@ -24,7 +24,7 @@ struct IntermediateRepresentation
     auto CreateAssignment(std::string const& key) -> std::string;
     auto CreateTemporaryOnStack() -> std::string;
 
-    auto GetStatementList() -> std::vector<ThreeAddressCode> const& { return m_statements; }
+    auto GetStatementList() -> std::vector<ThreeAddressCode>& { return m_statements; }
 
 private:
     int m_varCounter = 0;

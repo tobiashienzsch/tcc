@@ -3,8 +3,8 @@ project(tcc-test)
 set (TEST_SRC
     test_main.cpp
     
-    test_asm_generator.cpp
     test_parser_x3.cpp
+    test_optimizer.cpp
 )
 source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} FILES ${TEST_SRC})
 

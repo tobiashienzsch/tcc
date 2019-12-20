@@ -3,7 +3,7 @@ project(tcc)
 # library
 set(tcc_lib_source
     # src/asm/generator.cpp
-    src/asm/generator.hpp
+    src/optimizer/optimizer.hpp
 
     src/ir/intermediate_representation.cpp
     src/ir/intermediate_representation.hpp

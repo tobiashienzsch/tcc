@@ -2,13 +2,13 @@
 
 #include "tcc/core/core.hpp"
 
-#include "tcc/vm/vm.hpp"
+#include "tcvm/vm/vm.hpp"
 
 namespace tcvm
 {
 auto const createAdditionAssembly = [](tcc::Integer const arg) {
     using tcc::ByteCode;
-    return std::vector<tcc::Integer> {
+    return std::vector<tcc::Integer>{
         // .def addition: args=2, locals=1
         // l1 = x + y
         ByteCode::ICONST, 0,  // 0 local #1
@@ -38,7 +38,7 @@ auto const createAdditionAssembly = [](tcc::Integer const arg) {
 
 auto const createFactorialAssembly = [](tcc::Integer argument) {
     using tcc::ByteCode;
-    return std::vector<tcc::Integer> {
+    return std::vector<tcc::Integer>{
         // .def fact: args=1, locals=0
         // if n < 2 return 1
         ByteCode::LOAD, -3,   // 0

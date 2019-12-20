@@ -1,23 +1,43 @@
 project(tcvm)
 
-set(tcvm_source
+# Library
+set(tcvm_lib_source
     main.cpp
 
     src/tcvm/examples.hpp
     src/tcvm/program_options.hpp
-)
 
-add_executable(${PROJECT_NAME} ${tcvm_source})
-source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} FILES ${tcvm_source})
-target_include_directories(${PROJECT_NAME} PRIVATE src)
-target_link_libraries(${PROJECT_NAME} 
-    PRIVATE 
-        tcc::Library
-        tcc::CompilerOptions
-        tcc::CompilerWarnings    
+    src/tcvm/vm/byte_code.hpp
+    src/tcvm/vm/byte_code.cpp
+    src/tcvm/vm/vm.hpp
+    src/tcvm/vm/vm.cpp
+)
+source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} FILES ${tcvm_lib_source})
+
+add_library(tcvm_lib ${tcvm_lib_source})
+add_library(tcc::tcvm ALIAS tcvm_lib)
+target_include_directories(tcvm_lib PUBLIC src)
+target_link_libraries(tcvm_lib  
+    PUBLIC
+        tcc::Core 
         Boost::boost 
         Boost::program_options 
         Boost::system
         Boost::filesystem
         fmt
+    PRIVATE 
+        tcc::CompilerOptions
+        tcc::CompilerWarnings   
+)
+
+# Executable
+set(tcvm_source main.cpp)
+source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} FILES ${tcvm_source})
+add_executable(${PROJECT_NAME} ${tcvm_source})
+target_link_libraries(${PROJECT_NAME}  
+    PUBLIC 
+        tcc::tcvm
+    PRIVATE 
+        tcc::CompilerOptions
+        tcc::CompilerWarnings   
 )

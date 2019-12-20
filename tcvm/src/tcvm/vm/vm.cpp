@@ -1,4 +1,4 @@
-#include "tcc/vm/vm.hpp"
+#include "tcvm/vm/vm.hpp"
 
 namespace tcc
 {
@@ -183,8 +183,8 @@ void VirtualMachine::disassemble(Integer const opcode)
 {
     auto const instruction = Instructions[opcode];
     std::printf("%04d: ", m_instructionPointer);
-    std::stringstream byteCodeStr {};
-    byteCodeStr << ByteCode {opcode};
+    std::stringstream byteCodeStr{};
+    byteCodeStr << ByteCode{opcode};
     std::printf("%s", byteCodeStr.str().c_str());
     if (instruction.numberOfOperands == 1) std::printf(" %d", m_code.at(m_instructionPointer + 1));
     if (instruction.numberOfOperands == 2)

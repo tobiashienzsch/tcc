@@ -1,3 +1,8 @@
+version: 0.1.0.{build}
+branches:
+  only:
+    - master
+
 image: Visual Studio 2019
 platform: x64
 
@@ -9,7 +14,6 @@ environment:
 clone_folder: C:/projects/tcc
 
 configuration:
-  - Debug
   - Release
 
 install:
@@ -30,5 +34,5 @@ build_script:
     -DBOOST_LIBRARYDIR="%BOOST_LIBRARYDIR_WIN64%"
     -DBoost_USE_STATIC_LIBS="ON"
     ..
-  - msbuild TobanteCrappyCompiler.sln
+  - cmake --build . --config Release
   - ctest

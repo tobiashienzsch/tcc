@@ -42,7 +42,7 @@ include(tccCompilerWarnings)
 #   set(Boost_NO_SYSTEM_PATHS     on                                  CACHE BOOL "Do not search system for Boost")
 # endif()
 
-find_package(Boost 1.65 REQUIRED COMPONENTS system program_options)
+find_package(Boost 1.65 REQUIRED COMPONENTS system program_options filesystem)
 
 add_subdirectory(3rd_party/fmt EXCLUDE_FROM_ALL)
 

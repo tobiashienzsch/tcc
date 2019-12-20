@@ -9,6 +9,7 @@ target_link_libraries(${PROJECT_NAME}
         tcc::CompilerWarnings    
         Boost::boost 
         Boost::program_options 
-        Boost::system 
+        Boost::system
+        Boost::filesystem
         fmt
 )

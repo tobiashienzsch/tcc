@@ -35,7 +35,8 @@ target_link_libraries(tcc_lib
         
         Boost::boost 
         Boost::program_options 
-        Boost::system 
+        Boost::system
+        Boost::filesystem
         fmt
     PRIVATE
         tcc::CompilerOptions

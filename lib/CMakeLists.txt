@@ -27,6 +27,7 @@ PUBLIC
 
     Boost::boost
     Boost::system
+    Boost::filesystem
 PRIVATE
     tcc::CompilerOptions
     tcc::CompilerWarnings

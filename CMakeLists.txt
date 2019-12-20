@@ -1,7 +1,7 @@
-cmake_minimum_required(VERSION 3.12)
-project(TobanteCrappyCompiler
+cmake_minimum_required(VERSION 3.12...3.16)
+project(TobanteCrappyCompilerCollection
     VERSION 0.1
-    DESCRIPTION "tobante's crappy compiler collection"
+    DESCRIPTION "tobante's (crappy) compiler collection"
     LANGUAGES CXX
 )
 
@@ -17,6 +17,12 @@ if(CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME)
     # Let's nicely support folders in IDE's
     set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 
+    include(CheckIPOSupported)
+    check_ipo_supported(RESULT TCC_BUILD_LTO)
+    if(TCC_BUILD_LTO)
+        message(STATUS "TobanteCrappyCompilerCollection: lto is supported")
+    endif()
+
     # Docs only available if this is the main app
     find_package(Doxygen)
         if(Doxygen_FOUND)
@@ -26,28 +32,25 @@ if(CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME)
     endif()
 endif()
 
+# project options
 option(TCC_BUILD_TESTS      "Build the unit tests with Catch2"  ON)
 option(TCC_BUILD_BENCHMARK  "Build benchmark tests"             ON)
 option(TCC_BUILD_COVERAGE   "Build with code coverage"          OFF)
 
+# cmake modules
 list (APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
 include(tccCodeCoverage)
 include(tccCompilerOptions)
 include(tccCompilerWarnings)
 
-# if (WIN32)
-#   set(BOOST_INCLUDEDIR          "C:\\Developer\\lib\\boost"         CACHE PATH "Boost include path")
-#   set(BOOST_LIBRARYDIR          "C:\\Developer\\lib\\boost"         CACHE PATH "Boost lib path")
-#   set(BOOST_ROOT                "C:\\Developer\\lib\\boost\\boost"  CACHE PATH "Boost library path")
-#   set(Boost_NO_SYSTEM_PATHS     on                                  CACHE BOOL "Do not search system for Boost")
-# endif()
-
+# boost
 find_package(Boost 1.65 REQUIRED COMPONENTS system program_options filesystem)
 
+# fmt
 add_subdirectory(3rd_party/fmt EXCLUDE_FROM_ALL)
 set_target_properties(fmt PROPERTIES FOLDER 3rd_party)
 
-# Testing
+# catch2
 if(TCC_BUILD_TESTS)
     list (APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/3rd_party/Catch2/contrib")
     enable_testing()
@@ -56,17 +59,18 @@ if(TCC_BUILD_TESTS)
     include(Catch)
 endif()
 
+# projects
 add_subdirectory(lib/core)
 add_subdirectory(lib)
 add_subdirectory(tcc)
 add_subdirectory(tcvm)
 
-# Testing
+# tests
 if(TCC_BUILD_TESTS)
     add_subdirectory(test)
 endif()
 
-# Benchmark
+# benchmarks
 if(TCC_BUILD_BENCHMARK)
     set(ALLOW_DOWNLOADING_GOOGLETEST FALSE)
     add_subdirectory(3rd_party/google-benchmark EXCLUDE_FROM_ALL) 

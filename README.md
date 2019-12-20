@@ -1,4 +1,4 @@
-# tobante's crappy compiler
+# tobante's (crappy) compiler collection
 
 ## Status
 

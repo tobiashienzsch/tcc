@@ -13,44 +13,52 @@ using StatementList = std::vector<ThreeAddressCode>;
 class AssemblyGenerator
 {
 public:
-    AssemblyGenerator(StatementList ir) : m_ir(std::move(ir)) {}
+    AssemblyGenerator(StatementList ir) : m_statementList(std::move(ir)) {}
 
     auto Generate() -> void
     {
-        fmt::print("Before: {} lines\n", m_ir.size());
-        for (ThreeAddressCode const& x : m_ir) std::cout << x << '\n';
+        fmt::print("Before: {} lines\n", m_statementList.size());
+        for (ThreeAddressCode const& x : m_statementList) std::cout << x << '\n';
 
         Optimize();
 
-        fmt::print("\n\nAfter: {} lines\n", m_ir.size());
-        for (ThreeAddressCode const& x : m_ir) std::cout << x << '\n';
+        fmt::print("\n\nAfter: {} lines\n", m_statementList.size());
+        for (ThreeAddressCode const& x : m_statementList) std::cout << x << '\n';
     }
 
     auto Optimize() -> void
     {
-        for (auto _ : {1, 2, 3})
+        for (auto x : {1, 2})
         {
-            tcc::IgnoreUnused(_);
+            std::for_each(std::begin(m_statementList), std::end(m_statementList),
+                          [](auto& statement) { ReplaceWithConstantStore(statement); });
 
-            for (ThreeAddressCode& statement : m_ir)
-            {
-                ReplaceWithConstantStore(statement);
-                ReplaceVariableWithConstant(statement);
-            }
+            std::for_each(std::begin(m_statementList), std::end(m_statementList),
+                          [&](auto& statement) { ReplaceVariableIfConstant(statement, m_statementList); });
         }
-        DeleteUnusedStatements(m_ir);
+
+        // DeleteUnusedStatements(m_statementList);
     }
 
     static auto DeleteUnusedStatements(StatementList& statementList) -> bool
     {
-        std::remove_if(std::begin(statementList), std::end(statementList),
-                       [&statementList](auto const& statement) { return IsUnusedStatement(statement, statementList); });
+        while (true)
+        {
+            auto const elementToDelete = std::find_if(
+                std::begin(statementList), std::end(statementList),
+                [&statementList](auto const& statement) { return IsUnusedStatement(statement, statementList); });
+
+            if (elementToDelete == std::end(statementList)) return false;
+
+            statementList.erase(elementToDelete);
+        }
+
         return false;
     }
 
     static auto IsUnusedStatement(ThreeAddressCode const& statement, StatementList const& statementList) -> bool
     {
-        return std::none_of(std::begin(statementList), std::end(statementList),
+        return !std::any_of(std::begin(statementList), std::end(statementList),
                             [&statement](ThreeAddressCode const& item) {
                                 auto result = false;
 
@@ -77,24 +85,41 @@ public:
                             });
     }
 
-    auto ReplaceVariableWithConstant(ThreeAddressCode& statement) -> bool
+    static auto ReplaceVariableIfConstant(ThreeAddressCode& statement, StatementList& statementList) -> bool
     {
         if (isConstantStoreExpression(statement))
         {
-            for (auto& nextStatement : m_ir)
+            for (auto& otherStatement : statementList)
             {
-                // first
-                std::visit(tcc::overloaded {
-                               [](int) { ; },
-                               [&statement, &nextStatement](std::string const& name) {
-                                   if (name == statement.destination)
-                                   {
-                                       fmt::print("{}", name);
-                                       nextStatement.first = std::get<int>(statement.first);
-                                   };
+                if (otherStatement.type != byte_code::op_load)
+                {
+                    // first
+                    std::visit(tcc::overloaded {
+                                   [](int) { ; },
+                                   [&statement, &otherStatement](std::string const& name) {
+                                       if (name == statement.destination)
+                                       {
+                                           otherStatement.first = std::get<int>(statement.first);
+                                       };
+                                   },
                                },
-                           },
-                           nextStatement.first);
+                               otherStatement.first);
+
+                    // second
+                    if (otherStatement.second.has_value())
+                    {
+                        std::visit(tcc::overloaded {
+                                       [](int) { ; },
+                                       [&statement, &otherStatement](std::string const& name) {
+                                           if (name == statement.destination)
+                                           {
+                                               otherStatement.second = std::get<int>(statement.first);
+                                           };
+                                       },
+                                   },
+                                   otherStatement.second.value());
+                    }
+                }
             }
 
             return true;
@@ -183,6 +208,6 @@ public:
     }
 
 private:
-    StatementList m_ir;
+    StatementList m_statementList;
 };
 }  // namespace tcc

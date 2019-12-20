@@ -107,3 +107,29 @@ TEST_CASE("optimizer: UnusedStatement", "[optimizer]")
     REQUIRE(asmGen::IsUnusedStatement(testData.at(0), testData) == false);
     REQUIRE(asmGen::IsUnusedStatement(testData.at(1), testData) == true);
 }
+
+TEST_CASE("optimizer: DeleteUnusedStatements", "[optimizer]")
+{
+    auto testData = tcc::StatementList {
+        ThreeAddressCode {byte_code::op_store, string("t0"), 1, std::nullopt}  //
+    };
+
+    REQUIRE(testData.size() == std::size_t {1});
+    REQUIRE(asmGen::DeleteUnusedStatements(testData) == false);
+    REQUIRE(testData.size() == std::size_t {0});
+}
+
+TEST_CASE("optimizer: ReplaceVariableIfConstant", "[optimizer]")
+{
+    auto testData = tcc::StatementList {
+        ThreeAddressCode {byte_code::op_store, string("x1"), 143, std::nullopt},           //
+        ThreeAddressCode {byte_code::op_store, string("x2"), string("x1"), std::nullopt},  //
+        ThreeAddressCode {byte_code::op_store, string("t0"), string("x1"), std::nullopt},  //
+        ThreeAddressCode {byte_code::op_add, string("t0"), 42, string("x1")}               //
+    };
+
+    REQUIRE(asmGen::ReplaceVariableIfConstant(testData.at(0), testData) == true);
+    REQUIRE(std::get<int>(testData[1].first) == 143);
+    REQUIRE(std::get<int>(testData[2].first) == 143);
+    REQUIRE(std::get<int>(testData[3].second.value()) == 143);
+}

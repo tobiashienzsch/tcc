@@ -11,8 +11,8 @@ else()
         -Wall
         -Wextra
         -Wshadow
-        -Wdouble-promotion
-        -Wsign-conversion
+        # -Wsign-conversion
+        # -Wdouble-promotion
         # -Wconversion
   )
   # GCC ONLY

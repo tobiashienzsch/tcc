@@ -6,6 +6,7 @@
 #include <memory>
 #include <vector>
 
+#include "tcc/core/core.hpp"
 #include "tcc/vm/vm.hpp"
 
 namespace tcc
@@ -256,7 +257,11 @@ public:
     ~ExpressionStatement() override = default;
 
     Statement::Type GetType() const noexcept override { return Statement::Type::Expression; };
-    InstructionList GetAssembly(Integer const offset = 0) const override { return expression->GetAssembly(); };
+    InstructionList GetAssembly(Integer const offset = 0) const override
+    {
+        tcc::IgnoreUnused(offset);
+        return expression->GetAssembly();
+    };
     void Print(std::ostream& str) const override { str << "expression: " << *expression.get(); }
 
 private:
@@ -273,7 +278,11 @@ public:
     ~AssignmentStatement() override = default;
 
     Statement::Type GetType() const noexcept override { return Statement::Type::Assignment; };
-    InstructionList GetAssembly(Integer const offset = 0) const override { return m_expression->GetAssembly(); };
+    InstructionList GetAssembly(Integer const offset = 0) const override
+    {
+        tcc::IgnoreUnused(offset);
+        return m_expression->GetAssembly();
+    };
 
     void Print(std::ostream& str) const override
     {
@@ -296,6 +305,7 @@ public:
     Statement::Type GetType() const noexcept override { return Statement::Type::Return; };
     InstructionList GetAssembly(Integer const offset = 0) const override
     {
+        tcc::IgnoreUnused(offset);
         auto result = expression->GetAssembly();
         result.push_back(ByteCode::RET);
         return result;
@@ -400,6 +410,7 @@ public:
 
     InstructionList GetAssembly(Integer const offset = 0) const override
     {
+        tcc::IgnoreUnused(offset);
         auto result = m_compoundStatements->GetAssembly();
         return result;
     };

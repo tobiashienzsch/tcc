@@ -3,6 +3,8 @@
 #include "expression.hpp"
 #include "statement.hpp"
 
+#include "tcc/core/core.hpp"
+
 #include <boost/spirit/home/x3.hpp>
 #include <boost/spirit/home/x3/support/ast/position_tagged.hpp>
 #include <boost/spirit/home/x3/support/utility/error_reporting.hpp>
@@ -27,6 +29,8 @@ struct error_handler_base
     template<typename Iterator, typename Exception, typename Context>
     x3::error_handler_result on_error(Iterator& first, Iterator const& last, Exception const& x, Context const& context)
     {
+        tcc::IgnoreUnused(first);
+        tcc::IgnoreUnused(last);
         std::string message = "Error! Expecting: " + x.which() + " here:";
         auto& error_handler = x3::get<error_handler_tag>(context).get();
         error_handler(x.where(), message);

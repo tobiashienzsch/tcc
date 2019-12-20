@@ -9,4 +9,5 @@
 TEST_CASE("tcc: SSA", "[compiler]")
 {
     auto const t = 10;
+    tcc::IgnoreUnused(t);
 }

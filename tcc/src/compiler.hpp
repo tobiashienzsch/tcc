@@ -48,12 +48,12 @@ struct IRBuilder
             auto secondStr = std::string {};
             if (data.second.has_value())
             {
-                auto const& second = data.second.value();
+                auto const& sec = data.second.value();
                 std::visit(overloaded {
                                [&secondStr](int arg) { secondStr = fmt::format("{}", arg); },
                                [&secondStr](const std::string& arg) { secondStr = fmt::format("%{}", arg); },
                            },
-                           second);
+                           sec);
             }
 
             std::stringstream opCodeStr;
@@ -96,19 +96,19 @@ struct IRBuilder
     {
         auto const first   = PopFromStack();
         auto const tmpName = CreateTemporaryOnStack();
-        m_statements.push_back(TacStatement {op, tmpName, first});
+        m_statements.push_back(TacStatement {op, tmpName, first, {}});
     }
 
     auto CreateStoreOperation(std::string key) -> void
     {
         auto const first = PopFromStack();
-        m_statements.push_back(TacStatement {op_store, key, first});
+        m_statements.push_back(TacStatement {op_store, key, first, {}});
     }
 
     auto CreateLoadOperation(std::string key) -> void
     {
         auto const tmpName = CreateTemporaryOnStack();
-        m_statements.push_back(TacStatement {op_load, tmpName, key});
+        m_statements.push_back(TacStatement {op_load, tmpName, key, {}});
     }
 
     auto CreateAssignment(std::string const& key) -> std::string

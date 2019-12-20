@@ -16,10 +16,10 @@ class VirtualMachine
 {
 public:
     explicit VirtualMachine(std::vector<Integer> code,  //
-                            Integer main,               //
-                            Integer dataSize,           //
-                            Integer stackSize = 100,    //
-                            bool shouldTrace  = true    //
+                            UInteger main,              //
+                            UInteger dataSize,          //
+                            UInteger stackSize = 100,   //
+                            bool shouldTrace   = true   //
     );
 
     Integer Cpu();

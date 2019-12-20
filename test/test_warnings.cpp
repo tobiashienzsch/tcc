@@ -6,7 +6,6 @@
 
 #include "tcc/core/core.hpp"
 
-
 TEST_CASE("core: IgnoreUnused", "[warnings]")
 {
     auto const t = 10;

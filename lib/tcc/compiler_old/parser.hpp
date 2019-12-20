@@ -99,6 +99,7 @@ public:
             }
 
             auto _ = nextToken();
+            tcc::IgnoreUnused(_);
         }
 
         return {};

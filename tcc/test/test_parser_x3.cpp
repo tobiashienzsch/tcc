@@ -4,16 +4,16 @@
  */
 #include "catch2/catch.hpp"
 
-#include "tcc/compiler_old/parser_x3.hpp"
+#include "parser_x3.hpp"
 
 TEST_CASE("parser_x3: Identifier", "[parser_x3]")
 {
-    auto testCases = std::vector<std::string> {
-        std::string {"_test"},     //
-        std::string {"_TEST_"},    //
-        std::string {"test"},      //
-        std::string {"tesT42"},    //
-        std::string {"test_143"},  //
+    auto testCases = std::vector<std::string>{
+        std::string{"_test"},     //
+        std::string{"_TEST_"},    //
+        std::string{"test"},      //
+        std::string{"tesT42"},    //
+        std::string{"test_143"},  //
     };
 
     for (auto const& test : testCases)
@@ -38,12 +38,12 @@ TEST_CASE("parser_x3: PackageDeclaration", "[parser_x3]")
         std::string expected;
     };
 
-    auto testCases = std::vector<TestCase> {
-        {std::string {"package main;"}, std::string {"main"}},            //
-        {std::string {"package math;"}, std::string {"math"}},            //
-        {std::string {"package math_test;"}, std::string {"math_test"}},  //
-        {std::string {"package tobi_est;"}, std::string {"tobi_est"}},    //
-        {std::string {"package fmt8;"}, std::string {"fmt8"}},            //
+    auto testCases = std::vector<TestCase>{
+        {std::string{"package main;"}, std::string{"main"}},            //
+        {std::string{"package math;"}, std::string{"math"}},            //
+        {std::string{"package math_test;"}, std::string{"math_test"}},  //
+        {std::string{"package tobi_est;"}, std::string{"tobi_est"}},    //
+        {std::string{"package fmt8;"}, std::string{"fmt8"}},            //
 
     };
 

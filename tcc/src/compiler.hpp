@@ -187,10 +187,10 @@ struct compiler
     typedef std::function<void(x3::position_tagged, std::string const&)> error_handler_type;
 
     template<typename ErrorHandler>
-    compiler(client::code_gen::program& program, IRBuilder& builder, ErrorHandler const& error_handler)
-        : program(program)
+    compiler(client::code_gen::program& prog, IRBuilder& builder, ErrorHandler const& errorHandler)
+        : program(prog)
         , m_builder(builder)
-        , error_handler([&](x3::position_tagged pos, std::string const& msg) { error_handler(pos, msg); })
+        , error_handler([&](x3::position_tagged pos, std::string const& msg) { errorHandler(pos, msg); })
     {
     }
 

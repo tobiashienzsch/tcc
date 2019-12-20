@@ -21,7 +21,7 @@ struct expression;
 
 struct variable : x3::position_tagged
 {
-    variable(std::string const& name = "") : name(name) {}
+    variable(std::string const& newName = "") : name(newName) {}
     std::string name;
 };
 

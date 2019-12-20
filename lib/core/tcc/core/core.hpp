@@ -15,4 +15,17 @@ constexpr auto IgnoreUnused(Types&&... /*unused*/) noexcept -> void
 {
 }
 
+/**
+ * @brief Handy helper struct for std::variant::vist.
+ * See https://en.cppreference.com/w/cpp/utility/variant/visit
+ */
+template<class... Ts>
+struct overloaded : Ts...
+{
+    using Ts::operator()...;
+};
+
+template<class... Ts>
+overloaded(Ts...)->overloaded<Ts...>;
+
 }  // namespace tcc

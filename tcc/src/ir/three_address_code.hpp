@@ -19,6 +19,7 @@ struct ThreeAddressCode
     std::string destination;
     Argument first;
     OptionalArgument second;
+    bool isTemporary {true};
 };
 
 auto operator<<(std::ostream& out, ThreeAddressCode const& data) -> std::ostream&;

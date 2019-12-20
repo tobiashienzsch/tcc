@@ -26,7 +26,8 @@ auto operator<<(std::ostream& out, ThreeAddressCode const& data) -> std::ostream
 
     std::stringstream opCodeStr;
     opCodeStr << static_cast<tcc::byte_code>(data.type);
-    auto const str = fmt::format("{0}\t:=\t{1}\t{2}\t{3}", data.destination, firstStr, opCodeStr.str(), secondStr);
+    auto const str = fmt::format("{0}\t{4}\t:=\t{1}\t{2}\t{3}", data.destination, firstStr, opCodeStr.str(), secondStr,
+                                 data.isTemporary);
 
     return out << str;
 }

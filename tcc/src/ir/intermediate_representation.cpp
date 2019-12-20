@@ -40,7 +40,7 @@ auto IntermediateRepresentation::CreateUnaryOperation(byte_code op) -> void
 auto IntermediateRepresentation::CreateStoreOperation(std::string key) -> void
 {
     auto const first = PopFromStack();
-    m_statements.push_back(ThreeAddressCode {op_store, key, first, {}});
+    m_statements.push_back(ThreeAddressCode {op_store, key, first, {}, false});
 }
 
 auto IntermediateRepresentation::CreateLoadOperation(std::string key) -> void

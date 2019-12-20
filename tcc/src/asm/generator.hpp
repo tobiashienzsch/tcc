@@ -28,8 +28,10 @@ public:
 
     auto Optimize() -> void
     {
-        for (auto x : {1, 2})
+        for (auto x = 0u; x < 7; x++)
         {
+            tcc::IgnoreUnused(x);
+
             std::for_each(std::begin(m_statementList), std::end(m_statementList),
                           [](auto& statement) { ReplaceWithConstantStore(statement); });
 
@@ -37,7 +39,7 @@ public:
                           [&](auto& statement) { ReplaceVariableIfConstant(statement, m_statementList); });
         }
 
-        // DeleteUnusedStatements(m_statementList);
+        DeleteUnusedStatements(m_statementList);
     }
 
     static auto DeleteUnusedStatements(StatementList& statementList) -> bool
@@ -58,31 +60,32 @@ public:
 
     static auto IsUnusedStatement(ThreeAddressCode const& statement, StatementList const& statementList) -> bool
     {
-        return !std::any_of(std::begin(statementList), std::end(statementList),
-                            [&statement](ThreeAddressCode const& item) {
-                                auto result = false;
+        return statement.isTemporary
+               && !std::any_of(std::begin(statementList), std::end(statementList),
+                               [&statement](ThreeAddressCode const& item) {
+                                   auto result = false;
 
-                                std::visit(tcc::overloaded {
-                                               [](int) { ; },
-                                               [&statement, &result](std::string const& name) {
-                                                   if (name == statement.destination) result = true;
-                                               },
-                                           },
-                                           item.first);
+                                   std::visit(tcc::overloaded {
+                                                  [](int) { ; },
+                                                  [&statement, &result](std::string const& name) {
+                                                      if (name == statement.destination) result = true;
+                                                  },
+                                              },
+                                              item.first);
 
-                                if (item.second.has_value())
-                                {
-                                    std::visit(tcc::overloaded {
-                                                   [](int) { ; },
-                                                   [&statement, &result](std::string const& name) {
-                                                       if (name == statement.destination) result = true;
-                                                   },
-                                               },
-                                               item.second.value());
-                                }
+                                   if (item.second.has_value())
+                                   {
+                                       std::visit(tcc::overloaded {
+                                                      [](int) { ; },
+                                                      [&statement, &result](std::string const& name) {
+                                                          if (name == statement.destination) result = true;
+                                                      },
+                                                  },
+                                                  item.second.value());
+                                   }
 
-                                return result;
-                            });
+                                   return result;
+                               });
     }
 
     static auto ReplaceVariableIfConstant(ThreeAddressCode& statement, StatementList& statementList) -> bool

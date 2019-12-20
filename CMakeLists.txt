@@ -45,12 +45,13 @@ include(tccCompilerWarnings)
 find_package(Boost 1.65 REQUIRED COMPONENTS system program_options filesystem)
 
 add_subdirectory(3rd_party/fmt EXCLUDE_FROM_ALL)
+set_target_properties(fmt PROPERTIES FOLDER 3rd_party)
 
 # Testing
 if(TCC_BUILD_TESTS)
     list (APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/3rd_party/Catch2/contrib")
     enable_testing()
-    add_subdirectory(3rd_party/Catch2 EXCLUDE_FROM_ALL)
+    add_subdirectory(3rd_party/Catch2 ${CMAKE_CURRENT_BINARY_DIR}/3rd_party/Catch2 EXCLUDE_FROM_ALL)
     include(CTest)
     include(Catch)
 endif()
@@ -69,6 +70,7 @@ endif()
 if(TCC_BUILD_BENCHMARK)
     set(ALLOW_DOWNLOADING_GOOGLETEST FALSE)
     add_subdirectory(3rd_party/google-benchmark EXCLUDE_FROM_ALL) 
+    set_target_properties(benchmark PROPERTIES FOLDER 3rd_party)
     add_subdirectory(benchmark)
 endif()
 

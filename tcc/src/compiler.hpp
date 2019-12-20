@@ -32,24 +32,22 @@ struct IRBuilder
 
         friend auto operator<<(std::ostream& out, TacStatement const& data) -> std::ostream&
         {
-            auto firstStr = std::string{};
-            std::visit(
-                tcc::overloaded{
-                    [&firstStr](int arg) { firstStr = fmt::format("{}", arg); },
-                    [&firstStr](const std::string& arg) { firstStr = fmt::format("%{}", arg); },
-                },
-                data.first);
+            auto firstStr = std::string {};
+            std::visit(tcc::overloaded {
+                           [&firstStr](int arg) { firstStr = fmt::format("{}", arg); },
+                           [&firstStr](const std::string& arg) { firstStr = fmt::format("%{}", arg); },
+                       },
+                       data.first);
 
-            auto secondStr = std::string{};
+            auto secondStr = std::string {};
             if (data.second.has_value())
             {
                 auto const& sec = data.second.value();
-                std::visit(
-                    tcc::overloaded{
-                        [&secondStr](int arg) { secondStr = fmt::format("{}", arg); },
-                        [&secondStr](const std::string& arg) { secondStr = fmt::format("%{}", arg); },
-                    },
-                    sec);
+                std::visit(tcc::overloaded {
+                               [&secondStr](int arg) { secondStr = fmt::format("{}", arg); },
+                               [&secondStr](const std::string& arg) { secondStr = fmt::format("%{}", arg); },
+                           },
+                           sec);
             }
 
             std::stringstream opCodeStr;
@@ -85,26 +83,26 @@ struct IRBuilder
         auto const first   = PopFromStack();
         auto const tmpName = CreateTemporaryOnStack();
 
-        m_statements.push_back(TacStatement{op, tmpName, first, second});
+        m_statements.push_back(TacStatement {op, tmpName, first, second});
     }
 
     auto CreateUnaryOperation(byte_code op) -> void
     {
         auto const first   = PopFromStack();
         auto const tmpName = CreateTemporaryOnStack();
-        m_statements.push_back(TacStatement{op, tmpName, first, {}});
+        m_statements.push_back(TacStatement {op, tmpName, first, {}});
     }
 
     auto CreateStoreOperation(std::string key) -> void
     {
         auto const first = PopFromStack();
-        m_statements.push_back(TacStatement{op_store, key, first, {}});
+        m_statements.push_back(TacStatement {op_store, key, first, {}});
     }
 
     auto CreateLoadOperation(std::string key) -> void
     {
         auto const tmpName = CreateTemporaryOnStack();
-        m_statements.push_back(TacStatement{op_load, tmpName, key, {}});
+        m_statements.push_back(TacStatement {op_load, tmpName, key, {}});
     }
 
     auto CreateAssignment(std::string const& key) -> std::string

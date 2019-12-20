@@ -2,9 +2,9 @@
 
 ## Status
 
-|                                                            License                                                             |                                                       Linux/macOS                                                       |                                                            Coverage                                                            |                                    Issues                                     |
-| :----------------------------------------------------------------------------------------------------------------------------: | :---------------------------------------------------------------------------------------------------------------------: | :----------------------------------------------------------------------------------------------------------------------------: | :---------------------------------------------------------------------------: |
-| [![MIT license](https://img.shields.io/badge/License-MIT-blue.svg)](https://github.com/tobiashienzsch/tcc/blob/master/LICENSE) | [![Build Status](https://travis-ci.org/tobiashienzsch/tcc.svg?branch=master)](https://travis-ci.org/tobiashienzsch/tcc) | [![codecov](https://codecov.io/gh/tobiashienzsch/tcc/branch/master/graph/badge.svg)](https://codecov.io/gh/tobiashienzsch/tcc) | ![GitHub issues](https://img.shields.io/github/issues/tobiashienzsch/tcc.svg) |
+|                                                            License                                                             |                                                       Linux/macOS                                                       |                                                                   Windows                                                                    |                                                            Coverage                                                            |                                    Issues                                     |
+| :----------------------------------------------------------------------------------------------------------------------------: | :---------------------------------------------------------------------------------------------------------------------: | :------------------------------------------------------------------------------------------------------------------------------------------: | :----------------------------------------------------------------------------------------------------------------------------: | :---------------------------------------------------------------------------: |
+| [![MIT license](https://img.shields.io/badge/License-MIT-blue.svg)](https://github.com/tobiashienzsch/tcc/blob/master/LICENSE) | [![Build Status](https://travis-ci.org/tobiashienzsch/tcc.svg?branch=master)](https://travis-ci.org/tobiashienzsch/tcc) | [![Build status](https://ci.appveyor.com/api/projects/status/ggt3ifgoxamvfe53?svg=true)](https://ci.appveyor.com/project/tobiashienzsch/tcc) | [![codecov](https://codecov.io/gh/tobiashienzsch/tcc/branch/master/graph/badge.svg)](https://codecov.io/gh/tobiashienzsch/tcc) | ![GitHub issues](https://img.shields.io/github/issues/tobiashienzsch/tcc.svg) |
 
 ## Features
 
@@ -21,9 +21,10 @@ Everything is in development. See test files for details.
 - C++17
 - CMake 3.12
 - Boost
+  - Filesystem
+  - Program Options
   - System
   - Spirit X3
-  - Program Options
 
 ### Clone
 

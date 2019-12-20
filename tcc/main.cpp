@@ -72,17 +72,17 @@ auto main(int argc, char** argv) -> int
     iterator_type iter(source.begin());
     iterator_type end(source.end());
 
-    tcc::vmachine vm;                                   // Our virtual machine
-    tcc::code_gen::program program;                     // Our VM program
-    tcc::code_gen::IntermediateRepresentation builder;  // IR builder
-    tcc::ast::statement_list ast;                       // Our AST
+    tcc::vmachine vm;                           // Our virtual machine
+    tcc::code_gen::program program;             // Our VM program
+    tcc::IntermediateRepresentation irBuilder;  // IR builder
+    tcc::ast::statement_list ast;               // Our AST
 
     using boost::spirit::x3::with;
     using tcc::parser::error_handler_type;
     error_handler_type error_handler(iter, end, std::cerr);  // Our error handler
 
     // Our compiler
-    tcc::code_gen::compiler compile(program, builder, error_handler);
+    tcc::code_gen::compiler compile(program, irBuilder, error_handler);
 
     // Our parser
     auto const parser =
@@ -97,7 +97,7 @@ auto main(int argc, char** argv) -> int
     {
         if (compile.start(ast))
         {
-            builder.PrintStatementList();
+            irBuilder.PrintStatementList();
             // std::cout << "Success\n";
             // std::cout << "-------------------------\n";
             vm.execute(program());

@@ -1,8 +1,36 @@
 project(tcc)
 
+# library
 set(tcc_lib_source
+    src/ir/intermediate_representation.cpp
+    src/ir/intermediate_representation.hpp
     src/ir/three_address_code.cpp
     src/ir/three_address_code.hpp
+)
+
+add_library(tcc_lib STATIC ${tcc_lib_source})
+add_library(tcc::tcc ALIAS tcc_lib)
+source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} FILES ${tcc_lib_source})
+target_include_directories(tcc_lib PUBLIC src)
+target_link_libraries(tcc_lib 
+    PUBLIC 
+        tcc::Core
+        
+        Boost::boost 
+        Boost::program_options 
+        Boost::system
+        Boost::filesystem
+        fmt
+    PRIVATE
+        tcc::CompilerOptions
+        tcc::CompilerWarnings
+        tcc::CodeCoverage
+
+)
+
+# exe
+set(tcc_source 
+    main.cpp
     
     src/ast.hpp
     src/ast_adapted.hpp
@@ -19,34 +47,19 @@ set(tcc_lib_source
     src/statement.hpp
     src/vm.cpp
     src/vm.hpp
-
-    main.cpp
 )
-source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} FILES ${tcc_lib_source})
-
-add_executable(${PROJECT_NAME} ${tcc_lib_source})
-
-target_include_directories(${PROJECT_NAME} 
-    PUBLIC 
-        src
-)
+source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} FILES ${tcc_source})
+add_executable(${PROJECT_NAME} ${tcc_source})
 
 target_link_libraries(${PROJECT_NAME} 
-    PUBLIC 
-        tcc::Core
-        
-        Boost::boost 
-        Boost::program_options 
-        Boost::system
-        Boost::filesystem
-        fmt
     PRIVATE
+        tcc::tcc
         tcc::CompilerOptions
         tcc::CompilerWarnings
 
 )
 
-# Test
+# test
 if(TCC_BUILD_TESTS)
     add_subdirectory(test)
 endif()

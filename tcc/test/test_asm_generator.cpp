@@ -96,3 +96,14 @@ TEST_CASE("optimizer: ConstantBinaryExpression", "[optimizer]")
         REQUIRE(asmGen::isConstantBinaryExpression(test.input) == test.expected);
     }
 }
+
+TEST_CASE("optimizer: UnusedStatement", "[optimizer]")
+{
+    auto testData = tcc::StatementList {
+        ThreeAddressCode {byte_code::op_store, string("x1"), 1, std::nullopt},            //
+        ThreeAddressCode {byte_code::op_store, string("x2"), string("x1"), std::nullopt}  //
+    };
+
+    REQUIRE(asmGen::IsUnusedStatement(testData.at(0), testData) == false);
+    REQUIRE(asmGen::IsUnusedStatement(testData.at(1), testData) == true);
+}

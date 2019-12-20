@@ -4,12 +4,16 @@
 
 #include "ir/intermediate_representation.hpp"
 
+#include <algorithm>
+
 namespace tcc
 {
+using StatementList = std::vector<ThreeAddressCode>;
+
 class AssemblyGenerator
 {
 public:
-    AssemblyGenerator(std::vector<ThreeAddressCode> ir) : m_ir(std::move(ir)) {}
+    AssemblyGenerator(StatementList ir) : m_ir(std::move(ir)) {}
 
     auto Generate() -> void
     {
@@ -24,35 +28,105 @@ public:
 
     auto Optimize() -> void
     {
-        for (ThreeAddressCode& statement : m_ir)
+        for (auto _ : {1, 2, 3})
         {
-            // replace constant expression with store of result.
-            if (isConstantBinaryExpression(statement))
-            {
-                statement.first  = std::get<int>(statement.first) + std::get<int>(statement.second.value());
-                statement.second = std::nullopt;
-                statement.type   = byte_code::op_store;
-            }
+            tcc::IgnoreUnused(_);
 
-            if (isConstantStoreExpression(statement))
+            for (ThreeAddressCode& statement : m_ir)
             {
-                for (auto& nextStatement : m_ir)
-                {
-                    // first
-                    std::visit(tcc::overloaded {
-                                   [](int) { ; },
-                                   [&statement, &nextStatement](std::string const& name) {
-                                       if (name == statement.destination)
-                                       {
-                                           fmt::print("{}", name);
-                                           nextStatement.first = std::get<int>(statement.first);
-                                       };
-                                   },
-                               },
-                               nextStatement.first);
-                }
+                ReplaceWithConstantStore(statement);
+                ReplaceVariableWithConstant(statement);
             }
         }
+        DeleteUnusedStatements(m_ir);
+    }
+
+    static auto DeleteUnusedStatements(StatementList& statementList) -> bool
+    {
+        std::remove_if(std::begin(statementList), std::end(statementList),
+                       [&statementList](auto const& statement) { return IsUnusedStatement(statement, statementList); });
+        return false;
+    }
+
+    static auto IsUnusedStatement(ThreeAddressCode const& statement, StatementList const& statementList) -> bool
+    {
+        return std::none_of(std::begin(statementList), std::end(statementList),
+                            [&statement](ThreeAddressCode const& item) {
+                                auto result = false;
+
+                                std::visit(tcc::overloaded {
+                                               [](int) { ; },
+                                               [&statement, &result](std::string const& name) {
+                                                   if (name == statement.destination) result = true;
+                                               },
+                                           },
+                                           item.first);
+
+                                if (item.second.has_value())
+                                {
+                                    std::visit(tcc::overloaded {
+                                                   [](int) { ; },
+                                                   [&statement, &result](std::string const& name) {
+                                                       if (name == statement.destination) result = true;
+                                                   },
+                                               },
+                                               item.second.value());
+                                }
+
+                                return result;
+                            });
+    }
+
+    auto ReplaceVariableWithConstant(ThreeAddressCode& statement) -> bool
+    {
+        if (isConstantStoreExpression(statement))
+        {
+            for (auto& nextStatement : m_ir)
+            {
+                // first
+                std::visit(tcc::overloaded {
+                               [](int) { ; },
+                               [&statement, &nextStatement](std::string const& name) {
+                                   if (name == statement.destination)
+                                   {
+                                       fmt::print("{}", name);
+                                       nextStatement.first = std::get<int>(statement.first);
+                                   };
+                               },
+                           },
+                           nextStatement.first);
+            }
+
+            return true;
+        }
+
+        return false;
+    }
+
+    // replace constant expression with store of result.
+    static auto ReplaceWithConstantStore(ThreeAddressCode& statement) -> bool
+    {
+        if (isConstantBinaryExpression(statement))
+        {
+            auto const first  = std::get<int>(statement.first);
+            auto const second = std::get<int>(statement.second.value());
+
+            switch (statement.type)
+            {
+                case byte_code::op_add: statement.first = first + second; break;
+                case byte_code::op_sub: statement.first = first - second; break;
+                case byte_code::op_mul: statement.first = first * second; break;
+                case byte_code::op_div: statement.first = first / second; break;
+                default: break;
+            }
+
+            statement.second = std::nullopt;
+            statement.type   = byte_code::op_store;
+
+            return true;
+        }
+
+        return false;
     }
 
     static auto isConstantArgument(ThreeAddressCode::Argument const& argument) -> bool
@@ -109,6 +183,6 @@ public:
     }
 
 private:
-    std::vector<ThreeAddressCode> m_ir;
+    StatementList m_ir;
 };
 }  // namespace tcc

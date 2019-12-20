@@ -10,6 +10,7 @@ else()
     INTERFACE
         -Wall
         -Wextra
+        -Wpedantic
         -Wshadow
         # -Wsign-conversion
         # -Wdouble-promotion

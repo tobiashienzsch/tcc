@@ -21,10 +21,3 @@ target_link_libraries(${PROJECT_NAME}
         Boost::filesystem
         fmt
 )
-
-if(TCC_BUILD_LTO)
-    set_target_properties(${PROJECT_NAME} 
-        PROPERTIES 
-            INTERPROCEDURAL_OPTIMIZATION TRUE
-    )
-endif()

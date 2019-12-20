@@ -24,10 +24,6 @@ PRIVATE
     Catch2::Catch2
 )
 
-# LTO
-if(TCC_BUILD_LTO)
-    set_target_properties(${PROJECT_NAME} PROPERTIES INTERPROCEDURAL_OPTIMIZATION TRUE)
-endif()
 
 include(CTest)
 include(Catch)

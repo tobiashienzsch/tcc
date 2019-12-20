@@ -1,6 +1,6 @@
 /**
  * @file byte_code.cpp
- * @copyright Copyright 2019 Tobias Hienzsch. All rights reserved.
+ * @copyright Copyright 2019 Tobias Hienzsch. MIT license.
  */
 
 #include "tcvm/vm/byte_code.hpp"

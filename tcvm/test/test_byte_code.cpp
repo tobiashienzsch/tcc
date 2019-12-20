@@ -1,6 +1,6 @@
 /**
  * @file test_byte_code.cpp
- * @copyright Copyright 2019 Tobias Hienzsch. All rights reserved.
+ * @copyright Copyright 2019 Tobias Hienzsch. MIT license.
  */
 #include "catch2/catch.hpp"
 

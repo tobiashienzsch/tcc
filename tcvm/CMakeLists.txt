@@ -1,6 +1,14 @@
 project(tcvm)
 
-add_executable(${PROJECT_NAME} main.cpp)
+set(tcvm_source
+    main.cpp
+
+    src/tcvm/examples.hpp
+    src/tcvm/program_options.hpp
+)
+
+add_executable(${PROJECT_NAME} ${tcvm_source})
+source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} FILES ${tcvm_source})
 target_include_directories(${PROJECT_NAME} PRIVATE src)
 target_link_libraries(${PROJECT_NAME} 
     PRIVATE 
@@ -14,7 +22,9 @@ target_link_libraries(${PROJECT_NAME}
         fmt
 )
 
-# LTO
 if(TCC_BUILD_LTO)
-    set_target_properties(${PROJECT_NAME} PROPERTIES INTERPROCEDURAL_OPTIMIZATION TRUE)
+    set_target_properties(${PROJECT_NAME} 
+        PROPERTIES 
+            INTERPROCEDURAL_OPTIMIZATION TRUE
+    )
 endif()

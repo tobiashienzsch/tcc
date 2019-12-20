@@ -12,6 +12,7 @@ set (TEST_SRC
     test_parser_x3.cpp
     test_vm.cpp
 )
+source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} FILES ${TEST_SRC})
 
 add_executable(${PROJECT_NAME} ${TEST_SRC})
 target_link_libraries(${PROJECT_NAME}

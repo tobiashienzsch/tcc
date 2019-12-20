@@ -1,6 +1,9 @@
 project(tcc)
 
 set(tcc_lib_source
+    src/ir/three_address_code.cpp
+    src/ir/three_address_code.hpp
+    
     src/ast.hpp
     src/ast_adapted.hpp
     src/common.hpp

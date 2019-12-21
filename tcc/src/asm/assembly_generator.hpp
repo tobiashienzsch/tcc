@@ -40,6 +40,22 @@ public:
                     fmt::print("STORE, {}\n", destIndex);
                     break;
                 }
+
+                case byte_code::op_load:
+                {
+
+                    auto const destIter  = std::find(std::begin(localVars), std::end(localVars),
+                                                    std::string(1, std::get<std::string>(statement.first)[0]));
+                    auto const destIndex = static_cast<int>(destIter - std::begin(localVars));
+                    fmt::print("LOAD, {}\n", destIndex);
+                    break;
+                }
+
+                case byte_code::op_add: fmt::print("ADD,\n"); break;
+                case byte_code::op_sub: fmt::print("SUB,\n"); break;
+                case byte_code::op_mul: fmt::print("MUL,\n"); break;
+                case byte_code::op_div: fmt::print("DIV,\n"); break;
+
                 default: break;
             }
         }

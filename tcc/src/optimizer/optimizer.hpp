@@ -12,7 +12,7 @@ namespace tcc
 class Optimizer
 {
 public:
-    Optimizer(StatementList& statements) : m_statementList(statements) {}
+    Optimizer(StatementScope& scope) : m_mainScope(scope) {}
 
     auto Optimize() -> void;
 
@@ -29,6 +29,6 @@ public:
     static auto isBinaryOperation(byte_code op) noexcept -> bool;
 
 private:
-    StatementList& m_statementList;
+    StatementScope& m_mainScope;
 };
 }  // namespace tcc

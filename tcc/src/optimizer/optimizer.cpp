@@ -4,24 +4,24 @@ namespace tcc
 {
 auto Optimizer::Optimize() -> void
 {
-    fmt::print("Before: {} lines\n", m_statementList.size());
-    for (ThreeAddressCode const& x : m_statementList) std::cout << x << '\n';
+    fmt::print("Before: {} lines\n", m_mainScope.statements.size());
+    for (ThreeAddressCode const& x : m_mainScope.statements) std::cout << x << '\n';
 
     for (auto x = 0u; x < 7; x++)
     {
         tcc::IgnoreUnused(x);
 
-        std::for_each(std::begin(m_statementList), std::end(m_statementList),
+        std::for_each(std::begin(m_mainScope.statements), std::end(m_mainScope.statements),
                       [](auto& statement) { ReplaceWithConstantStore(statement); });
 
-        std::for_each(std::begin(m_statementList), std::end(m_statementList),
-                      [&](auto& statement) { ReplaceVariableIfConstant(statement, m_statementList); });
+        std::for_each(std::begin(m_mainScope.statements), std::end(m_mainScope.statements),
+                      [&](auto& statement) { ReplaceVariableIfConstant(statement, m_mainScope.statements); });
     }
 
-    DeleteUnusedStatements(m_statementList);
+    DeleteUnusedStatements(m_mainScope.statements);
 
-    fmt::print("\n\nAfter: {} lines\n", m_statementList.size());
-    for (ThreeAddressCode const& x : m_statementList) std::cout << x << '\n';
+    fmt::print("\n\nAfter: {} lines\n", m_mainScope.statements.size());
+    for (ThreeAddressCode const& x : m_mainScope.statements) std::cout << x << '\n';
 }
 
 auto Optimizer::DeleteUnusedStatements(StatementList& statementList) -> bool

@@ -11,20 +11,35 @@ namespace tcc
 class AssemblyGenerator
 {
 public:
-    static auto Build(StatementList const& statements) -> void
+    static auto Build(StatementScope const& scope) -> void
     {
-        auto const numLocals
-            = std::count_if(std::begin(statements), std::end(statements),
-                            [](ThreeAddressCode const& statement) { return statement.isTemporary == false; });
-
+        auto const& statements = scope.statements;
+        auto const numLocals   = scope.variables.size();
         fmt::print("\nNum Locals: {}\n", numLocals);
-        for (auto x = 0; x < numLocals; x++) fmt::print("ICONST, 0\n");
+
+        auto localVars = std::vector<std::string> {};
+        for (auto const& var : scope.variables)
+        {
+            localVars.push_back(var.first);
+            fmt::print("ICONST, 0\n");
+        }
 
         for (ThreeAddressCode const& statement : statements)
         {
             switch (statement.type)
             {
-                case byte_code::op_store: fmt::print("ICONST, {}\nSTORE, {}", 42, 0); break;
+                case byte_code::op_store:
+                {
+                    if (auto* value = std::get_if<int>(&statement.first); value != nullptr)
+                    {
+                        fmt::print("ICONST, {}\n", *value);
+                    }
+                    auto const destIter  = std::find(std::begin(localVars), std::end(localVars),
+                                                    std::string(1, statement.destination[0]));
+                    auto const destIndex = static_cast<int>(destIter - std::begin(localVars));
+                    fmt::print("STORE, {}\n", destIndex);
+                    break;
+                }
                 default: break;
             }
         }

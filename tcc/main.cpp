@@ -102,9 +102,9 @@ auto main(int argc, char** argv) -> int
             vm.execute(program());
             program.print_variables(vm.get_stack());
 
-            auto optimizer = tcc::Optimizer(irBuilder.GetStatementList());
+            auto optimizer = tcc::Optimizer(*irBuilder.CurrentScope());
             optimizer.Optimize();
-            tcc::AssemblyGenerator::Build(irBuilder.GetStatementList());
+            tcc::AssemblyGenerator::Build(*irBuilder.CurrentScope());
         }
         else
         {

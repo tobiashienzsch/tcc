@@ -11,9 +11,33 @@
 
 namespace tcvm
 {
+auto const CreateCompiledAssembly = []() {
+    using tcc::ByteCode;
+    return std::vector<tcc::Integer>{
+        ByteCode::ICONST, 0,   //
+        ByteCode::ICONST, 0,   //
+        ByteCode::ICONST, 0,   //
+        ByteCode::ICONST, 13,  //
+        ByteCode::STORE,  0,   //
+        ByteCode::LOAD,   0,   //
+        ByteCode::LOAD,   0,   //
+        ByteCode::IADD,        //
+        ByteCode::LOAD,   0,   //
+        ByteCode::IADD,        //
+        ByteCode::LOAD,   0,   //
+        ByteCode::IADD,        //
+        ByteCode::STORE,  1,   //
+        ByteCode::LOAD,   1,   //
+        ByteCode::LOAD,   0,   //
+        ByteCode::IADD,        //
+        ByteCode::IMUL,        //
+        ByteCode::STORE,  2,   //
+    };
+};
+
 auto const CreateAdditionAssembly = [](tcc::Integer const arg) {
     using tcc::ByteCode;
-    return std::vector<tcc::Integer> {
+    return std::vector<tcc::Integer>{
         // .def addition: args=2, locals=1
         // l1 = x + y
         ByteCode::ICONST, 0,  // 0 local #1
@@ -43,7 +67,7 @@ auto const CreateAdditionAssembly = [](tcc::Integer const arg) {
 
 auto const CreateFactorialAssembly = [](tcc::Integer argument) {
     using tcc::ByteCode;
-    return std::vector<tcc::Integer> {
+    return std::vector<tcc::Integer>{
         // .def fact: args=1, locals=0
         // if n < 2 return 1
         ByteCode::LOAD, -3,   // 0
@@ -71,7 +95,7 @@ auto const CreateFactorialAssembly = [](tcc::Integer argument) {
 
 auto const CreateFibonacciAssembly = [](tcc::Integer const arg) {
     using tcc::ByteCode;
-    return std::vector<tcc::Integer> {
+    return std::vector<tcc::Integer>{
         // .def fib: args=1, locals=0
         // if (x < 2) return x;
         ByteCode::LOAD, -3,   // 0
@@ -103,7 +127,7 @@ auto const CreateFibonacciAssembly = [](tcc::Integer const arg) {
 
 auto const CreateMultipleArgumentsAssembly = [](tcc::Integer firstArg, tcc::Integer secondArg) {
     using tcc::ByteCode;
-    return std::vector<tcc::Integer> {
+    return std::vector<tcc::Integer>{
         // .def sub: args=2, locals=0
         // return x + y;
         ByteCode::LOAD, -4,  // 0 <-- load x
@@ -126,7 +150,7 @@ auto const CreateMultipleArgumentsAssembly = [](tcc::Integer firstArg, tcc::Inte
 
 auto const CreateMultipleFunctionsAssembly = [](tcc::Integer arg) {
     using tcc::ByteCode;
-    return std::vector<tcc::Integer> {
+    return std::vector<tcc::Integer>{
         // .def func1: args=1, locals=0
         // return x * 3;
         ByteCode::LOAD, -3,   // 0

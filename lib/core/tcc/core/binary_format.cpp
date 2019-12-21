@@ -12,8 +12,8 @@ auto BinaryFormat::Write(std::string const& path, std::vector<Integer> const& da
         return false;
     }
 
-    auto test = std::int64_t(0);
-    file.write((char*)&test, sizeof(std::int64_t));
+    auto test = TcbHeader{1, "test", 0, 0};
+    file.write((char*)&test, sizeof(TcbHeader));
 
     file.close();
     if (!file.good())
@@ -34,8 +34,14 @@ auto BinaryFormat::Read(std::string const& path, std::vector<Integer>& data) -> 
         return false;
     }
 
-    auto test = std::int64_t(0);
-    file.read((char*)&test, sizeof(std::int64_t));
+    auto test = TcbHeader{};
+    file.read((char*)&test, sizeof(TcbHeader));
+
+    fmt::print("header:\n");
+    fmt::print("\tversion: {}\n", test.version);
+    fmt::print("\tname: {}\n", test.name);
+    fmt::print("\tdataSize: {}\n", test.dataSize);
+    fmt::print("\tentryPoint: {}\n", test.entryPoint);
 
     file.close();
     if (!file.good())

@@ -37,6 +37,7 @@ endif()
 # project options
 option(TCC_BUILD_TESTS      "Build the unit tests with Catch2"  ON)
 option(TCC_BUILD_BENCHMARK  "Build benchmark tests"             ON)
+option(TCC_BUILD_PLAYGROUND "Build playground project"          ON)
 option(TCC_BUILD_COVERAGE   "Build with code coverage"          OFF)
 
 # cmake modules
@@ -76,3 +77,7 @@ if(TCC_BUILD_BENCHMARK)
     add_subdirectory(benchmark)
 endif()
 
+# playground
+if(TCC_BUILD_PLAYGROUND)
+    add_subdirectory(playground)
+endif()

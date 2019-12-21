@@ -3,6 +3,8 @@
  * @copyright Copyright 2019 Tobias Hienzsch. MIT license.
  */
 
+#include "tcc/core/binary_format.hpp"
+
 #include "tcvm/examples.hpp"
 #include "tcvm/program_options.hpp"
 
@@ -18,12 +20,21 @@ auto main(int argc, char** argv) -> int
         fmt::print("{}\n", arg);
     }
 
+    auto const path          = std::string("test.tcb");
+    auto const writeAssembly = tcvm::CreateFactorialAssembly(arg);
+    tcc::BinaryFormat::Write(path, writeAssembly);
+
+    auto assembly = std::vector<tcc::Integer>{};
+    tcc::BinaryFormat::Read(path, assembly);
+
     // auto vm             = tcc::VirtualMachine(tcvm::CreateFactorialAssembly(arg), 22, 0, 1000, true);
     // auto vm             = tcc::VirtualMachine(tcvm::CreateAdditionAssembly(20), 18, 0, 200, true);
-    auto vm             = tcc::VirtualMachine(tcvm::CreateCompiledAssembly(), 0, 0, 200, true);
-    auto const exitCode = vm.Cpu();
+    // auto vm             = tcc::VirtualMachine(tcvm::CreateCompiledAssembly(), 0, 0, 200, true);
 
-    fmt::print("---\nexit code: {}\n", exitCode);
+    // auto const entryPoint = 22;
+    // auto vm               = tcc::VirtualMachine(assembly, entryPoint, 0, 200, true);
+    // auto const exitCode   = vm.Cpu();
+    // fmt::print("---\nexit code: {}\n", exitCode);
 
     return EXIT_SUCCESS;
 }

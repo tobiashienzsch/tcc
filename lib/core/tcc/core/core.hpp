@@ -8,8 +8,8 @@
 
 namespace tcc
 {
-using Integer  = int32_t;
-using UInteger = uint32_t;
+using Integer  = int64_t;
+using UInteger = uint64_t;
 
 /**
  * @brief Handy function for avoiding unused variable warnings.

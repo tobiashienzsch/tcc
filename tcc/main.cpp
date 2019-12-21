@@ -1,3 +1,4 @@
+#include "asm/assembly_generator.hpp"
 #include "ast.hpp"
 #include "compiler.hpp"
 #include "config.hpp"
@@ -98,19 +99,12 @@ auto main(int argc, char** argv) -> int
     {
         if (compile.start(ast))
         {
+            vm.execute(program());
+            program.print_variables(vm.get_stack());
+
             auto optimizer = tcc::Optimizer(irBuilder.GetStatementList());
             optimizer.Optimize();
-            // std::cout << "Success\n";
-            // std::cout << "-------------------------\n";
-            vm.execute(program());
-
-            // std::cout << "-------------------------\n";
-            // std::cout << "Assembler----------------\n\n";
-            // program.print_assembler();
-
-            // std::cout << "-------------------------\n";
-            // std::cout << "Results------------------\n\n";
-            program.print_variables(vm.get_stack());
+            tcc::AssemblyGenerator::Build(irBuilder.GetStatementList());
         }
         else
         {

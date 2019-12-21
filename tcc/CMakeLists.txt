@@ -2,6 +2,8 @@ project(tcc)
 
 # library
 set(tcc_lib_source
+    src/asm/assembly_generator.hpp
+
     src/optimizer/optimizer.cpp
     src/optimizer/optimizer.hpp
 

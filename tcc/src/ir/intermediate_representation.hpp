@@ -11,6 +11,19 @@ namespace tcc
 {
 struct IntermediateRepresentation
 {
+    IntermediateRepresentation() : m_currentScope(&m_mainScope) {}
+
+    auto CurrentScope() -> StatementScope*
+    {
+        if (!m_currentScope)
+        {
+            fmt::print("Current scope is nullptr;\n EXIT\n");
+            std::exit(1);
+        }
+
+        return m_currentScope;
+    }
+
     auto PushToStack(int x) -> void;
     auto PopFromStack() -> std::variant<int, std::string>;
 
@@ -24,13 +37,13 @@ struct IntermediateRepresentation
     auto CreateAssignment(std::string const& key) -> std::string;
     auto CreateTemporaryOnStack() -> std::string;
 
-    auto GetStatementList() -> std::vector<ThreeAddressCode>& { return m_statements; }
+    auto GetStatementList() -> StatementList& { return m_mainScope.statements; }
 
 private:
     int m_varCounter = 0;
-    std::map<std::string, int> m_variables;
     std::vector<std::variant<int, std::string>> m_stack;
-    std::vector<ThreeAddressCode> m_statements;
+    StatementScope m_mainScope {"main"};
+    StatementScope* m_currentScope = nullptr;
 };
 
 }  // namespace tcc

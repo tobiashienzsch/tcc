@@ -4,8 +4,10 @@
 
 #include "vm.hpp"
 
+#include <map>
 #include <optional>
 #include <ostream>
+#include <string>
 #include <variant>
 #include <vector>
 
@@ -23,8 +25,19 @@ struct ThreeAddressCode
     bool isTemporary {true};
 };
 
+auto operator<<(std::ostream& out, ThreeAddressCode const& data) -> std::ostream&;
+
 using StatementList = std::vector<ThreeAddressCode>;
 
-auto operator<<(std::ostream& out, ThreeAddressCode const& data) -> std::ostream&;
+struct StatementScope
+{
+    std::string name                      = "";
+    StatementList statements              = {};
+    StatementScope* parent                = nullptr;
+    std::vector<StatementScope*> children = {nullptr};
+    std::map<std::string, int> variables  = {};
+};
+
+inline auto operator<<(std::ostream& out, StatementScope const& data) -> std::ostream& { return out << data.name; }
 
 }  // namespace tcc

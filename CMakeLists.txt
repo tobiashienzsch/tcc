@@ -47,7 +47,7 @@ include(tccCompilerOptions)
 include(tccCompilerWarnings)
 
 # boost
-find_package(Boost 1.65 REQUIRED COMPONENTS system program_options filesystem)
+find_package(Boost 1.65 REQUIRED COMPONENTS system serialization program_options filesystem)
 
 # fmt
 add_subdirectory(3rd_party/fmt EXCLUDE_FROM_ALL)

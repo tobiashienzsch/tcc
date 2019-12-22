@@ -10,9 +10,13 @@
 
 Everything is in development. See test files for details.
 
-- Source code lexer
-- AST to bytecode
-- Bytecode virtual stack machine
+### Compiler
+
+Source code is parsed using the `boost spirit x3` library. It creates an intermediate representation which generates the assembly.
+
+### Virtual Machine
+
+Current implementation is a stack only based virtual machine.
 
 ## Quick Start
 
@@ -20,7 +24,7 @@ Everything is in development. See test files for details.
 
 - C++17
 - CMake 3.12
-- Boost
+- Boost 1.70
   - Filesystem
   - Program Options
   - System
@@ -35,11 +39,15 @@ git clone --recursive https://github.com/tobiashienzsch/tcc.git
 ### Build
 
 ```sh
+# unix
 CONFIG=Debug make
 # same as
 CONFIG=Debug make config build test
-# visual studio (git-bash)
-CONFIG=Debug CM_GENERATOR="Visual Studio 16 2019" make
+
+# visual studio (you may need to edit the boost path in the makefile)
+CONFIG=Debug make win
+# same as
+CONFIG=Debug make config-vs build test
 ```
 
 ## Project Structure
@@ -53,17 +61,8 @@ $PROJECT_ROOT
   lib           # shared code
   tcc           # compiler
   tcvm          # virtual machine
-  test          # unit tests using catch2
   test_data     # files for testing
 ```
-
-### Compiler
-
-Source code is parsed using the `boost spirit x3` library. It creates an intermediate representation which generates the assembly.
-
-### Virtual Machine
-
-Current implementation is a stack only based virtual machine.
 
 ## Resources
 

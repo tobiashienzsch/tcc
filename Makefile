@@ -5,6 +5,9 @@ BUILD_DIR = build_$(CONFIG)
 
 CM_GENERATOR ?= Ninja
 
+.PHONY: win
+win: config-vs build test
+
 .PHONY: config
 config:
 	cmake -B$(BUILD_DIR) -S. -G"$(CM_GENERATOR)"    \

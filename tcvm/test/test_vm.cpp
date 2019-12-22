@@ -17,7 +17,7 @@ using tcc::VirtualMachine;
 
 TEST_CASE("vm: Halt", "[vm]")
 {
-    auto const assembly = std::vector<tcc::Integer> {
+    auto const assembly = std::vector<tcc::Integer>{
         ByteCode::ICONST, 2,  //
         ByteCode::HALT,       //
     };
@@ -30,7 +30,7 @@ TEST_CASE("vm: Halt", "[vm]")
 
 TEST_CASE("vm: Exit", "[vm]")
 {
-    auto const assembly = std::vector<tcc::Integer> {
+    auto const assembly = std::vector<tcc::Integer>{
         ByteCode::ICONST, 2,  //
         ByteCode::EXIT,       //
     };
@@ -43,7 +43,7 @@ TEST_CASE("vm: Exit", "[vm]")
 
 TEST_CASE("vm: GlobalMemory", "[vm]")
 {
-    auto const assembly = std::vector<tcc::Integer> {
+    auto const assembly = std::vector<tcc::Integer>{
         ByteCode::ICONST, 143,  // push constant to stack
         ByteCode::GSTORE, 0,    // save to global
         ByteCode::ICONST, 2,    // do other stuff
@@ -65,14 +65,14 @@ TEST_CASE("vm: Addition", "[vm]")
 {
 
     auto const testCases = {
-        TestCase<Integer, Integer> {10, 40},  //
-        TestCase<Integer, Integer> {20, 50},  //
+        TestCase<Integer, Integer>{10, 40},  //
+        TestCase<Integer, Integer>{20, 50},  //
     };
 
     for (auto const& test : testCases)
     {
-        auto const assembly = tcvm::CreateAdditionAssembly(test.input);
-        auto vm             = VirtualMachine(assembly, 18, 0, 200, false);
+        auto const assembly = tcvm::CreateAdditionProgram(test.input);
+        auto vm             = VirtualMachine(assembly.data, assembly.entryPoint, 0, 200, false);
         auto const exitCode = vm.Cpu();
         REQUIRE(exitCode == test.expected);
     }
@@ -82,15 +82,15 @@ TEST_CASE("vm: Factorial", "[vm]")
 {
 
     auto const testCases = {
-        TestCase<Integer, Integer> {1, 1},    //
-        TestCase<Integer, Integer> {3, 6},    //
-        TestCase<Integer, Integer> {7, 5040}  //
+        TestCase<Integer, Integer>{1, 1},    //
+        TestCase<Integer, Integer>{3, 6},    //
+        TestCase<Integer, Integer>{7, 5040}  //
     };
 
     for (auto const& test : testCases)
     {
-        auto const factorial = tcvm::CreateFactorialAssembly(test.input);
-        auto vm              = VirtualMachine(factorial, 22, 0, 200, false);
+        auto const factorial = tcvm::CreateFactorialProgram(test.input);
+        auto vm              = VirtualMachine(factorial.data, factorial.entryPoint, 0, 200, false);
         auto const exitCode  = vm.Cpu();
         REQUIRE(exitCode == test.expected);
     }
@@ -99,23 +99,23 @@ TEST_CASE("vm: Factorial", "[vm]")
 TEST_CASE("vm: Fibonacci", "[vm]")
 {
     auto const testCases = {
-        TestCase<Integer, Integer> {1, 1},    //
-        TestCase<Integer, Integer> {5, 5},    //
-        TestCase<Integer, Integer> {12, 144}  //
+        TestCase<Integer, Integer>{1, 1},    //
+        TestCase<Integer, Integer>{5, 5},    //
+        TestCase<Integer, Integer>{12, 144}  //
     };
 
     for (auto const& test : testCases)
     {
-        auto const assembly = tcvm::CreateFibonacciAssembly(test.input);
-        auto vm             = VirtualMachine(assembly, 28, 0, 200, false);
+        auto const assembly = tcvm::CreateFibonacciProgram(test.input);
+        auto vm             = VirtualMachine(assembly.data, assembly.entryPoint, 0, 200, false);
         REQUIRE(vm.Cpu() == test.expected);
     }
 }
 
 TEST_CASE("vm: MultipleArguments", "[vm]")
 {
-    auto const assembly = tcvm::CreateMultipleArgumentsAssembly(10, 2);
-    auto vm             = VirtualMachine(assembly, 6, 0, 100, false);
+    auto const assembly = tcvm::CreateMultipleArgumentsProgram(10, 2);
+    auto vm             = VirtualMachine(assembly.data, assembly.entryPoint, 0, 100, false);
     auto const exitCode = vm.Cpu();
 
     REQUIRE(exitCode == 3);
@@ -123,8 +123,8 @@ TEST_CASE("vm: MultipleArguments", "[vm]")
 
 TEST_CASE("vm: MultipleFunctions", "[vm]")
 {
-    auto const assembly = tcvm::CreateMultipleFunctionsAssembly(2);
-    auto vm             = VirtualMachine(assembly, 12, 0, 200, false);
+    auto const assembly = tcvm::CreateMultipleFunctionsProgram(2);
+    auto vm             = VirtualMachine(assembly.data, assembly.entryPoint, 0, 200, false);
     auto const exitCode = vm.Cpu();
     REQUIRE(exitCode == 16);
 }

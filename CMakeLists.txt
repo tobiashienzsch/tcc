@@ -22,6 +22,7 @@ if(CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME)
     check_ipo_supported(RESULT TCC_BUILD_LTO)
     if(TCC_BUILD_LTO)
         message(STATUS "TobanteCrappyCompilerCollection: lto is supported, but not used.")
+        # set(CMAKE_INTERPROCEDURAL_OPTIMIZATION TRUE)
         # set_target_properties(${PROJECT_NAME} PROPERTIES INTERPROCEDURAL_OPTIMIZATION TRUE)
     endif()
 

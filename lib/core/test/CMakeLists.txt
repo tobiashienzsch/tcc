@@ -13,6 +13,7 @@ PRIVATE
     tcc::CompilerOptions
     tcc::CompilerWarnings
     tcc::CodeCoverage
+    Boost::filesystem
     Catch2::Catch2
 )
 

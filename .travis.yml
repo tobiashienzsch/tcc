@@ -46,13 +46,11 @@ matrix:
         apt:
           sources:
             - sourceline: "ppa:mhier/libboost-latest"
-            - sourceline: "ppa:ubuntu-toolchain-r/test"
           packages:
             - ninja-build
             - libboost1.70-dev
-            - g++-8
       env:
-        - MATRIX_EVAL="CC=gcc-8 && CXX=g++-8"
+        - MATRIX_EVAL="CC=gcc && CXX=g++"
       script: *script-linux-coverage
 
 before_install:

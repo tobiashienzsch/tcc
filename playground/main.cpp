@@ -1,5 +1,6 @@
 #include <cstdlib>
 
+#include <filesystem>
 #include <fstream>
 #include <iostream>
 #include <string>
@@ -10,6 +11,8 @@
 #include <boost/serialization/vector.hpp>
 
 #include <fmt/format.h>
+
+namespace fs = std::filesystem;
 
 struct BinaryProgram
 {
@@ -29,6 +32,7 @@ struct BinaryProgram
 int main(int, char**)
 {
 
+    std::cout << "Temp directory is " << fs::temp_directory_path() << '\n';
     {
         // make an archive
         auto program = BinaryProgram{1, "test", {0, 1, 2, 3, 1, 4, 5, 2, 6, 4, 8, 2}};

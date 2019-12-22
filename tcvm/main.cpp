@@ -23,10 +23,10 @@ auto main(int argc, char** argv) -> int
     auto const path          = std::string("test.tcb");
     auto const writeAssembly = tcvm::CreateFactorialAssembly(arg);
     auto const writeProgram  = tcc::BinaryProgram{1, "project1", 0, writeAssembly};
-    tcc::BinaryFormat::Write(path, writeProgram);
+    tcc::BinaryFormat::WriteToFile(path, writeProgram);
 
     auto program = tcc::BinaryProgram{};
-    tcc::BinaryFormat::Read(path, program);
+    tcc::BinaryFormat::ReadFromFile(path, program);
 
     // auto vm             = tcc::VirtualMachine(tcvm::CreateFactorialAssembly(arg), 22, 0, 1000, true);
     // auto vm             = tcc::VirtualMachine(tcvm::CreateAdditionAssembly(20), 18, 0, 200, true);

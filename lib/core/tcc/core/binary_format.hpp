@@ -49,8 +49,8 @@ struct BinaryFormat
         return true;
     }
 
-    static auto Write(std::string const& path, BinaryProgram const& program) -> bool;
-    static auto Read(std::string const& path, BinaryProgram& program) -> bool;
+    static auto WriteToFile(std::string const& path, BinaryProgram const& program) -> bool;
+    static auto ReadFromFile(std::string const& path, BinaryProgram& program) -> bool;
 };
 
 }  // namespace tcc

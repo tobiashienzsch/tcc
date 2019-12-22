@@ -3,6 +3,7 @@ project(tcvm)
 # Library
 set(tcvm_lib_source
     src/tcvm/examples.hpp
+    src/tcvm/examples.cpp
     src/tcvm/program_options.hpp
 
     src/tcvm/vm/byte_code.hpp

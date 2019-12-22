@@ -8,3 +8,6 @@
 build
 build-*
 build_*
+
+# TCVM BINARIES
+*.tcb

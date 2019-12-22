@@ -26,7 +26,7 @@ TEST_CASE("core: BinaryFormat WriteReadStream", "[core]")
         REQUIRE(program.version == 1);
         REQUIRE(program.name == std::string("test"));
         REQUIRE(program.entryPoint == 0);
-        REQUIRE(program.data == std::vector<tcc::Integer>{});
+        REQUIRE(program.data == std::vector<int64_t>{});
     }
 }
 
@@ -49,6 +49,6 @@ TEST_CASE("core: BinaryFormatWriteReadFile", "[core]")
         REQUIRE(program.version == 1);
         REQUIRE(program.name == std::string("test"));
         REQUIRE(program.entryPoint == 0);
-        REQUIRE(program.data == std::vector<tcc::Integer>{1, 2, 3});
+        REQUIRE(program.data == std::vector<int64_t>{1, 2, 3});
     }
 }

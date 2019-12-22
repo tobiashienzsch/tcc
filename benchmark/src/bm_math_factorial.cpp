@@ -15,11 +15,11 @@ static_assert(factorial(2) == 2);
 static_assert(factorial(3) == 6);
 static_assert(factorial(4) == 24);
 
-auto createFactorialAssembly(tcc::Integer argument)
+auto createFactorialAssembly(int64_t argument)
 {
     using tcc::ByteCode;
 
-    return std::vector<tcc::Integer>{
+    return std::vector<int64_t>{
         // .def fact: args=1, locals=0
         // if n < 2 return 1
         ByteCode::LOAD, -3,   // 0

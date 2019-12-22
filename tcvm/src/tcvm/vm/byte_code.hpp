@@ -9,7 +9,7 @@
 
 namespace tcc
 {
-enum ByteCode : Integer
+enum ByteCode : int64_t
 {
     IADD   = 1,
     ISUB   = 2,

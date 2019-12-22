@@ -7,8 +7,8 @@
 
 namespace tcc
 {
-VirtualMachine::VirtualMachine(std::vector<Integer> code, UInteger const main, UInteger const dataSize,
-                               UInteger const stackSize, bool shouldTrace)
+VirtualMachine::VirtualMachine(std::vector<int64_t> code, uint64_t const main, uint64_t const dataSize,
+                               uint64_t const stackSize, bool shouldTrace)
     : m_instructionPointer(main)
     , m_code(std::move(code))
     , m_data(dataSize)
@@ -17,7 +17,7 @@ VirtualMachine::VirtualMachine(std::vector<Integer> code, UInteger const main, U
 {
 }
 
-Integer VirtualMachine::Cpu()
+int64_t VirtualMachine::Cpu()
 {
 
     while (static_cast<size_t>(m_instructionPointer) < m_code.size())
@@ -184,7 +184,7 @@ Integer VirtualMachine::Cpu()
 
 void VirtualMachine::EnableTracing(bool const shouldTrace) { m_shouldTrace = shouldTrace; }
 
-void VirtualMachine::disassemble(Integer const opcode)
+void VirtualMachine::disassemble(int64_t const opcode)
 {
     auto const instruction = Instructions[opcode];
     std::printf("%04d: ", m_instructionPointer);

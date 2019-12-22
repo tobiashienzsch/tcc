@@ -11,7 +11,7 @@
 
 namespace tcc
 {
-using InstructionList = std::vector<Integer>;
+using InstructionList = std::vector<int64_t>;
 
 class Expression
 {
@@ -36,19 +36,19 @@ public:
     friend std::ostream& operator<<(std::ostream& str, Expression const* const data) { return str << *data; }
 };
 
-Integer AppendExpression(InstructionList& dest, Expression const& source);
+int64_t AppendExpression(InstructionList& dest, Expression const& source);
 
 class LiteralExpression : public Expression
 {
 public:
-    LiteralExpression(Integer val) : value(val){};
+    LiteralExpression(int64_t val) : value(val){};
     ~LiteralExpression() override = default;
 
     InstructionList GetAssembly() const override { return {ByteCode::ICONST, value}; }
     void Print(std::ostream& str) const override { str << value; }
 
 private:
-    Integer value;
+    int64_t value;
 };
 
 class VariableExpression : public Expression
@@ -190,7 +190,7 @@ public:
 
         AppendExpression(result, *falseCase.get());
 
-        auto const trueCaseIdx = static_cast<tcc::Integer>(result.size());
+        auto const trueCaseIdx = static_cast<int64_t>(result.size());
         AppendExpression(result, *trueCase.get());
 
         result.at(placeholderIdx) = trueCaseIdx;
@@ -235,7 +235,7 @@ public:
     Statement()                                                         = default;
     virtual ~Statement()                                                = default;
     virtual Type GetType() const                                        = 0;
-    virtual InstructionList GetAssembly(Integer const offset = 0) const = 0;
+    virtual InstructionList GetAssembly(int64_t const offset = 0) const = 0;
 
 protected:
     virtual void Print(std::ostream& str) const = 0;
@@ -257,7 +257,7 @@ public:
     ~ExpressionStatement() override = default;
 
     Statement::Type GetType() const noexcept override { return Statement::Type::Expression; };
-    InstructionList GetAssembly(Integer const offset = 0) const override
+    InstructionList GetAssembly(int64_t const offset = 0) const override
     {
         tcc::IgnoreUnused(offset);
         return expression->GetAssembly();
@@ -278,7 +278,7 @@ public:
     ~AssignmentStatement() override = default;
 
     Statement::Type GetType() const noexcept override { return Statement::Type::Assignment; };
-    InstructionList GetAssembly(Integer const offset = 0) const override
+    InstructionList GetAssembly(int64_t const offset = 0) const override
     {
         tcc::IgnoreUnused(offset);
         return m_expression->GetAssembly();
@@ -303,7 +303,7 @@ public:
     ~ReturnStatement() override = default;
 
     Statement::Type GetType() const noexcept override { return Statement::Type::Return; };
-    InstructionList GetAssembly(Integer const offset = 0) const override
+    InstructionList GetAssembly(int64_t const offset = 0) const override
     {
         tcc::IgnoreUnused(offset);
         auto result = expression->GetAssembly();
@@ -329,13 +329,13 @@ public:
 
     Statement::Type GetType() const noexcept override { return Statement::Type::Conditional; };
 
-    InstructionList GetAssembly(Integer const offset = 0) const override
+    InstructionList GetAssembly(int64_t const offset = 0) const override
     {
         auto result = m_condition->GetAssembly();
         result.push_back(ByteCode::BRF);
 
         auto const trueCaseAsm = m_trueCase->GetAssembly();
-        result.push_back(static_cast<tcc::Integer>(trueCaseAsm.size()) + static_cast<tcc::Integer>(result.size()) + 1
+        result.push_back(static_cast<int64_t>(trueCaseAsm.size()) + static_cast<int64_t>(result.size()) + 1
                          + offset);
         result.insert(std::end(result), std::begin(trueCaseAsm), std::end(trueCaseAsm));
 
@@ -366,7 +366,7 @@ public:
 
     Statement::Type GetType() const noexcept override { return Statement::Type::Compound; };
 
-    InstructionList GetAssembly(Integer const offset = 0) const override
+    InstructionList GetAssembly(int64_t const offset = 0) const override
     {
         auto result         = InstructionList{};
         auto internalOffset = offset;
@@ -374,7 +374,7 @@ public:
         for (Statement::Ptr const& statement : m_statements)
         {
             auto const assembly = statement->GetAssembly(internalOffset);
-            internalOffset += static_cast<tcc::Integer>(assembly.size());
+            internalOffset += static_cast<int64_t>(assembly.size());
 
             result.insert(std::end(result), std::begin(assembly), std::end(assembly));
         }
@@ -409,7 +409,7 @@ public:
 
     Statement::Type GetType() const noexcept override { return Statement::Type::Function; };
 
-    InstructionList GetAssembly(Integer const offset = 0) const override
+    InstructionList GetAssembly(int64_t const offset = 0) const override
     {
         tcc::IgnoreUnused(offset);
         auto result = m_compoundStatements->GetAssembly();

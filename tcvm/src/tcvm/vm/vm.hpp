@@ -20,18 +20,18 @@ namespace tcc
 class VirtualMachine
 {
 public:
-    explicit VirtualMachine(std::vector<Integer> code,  //
-                            UInteger main,              //
-                            UInteger dataSize,          //
-                            UInteger stackSize = 100,   //
+    explicit VirtualMachine(std::vector<int64_t> code,  //
+                            uint64_t main,              //
+                            uint64_t dataSize,          //
+                            uint64_t stackSize = 100,   //
                             bool shouldTrace   = true   //
     );
 
-    Integer Cpu();
+    int64_t Cpu();
 
     void EnableTracing(bool const shouldTrace);
 
-    void Reset(Integer const entryPoint)
+    void Reset(int64_t const entryPoint)
     {
         m_stackPointer       = -1;
         m_instructionPointer = entryPoint;
@@ -39,18 +39,18 @@ public:
     }
 
 private:
-    void disassemble(Integer const opcode);
+    void disassemble(int64_t const opcode);
     void printStack();
     void printGlobalMemory();
 
 private:
-    Integer m_stackPointer {-1};
-    Integer m_instructionPointer;
-    Integer m_framePointer {0};
+    int64_t m_stackPointer {-1};
+    int64_t m_instructionPointer;
+    int64_t m_framePointer {0};
 
-    std::vector<Integer> m_code;
-    std::vector<Integer> m_data;
-    std::vector<Integer> m_stack;
+    std::vector<int64_t> m_code;
+    std::vector<int64_t> m_data;
+    std::vector<int64_t> m_stack;
 
 private:
     bool m_shouldTrace {true};

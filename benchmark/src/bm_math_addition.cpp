@@ -14,9 +14,9 @@ constexpr auto addition(int64_t x, int64_t y) -> int64_t
 static_assert(addition(10, 10) == 40);
 static_assert(addition(7, 10) == 37);
 
-auto const createAdditionAssembly = [](tcc::Integer const arg) {
+auto const createAdditionAssembly = [](int64_t const arg) {
     using tcc::ByteCode;
-    return std::vector<tcc::Integer>{
+    return std::vector<int64_t>{
         // .def addition: args=2, locals=1
         // l1 = x + y
         ByteCode::ICONST, 0,  // 0 local #1

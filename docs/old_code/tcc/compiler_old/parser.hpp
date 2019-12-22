@@ -124,7 +124,7 @@ private:
         return current;
     }
 
-    SyntaxToken peekToken(Integer offset)
+    SyntaxToken peekToken(int64_t offset)
     {
         auto const index = m_position + offset;
         if (index >= m_tokens.size())
@@ -139,7 +139,7 @@ private:
 
 private:
     tcc::SyntaxTokenList m_tokens;
-    UInteger m_position {0};
+    uint64_t m_position {0};
 };
 
 }  // namespace tcc

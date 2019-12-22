@@ -12,7 +12,7 @@ using tcc::ByteCode;
 
 TEST_CASE("vm: Halt", "[vm]")
 {
-    auto const assembly = std::vector<tcc::Integer> {
+    auto const assembly = std::vector<int64_t> {
         ByteCode::ICONST, 2,  //
         ByteCode::HALT,       //
     };
@@ -25,7 +25,7 @@ TEST_CASE("vm: Halt", "[vm]")
 
 TEST_CASE("vm: Exit", "[vm]")
 {
-    auto const assembly = std::vector<tcc::Integer> {
+    auto const assembly = std::vector<int64_t> {
         ByteCode::ICONST, 2,  //
         ByteCode::EXIT,       //
     };
@@ -38,7 +38,7 @@ TEST_CASE("vm: Exit", "[vm]")
 
 TEST_CASE("vm: GlobalMemory", "[vm]")
 {
-    auto const assembly = std::vector<tcc::Integer> {
+    auto const assembly = std::vector<int64_t> {
         ByteCode::ICONST, 143,  // push constant to stack
         ByteCode::GSTORE, 0,    // save to global
         ByteCode::ICONST, 2,    // do other stuff
@@ -74,7 +74,7 @@ TEST_CASE("vm: Simple Expression", "[vm]")
 TEST_CASE("vm: Factorial", "[vm]")
 {
     auto const argument  = 3;
-    auto const factorial = std::vector<tcc::Integer> {
+    auto const factorial = std::vector<int64_t> {
         // .def fact: args=1, locals=0
         // if n < 2 return 1
         ByteCode::LOAD, -3,   // 0
@@ -106,8 +106,8 @@ TEST_CASE("vm: Factorial", "[vm]")
 
 TEST_CASE("vm: Fibonacci", "[vm]")
 {
-    auto const createFibonacciAssembly = [](tcc::Integer const arg) {
-        return std::vector<tcc::Integer> {
+    auto const createFibonacciAssembly = [](int64_t const arg) {
+        return std::vector<int64_t> {
             // .def fib: args=1, locals=0
             // if (x < 2) return x;
             ByteCode::LOAD, -3,   // 0
@@ -161,7 +161,7 @@ TEST_CASE("vm: Fibonacci", "[vm]")
 
 TEST_CASE("vm: MultipleArguments", "[vm]")
 {
-    auto const assembly = std::vector<tcc::Integer> {
+    auto const assembly = std::vector<int64_t> {
         // .def sub: args=2, locals=0
         // return x + y;
         ByteCode::LOAD, -4,  // 0 <-- load x
@@ -189,7 +189,7 @@ TEST_CASE("vm: MultipleArguments", "[vm]")
 
 TEST_CASE("vm: MultipleFunctions", "[vm]")
 {
-    auto const assembly = std::vector<tcc::Integer> {
+    auto const assembly = std::vector<int64_t> {
         // .def func1: args=1, locals=0
         // return x * 3;
         ByteCode::LOAD, -3,   // 0

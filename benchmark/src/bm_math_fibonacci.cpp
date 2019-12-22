@@ -4,7 +4,7 @@
 
 namespace
 {
-constexpr auto fibonacci(tcc::Integer x) -> tcc::Integer
+constexpr auto fibonacci(int64_t x) -> int64_t
 {
     if (x < 2) return x;
     return fibonacci(x - 1) + fibonacci(x - 2);
@@ -15,9 +15,9 @@ static_assert(fibonacci(2) == 1);
 static_assert(fibonacci(5) == 5);
 static_assert(fibonacci(12) == 144);
 
-auto const createFibonacciAssembly = [](tcc::Integer const arg) {
+auto const createFibonacciAssembly = [](int64_t const arg) {
     using tcc::ByteCode;
-    return std::vector<tcc::Integer>{
+    return std::vector<int64_t>{
         // .def fib: args=1, locals=0
         // if (x < 2) return x;
         ByteCode::LOAD, -3,   // 0

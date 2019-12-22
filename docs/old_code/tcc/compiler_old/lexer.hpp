@@ -73,7 +73,7 @@ public:
     };
 
     Type const type;
-    UInteger const position;
+    uint64_t const position;
     std::string_view const text;
 };
 
@@ -103,7 +103,7 @@ private:
     void next() noexcept { m_position++; }
 
 private:
-    UInteger m_position {0};
+    uint64_t m_position {0};
     std::string_view const m_text;
 };
 

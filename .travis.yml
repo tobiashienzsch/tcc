@@ -29,8 +29,8 @@ matrix:
           sources:
             - sourceline: "ppa:mhier/libboost-latest"
             - sourceline: "ppa:ubuntu-toolchain-r/test"
-            - sourceline: 'deb https://apt.llvm.org/bionic/ llvm-toolchain-bionic-9 main'
-              key_url: 'https://apt.llvm.org/llvm-snapshot.gpg.key'
+            - sourceline: "deb https://apt.llvm.org/bionic/ llvm-toolchain-bionic-9 main"
+              key_url: "https://apt.llvm.org/llvm-snapshot.gpg.key"
           packages:
             - ninja-build
             - libboost1.70-dev
@@ -39,7 +39,6 @@ matrix:
         - MATRIX_EVAL="CC=clang-9 && CXX=clang++-9"
       script: *script-linux-release
 
-  include:
     - os: linux
       dist: bionic
       addons:

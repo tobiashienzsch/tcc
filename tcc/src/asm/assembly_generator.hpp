@@ -1,6 +1,6 @@
 #pragma once
 
-#include "tcc/core/core.hpp"
+#include "tcc/core/byte_code.hpp"
 
 #include "ir/three_address_code.hpp"
 
@@ -11,16 +11,19 @@ namespace tcc
 class AssemblyGenerator
 {
 public:
-    static auto Build(StatementScope const& scope) -> void
+    static auto Build(StatementScope const& scope) -> std::vector<int64_t>
     {
+        auto result = std::vector<int64_t>{};
+
         auto const& statements = scope.statements;
         auto const numLocals   = scope.variables.size();
         fmt::print("\nNum Locals: {}\n", numLocals);
 
-        auto localVars = std::vector<std::string> {};
+        auto localVars = std::vector<std::string>{};
         for (auto const& var : scope.variables)
         {
             localVars.push_back(var.first);
+            // result.push_back(tcc::B)
             fmt::print("ICONST, 0\n");
         }
 
@@ -59,6 +62,8 @@ public:
                 default: break;
             }
         }
+
+        return result;
     }
 };
 }  // namespace tcc

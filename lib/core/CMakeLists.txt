@@ -5,6 +5,8 @@ set(tcc_core_source
     tcc/core/testing.hpp
     tcc/core/binary_format.hpp
     tcc/core/binary_format.cpp
+    tcc/core/byte_code.hpp
+    tcc/core/byte_code.cpp
 )    
 source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} FILES ${tcc_core_source})
 

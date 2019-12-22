@@ -13,7 +13,7 @@
 #include <string_view>
 #include <vector>
 
-#include "tcvm/vm/byte_code.hpp"
+#include "tcc/core/byte_code.hpp"
 
 namespace tcc
 {
@@ -44,15 +44,15 @@ private:
     void printGlobalMemory();
 
 private:
-    int64_t m_stackPointer {-1};
+    int64_t m_stackPointer{-1};
     int64_t m_instructionPointer;
-    int64_t m_framePointer {0};
+    int64_t m_framePointer{0};
 
     std::vector<int64_t> m_code;
     std::vector<int64_t> m_data;
     std::vector<int64_t> m_stack;
 
 private:
-    bool m_shouldTrace {true};
+    bool m_shouldTrace{true};
 };
 }  // namespace tcc

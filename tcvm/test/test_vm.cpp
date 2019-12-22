@@ -6,8 +6,8 @@
 
 #include "tcc/core/testing.hpp"
 
+#include "tcc/core/byte_code.hpp"
 #include "tcvm/examples.hpp"
-#include "tcvm/vm/byte_code.hpp"
 #include "tcvm/vm/vm.hpp"
 
 using tcc::ByteCode;

@@ -31,10 +31,10 @@ auto main(int argc, char** argv) -> int
     // auto vm             = tcc::VirtualMachine(tcvm::CreateAdditionAssembly(20), 18, 0, 200, true);
     // auto vm             = tcc::VirtualMachine(tcvm::CreateCompiledAssembly(), 0, 0, 200, true);
 
-    // auto const entryPoint = 22;
-    // auto vm               = tcc::VirtualMachine(assembly, entryPoint, 0, 200, true);
-    // auto const exitCode   = vm.Cpu();
-    // fmt::print("---\nexit code: {}\n", exitCode);
+    auto const entryPoint = 22;
+    auto vm               = tcc::VirtualMachine(assembly, entryPoint, 0, 200, true);
+    auto const exitCode   = vm.Cpu();
+    fmt::print("---\nexit code: {}\n", exitCode);
 
     return EXIT_SUCCESS;
 }

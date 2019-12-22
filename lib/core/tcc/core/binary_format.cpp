@@ -5,6 +5,7 @@ namespace tcc
 
 auto BinaryFormat::Write(std::string const& path, std::vector<Integer> const& data) -> bool
 {
+    // open
     auto file = std::ofstream(path, std::ios::out | std::ios::binary);
     if (!file)
     {
@@ -12,9 +13,13 @@ auto BinaryFormat::Write(std::string const& path, std::vector<Integer> const& da
         return false;
     }
 
-    auto test = TcbHeader{1, "test", 0, 0};
-    file.write((char*)&test, sizeof(TcbHeader));
+    auto program = BinaryProgram{1, "test", data};
 
+    // write archive
+    boost::archive::text_oarchive oa(file);
+    oa << program;
+
+    // close
     file.close();
     if (!file.good())
     {
@@ -34,21 +39,14 @@ auto BinaryFormat::Read(std::string const& path, std::vector<Integer>& data) -> 
         return false;
     }
 
-    auto test = TcbHeader{};
-    file.read((char*)&test, sizeof(TcbHeader));
+    // open the archive
+    auto program = BinaryProgram{};
+    boost::archive::text_iarchive ia(file);
+    ia >> program;
+    data = program.data;
 
-    fmt::print("header:\n");
-    fmt::print("\tversion: {}\n", test.version);
-    fmt::print("\tname: {}\n", test.name);
-    fmt::print("\tdataSize: {}\n", test.dataSize);
-    fmt::print("\tentryPoint: {}\n", test.entryPoint);
-
-    file.close();
-    if (!file.good())
-    {
-        fmt::print("Error occurred at reading time!\n");
-        return false;
-    }
+    fmt::print("Name: {}\n", program.name);
+    for (auto x : program.data) fmt::print("{}\n", x);
 
     return true;
 }

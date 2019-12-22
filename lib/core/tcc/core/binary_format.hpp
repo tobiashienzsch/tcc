@@ -13,18 +13,11 @@
 
 namespace tcc
 {
-struct TcbHeader
-{
-    int64_t version    = {0};
-    char name[25]      = {0};
-    int64_t dataSize   = {0};
-    int64_t entryPoint = {0};
-};
-
 struct BinaryProgram
 {
     int64_t version{0};
     char name[25]{0};
+    int64_t entryPoint = {0};
     std::vector<int64_t> data;
 
     template<class Archive>
@@ -32,13 +25,32 @@ struct BinaryProgram
     {
         ar& version;
         ar& name;
+        ar& entryPoint;
         ar& data;
     }
 };
 
 struct BinaryFormat
 {
-    static auto Write(std::string const& path, std::vector<Integer> const& data) -> bool;
-    static auto Read(std::string const& path, std::vector<Integer>& data) -> bool;
+    template<typename StreamType>
+    static auto WriteToStream(StreamType& stream, BinaryProgram const& program) -> bool
+    {
+        auto oa = boost::archive::text_oarchive(stream);
+        oa << program;
+
+        return true;
+    }
+
+    template<typename StreamType>
+    static auto ReadFromStream(StreamType& stream, BinaryProgram& program) -> bool
+    {
+        auto inputArchive = boost::archive::text_iarchive(stream);
+        inputArchive >> program;
+        return true;
+    }
+
+    static auto Write(std::string const& path, BinaryProgram const& program) -> bool;
+    static auto Read(std::string const& path, BinaryProgram& program) -> bool;
 };
+
 }  // namespace tcc

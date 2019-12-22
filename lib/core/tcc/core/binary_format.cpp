@@ -3,7 +3,7 @@
 namespace tcc
 {
 
-auto BinaryFormat::Write(std::string const& path, std::vector<Integer> const& data) -> bool
+auto BinaryFormat::Write(std::string const& path, BinaryProgram const& program) -> bool
 {
     // open
     auto file = std::ofstream(path, std::ios::out | std::ios::binary);
@@ -13,11 +13,7 @@ auto BinaryFormat::Write(std::string const& path, std::vector<Integer> const& da
         return false;
     }
 
-    auto program = BinaryProgram{1, "test", data};
-
-    // write archive
-    boost::archive::text_oarchive oa(file);
-    oa << program;
+    WriteToStream(file, program);
 
     // close
     file.close();
@@ -30,7 +26,7 @@ auto BinaryFormat::Write(std::string const& path, std::vector<Integer> const& da
     return true;
 }
 
-auto BinaryFormat::Read(std::string const& path, std::vector<Integer>& data) -> bool
+auto BinaryFormat::Read(std::string const& path, BinaryProgram& program) -> bool
 {
     auto file = std::ifstream(path, std::ios::out | std::ios::binary);
     if (!file)
@@ -39,16 +35,7 @@ auto BinaryFormat::Read(std::string const& path, std::vector<Integer>& data) -> 
         return false;
     }
 
-    // open the archive
-    auto program = BinaryProgram{};
-    boost::archive::text_iarchive ia(file);
-    ia >> program;
-    data = program.data;
-
-    fmt::print("Name: {}\n", program.name);
-    for (auto x : program.data) fmt::print("{}\n", x);
-
-    return true;
+    return ReadFromStream(file, program);
 }
 
 }  // namespace tcc

@@ -22,3 +22,8 @@ target_link_libraries(${PROJECT_NAME}
         tcc::CodeCoverage
 
 )
+
+# Test
+if(TCC_BUILD_TESTS)
+    add_subdirectory(test)
+endif()

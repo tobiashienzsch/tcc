@@ -22,17 +22,18 @@ auto main(int argc, char** argv) -> int
 
     auto const path          = std::string("test.tcb");
     auto const writeAssembly = tcvm::CreateFactorialAssembly(arg);
-    tcc::BinaryFormat::Write(path, writeAssembly);
+    auto const writeProgram  = tcc::BinaryProgram{1, "project1", 0, writeAssembly};
+    tcc::BinaryFormat::Write(path, writeProgram);
 
-    auto assembly = std::vector<tcc::Integer>{};
-    tcc::BinaryFormat::Read(path, assembly);
+    auto program = tcc::BinaryProgram{};
+    tcc::BinaryFormat::Read(path, program);
 
     // auto vm             = tcc::VirtualMachine(tcvm::CreateFactorialAssembly(arg), 22, 0, 1000, true);
     // auto vm             = tcc::VirtualMachine(tcvm::CreateAdditionAssembly(20), 18, 0, 200, true);
     // auto vm             = tcc::VirtualMachine(tcvm::CreateCompiledAssembly(), 0, 0, 200, true);
 
     auto const entryPoint = 22;
-    auto vm               = tcc::VirtualMachine(assembly, entryPoint, 0, 200, true);
+    auto vm               = tcc::VirtualMachine(program.data, program.entryPoint, 0, 200, true);
     auto const exitCode   = vm.Cpu();
     fmt::print("---\nexit code: {}\n", exitCode);
 

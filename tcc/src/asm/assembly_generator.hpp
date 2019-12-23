@@ -23,8 +23,8 @@ public:
         for (auto const& var : scope.variables)
         {
             localVars.push_back(var.first);
-            // result.push_back(tcc::B)
-            fmt::print("ICONST, 0\n");
+            result.push_back(tcc::ByteCode::ICONST);
+            result.push_back(0);
         }
 
         for (ThreeAddressCode const& statement : statements)
@@ -35,12 +35,16 @@ public:
                 {
                     if (auto* value = std::get_if<int>(&statement.first); value != nullptr)
                     {
-                        fmt::print("ICONST, {}\n", *value);
+                        result.push_back(tcc::ByteCode::ICONST);
+                        result.push_back(*value);
                     }
                     auto const destIter  = std::find(std::begin(localVars), std::end(localVars),
                                                     std::string(1, statement.destination[0]));
                     auto const destIndex = static_cast<int>(destIter - std::begin(localVars));
-                    fmt::print("STORE, {}\n", destIndex);
+
+                    result.push_back(tcc::ByteCode::STORE);
+                    result.push_back(destIndex);
+
                     break;
                 }
 
@@ -50,14 +54,35 @@ public:
                     auto const destIter  = std::find(std::begin(localVars), std::end(localVars),
                                                     std::string(1, std::get<std::string>(statement.first)[0]));
                     auto const destIndex = static_cast<int>(destIter - std::begin(localVars));
-                    fmt::print("LOAD, {}\n", destIndex);
+
+                    result.push_back(tcc::ByteCode::LOAD);
+                    result.push_back(destIndex);
+
                     break;
                 }
 
-                case byte_code::op_add: fmt::print("ADD,\n"); break;
-                case byte_code::op_sub: fmt::print("SUB,\n"); break;
-                case byte_code::op_mul: fmt::print("MUL,\n"); break;
-                case byte_code::op_div: fmt::print("DIV,\n"); break;
+                case byte_code::op_add:
+                {
+                    result.push_back(tcc::ByteCode::IADD);
+                    break;
+                }
+                case byte_code::op_sub:
+                {
+                    result.push_back(tcc::ByteCode::ISUB);
+                    break;
+                }
+                case byte_code::op_mul:
+                {
+                    result.push_back(tcc::ByteCode::IMUL);
+                    break;
+                }
+
+                    // case byte_code::op_div:
+                    // {
+                    //     result.push_back(tcc::ByteCode::IDIV);
+                    //     fmt::print("DIV,\n");
+                    //     break;
+                    // }
 
                 default: break;
             }

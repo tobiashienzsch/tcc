@@ -22,11 +22,11 @@ auto main(int argc, char** argv) -> int
 
     auto const path = std::string("test.tcb");
 
-    // write binary
-    {
-        auto const program = tcvm::CreateFactorialProgram(arg);
-        tcc::BinaryFormat::WriteToFile(path, program);
-    }
+    // // write binary
+    // {
+    //     auto const program = tcvm::CreateFactorialProgram(arg);
+    //     tcc::BinaryFormat::WriteToFile(path, program);
+    // }
 
     // read binary
     auto program = tcc::BinaryProgram{};

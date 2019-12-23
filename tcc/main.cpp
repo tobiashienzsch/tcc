@@ -7,6 +7,8 @@
 #include "statement.hpp"
 #include "vm.hpp"
 
+#include "tcc/core/binary_format.hpp"
+
 #include <boost/program_options.hpp>
 namespace po = boost::program_options;
 
@@ -104,7 +106,9 @@ auto main(int argc, char** argv) -> int
 
             auto optimizer = tcc::Optimizer(*irBuilder.CurrentScope());
             optimizer.Optimize();
-            tcc::AssemblyGenerator::Build(*irBuilder.CurrentScope());
+            auto assembly      = tcc::AssemblyGenerator::Build(*irBuilder.CurrentScope());
+            auto binaryProgram = tcc::BinaryProgram{1, "test", 0, assembly};
+            if (!tcc::BinaryFormat::WriteToFile("test.tcb", binaryProgram)) fmt::print("Error wrtiting binary.\n");
         }
         else
         {

@@ -16,7 +16,7 @@ using tcc::VirtualMachine;
 
 TEST_CASE("vm: Halt", "[vm]")
 {
-    auto const assembly = std::vector<int64_t>{
+    auto const assembly = std::vector<int64_t> {
         ByteCode::ICONST, 2,  //
         ByteCode::HALT,       //
     };
@@ -29,7 +29,7 @@ TEST_CASE("vm: Halt", "[vm]")
 
 TEST_CASE("vm: Exit", "[vm]")
 {
-    auto const assembly = std::vector<int64_t>{
+    auto const assembly = std::vector<int64_t> {
         ByteCode::ICONST, 2,  //
         ByteCode::EXIT,       //
     };
@@ -42,7 +42,7 @@ TEST_CASE("vm: Exit", "[vm]")
 
 TEST_CASE("vm: GlobalMemory", "[vm]")
 {
-    auto const assembly = std::vector<int64_t>{
+    auto const assembly = std::vector<int64_t> {
         ByteCode::ICONST, 143,  // push constant to stack
         ByteCode::GSTORE, 0,    // save to global
         ByteCode::ICONST, 2,    // do other stuff
@@ -64,8 +64,8 @@ TEST_CASE("vm: Addition", "[vm]")
 {
 
     auto const testCases = {
-        TestCase<int64_t, int64_t>{10, 40},  //
-        TestCase<int64_t, int64_t>{20, 50},  //
+        TestCase<int64_t, int64_t> {10, 40},  //
+        TestCase<int64_t, int64_t> {20, 50},  //
     };
 
     for (auto const& test : testCases)
@@ -81,9 +81,9 @@ TEST_CASE("vm: Factorial", "[vm]")
 {
 
     auto const testCases = {
-        TestCase<int64_t, int64_t>{1, 1},    //
-        TestCase<int64_t, int64_t>{3, 6},    //
-        TestCase<int64_t, int64_t>{7, 5040}  //
+        TestCase<int64_t, int64_t> {1, 1},    //
+        TestCase<int64_t, int64_t> {3, 6},    //
+        TestCase<int64_t, int64_t> {7, 5040}  //
     };
 
     for (auto const& test : testCases)
@@ -98,9 +98,9 @@ TEST_CASE("vm: Factorial", "[vm]")
 TEST_CASE("vm: Fibonacci", "[vm]")
 {
     auto const testCases = {
-        TestCase<int64_t, int64_t>{1, 1},    //
-        TestCase<int64_t, int64_t>{5, 5},    //
-        TestCase<int64_t, int64_t>{12, 144}  //
+        TestCase<int64_t, int64_t> {1, 1},    //
+        TestCase<int64_t, int64_t> {5, 5},    //
+        TestCase<int64_t, int64_t> {12, 144}  //
     };
 
     for (auto const& test : testCases)

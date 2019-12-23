@@ -11,11 +11,11 @@ namespace tcvm
 {
 auto CreateCompiledProgram() -> tcc::BinaryProgram
 {
-    return tcc::BinaryProgram{
+    return tcc::BinaryProgram {
         1,          // version
         "compile",  // name
         0,          // entryPoint
-        std::vector<int64_t>{
+        std::vector<int64_t> {
             ByteCode::ICONST, 0,   //
             ByteCode::ICONST, 0,   //
             ByteCode::ICONST, 0,   //
@@ -40,11 +40,11 @@ auto CreateCompiledProgram() -> tcc::BinaryProgram
 
 auto CreateAdditionProgram(int64_t const argument) -> tcc::BinaryProgram
 {
-    return tcc::BinaryProgram{
+    return tcc::BinaryProgram {
         1,           // version
         "addition",  // name
         18,          // entryPoint
-        std::vector<int64_t>{
+        std::vector<int64_t> {
             // .def addition: args=2, locals=1
             // l1 = x + y
             ByteCode::ICONST, 0,  // 0 local #1
@@ -74,11 +74,11 @@ auto CreateAdditionProgram(int64_t const argument) -> tcc::BinaryProgram
 }
 auto CreateFactorialProgram(int64_t const argument) -> tcc::BinaryProgram
 {
-    return tcc::BinaryProgram{
+    return tcc::BinaryProgram {
         1,            // version
         "factorial",  // name
         22,           // entryPoint
-        std::vector<int64_t>{
+        std::vector<int64_t> {
             // .def fact: args=1, locals=0
             // if n < 2 return 1
             ByteCode::LOAD, -3,   // 0
@@ -107,11 +107,11 @@ auto CreateFactorialProgram(int64_t const argument) -> tcc::BinaryProgram
 
 auto CreateFibonacciProgram(int64_t const argument) -> tcc::BinaryProgram
 {
-    return tcc::BinaryProgram{
+    return tcc::BinaryProgram {
         1,            // version
         "fibonacci",  // name
         28,           // entryPoint
-        std::vector<int64_t>{
+        std::vector<int64_t> {
             // .def fib: args=1, locals=0
             // if (x < 2) return x;
             ByteCode::LOAD, -3,   // 0
@@ -144,11 +144,11 @@ auto CreateFibonacciProgram(int64_t const argument) -> tcc::BinaryProgram
 
 auto CreateMultipleArgumentsProgram(int64_t const firstArg, int64_t const secondArg) -> tcc::BinaryProgram
 {
-    return tcc::BinaryProgram{
+    return tcc::BinaryProgram {
         1,                     // version
         "multiple arguments",  // name
         6,                     // entryPoint
-        std::vector<int64_t>{
+        std::vector<int64_t> {
             // .def sub: args=2, locals=0
             // return x + y;
             ByteCode::LOAD, -4,  // 0 <-- load x
@@ -172,11 +172,11 @@ auto CreateMultipleArgumentsProgram(int64_t const firstArg, int64_t const second
 
 auto CreateMultipleFunctionsProgram(int64_t const argument) -> tcc::BinaryProgram
 {
-    return tcc::BinaryProgram{
+    return tcc::BinaryProgram {
         1,                     // version
         "multiple functions",  // name
         12,                    // entryPoint
-        std::vector<int64_t>{
+        std::vector<int64_t> {
             // .def func1: args=1, locals=0
             // return x * 3;
             ByteCode::LOAD, -3,   // 0

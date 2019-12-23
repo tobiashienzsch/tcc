@@ -10,23 +10,23 @@
 
 TEST_CASE("core: BinaryFormat WriteReadStream", "[core]")
 {
-    auto stream = std::stringstream{};
+    auto stream = std::stringstream {};
 
     // write to stream
     {
-        auto const program = tcc::BinaryProgram{1, "test", 0, {}};
+        auto const program = tcc::BinaryProgram {1, "test", 0, {}};
         tcc::BinaryFormat::WriteToStream(stream, program);
     }
 
     // read to stream
     {
-        auto program = tcc::BinaryProgram{};
+        auto program = tcc::BinaryProgram {};
         tcc::BinaryFormat::ReadFromStream(stream, program);
 
         REQUIRE(program.version == 1);
         REQUIRE(program.name == std::string("test"));
         REQUIRE(program.entryPoint == 0);
-        REQUIRE(program.data == std::vector<int64_t>{});
+        REQUIRE(program.data == std::vector<int64_t> {});
     }
 }
 
@@ -37,18 +37,18 @@ TEST_CASE("core: BinaryFormatWriteReadFile", "[core]")
 
     // write to stream
     {
-        auto const program = tcc::BinaryProgram{1, "test", 0, {1, 2, 3}};
+        auto const program = tcc::BinaryProgram {1, "test", 0, {1, 2, 3}};
         tcc::BinaryFormat::WriteToFile(tempFile, program);
     }
 
     // read to stream
     {
-        auto program = tcc::BinaryProgram{};
+        auto program = tcc::BinaryProgram {};
         tcc::BinaryFormat::ReadFromFile(tempFile, program);
 
         REQUIRE(program.version == 1);
         REQUIRE(program.name == std::string("test"));
         REQUIRE(program.entryPoint == 0);
-        REQUIRE(program.data == std::vector<int64_t>{1, 2, 3});
+        REQUIRE(program.data == std::vector<int64_t> {1, 2, 3});
     }
 }

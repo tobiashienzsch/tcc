@@ -107,7 +107,7 @@ auto main(int argc, char** argv) -> int
             auto optimizer = tcc::Optimizer(*irBuilder.CurrentScope());
             optimizer.Optimize();
             auto assembly      = tcc::AssemblyGenerator::Build(*irBuilder.CurrentScope());
-            auto binaryProgram = tcc::BinaryProgram{1, "test", 0, assembly};
+            auto binaryProgram = tcc::BinaryProgram {1, "test", 0, assembly};
             if (!tcc::BinaryFormat::WriteToFile("test.tcb", binaryProgram)) fmt::print("Error wrtiting binary.\n");
         }
         else

@@ -5,6 +5,7 @@
 #include "ir/three_address_code.hpp"
 
 #include <algorithm>
+#include <variant>
 
 namespace tcc
 {
@@ -13,13 +14,13 @@ class AssemblyGenerator
 public:
     static auto Build(StatementScope const& scope) -> std::vector<int64_t>
     {
-        auto result = std::vector<int64_t>{};
+        auto result = std::vector<int64_t> {};
 
         auto const& statements = scope.statements;
         auto const numLocals   = scope.variables.size();
         fmt::print("\nNum Locals: {}\n", numLocals);
 
-        auto localVars = std::vector<std::string>{};
+        auto localVars = std::vector<std::string> {};
         for (auto const& var : scope.variables)
         {
             localVars.push_back(var.first);
@@ -29,6 +30,18 @@ public:
 
         for (ThreeAddressCode const& statement : statements)
         {
+            auto const CheckIfInstructionHasConstArgument = [&]() {
+                if (statement.second.has_value())
+                {
+                    auto const& second = statement.second.value();
+                    if (auto* value = std::get_if<int>(&second); value != nullptr)
+                    {
+                        result.push_back(tcc::ByteCode::ICONST);
+                        result.push_back(*value);
+                    }
+                }
+            };
+
             switch (statement.type)
             {
                 case byte_code::op_store:
@@ -63,16 +76,19 @@ public:
 
                 case byte_code::op_add:
                 {
+                    CheckIfInstructionHasConstArgument();
                     result.push_back(tcc::ByteCode::IADD);
                     break;
                 }
                 case byte_code::op_sub:
                 {
+                    CheckIfInstructionHasConstArgument();
                     result.push_back(tcc::ByteCode::ISUB);
                     break;
                 }
                 case byte_code::op_mul:
                 {
+                    CheckIfInstructionHasConstArgument();
                     result.push_back(tcc::ByteCode::IMUL);
                     break;
                 }

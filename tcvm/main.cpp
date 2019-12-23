@@ -10,10 +10,10 @@
 
 auto main(int argc, char** argv) -> int
 {
-    auto cliArguments = po::variables_map{};
+    auto cliArguments = po::variables_map {};
     if (!tcvm::ProgramOptions::Parse(argc, argv, cliArguments)) return EXIT_FAILURE;
 
-    auto arg = std::int64_t{};
+    auto arg = std::int64_t {};
     if (cliArguments.count("input"))
     {
         arg = cliArguments["input"].as<std::int64_t>();
@@ -29,7 +29,7 @@ auto main(int argc, char** argv) -> int
     // }
 
     // read binary
-    auto program = tcc::BinaryProgram{};
+    auto program = tcc::BinaryProgram {};
     tcc::BinaryFormat::ReadFromFile(path, program);
 
     // execute

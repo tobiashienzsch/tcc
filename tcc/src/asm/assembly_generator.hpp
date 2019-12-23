@@ -30,7 +30,14 @@ public:
 
         for (ThreeAddressCode const& statement : statements)
         {
-            auto const CheckIfInstructionHasConstArgument = [&]() {
+            auto const PushConstArgument = [&]() -> void {
+                auto const& first = statement.first;
+                if (auto* value = std::get_if<int>(&first); value != nullptr)
+                {
+                    result.push_back(tcc::ByteCode::ICONST);
+                    result.push_back(*value);
+                }
+
                 if (statement.second.has_value())
                 {
                     auto const& second = statement.second.value();
@@ -76,19 +83,19 @@ public:
 
                 case byte_code::op_add:
                 {
-                    CheckIfInstructionHasConstArgument();
+                    PushConstArgument();
                     result.push_back(tcc::ByteCode::IADD);
                     break;
                 }
                 case byte_code::op_sub:
                 {
-                    CheckIfInstructionHasConstArgument();
+                    PushConstArgument();
                     result.push_back(tcc::ByteCode::ISUB);
                     break;
                 }
                 case byte_code::op_mul:
                 {
-                    CheckIfInstructionHasConstArgument();
+                    PushConstArgument();
                     result.push_back(tcc::ByteCode::IMUL);
                     break;
                 }

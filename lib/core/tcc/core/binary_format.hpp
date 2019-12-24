@@ -8,7 +8,9 @@
 #include <vector>
 
 #include <boost/archive/text_iarchive.hpp>
+#include <boost/archive/binary_iarchive.hpp>
 #include <boost/archive/text_oarchive.hpp>
+#include <boost/archive/binary_oarchive.hpp>
 #include <boost/serialization/vector.hpp>
 
 namespace tcc
@@ -35,7 +37,7 @@ struct BinaryFormat
     template<typename StreamType>
     static auto WriteToStream(StreamType& stream, BinaryProgram const& program) -> bool
     {
-        auto oa = boost::archive::text_oarchive(stream);
+        auto oa = boost::archive::binary_oarchive(stream);
         oa << program;
 
         return true;
@@ -44,7 +46,7 @@ struct BinaryFormat
     template<typename StreamType>
     static auto ReadFromStream(StreamType& stream, BinaryProgram& program) -> bool
     {
-        auto inputArchive = boost::archive::text_iarchive(stream);
+        auto inputArchive = boost::archive::binary_iarchive(stream);
         inputArchive >> program;
         return true;
     }

@@ -21,7 +21,7 @@ namespace tcc
 struct BinaryProgram
 {
     int64_t version {0};
-    char name[25] {0};
+    std::string name {""};
     int64_t entryPoint = {0};
     std::vector<int64_t> data;
 

@@ -1,6 +1,5 @@
 Checks:          '-*,cppcoreguidelines-*,modernize-*,-cppcoreguidelines-macro-usage,-cppcoreguidelines-avoid-magic-numbers'
 WarningsAsErrors: '-*'
-HeaderFilterRegex: 'lib/*,(/juce_.*).*,(test_.*).*'
 AnalyzeTemporaryDtors: false
 FormatStyle:     none
 ...

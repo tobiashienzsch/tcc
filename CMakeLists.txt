@@ -88,7 +88,6 @@ endif()
 
 # projects
 add_subdirectory(lib/core)
-# add_subdirectory(lib)
 add_subdirectory(tcc)
 add_subdirectory(tcvm)
 

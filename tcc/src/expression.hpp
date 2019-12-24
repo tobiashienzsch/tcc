@@ -14,5 +14,5 @@ using expression_type = x3::rule<expression_class, ast::expression>;
 BOOST_SPIRIT_DECLARE(expression_type);
 }  // namespace parser
 
-parser::expression_type const& expression();
+auto expression() -> parser::expression_type const&;
 }  // namespace tcc

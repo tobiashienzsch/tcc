@@ -32,7 +32,7 @@ struct program
         code.clear();
         variables.clear();
     }
-    
+
     auto size() const -> std::size_t { return code.size(); }
     auto operator()() const -> std::vector<int> const& { return code; }
 

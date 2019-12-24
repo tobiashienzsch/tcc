@@ -21,7 +21,7 @@ struct expression;
 
 struct variable : x3::position_tagged
 {
-    variable(std::string const& newName = "") : name(newName) {}
+    variable(std::string newName = "") : name(std::move(newName)) {}
     std::string name;
 };
 
@@ -110,13 +110,13 @@ struct while_statement
 };
 
 // print functions for debugging
-inline std::ostream& operator<<(std::ostream& out, nil)
+inline auto operator<<(std::ostream& out, nil) -> std::ostream&
 {
     out << "nil";
     return out;
 }
 
-inline std::ostream& operator<<(std::ostream& out, variable const& var)
+inline auto operator<<(std::ostream& out, variable const& var) -> std::ostream&
 {
     out << var.name;
     return out;

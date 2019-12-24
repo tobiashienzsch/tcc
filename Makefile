@@ -12,6 +12,8 @@ win: config-vs build test
 config:
 	cmake -B$(BUILD_DIR) -S. -G"$(CM_GENERATOR)"    \
     -DCMAKE_BUILD_TYPE:STRING=$(CONFIG)             \
+	-DTCC_BUILD_CLANG_TIDY=ON 						\
+	-DTCC_BUILD_BENCHMARK=ON						\
     -DBENCHMARK_ENABLE_GTEST_TESTS=OFF              \
     -DBENCHMARK_ENABLE_TESTING=OFF      			
 
@@ -21,6 +23,7 @@ config-vs:
 	-DBOOST_ROOT="C:/boost/boost_1_71_0" 						\
 	-DBOOST_LIBRARYDIR="C:/boost/boost_1_71_0/lib64-msvc-14.2" 	\
 	-DBoost_USE_STATIC_LIBS="ON"								\
+	-DTCC_BUILD_BENCHMARK=ON									\
 	-DBENCHMARK_ENABLE_GTEST_TESTS=OFF              			\
     -DBENCHMARK_ENABLE_TESTING=OFF      						
 

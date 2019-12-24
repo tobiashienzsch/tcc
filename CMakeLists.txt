@@ -37,10 +37,10 @@ endif()
 
 # project options
 option(TCC_BUILD_TESTS      "Build the unit tests with Catch2"  ON)
-option(TCC_BUILD_BENCHMARK  "Build benchmark tests"             ON)
 option(TCC_BUILD_PLAYGROUND "Build playground project"          ON)
+option(TCC_BUILD_BENCHMARK  "Build benchmark tests"             OFF)
 option(TCC_BUILD_COVERAGE   "Build with code coverage"          OFF)
-option(TCC_BUILD_CLANG_TIDY "Run clang-tidy with the compiler"  ON)
+option(TCC_BUILD_CLANG_TIDY "Run clang-tidy with the compiler"  OFF)
 
 # cmake modules
 list (APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")

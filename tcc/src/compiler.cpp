@@ -7,39 +7,30 @@
 #include <iostream>
 #include <set>
 
-namespace tcc
+namespace tcc::code_gen
 {
-namespace code_gen
-{
-void program::op(int a) { code.push_back(a); }
+auto program::op(int a) -> void { code.push_back(a); }
 
-void program::op(int a, int b)
+auto program::op(int a, int b) -> void
 {
     code.push_back(a);
     code.push_back(b);
 }
 
-// void program::op(int a, int b, int c)
-// {
-//     code.push_back(a);
-//     code.push_back(b);
-//     code.push_back(c);
-// }
-
-int const* program::find_var(std::string const& name) const
+auto program::find_var(std::string const& name) const -> int const*
 {
     auto i = variables.find(name);
-    if (i == variables.end()) return 0;
+    if (i == variables.end()) return nullptr;
     return &i->second;
 }
 
-void program::add_var(std::string const& name)
+auto program::add_var(std::string const& name) -> void
 {
     std::size_t n   = variables.size();
     variables[name] = int(n);
 }
 
-void program::print_variables(std::vector<int> const& stack) const
+auto program::print_variables(std::vector<int> const& stack) const -> void
 {
     for (auto const& p : variables)
     {
@@ -47,7 +38,7 @@ void program::print_variables(std::vector<int> const& stack) const
     }
 }
 
-void program::print_assembler() const
+auto program::print_assembler() const -> void
 {
     auto pc = code.begin();
 
@@ -158,23 +149,23 @@ void program::print_assembler() const
     std::cout << "end:" << std::endl;
 }
 
-bool compiler::operator()(unsigned int x) const
+auto compiler::operator()(unsigned int x) const -> bool
 {
     program.op(op_int, x);
     m_builder.PushToStack(x);
     return true;
 }
 
-bool compiler::operator()(bool x) const
+auto compiler::operator()(bool x) const -> bool
 {
     program.op(x ? op_true : op_false);
     return true;
 }
 
-bool compiler::operator()(ast::variable const& x) const
+auto compiler::operator()(ast::variable const& x) const -> bool
 {
     int const* p = program.find_var(x.name);
-    if (p == 0)
+    if (p == nullptr)
     {
         error_handler(x, "Undeclared variable: " + x.name);
         return false;
@@ -185,7 +176,7 @@ bool compiler::operator()(ast::variable const& x) const
     return true;
 }
 
-bool compiler::operator()(ast::operation const& x) const
+auto compiler::operator()(ast::operation const& x) const -> bool
 {
     if (!boost::apply_visitor(*this, x.operand_)) return false;
     switch (x.operator_)
@@ -264,12 +255,12 @@ bool compiler::operator()(ast::operation const& x) const
             m_builder.CreateBinaryOperation(op_or);
             break;
         }
-        default: BOOST_ASSERT(0); return false;
+        default: return false;
     }
     return true;
 }
 
-bool compiler::operator()(ast::unary const& x) const
+auto compiler::operator()(ast::unary const& x) const -> bool
 {
     if (!boost::apply_visitor(*this, x.operand_)) return false;
     switch (x.operator_)
@@ -289,12 +280,12 @@ bool compiler::operator()(ast::unary const& x) const
             break;
         }
 
-        default: BOOST_ASSERT(0); return false;
+        default: return false;
     }
     return true;
 }
 
-bool compiler::operator()(ast::expression const& x) const
+auto compiler::operator()(ast::expression const& x) const -> bool
 {
     if (!boost::apply_visitor(*this, x.first)) return false;
     for (ast::operation const& oper : x.rest)
@@ -304,11 +295,11 @@ bool compiler::operator()(ast::expression const& x) const
     return true;
 }
 
-bool compiler::operator()(ast::assignment const& x) const
+auto compiler::operator()(ast::assignment const& x) const -> bool
 {
     if (!(*this)(x.rhs)) return false;
     int const* p = program.find_var(x.lhs.name);
-    if (p == 0)
+    if (p == nullptr)
     {
         error_handler(x.lhs, "Undeclared variable: " + x.lhs.name);
         return false;
@@ -319,10 +310,10 @@ bool compiler::operator()(ast::assignment const& x) const
     return true;
 }
 
-bool compiler::operator()(ast::variable_declaration const& x) const
+auto compiler::operator()(ast::variable_declaration const& x) const -> bool
 {
     int const* p = program.find_var(x.assign.lhs.name);
-    if (p != 0)
+    if (p != nullptr)
     {
         error_handler(x.assign.lhs, "Duplicate variable: " + x.assign.lhs.name);
         return false;
@@ -339,9 +330,9 @@ bool compiler::operator()(ast::variable_declaration const& x) const
     return r;
 }
 
-bool compiler::operator()(ast::statement const& x) const { return boost::apply_visitor(*this, x); }
+auto compiler::operator()(ast::statement const& x) const -> bool { return boost::apply_visitor(*this, x); }
 
-bool compiler::operator()(ast::statement_list const& x) const
+auto compiler::operator()(ast::statement_list const& x) const -> bool
 {
     for (auto const& s : x)
     {
@@ -350,7 +341,7 @@ bool compiler::operator()(ast::statement_list const& x) const
     return true;
 }
 
-bool compiler::operator()(ast::if_statement const& x) const
+auto compiler::operator()(ast::if_statement const& x) const -> bool
 {
     if (!(*this)(x.condition)) return false;
     program.op(op_jump_if, 0);              // we shall fill this (0) in later
@@ -370,7 +361,7 @@ bool compiler::operator()(ast::if_statement const& x) const
     return true;
 }
 
-bool compiler::operator()(ast::while_statement const& x) const
+auto compiler::operator()(ast::while_statement const& x) const -> bool
 {
     std::size_t loop = program.size();  // mark our position
     if (!(*this)(x.condition)) return false;
@@ -383,7 +374,7 @@ bool compiler::operator()(ast::while_statement const& x) const
     return true;
 }
 
-bool compiler::start(ast::statement_list const& x) const
+auto compiler::start(ast::statement_list const& x) const -> bool
 {
     program.clear();
     // op_stk_adj 0 for now. we'll know how many variables we'll have later
@@ -397,5 +388,4 @@ bool compiler::start(ast::statement_list const& x) const
     program[1] = int(program.nvars());  // now store the actual number of variables
     return true;
 }
-}  // namespace code_gen
-}  // namespace tcc
+}  // namespace tcc::code_gen

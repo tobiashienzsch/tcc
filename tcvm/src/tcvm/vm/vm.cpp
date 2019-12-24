@@ -139,7 +139,7 @@ int64_t VirtualMachine::Cpu()
             {
                 auto const val = m_stack.at(m_stackPointer);
                 m_stackPointer--;
-                std::printf("%d\n", val);
+                fmt::print("{}\n", val);
                 break;
             }
 
@@ -187,20 +187,20 @@ void VirtualMachine::EnableTracing(bool const shouldTrace) { m_shouldTrace = sho
 void VirtualMachine::disassemble(int64_t const opcode)
 {
     auto const instruction = Instructions[opcode];
-    std::printf("%04d: ", m_instructionPointer);
+    std::printf("%04ld: ", m_instructionPointer);
     std::stringstream byteCodeStr {};
     byteCodeStr << ByteCode {opcode};
     std::printf("%s", byteCodeStr.str().c_str());
-    if (instruction.numberOfOperands == 1) std::printf(" %d", m_code.at(m_instructionPointer + 1));
+    if (instruction.numberOfOperands == 1) std::printf(" %ld", m_code.at(m_instructionPointer + 1));
     if (instruction.numberOfOperands == 2)
     {
         auto const firstOperand  = m_code.at(m_instructionPointer + 1);
         auto const secondOperand = m_code.at(m_instructionPointer + 2);
-        std::printf(" %d, %d", firstOperand, secondOperand);
+        std::printf(" %ld, %ld", firstOperand, secondOperand);
     }
 
     printGlobalMemory();
-    std::printf("\t STACK_PTR: %2d", m_stackPointer);
+    std::printf("\t STACK_PTR: %2ld", m_stackPointer);
     printStack();
     std::puts("");
 }
@@ -210,14 +210,14 @@ void VirtualMachine::printStack()
     for (auto i = 0; i <= m_stackPointer; i++)
     {
         auto const var = m_stack.at(i);
-        std::printf("%d ", var);
+        std::printf("%ld ", var);
     }
     std::printf("]");
 }
 void VirtualMachine::printGlobalMemory()
 {
     std::printf("\t\t GLOBALS: [ ");
-    for (auto const& global : m_data) std::printf("%04d ", global);
+    for (auto const& global : m_data) std::printf("%04ld ", global);
     std::printf("]");
 }
 

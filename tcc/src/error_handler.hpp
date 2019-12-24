@@ -27,7 +27,8 @@ using error_handler_tag = x3::error_handler_tag;
 struct error_handler_base
 {
     template<typename Iterator, typename Exception, typename Context>
-    x3::error_handler_result on_error(Iterator& first, Iterator const& last, Exception const& x, Context const& context)
+    auto on_error(Iterator& first, Iterator const& last, Exception const& x, Context const& context)
+        -> x3::error_handler_result
     {
         tcc::IgnoreUnused(first);
         tcc::IgnoreUnused(last);

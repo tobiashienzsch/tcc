@@ -40,6 +40,7 @@ target_link_libraries(${PROJECT_NAME}
     PUBLIC 
         tcc::tcvm
     PRIVATE 
+        tcc::CodeCoverage
         tcc::CompilerOptions
         tcc::CompilerWarnings   
 )

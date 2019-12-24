@@ -1,4 +1,12 @@
+/**
+ * @file variant.hpp
+ * @copyright Copyright 2019 Tobias Hienzsch. MIT license.
+ */
+
+
 #pragma once
+
+#include <variant>
 
 namespace tcc
 {

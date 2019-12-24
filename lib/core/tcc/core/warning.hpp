@@ -1,3 +1,9 @@
+/**
+ * @file warning.hpp
+ * @copyright Copyright 2019 Tobias Hienzsch. MIT license.
+ */
+
+
 #pragma once
 
 namespace tcc

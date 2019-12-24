@@ -1,3 +1,8 @@
+/**
+ * @file byte_code.hpp
+ * @copyright Copyright 2019 Tobias Hienzsch. MIT license.
+ */
+
 #pragma once
 
 #include <cstdint>

@@ -12,5 +12,6 @@
 #include "tcc/core/warning.hpp"
 
 #include "fmt/format.h"
+#include "fmt/printf.h"
 
 #include <iostream>

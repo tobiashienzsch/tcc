@@ -48,7 +48,7 @@ include(tccCodeCoverage)
 include(tccCompilerOptions)
 include(tccCompilerWarnings)
 
-# tidy
+# tidy, has to be enabled for each target.
 if(TCC_BUILD_CLANG_TIDY)
   if(CMake_SOURCE_DIR STREQUAL CMake_BINARY_DIR)
     message(FATAL_ERROR "TCC_BUILD_CLANG_TIDY requires an out-of-source build!")
@@ -56,9 +56,6 @@ if(TCC_BUILD_CLANG_TIDY)
   find_program(CLANG_TIDY_EXE NAMES clang-tidy)
   if(NOT CLANG_TIDY_EXE)
     message(WARNING "TCC_BUILD_CLANG_TIDY is ON but clang-tidy is not found!")
-    set(DO_CLANG_TIDY "" CACHE STRING "" FORCE)
-  else()
-    set(DO_CLANG_TIDY "${CLANG_TIDY_EXE}")
   endif()
 
   # Create a preprocessor definition that depends on .clang-tidy content so

@@ -40,7 +40,7 @@ struct BinaryFormat
     template<typename StreamType>
     static auto WriteToStream(StreamType& stream, BinaryProgram const& program) -> bool
     {
-        auto oa = boost::archive::binary_oarchive(stream);
+        boost::archive::binary_oarchive oa(stream);
         oa << program;
 
         return true;
@@ -49,7 +49,7 @@ struct BinaryFormat
     template<typename StreamType>
     static auto ReadFromStream(StreamType& stream, BinaryProgram& program) -> bool
     {
-        auto inputArchive = boost::archive::binary_iarchive(stream);
+        boost::archive::binary_iarchive inputArchive(stream);
         inputArchive >> program;
         return true;
     }

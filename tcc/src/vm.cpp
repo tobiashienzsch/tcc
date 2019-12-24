@@ -9,10 +9,10 @@
 
 namespace tcc
 {
-int vmachine::execute(std::vector<int> const& code, std::vector<int>::const_iterator pc,
-                      std::vector<int>::iterator frame_ptr)
+auto vmachine::execute(std::vector<int> const& code, std::vector<int>::const_iterator pc,
+                       std::vector<int>::iterator frame_ptr) -> int
 {
-    std::vector<int>::iterator stack_ptr = frame_ptr;
+    auto stack_ptr = frame_ptr;
 
     while (pc != code.end())
     {

@@ -17,7 +17,7 @@ VirtualMachine::VirtualMachine(std::vector<int64_t> code, uint64_t const main, u
 {
 }
 
-int64_t VirtualMachine::Cpu()
+auto VirtualMachine::Cpu() -> int64_t
 {
 
     while (static_cast<size_t>(m_instructionPointer) < m_code.size())
@@ -186,7 +186,7 @@ void VirtualMachine::EnableTracing(bool const shouldTrace) { m_shouldTrace = sho
 
 void VirtualMachine::disassemble(int64_t const opcode)
 {
-    auto const instruction = Instructions[opcode];
+    auto const instruction = gsl::at(Instructions, opcode);
     fmt::printf("%04ld: ", m_instructionPointer);
     std::stringstream byteCodeStr {};
     byteCodeStr << ByteCode {opcode};

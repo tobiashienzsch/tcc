@@ -21,25 +21,27 @@ namespace code_gen
 
 struct program
 {
-    void op(int a);
-    void op(int a, int b);
+    auto op(int a) -> void;
+    auto op(int a, int b) -> void;
 
-    int& operator[](std::size_t i) { return code[i]; }
-    int operator[](std::size_t i) const { return code[i]; }
-    void clear()
+    auto operator[](std::size_t i) -> int& { return code[i]; }
+    auto operator[](std::size_t i) const -> int { return code[i]; }
+
+    auto clear() -> void
     {
         code.clear();
         variables.clear();
     }
-    std::size_t size() const { return code.size(); }
-    std::vector<int> const& operator()() const { return code; }
+    
+    auto size() const -> std::size_t { return code.size(); }
+    auto operator()() const -> std::vector<int> const& { return code; }
 
-    std::size_t nvars() const { return variables.size(); }
-    int const* find_var(std::string const& name) const;
-    void add_var(std::string const& name);
+    auto nvars() const -> std::size_t { return variables.size(); }
+    auto find_var(std::string const& name) const -> int const*;
+    auto add_var(std::string const& name) -> void;
 
-    void print_variables(std::vector<int> const& stack) const;
-    void print_assembler() const;
+    auto print_variables(std::vector<int> const& stack) const -> void;
+    auto print_assembler() const -> void;
 
 private:
     std::map<std::string, int> variables;
@@ -62,25 +64,25 @@ struct compiler
     {
     }
 
-    bool operator()(ast::nil) const
+    auto operator()(ast::nil) const -> bool
     {
         BOOST_ASSERT(0);
         return false;
     }
-    bool operator()(unsigned int x) const;
-    bool operator()(bool x) const;
-    bool operator()(ast::variable const& x) const;
-    bool operator()(ast::operation const& x) const;
-    bool operator()(ast::unary const& x) const;
-    bool operator()(ast::expression const& x) const;
-    bool operator()(ast::assignment const& x) const;
-    bool operator()(ast::variable_declaration const& x) const;
-    bool operator()(ast::statement_list const& x) const;
-    bool operator()(ast::statement const& x) const;
-    bool operator()(ast::if_statement const& x) const;
-    bool operator()(ast::while_statement const& x) const;
+    auto operator()(uint64_t x) const -> bool;
+    auto operator()(bool x) const -> bool;
+    auto operator()(ast::variable const& x) const -> bool;
+    auto operator()(ast::operation const& x) const -> bool;
+    auto operator()(ast::unary const& x) const -> bool;
+    auto operator()(ast::expression const& x) const -> bool;
+    auto operator()(ast::assignment const& x) const -> bool;
+    auto operator()(ast::variable_declaration const& x) const -> bool;
+    auto operator()(ast::statement_list const& x) const -> bool;
+    auto operator()(ast::statement const& x) const -> bool;
+    auto operator()(ast::if_statement const& x) const -> bool;
+    auto operator()(ast::while_statement const& x) const -> bool;
 
-    bool start(ast::statement_list const& x) const;
+    auto start(ast::statement_list const& x) const -> bool;
 
     tcc::code_gen::program& program;
     tcc::IntermediateRepresentation& m_builder;

@@ -149,7 +149,7 @@ auto program::print_assembler() const -> void
     std::cout << "end:" << std::endl;
 }
 
-auto compiler::operator()(unsigned int x) const -> bool
+auto compiler::operator()(uint64_t x) const -> bool
 {
     program.op(op_int, x);
     m_builder.PushToStack(x);

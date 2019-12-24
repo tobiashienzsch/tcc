@@ -25,7 +25,7 @@ struct variable : x3::position_tagged
     std::string name;
 };
 
-struct operand : x3::variant<nil, unsigned int, variable, x3::forward_ast<unary>, x3::forward_ast<expression>>
+struct operand : x3::variant<nil, uint64_t, variable, x3::forward_ast<unary>, x3::forward_ast<expression>>
 {
     using base_type::base_type;
     using base_type::operator=;

@@ -1,4 +1,4 @@
-Checks:          '-*,cppcoreguidelines-*,modernize-*,-cppcoreguidelines-macro-usage,-cppcoreguidelines-avoid-magic-numbers'
+Checks:          '-*,cppcoreguidelines-*,modernize-*,cert-*,-cppcoreguidelines-macro-usage,-cppcoreguidelines-avoid-magic-numbers'
 WarningsAsErrors: '-*'
 AnalyzeTemporaryDtors: false
 FormatStyle:     none

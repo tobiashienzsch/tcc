@@ -1,6 +1,6 @@
 #pragma once
 
-#include "tcc/core/core.hpp"
+#include "tcc/core.hpp"
 
 #include "vm.hpp"
 

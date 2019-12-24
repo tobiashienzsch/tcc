@@ -4,9 +4,8 @@
  */
 #include "catch2/catch.hpp"
 
-#include "tcc/core/testing.hpp"
+#include "tcc/core.hpp"
 
-#include "tcc/core/byte_code.hpp"
 #include "tcvm/examples.hpp"
 #include "tcvm/vm/vm.hpp"
 

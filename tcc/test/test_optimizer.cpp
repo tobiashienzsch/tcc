@@ -4,7 +4,7 @@
  */
 #include "catch2/catch.hpp"
 
-#include "tcc/core/testing.hpp"
+#include "tcc/core.hpp"
 
 #include "optimizer/optimizer.hpp"
 

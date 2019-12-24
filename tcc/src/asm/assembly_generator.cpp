@@ -1,6 +1,6 @@
 #include "asm/assembly_generator.hpp"
 
-#include "tcc/core/byte_code.hpp"
+#include "tcc/core.hpp"
 
 #include <algorithm>
 #include <variant>

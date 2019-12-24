@@ -1,16 +1,14 @@
 #pragma once
 
-#include "tcc/core/core.hpp"
-
 #include <fstream>
 #include <iostream>
 #include <string>
 #include <vector>
 
-#include <boost/archive/text_iarchive.hpp>
 #include <boost/archive/binary_iarchive.hpp>
-#include <boost/archive/text_oarchive.hpp>
 #include <boost/archive/binary_oarchive.hpp>
+#include <boost/archive/text_iarchive.hpp>
+#include <boost/archive/text_oarchive.hpp>
 #include <boost/serialization/vector.hpp>
 
 namespace tcc

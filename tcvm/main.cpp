@@ -3,7 +3,7 @@
  * @copyright Copyright 2019 Tobias Hienzsch. MIT license.
  */
 
-#include "tcc/core/binary_format.hpp"
+#include "tcc/core.hpp"
 
 #include "tcvm/examples.hpp"
 #include "tcvm/program_options.hpp"

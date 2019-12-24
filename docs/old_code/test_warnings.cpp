@@ -4,7 +4,7 @@
  */
 #include "catch2/catch.hpp"
 
-#include "tcc/core/core.hpp"
+#include "tcc/core.hpp"
 
 TEST_CASE("core: IgnoreUnused", "[warnings]")
 {

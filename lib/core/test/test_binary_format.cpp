@@ -4,7 +4,7 @@
  */
 #include "catch2/catch.hpp"
 
-#include "tcc/core/binary_format.hpp"
+#include "tcc/core.hpp"
 
 #include <sstream>
 

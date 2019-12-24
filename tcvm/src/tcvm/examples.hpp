@@ -5,8 +5,7 @@
 
 #pragma once
 
-#include "tcc/core/binary_format.hpp"
-#include "tcc/core/core.hpp"
+#include "tcc/core.hpp"
 
 #include "tcvm/vm/vm.hpp"
 

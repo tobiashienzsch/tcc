@@ -6,7 +6,7 @@
 
 #include <sstream>
 
-#include "tcc/core/byte_code.hpp"
+#include "tcc/core.hpp"
 
 TEST_CASE("vm: ByteCode ostream", "[vm]")
 {

@@ -6,7 +6,7 @@
 #include <memory>
 #include <vector>
 
-#include "tcc/core/core.hpp"
+#include "tcc/core.hpp"
 #include "tcc/vm/vm.hpp"
 
 namespace tcc

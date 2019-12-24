@@ -5,6 +5,8 @@
 
 #pragma once
 
+#include "tcc/core.hpp"
+
 #include <cstdint>
 
 #include <algorithm>
@@ -12,8 +14,6 @@
 #include <sstream>
 #include <string_view>
 #include <vector>
-
-#include "tcc/core/byte_code.hpp"
 
 namespace tcc
 {

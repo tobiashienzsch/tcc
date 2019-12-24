@@ -1,22 +1,7 @@
 #pragma once
 
-#include "fmt/format.h"
-
-#include <cstdint>
-
-#include <iostream>
-
 namespace tcc
 {
-
-/**
- * @brief Handy function for avoiding unused variable warnings.
- */
-template<typename... Types>
-constexpr auto IgnoreUnused(Types&&... /*unused*/) noexcept -> void
-{
-}
-
 /**
  * @brief Handy helper struct for std::variant::vist.
  * See https://en.cppreference.com/w/cpp/utility/variant/visit

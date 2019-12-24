@@ -5,7 +5,7 @@
 #include "ir/intermediate_representation.hpp"
 #include "vm.hpp"
 
-#include "tcc/core/core.hpp"
+#include "tcc/core.hpp"
 
 #include <iostream>
 #include <map>

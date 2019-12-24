@@ -3,7 +3,7 @@
 #include "expression.hpp"
 #include "statement.hpp"
 
-#include "tcc/core/core.hpp"
+#include "tcc/core.hpp"
 
 #include <boost/spirit/home/x3.hpp>
 #include <boost/spirit/home/x3/support/ast/position_tagged.hpp>

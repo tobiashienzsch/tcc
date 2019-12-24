@@ -5,7 +5,7 @@
 #include "catch2/catch.hpp"
 
 #include "tcc/compiler_old/ast.hpp"
-#include "tcc/core/byte_code.hpp"
+#include "tcc/core.hpp"
 #include "tcc/vm/vm.hpp"
 
 using tcc::ByteCode;

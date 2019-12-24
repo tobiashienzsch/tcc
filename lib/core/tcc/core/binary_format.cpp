@@ -1,5 +1,7 @@
 #include "tcc/core/binary_format.hpp"
 
+#include "fmt/format.h"
+
 namespace tcc
 {
 

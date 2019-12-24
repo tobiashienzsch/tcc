@@ -7,7 +7,7 @@
 #include "statement.hpp"
 #include "vm.hpp"
 
-#include "tcc/core/binary_format.hpp"
+#include "tcc/core.hpp"
 
 #include <boost/program_options.hpp>
 namespace po = boost::program_options;

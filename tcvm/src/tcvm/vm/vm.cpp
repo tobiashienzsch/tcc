@@ -212,13 +212,14 @@ void VirtualMachine::printStack()
         auto const var = m_stack.at(i);
         std::printf("%ld ", var);
     }
-    std::printf("]");
+    fmt::print("]");
 }
+
 void VirtualMachine::printGlobalMemory()
 {
-    std::printf("\t\t GLOBALS: [ ");
+    fmt::print("\t\t GLOBALS: [ ");
     for (auto const& global : m_data) std::printf("%04ld ", global);
-    std::printf("]");
+    fmt::print("]");
 }
 
 }  // namespace tcc

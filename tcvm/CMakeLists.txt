@@ -13,6 +13,8 @@ source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} FILES ${tcvm_lib_source})
 
 add_library(tcvm_lib ${tcvm_lib_source})
 add_library(tcc::tcvm ALIAS tcvm_lib)
+set_target_properties(tcvm_lib PROPERTIES CXX_CLANG_TIDY "${DO_CLANG_TIDY}")
+
 target_include_directories(tcvm_lib PUBLIC src)
 target_link_libraries(tcvm_lib  
     PUBLIC
@@ -32,6 +34,8 @@ target_link_libraries(tcvm_lib
 set(tcvm_source main.cpp)
 source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} FILES ${tcvm_source})
 add_executable(${PROJECT_NAME} ${tcvm_source})
+set_target_properties(${PROJECT_NAME} PROPERTIES CXX_CLANG_TIDY "${DO_CLANG_TIDY}")
+
 target_link_libraries(${PROJECT_NAME}  
     PUBLIC 
         tcc::tcvm

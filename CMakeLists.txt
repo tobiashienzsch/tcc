@@ -47,6 +47,7 @@ list (APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
 include(tccCodeCoverage)
 include(tccCompilerOptions)
 include(tccCompilerWarnings)
+include(tccThreads)
 
 # tidy, has to be enabled for each target.
 if(TCC_BUILD_CLANG_TIDY)

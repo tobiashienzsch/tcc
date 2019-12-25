@@ -1,54 +1,58 @@
-#include <cstdlib>
+#include "grammar.hpp"
 
-#include <fstream>
 #include <iostream>
 #include <string>
-#include <vector>
 
-#include <boost/archive/text_iarchive.hpp>
-#include <boost/archive/text_oarchive.hpp>
-#include <boost/serialization/vector.hpp>
-
-#include <fmt/format.h>
-
-struct BinaryProgram
+///////////////////////////////////////////////////////////////////////////////
+//  Main program
+///////////////////////////////////////////////////////////////////////////////
+int
+main()
 {
-    int64_t version{0};
-    char name[25]{0};
-    std::vector<int64_t> data;
+    std::cout << "/////////////////////////////////////////////////////////\n\n";
+    std::cout << "Expression parser...\n\n";
+    std::cout << "/////////////////////////////////////////////////////////\n\n";
+    std::cout << "Type an expression...or [q or Q] to quit\n\n";
 
-    template<class Archive>
-    void serialize(Archive& ar, const unsigned int /* file_version */)
+    typedef std::string::const_iterator iterator_type;
+    typedef client::ast::program ast_program;
+    typedef client::ast::printer ast_print;
+    typedef client::ast::eval ast_eval;
+
+    std::string str;
+    while (std::getline(std::cin, str))
     {
-        ar& version;
-        ar& name;
-        ar& data;
+        if (str.empty() || str[0] == 'q' || str[0] == 'Q')
+            break;
+
+        auto& calc = client::calculator;    // Our grammar
+        ast_program program;                // Our program (AST)
+        ast_print print;                    // Prints the program
+        ast_eval eval;                      // Evaluates the program
+
+        iterator_type iter = str.begin();
+        iterator_type end = str.end();
+        boost::spirit::x3::ascii::space_type space;
+        bool r = phrase_parse(iter, end, calc, space, program);
+
+        if (r && iter == end)
+        {
+            std::cout << "-------------------------\n";
+            std::cout << "Parsing succeeded\n";
+            print(program);
+            std::cout << "\nResult: " << eval(program) << std::endl;
+            std::cout << "-------------------------\n";
+        }
+        else
+        {
+            std::string rest(iter, end);
+            std::cout << "-------------------------\n";
+            std::cout << "Parsing failed\n";
+            std::cout << "stopped at: \"" << rest << "\"\n";
+            std::cout << "-------------------------\n";
+        }
     }
-};
 
-int main(int, char**)
-{
-
-    {
-        // make an archive
-        auto program = BinaryProgram{1, "test", {0, 1, 2, 3, 1, 4, 5, 2, 6, 4, 8, 2}};
-        std::ofstream ofs("test.tcb");
-        boost::archive::text_oarchive oa(ofs);
-        oa << program;
-    }
-
-    {
-        // open the archive
-        auto program = BinaryProgram{};
-        std::ifstream ifs("test.tcb");
-        boost::archive::text_iarchive ia(ifs);
-
-        // restore the schedule from the archive
-        ia >> program;
-
-        fmt::print("Name: {}\n", program.name);
-        for (auto x : program.data) fmt::print("{}\n", x);
-    }
-
-    return EXIT_SUCCESS;
+    std::cout << "Bye... :-) \n\n";
+    return 0;
 }

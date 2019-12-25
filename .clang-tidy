@@ -1,4 +1,4 @@
-Checks:          '-*,cppcoreguidelines-*,modernize-*,cert-*,-cppcoreguidelines-macro-usage,-cppcoreguidelines-avoid-magic-numbers'
+Checks:          '-*,cppcoreguidelines-*,modernize-*,cert-*,-cppcoreguidelines-macro-usage,-cppcoreguidelines-avoid-magic-numbers,-cppcoreguidelines-pro-bounds-array-to-pointer-decay,-modernize-use-trailing-return-type'
 WarningsAsErrors: '-*'
 AnalyzeTemporaryDtors: false
 FormatStyle:     none

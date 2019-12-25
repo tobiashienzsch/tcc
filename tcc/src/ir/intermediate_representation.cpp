@@ -3,7 +3,7 @@
 namespace tcc
 {
 
-auto IntermediateRepresentation::PushToStack(int x) -> void { m_stack.push_back(x); }
+auto IntermediateRepresentation::PushToStack(int x) -> void { m_stack.emplace_back(x); }
 
 auto IntermediateRepresentation::PopFromStack() -> std::variant<int, std::string>
 {
@@ -66,7 +66,7 @@ auto IntermediateRepresentation::GetLastVariable(std::string const& key) const -
 auto IntermediateRepresentation::CreateTemporaryOnStack() -> std::string
 {
     auto tmp = std::string("t").append(std::to_string(m_varCounter++));
-    m_stack.push_back(tmp);
+    m_stack.emplace_back(tmp);
     return tmp;
 }
 

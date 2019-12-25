@@ -1,15 +1,22 @@
 project(tcc-playground)
 
-set(playground_source
-    main.cpp
+add_executable(asio_server asio_server.cpp)
+set_target_properties(asio_server PROPERTIES CXX_CLANG_TIDY "${CLANG_TIDY_EXE}")
+target_link_libraries(asio_server 
+    PRIVATE 
+        Boost::boost 
+        Boost::system 
+        Boost::filesystem
+        Boost::serialization 
+        tcc::Core
+        tcc::Threads 
+        tcc::CompilerOptions 
+        tcc::CompilerWarnings
 )
 
-add_executable(${PROJECT_NAME} ${playground_source})
-source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} FILES ${playground_source})
-set_target_properties(${PROJECT_NAME} PROPERTIES CXX_CLANG_TIDY "${CLANG_TIDY_EXE}")
-
-target_include_directories(${PROJECT_NAME} PRIVATE src)
-target_link_libraries(${PROJECT_NAME} 
+add_executable(asio_client asio_client.cpp)
+set_target_properties(asio_client PROPERTIES CXX_CLANG_TIDY "${CLANG_TIDY_EXE}")
+target_link_libraries(asio_client 
     PRIVATE 
         Boost::boost 
         Boost::system 

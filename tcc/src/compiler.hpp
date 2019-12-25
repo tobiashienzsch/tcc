@@ -41,7 +41,6 @@ struct program
     auto add_var(std::string const& name) -> void;
 
     auto print_variables(std::vector<int> const& stack) const -> void;
-    auto print_assembler() const -> void;
 
 private:
     std::map<std::string, int> variables;
@@ -64,11 +63,7 @@ struct compiler
     {
     }
 
-    auto operator()(ast::nil) const -> bool
-    {
-        BOOST_ASSERT(0);
-        return false;
-    }
+    auto operator()(ast::nil) const -> bool { return false; }
     auto operator()(uint64_t x) const -> bool;
     auto operator()(bool x) const -> bool;
     auto operator()(ast::variable const& x) const -> bool;

@@ -164,7 +164,7 @@ private:
 
 int main(int argc, char* argv[])
 {
-    auto arguments = gsl::span<char*>{argv,argc};
+    auto arguments = gsl::span<char*> {argv, argc};
     try
     {
         if (argc < 2)

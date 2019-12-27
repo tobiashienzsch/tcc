@@ -13,7 +13,7 @@
 
 using boost::asio::ip::tcp;
 
-using ChatMessageQueue = std::deque<ChatMessage> ;
+using ChatMessageQueue = std::deque<ChatMessage>;
 
 class ChatClient
 {
@@ -107,40 +107,38 @@ private:
     boost::asio::io_context& io_context_;
     tcp::socket socket_;
     ChatMessage read_msg_;
-    ChatMessageQueue write_msgs_;
+    ChatMessageQueue write_msgs_ {};
 };
 
 int main(int argc, char* argv[])
 {
-    auto const arguments = gsl::span<char*>{argv, argc};
+    auto const arguments = gsl::span<char*> {argv, argc};
     try
     {
-        if (argc != 3)
+        if (arguments.size() != 3)
         {
             std::cerr << "Usage: ChatClient <host> <port>\n";
             return 1;
         }
 
-        boost::asio::io_context io_context;
+        auto ioContext        = boost::asio::io_context {};
+        auto resolver         = tcp::resolver(ioContext);
+        auto endpoints        = resolver.resolve(arguments[1], arguments[2]);
+        auto client           = ChatClient(ioContext, endpoints);
+        auto backgroundThread = std::thread([&ioContext]() { ioContext.run(); });
 
-        tcp::resolver resolver(io_context);
-        auto endpoints = resolver.resolve(arguments[1], arguments[2]);
-        ChatClient c(io_context, endpoints);
-
-        std::thread t([&io_context]() { io_context.run(); });
-
-        char line[ChatMessage::max_body_length + 1];
-        while (std::cin.getline(line, ChatMessage::max_body_length + 1))
+        auto line = std::array<char, ChatMessage::max_body_length + 1> {};
+        while (std::cin.getline(line.data(), line.size()))
         {
-            ChatMessage msg;
-            msg.body_length(std::strlen(line));
-            std::memcpy(msg.body(), line, msg.body_length());
+            auto msg = ChatMessage {};
+            msg.body_length(std::strlen(line.data()));
+            std::memcpy(msg.body(), line.data(), msg.body_length());
             msg.encode_header();
-            c.write(msg);
+            client.write(msg);
         }
 
-        c.close();
-        t.join();
+        client.close();
+        backgroundThread.join();
     }
     catch (std::exception& e)
     {

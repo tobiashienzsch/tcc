@@ -19,6 +19,7 @@ set_target_properties(asio_client PROPERTIES CXX_CLANG_TIDY "${CLANG_TIDY_EXE}")
 target_link_libraries(asio_client 
     PRIVATE 
         Boost::boost 
+        Boost::date_time 
         Boost::system 
         Boost::filesystem
         Boost::serialization 

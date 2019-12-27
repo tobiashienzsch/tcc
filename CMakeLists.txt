@@ -72,7 +72,7 @@ endif(TCC_BUILD_CLANG_TIDY)
 configure_file(.clang-tidy .clang-tidy COPYONLY)
 
 # boost
-find_package(Boost 1.70 REQUIRED COMPONENTS system serialization program_options filesystem)
+find_package(Boost 1.70 REQUIRED COMPONENTS filesystem program_options regex serialization system)
 
 # fmt
 add_subdirectory(3rd_party/fmt EXCLUDE_FROM_ALL)

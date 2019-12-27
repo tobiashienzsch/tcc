@@ -9,7 +9,8 @@ script-anchors:
     - cd $TRAVIS_BUILD_DIR
     - mkdir build
     - cd build
-    - cmake .. -DTCC_BUILD_PLAYGROUND=OFF -DTCC_BUILD_BENCHMARK=OFF -DCMAKE_BUILD_TYPE:STRING=Release
+    - cmake --version
+    - cmake .. -GXcode -DTCC_BUILD_PLAYGROUND=OFF -DTCC_BUILD_BENCHMARK=OFF -DCMAKE_BUILD_TYPE:STRING=Release
     - cmake --build .
     - ctest
 
@@ -38,6 +39,7 @@ matrix:
         homebrew:
           casks:
             - cmake
+            - boost@1.71
       script: *script-macOS
 
     - os: linux

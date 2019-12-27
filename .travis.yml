@@ -5,6 +5,14 @@ branches:
 language: cpp
 
 script-anchors:
+  - &script-macOS
+    - cd $TRAVIS_BUILD_DIR
+    - mkdir build
+    - cd build
+    - cmake .. -DTCC_BUILD_PLAYGROUND=OFF -DTCC_BUILD_BENCHMARK=OFF -DCMAKE_BUILD_TYPE:STRING=Release
+    - cmake --build .
+    - ctest
+
   - &script-linux-release
     - cd $TRAVIS_BUILD_DIR
     - mkdir build_release && cd build_release
@@ -24,6 +32,14 @@ script-anchors:
 
 matrix:
   include:
+    - os: osx
+      osx_image: xcode11.2
+      addons:
+        homebrew:
+          casks:
+            - cmake
+      script: *script-macOS
+
     - os: linux
       dist: bionic
       addons:

@@ -1,21 +1,20 @@
-project(tcc-test)
+project(tcc-test-2)
 
 set (TEST_SRC
     test_main.cpp
-    
-    test_optimizer.cpp
+    test_parser_x3.cpp
 )
 source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} FILES ${TEST_SRC})
 
 add_executable(${PROJECT_NAME} ${TEST_SRC})
 target_link_libraries(${PROJECT_NAME}
-PRIVATE
-    tcc::tcc
-    tcc::CompilerOptions
-    tcc::CompilerWarnings
-    tcc::CodeCoverage
-    Boost::boost 
-    Catch2::Catch2
+    PRIVATE
+        tcc::tcc2
+        tcc::CompilerOptions
+        tcc::CompilerWarnings
+        tcc::CodeCoverage
+        Boost::boost 
+        Catch2::Catch2
 )
 
 

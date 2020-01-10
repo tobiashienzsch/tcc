@@ -28,3 +28,17 @@ target_link_libraries(asio_client
         tcc::CompilerOptions 
         tcc::CompilerWarnings
 )
+
+add_executable(serialize main_serialize.cpp)
+set_target_properties(serialize PROPERTIES CXX_CLANG_TIDY "${CLANG_TIDY_EXE}")
+target_link_libraries(serialize 
+    PRIVATE 
+        Boost::boost 
+        Boost::system 
+        Boost::filesystem
+        Boost::serialization 
+        tcc::Core
+        tcc::Threads 
+        tcc::CompilerOptions 
+        tcc::CompilerWarnings
+)

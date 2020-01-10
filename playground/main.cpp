@@ -1,7 +1,8 @@
+#include <iostream>
+
 #include <boost/archive/text_oarchive.hpp>
 #include <boost/asio.hpp>
 #include <boost/serialization/serialization.hpp>
-#include <iostream>
 
 struct ParameterMsg
 {

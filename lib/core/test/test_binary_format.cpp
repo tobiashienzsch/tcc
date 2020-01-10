@@ -1,6 +1,6 @@
 /**
  * @file test_binary_format.cpp
- * @copyright Copyright 2019 Tobias Hienzsch. MIT license.
+ * @copyright Copyright 2019-2020 Tobias Hienzsch. MIT license.
  */
 #include "catch2/catch.hpp"
 

@@ -1,6 +1,6 @@
 /**
  * @file vm.cpp
- * @copyright Copyright 2019 Tobias Hienzsch. MIT license.
+ * @copyright Copyright 2019-2020 Tobias Hienzsch. MIT license.
  */
 
 #include "tcvm/vm/vm.hpp"

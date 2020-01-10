@@ -1,6 +1,6 @@
 /**
  * @file examples.hpp
- * @copyright Copyright 2019 Tobias Hienzsch. MIT license.
+ * @copyright Copyright 2019-2020 Tobias Hienzsch. MIT license.
  */
 
 #pragma once

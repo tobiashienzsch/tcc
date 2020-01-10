@@ -1,6 +1,6 @@
 /**
  * @file binary_format.cpp
- * @copyright Copyright 2019 Tobias Hienzsch. MIT license.
+ * @copyright Copyright 2019-2020 Tobias Hienzsch. MIT license.
  */
 
 #include "tcc/core/binary_format.hpp"

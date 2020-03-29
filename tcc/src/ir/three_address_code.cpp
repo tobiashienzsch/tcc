@@ -6,28 +6,22 @@ namespace tcc
 {
 auto operator<<(std::ostream& out, ThreeAddressCode const& data) -> std::ostream&
 {
-    auto firstStr = std::string {};
-    std::visit(tcc::overloaded {
-                   [&firstStr](int arg) { firstStr = fmt::format("{}", arg); },
-                   [&firstStr](const std::string& arg) { firstStr = fmt::format("%{}", arg); },
-               },
-               data.first);
-
-    auto secondStr = std::string {};
-    if (data.second.has_value())
-    {
-        auto const& sec = data.second.value();
+    auto const formatArgument = [](auto const& argument) {
+        auto result = std::string {};
         std::visit(tcc::overloaded {
-                       [&secondStr](int arg) { secondStr = fmt::format("{}", arg); },
-                       [&secondStr](const std::string& arg) { secondStr = fmt::format("%{}", arg); },
+                       [&result](int const arg) { result = fmt::format("{}", arg); },
+                       [&result](std::string const& arg) { result = fmt::format("%{}", arg); },
                    },
-                   sec);
-    }
+                   argument);
+        return result;
+    };
 
-    std::stringstream opCodeStr;
+    auto const firstStr  = formatArgument(data.first);
+    auto const secondStr = data.second.has_value() ? formatArgument(data.second.value()) : "";
+
+    auto opCodeStr = std::stringstream {};
     opCodeStr << static_cast<tcc::byte_code>(data.type);
-    auto const str = fmt::format("{0}\t:=\t{1}\t{2}\t{3}", data.destination, firstStr, opCodeStr.str(), secondStr);
 
-    return out << str;
+    return out << fmt::format("{0}\t:=\t{1}\t{2}\t{3}", data.destination, opCodeStr.str(), firstStr, secondStr);
 }
 }  // namespace tcc

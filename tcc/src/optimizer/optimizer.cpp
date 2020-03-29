@@ -4,8 +4,8 @@ namespace tcc
 {
 auto Optimizer::Optimize() -> void
 {
-    fmt::print("Before: {} lines\n", m_mainScope.statements.size());
-    for (ThreeAddressCode const& x : m_mainScope.statements) std::cout << x << '\n';
+    // fmt::print("Before: {} lines\n", m_mainScope.statements.size());
+    // for (ThreeAddressCode const& x : m_mainScope.statements) std::cout << x << '\n';
 
     for (auto x = 0u; x < 7; x++)
     {

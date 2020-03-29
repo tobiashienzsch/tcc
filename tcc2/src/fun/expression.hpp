@@ -13,20 +13,18 @@
 
 namespace fun
 {
-    namespace x3 = boost::spirit::x3;
+namespace x3 = boost::spirit::x3;
 
-    // EXPRESSION_VISIT_BEGIN
-    namespace parser
-    {
-        struct expression_class;
-        typedef
-            x3::rule<expression_class, ast::expression>
-        expression_type;
-        BOOST_SPIRIT_DECLARE(expression_type);
-    }
+// EXPRESSION_VISIT_BEGIN
+namespace parser
+{
+struct expression_class;
+typedef x3::rule<expression_class, ast::expression> expression_type;
+BOOST_SPIRIT_DECLARE(expression_type);
+}  // namespace parser
 
-    parser::expression_type const& expression();
-    // EXPRESSION_VISIT_END
-}
+parser::expression_type const& expression();
+// EXPRESSION_VISIT_END
+}  // namespace fun
 
 #endif

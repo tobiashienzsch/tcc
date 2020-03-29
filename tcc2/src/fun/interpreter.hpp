@@ -11,121 +11,96 @@
 
 #include <boost/mpl/int.hpp>
 
-#include <map>
 #include <functional>
+#include <map>
 
-namespace fun { namespace ast
+namespace fun
 {
-    // INTERPRETER_CLASS_VISIT_BEGIN
-    class interpreter
+namespace ast
+{
+// INTERPRETER_CLASS_VISIT_BEGIN
+class interpreter
+{
+public:
+    typedef std::function<void(x3::position_tagged, std::string const&)> error_handler_type;
+
+    template<typename ErrorHandler>
+    interpreter(ErrorHandler const& error_handler);
+
+    template<typename F>
+    void add_function(std::string name, F f);
+
+    float eval(ast::expression const& ast);
+
+private:
+    std::map<std::string, std::pair<std::function<double(double* args)>, std::size_t>> fmap;
+
+    error_handler_type error_handler;
+};
+// INTERPRETER_CLASS_VISIT_END
+
+///////////////////////////////////////////////////////////////////////////
+// Implementation
+///////////////////////////////////////////////////////////////////////////
+template<typename ErrorHandler>
+inline interpreter::interpreter(ErrorHandler const& error_handler)
+    : error_handler([&](x3::position_tagged pos, std::string const& msg) { error_handler(pos, msg); })
+{
+}
+
+namespace detail
+{
+std::size_t const max_arity = 5;
+
+template<typename T>
+struct arity : arity<decltype(&T::operator())>
+{
+};
+
+template<typename F, typename RT, typename... Args>
+struct arity<RT (F::*)(Args...) const>
+{
+    enum
     {
-    public:
-
-        typedef std::function<
-            void(x3::position_tagged, std::string const&)>
-        error_handler_type;
-
-        template <typename ErrorHandler>
-        interpreter(ErrorHandler const& error_handler);
-
-        template <typename F>
-        void add_function(std::string name, F f);
-
-        float eval(ast::expression const& ast);
-
-    private:
-
-        std::map<
-            std::string
-          , std::pair<std::function<double(double* args)>, std::size_t>
-        >
-        fmap;
-
-        error_handler_type error_handler;
+        value = sizeof...(Args)
     };
-    // INTERPRETER_CLASS_VISIT_END
+};
 
-    ///////////////////////////////////////////////////////////////////////////
-    // Implementation
-    ///////////////////////////////////////////////////////////////////////////
-    template <typename ErrorHandler>
-    inline interpreter::interpreter(ErrorHandler const& error_handler)
-        : error_handler(
-            [&](x3::position_tagged pos, std::string const& msg)
-            { error_handler(pos, msg); }
-        )
-    {}
+template<typename F>
+struct adapter_function
+{
+    adapter_function(F f) : f(f) {}
 
-    namespace detail
-    {
-        std::size_t const max_arity = 5;
+    double dispatch(double* args, boost::mpl::int_<0>) const { return f(); }
 
-        template <typename T>
-        struct arity : arity<decltype(&T::operator())> {};
+    double dispatch(double* args, boost::mpl::int_<1>) const { return f(args[0]); }
 
-        template <typename F, typename RT, typename ...Args>
-        struct arity<RT(F::*)(Args...) const>
-        {
-            enum { value = sizeof...(Args) };
-        };
+    double dispatch(double* args, boost::mpl::int_<2>) const { return f(args[0], args[1]); }
 
-        template <typename F>
-        struct adapter_function
-        {
-            adapter_function(F f)
-                : f(f) {}
+    double dispatch(double* args, boost::mpl::int_<3>) const { return f(args[0], args[1], args[2]); }
 
-            double dispatch(double* args, boost::mpl::int_<0>) const
-            {
-                return f();
-            }
+    double dispatch(double* args, boost::mpl::int_<4>) const { return f(args[0], args[1], args[2], args[3]); }
 
-            double dispatch(double* args, boost::mpl::int_<1>) const
-            {
-                return f(args[0]);
-            }
+    double dispatch(double* args, boost::mpl::int_<5>) const { return f(args[0], args[1], args[2], args[3], args[4]); }
 
-            double dispatch(double* args, boost::mpl::int_<2>) const
-            {
-                return f(args[0], args[1]);
-            }
+    double operator()(double* args) const { return dispatch(args, boost::mpl::int_<detail::arity<F>::value>()); }
 
-            double dispatch(double* args, boost::mpl::int_<3>) const
-            {
-                return f(args[0], args[1], args[2]);
-            }
+    F f;
+};
+}  // namespace detail
 
-            double dispatch(double* args, boost::mpl::int_<4>) const
-            {
-                return f(args[0], args[1], args[2], args[3]);
-            }
+// INTERPRETER_ADD_FUNCTION_VISIT_BEGIN
+template<typename F>
+inline void interpreter::add_function(std::string name, F f)
+{
+    static_assert(detail::arity<F>::value <= detail::max_arity, "Function F has too many arguments (maximum == 5).");
 
-            double dispatch(double* args, boost::mpl::int_<5>) const
-            {
-                return f(args[0], args[1], args[2], args[3], args[4]);
-            }
+    std::function<double(double* args)> f_adapter = detail::adapter_function<F>(f);
+    fmap[name]                                    = std::make_pair(f_adapter, detail::arity<F>::value);
+}
+// INTERPRETER_ADD_FUNCTION_VISIT_END
 
-            double operator()(double* args) const
-            {
-                return dispatch(args, boost::mpl::int_<detail::arity<F>::value>());
-            }
-
-            F f;
-        };
-    }
-
-    // INTERPRETER_ADD_FUNCTION_VISIT_BEGIN
-    template <typename F>
-    inline void interpreter::add_function(std::string name, F f)
-    {
-        static_assert(detail::arity<F>::value <= detail::max_arity,
-            "Function F has too many arguments (maximum == 5).");
-
-        std::function<double(double* args)> f_adapter = detail::adapter_function<F>(f);
-        fmap[name] = std::make_pair(f_adapter, detail::arity<F>::value);
-    }
-    // INTERPRETER_ADD_FUNCTION_VISIT_END
-
-}}
+}  // namespace ast
+}  // namespace fun
 
 #endif

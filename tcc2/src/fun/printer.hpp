@@ -11,9 +11,12 @@
 
 #include <ostream>
 
-namespace fun { namespace ast
+namespace fun
 {
-    void print(std::ostream& out, ast::expression const& ast);
-}}
+namespace ast
+{
+void print(std::ostream& out, ast::expression const& ast);
+}
+}  // namespace fun
 
 #endif

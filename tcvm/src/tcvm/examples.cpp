@@ -61,7 +61,7 @@ auto CreateAdditionProgram(int64_t const argument) -> tcc::BinaryProgram
             // l1 + l2
             ByteCode::LOAD, 1,  // 14 load local #1
             ByteCode::IADD,     // 16 l1 + l2
-            ByteCode::RET,      // 17 return 
+            ByteCode::RET,      // 17 return
 
             // .def main: args=0, locals=0
             ByteCode::ICONST, argument,  // 18 <-- MAIN

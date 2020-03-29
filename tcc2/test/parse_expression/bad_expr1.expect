@@ -1,4 +1,0 @@
-In file <%.*?bad_expr1.input%>, line 1:
-Error! Expecting: Expression here:
-123 + #$%^
-______^_

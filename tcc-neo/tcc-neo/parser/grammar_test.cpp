@@ -1,12 +1,12 @@
 /**
- * @file test_parser_x3.cpp
+ * @file test_grammar.cpp
  * @copyright Copyright 2019-2020 Tobias Hienzsch. MIT license.
  */
 #include "catch2/catch.hpp"
 
-#include "parser_x3.hpp"
+#include "tcc-neo/parser/grammar.hpp"
 
-TEST_CASE("parser_x3: Identifier", "[parser_x3]")
+TEST_CASE("tcc-neo/grammar: Identifier", "[grammar]")
 {
     auto testCases = std::vector<std::string> {
         std::string {"_test"},     //
@@ -30,7 +30,7 @@ TEST_CASE("parser_x3: Identifier", "[parser_x3]")
     }
 }
 
-TEST_CASE("parser_x3: PackageDeclaration", "[parser_x3]")
+TEST_CASE("tcc-neo/grammar: PackageDeclaration", "[grammar]")
 {
     struct TestCase
     {
@@ -61,7 +61,7 @@ TEST_CASE("parser_x3: PackageDeclaration", "[parser_x3]")
     }
 }
 
-TEST_CASE("parser_x3: PackageDefinition", "[parser_x3]")
+TEST_CASE("tcc-neo/grammar: PackageDefinition", "[grammar]")
 {
     auto const input = std::string(R"(
         package main;

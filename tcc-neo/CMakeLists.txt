@@ -2,8 +2,8 @@ project(tcc-neo)
 
 # library
 set(tcc_neo_lib_source
-    tcc-neo/parser_x3.hpp
-    tcc-neo/parser_x3.cpp
+    tcc-neo/parser/grammar.hpp
+    tcc-neo/parser/grammar.cpp
 )
 
 add_library(tcc_neo_lib STATIC ${tcc_neo_lib_source})
@@ -47,7 +47,7 @@ target_link_libraries(${PROJECT_NAME}
 if(TCC_BUILD_TESTS)
     set (TEST_SRC
         main_test.cpp
-        tcc-neo/parser_x3_test.cpp
+        tcc-neo/parser/grammar_test.cpp
     )
     source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} FILES ${TEST_SRC})
 

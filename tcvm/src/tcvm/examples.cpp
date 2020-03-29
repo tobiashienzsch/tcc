@@ -47,27 +47,26 @@ auto CreateAdditionProgram(int64_t const argument) -> tcc::BinaryProgram
         std::vector<int64_t> {
             // .def addition: args=2, locals=1
             // l1 = x + y
-            ByteCode::ICONST, 0,  // 0 local #1
-            ByteCode::LOAD, -4,   // 2
-            ByteCode::LOAD, -3,   // 4
-            ByteCode::IADD,       // 6
-            ByteCode::STORE, 1,   // 7
+            ByteCode::ICONST, 0,  // 0 reserve space for local #1
+            ByteCode::LOAD, -4,   // 2 load x
+            ByteCode::LOAD, -3,   // 4 load y
+            ByteCode::IADD,       // 6 x + y
+            ByteCode::STORE, 1,   // 7 store add result in local #1
 
             // l2 = y + 10
-            ByteCode::LOAD, -3,    // 9
-            ByteCode::ICONST, 10,  // 11
-            ByteCode::IADD,        // 13
+            ByteCode::LOAD, -3,    // 9 load y
+            ByteCode::ICONST, 10,  // 11 load 10
+            ByteCode::IADD,        // 13 y + 10
 
             // l1 + l2
-            ByteCode::LOAD, 1,  // 14
-            ByteCode::IADD,     // 16
-            ByteCode::RET,      // 17
+            ByteCode::LOAD, 1,  // 14 load local #1
+            ByteCode::IADD,     // 16 l1 + l2
+            ByteCode::RET,      // 17 return 
 
             // .def main: args=0, locals=0
-            // foo(10, 10)
             ByteCode::ICONST, argument,  // 18 <-- MAIN
             ByteCode::ICONST, 10,        // 20
-            ByteCode::CALL, 0, 1,        // 22
+            ByteCode::CALL, 0, 2,        // 22 addition(argument, 10)
             ByteCode::EXIT,              // 25
         }                                //
     };

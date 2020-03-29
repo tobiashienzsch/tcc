@@ -12,7 +12,6 @@ win: config-vs build test
 config:
 	cmake -B$(BUILD_DIR) -S. -G"$(CM_GENERATOR)"    \
     -DCMAKE_BUILD_TYPE:STRING=$(CONFIG)             \
-	-DTCC_BUILD_CLANG_TIDY=ON 						\
 	-DTCC_BUILD_BENCHMARK=ON						\
     -DBENCHMARK_ENABLE_GTEST_TESTS=OFF              \
     -DBENCHMARK_ENABLE_TESTING=OFF      			

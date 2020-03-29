@@ -2,10 +2,12 @@ project(tcc-neo)
 
 # library
 set(tcc_neo_lib_source
-    tcc-neo/parser/package.hpp
-    tcc-neo/parser/package.cpp
+    tcc-neo/parser/common.hpp
+    tcc-neo/parser/common.cpp
     tcc-neo/parser/identifier.hpp
     tcc-neo/parser/identifier.cpp
+    tcc-neo/parser/package.hpp
+    tcc-neo/parser/package.cpp
 )
 
 add_library(tcc_neo_lib STATIC ${tcc_neo_lib_source})

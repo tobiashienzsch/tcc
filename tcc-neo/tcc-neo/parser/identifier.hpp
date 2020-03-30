@@ -2,7 +2,6 @@
 
 #include "tcc-neo/parser/common.hpp"
 
-
 namespace tcc
 {
 namespace parser

@@ -20,7 +20,7 @@ TEST_CASE("tcc-neo/parser: PackageDeclaration", "[parser]")
         {std::string {"package math_test;"}, std::string {"math_test"}},  //
         {std::string {"package tobi_est;"}, std::string {"tobi_est"}},    //
         {std::string {"package fmt8;"}, std::string {"fmt8"}},            //
-        {std::string {";"}, std::string {""}},            //
+        {std::string {";"}, std::string {""}},                            //
 
     };
 

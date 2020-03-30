@@ -28,11 +28,11 @@ using variable_declaration_type = x3::rule<variable_declaration_class, ast::vari
 using assignment_type           = x3::rule<assignment_class, ast::assignment>;
 using variable_type             = x3::rule<variable_class, ast::variable>;
 
-statement_type const statement("statement");
-statement_list_type const statement_list("statement_list");
-variable_declaration_type const variable_declaration("variable_declaration");
-assignment_type const assignment("assignment");
-variable_type const variable("variable");
+auto const statement            = statement_type("statement");
+auto const statement_list       = statement_list_type("statement_list");
+auto const variable_declaration = variable_declaration_type("variable_declaration");
+auto const assignment           = assignment_type("assignment");
+auto const variable             = variable_type("variable");
 
 // Import the expression rule
 namespace

@@ -43,7 +43,7 @@ format:
 	find lib -iname '*.hpp' -o -iname '*.cpp' | xargs clang-format -i
 	find playground -iname '*.hpp' -o -iname '*.cpp' | xargs clang-format -i
 	find tcc -iname '*.hpp' -o -iname '*.cpp' | xargs clang-format -i
-	find tcc2 -iname '*.hpp' -o -iname '*.cpp' | xargs clang-format -i
+	find tcc-neo -iname '*.hpp' -o -iname '*.cpp' | xargs clang-format -i
 	find tcvm -iname '*.hpp' -o -iname '*.cpp' | xargs clang-format -i
 	
 .PHONY: stats

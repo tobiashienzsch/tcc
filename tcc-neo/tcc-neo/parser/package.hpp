@@ -17,8 +17,6 @@
 namespace tcc::parser
 {
 
-
-
 // using functionDefinition_t    = std::vector<identifier_t>;
 // auto const functionDefinition = x3::rule<class functionDefinition, functionDefinition_t>()
 //     = x3::lit("auto")                    //

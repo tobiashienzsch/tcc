@@ -5,54 +5,50 @@
 
 #pragma once
 
-#include "tcc/core.hpp"
-
-#include <cstdint>
-
 #include <algorithm>
+#include <cstdint>
 #include <iostream>
 #include <sstream>
 #include <string_view>
 #include <vector>
 
-namespace tcc
-{
-class VirtualMachine
-{
-public:
-    explicit VirtualMachine(std::vector<int64_t> code,  //
-                            uint64_t main,              //
-                            uint64_t dataSize,          //
-                            uint64_t stackSize = 100,   //
-                            bool shouldTrace   = true   //
-    );
+#include "tcc/core.hpp"
 
-    int64_t Cpu();
+namespace tcc {
+class VirtualMachine {
+ public:
+  explicit VirtualMachine(std::vector<int64_t> code,  //
+                          uint64_t main,              //
+                          uint64_t dataSize,          //
+                          uint64_t stackSize = 100,   //
+                          bool shouldTrace = true     //
+  );
 
-    void EnableTracing(bool const shouldTrace);
+  int64_t Cpu();
 
-    void Reset(int64_t const entryPoint)
-    {
-        m_stackPointer       = -1;
-        m_instructionPointer = entryPoint;
-        m_framePointer       = 0;
-    }
+  void EnableTracing(bool const shouldTrace);
 
-private:
-    void disassemble(int64_t const opcode);
-    void printStack();
-    void printGlobalMemory();
+  void Reset(int64_t const entryPoint) {
+    m_stackPointer = -1;
+    m_instructionPointer = entryPoint;
+    m_framePointer = 0;
+  }
 
-private:
-    int64_t m_stackPointer {-1};
-    int64_t m_instructionPointer;
-    int64_t m_framePointer {0};
+ private:
+  void disassemble(int64_t const opcode);
+  void printStack();
+  void printGlobalMemory();
 
-    std::vector<int64_t> m_code;
-    std::vector<int64_t> m_data;
-    std::vector<int64_t> m_stack;
+ private:
+  int64_t m_stackPointer{-1};
+  int64_t m_instructionPointer;
+  int64_t m_framePointer{0};
 
-private:
-    bool m_shouldTrace {true};
+  std::vector<int64_t> m_code;
+  std::vector<int64_t> m_data;
+  std::vector<int64_t> m_stack;
+
+ private:
+  bool m_shouldTrace{true};
 };
 }  // namespace tcc

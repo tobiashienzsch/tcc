@@ -1,49 +1,44 @@
 #pragma once
 
-#include "tcc/core.hpp"
-
-#include "ir/three_address_code.hpp"
-
 #include <map>
 #include <vector>
 
-namespace tcc
-{
-struct IntermediateRepresentation
-{
-    IntermediateRepresentation() : m_currentScope(&m_mainScope) {}
+#include "ir/three_address_code.hpp"
+#include "tcc/core.hpp"
 
-    auto CurrentScope() -> StatementScope*
-    {
-        if (!m_currentScope)
-        {
-            fmt::print("Current scope is nullptr;\n EXIT\n");
-            std::exit(1);
-        }
+namespace tcc {
+struct IntermediateRepresentation {
+  IntermediateRepresentation() : m_currentScope(&m_mainScope) {}
 
-        return m_currentScope;
+  auto CurrentScope() -> StatementScope* {
+    if (!m_currentScope) {
+      fmt::print("Current scope is nullptr;\n EXIT\n");
+      std::exit(1);
     }
 
-    auto PushToStack(int x) -> void;
-    auto PopFromStack() -> std::variant<int, std::string>;
+    return m_currentScope;
+  }
 
-    auto AddVariable(std::string name) -> void;
-    auto GetLastVariable(std::string const& key) const -> std::string;
+  auto PushToStack(int x) -> void;
+  auto PopFromStack() -> std::variant<int, std::string>;
 
-    auto CreateBinaryOperation(byte_code op) -> void;
-    auto CreateUnaryOperation(byte_code op) -> void;
-    auto CreateStoreOperation(std::string key) -> void;
-    auto CreateLoadOperation(std::string key) -> void;
-    auto CreateAssignment(std::string const& key) -> std::string;
-    auto CreateTemporaryOnStack() -> std::string;
+  auto AddVariable(std::string name) -> void;
+  auto GetLastVariable(std::string const& key) const -> std::string;
 
-    auto GetStatementList() -> StatementList& { return m_mainScope.statements; }
+  auto CreateBinaryOperation(byte_code op) -> void;
+  auto CreateUnaryOperation(byte_code op) -> void;
+  auto CreateStoreOperation(std::string key) -> void;
+  auto CreateLoadOperation(std::string key) -> void;
+  auto CreateAssignment(std::string const& key) -> std::string;
+  auto CreateTemporaryOnStack() -> std::string;
 
-private:
-    int m_varCounter = 0;
-    std::vector<std::variant<int, std::string>> m_stack;
-    StatementScope m_mainScope {"main"};
-    StatementScope* m_currentScope = nullptr;
+  auto GetStatementList() -> StatementList& { return m_mainScope.statements; }
+
+ private:
+  int m_varCounter = 0;
+  std::vector<std::variant<int, std::string>> m_stack;
+  StatementScope m_mainScope{"main"};
+  StatementScope* m_currentScope = nullptr;
 };
 
 }  // namespace tcc

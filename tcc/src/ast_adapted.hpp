@@ -1,8 +1,8 @@
 #pragma once
 
-#include "ast.hpp"
-
 #include <boost/fusion/include/adapt_struct.hpp>
+
+#include "ast.hpp"
 
 BOOST_FUSION_ADAPT_STRUCT(tcc::ast::unary, operator_, operand_)
 BOOST_FUSION_ADAPT_STRUCT(tcc::ast::operation, operator_, operand_)

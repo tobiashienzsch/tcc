@@ -1,26 +1,23 @@
 #pragma once
 
-#include "tcc-neo/parser/identifier.hpp"
-
 #include <boost/config/warning_disable.hpp>
 #include <boost/fusion/include/adapt_struct.hpp>
 #include <boost/fusion/include/std_tuple.hpp>
 #include <boost/spirit/home/x3.hpp>
 #include <boost/spirit/home/x3/support/ast/variant.hpp>
-
 #include <string>
 
-namespace tcc
-{
+#include "tcc-neo/parser/identifier.hpp"
+
+namespace tcc {
 
 namespace x3 = boost::spirit::x3;
 
-namespace parser
-{
+namespace parser {
 
 struct PackageDeclaration_class;
 using PackageDeclaration_type = x3::rule<PackageDeclaration_class, std::string>;
-using PackageDeclaration_id   = PackageDeclaration_type::id;
+using PackageDeclaration_id = PackageDeclaration_type::id;
 BOOST_SPIRIT_DECLARE(PackageDeclaration_type);
 
 }  // namespace parser
@@ -41,7 +38,8 @@ parser::PackageDeclaration_type const& PackageDeclaration();
 // {
 
 // // using functionDefinition_t    = std::vector<identifier_t>;
-// // auto const functionDefinition = x3::rule<class functionDefinition, functionDefinition_t>()
+// // auto const functionDefinition = x3::rule<class functionDefinition,
+// functionDefinition_t>()
 // //     = x3::lit("auto")                    //
 // //       >> identifier                      //
 // //       >> x3::lit("(")                    //
@@ -52,7 +50,8 @@ parser::PackageDeclaration_type const& PackageDeclaration();
 // //     ;                                    //
 
 // // using variableDefinition_t    = std::vector<identifier_t>;
-// // auto const variableDefinition = x3::rule<class variableDefinition, variableDefinition_t>()
+// // auto const variableDefinition = x3::rule<class variableDefinition,
+// variableDefinition_t>()
 // //     = x3::lit("auto")           //
 // //       >> identifier             //
 // //       >> x3::lit("=")           //
@@ -61,14 +60,17 @@ parser::PackageDeclaration_type const& PackageDeclaration();
 // //     ;                           //
 
 // using packageDeclaration_t    = std::string;
-// auto const packageDeclaration = x3::rule<class packageDeclaration, packageDeclaration_t>()  //
-//     = x3::lit("package")                                                                    //
-//       >> identifier                                                                         //
-//       >> x3::lit(";")                                                                       //
-//     ;                                                                                       //
+// auto const packageDeclaration = x3::rule<class packageDeclaration,
+// packageDeclaration_t>()  //
+//     = x3::lit("package") //
+//       >> identifier //
+//       >> x3::lit(";") //
+//     ; //
 
-// // using packageDefinition_t    = std::tuple<packageDeclaration_t, functionDefinition_t>;
-// // auto const packageDefinition = x3::rule<class packageDefinition, packageDefinition_t>()
+// // using packageDefinition_t    = std::tuple<packageDeclaration_t,
+// functionDefinition_t>;
+// // auto const packageDefinition = x3::rule<class packageDefinition,
+// packageDefinition_t>()
 // //     = packageDeclaration                             //
 // //       >> +(variableDefinition | functionDefinition)  //
 // //     ;                                                //

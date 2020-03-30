@@ -83,12 +83,8 @@ class vmachine
 public:
     vmachine(unsigned stackSize = 4096) : stack(stackSize) {}
 
-    int execute(std::vector<int> const& code  // the program code
-                ,
-                std::vector<int>::const_iterator pc  // program counter
-                ,
-                std::vector<int>::iterator frame_ptr  // start of arguments and locals
-    );
+    int execute(std::vector<int> const& code, std::vector<int>::const_iterator pc,
+                std::vector<int>::iterator frame_ptr);
 
     int execute(std::vector<int> const& code) { return execute(code, code.begin(), stack.begin()); };
 

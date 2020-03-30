@@ -4,8 +4,11 @@ project(tcc-neo)
 set(tcc_neo_lib_source
     tcc-neo/parser/common.hpp
     tcc-neo/parser/common.cpp
+    tcc-neo/parser/config.hpp
+    tcc-neo/parser/error_handler.hpp
     tcc-neo/parser/identifier.hpp
     tcc-neo/parser/identifier.cpp
+    tcc-neo/parser/package_def.hpp
     tcc-neo/parser/package.hpp
     tcc-neo/parser/package.cpp
 )

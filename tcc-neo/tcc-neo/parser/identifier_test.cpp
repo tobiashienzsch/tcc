@@ -8,24 +8,21 @@
 
 TEST_CASE("tcc-neo/parser: Identifier", "[parser]")
 {
-    auto testCases = std::vector<std::string> {
-        std::string {"_test"},     //
-        std::string {"_TEST_"},    //
-        std::string {"test"},      //
-        std::string {"tesT42"},    //
-        std::string {"test_143"},  //
-    };
+    auto testCase = GENERATE(as<std::string> {},
+                             "_test",    //
+                             "_TEST_",   //
+                             "test",     //
+                             "tesT42",   //
+                             "test_143"  //
+    );
 
-    for (auto const& test : testCases)
-    {
-        std::string result;
-        tcc::parser::x3::phrase_parse(std::begin(test),         //
-                                      std::end(test),           //
-                                      tcc::parser::identifier,  //
-                                      tcc::parser::x3::space,   //
-                                      result                    //
-        );
+    std::string result;
+    tcc::parser::x3::phrase_parse(std::begin(testCase),     //
+                                  std::end(testCase),       //
+                                  tcc::parser::identifier,  //
+                                  tcc::parser::x3::space,   //
+                                  result                    //
+    );
 
-        REQUIRE(result == test);
-    }
+    REQUIRE(testCase == result);
 }

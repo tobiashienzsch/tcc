@@ -8,32 +8,22 @@
 
 TEST_CASE("tcc-neo/parser: PackageDeclaration", "[parser]")
 {
-    struct TestCase
-    {
-        std::string input;
-        std::string expected;
-    };
+    auto [test_input, expected] = GENERATE(table<std::string, std::string>({
+        {"package main;", "main"},            //
+        {"package math;", "math"},            //
+        {"package math_test;", "math_test"},  //
+        {"package tobi_est;", "tobi_est"},    //
+        {"package fmt8;", "fmt8"},            //
+        {";", ""},                            //
+    }));
 
-    auto testCases = std::vector<TestCase> {
-        {std::string {"package main;"}, std::string {"main"}},            //
-        {std::string {"package math;"}, std::string {"math"}},            //
-        {std::string {"package math_test;"}, std::string {"math_test"}},  //
-        {std::string {"package tobi_est;"}, std::string {"tobi_est"}},    //
-        {std::string {"package fmt8;"}, std::string {"fmt8"}},            //
-        {std::string {";"}, std::string {""}},                            //
+    std::string result;
+    tcc::parser::x3::phrase_parse(std::begin(test_input),     //
+                                  std::end(test_input),       //
+                                  tcc::PackageDeclaration(),  //
+                                  tcc::parser::x3::space,     //
+                                  result                      //
+    );
 
-    };
-
-    for (auto const& test : testCases)
-    {
-        std::string result;
-        tcc::parser::x3::phrase_parse(std::begin(test.input),           //
-                                      std::end(test.input),             //
-                                      tcc::PackageDeclaration(),  //
-                                      tcc::parser::x3::space,           //
-                                      result                            //
-        );
-
-        REQUIRE(result == test.expected);
-    }
+    REQUIRE(result == expected);
 }

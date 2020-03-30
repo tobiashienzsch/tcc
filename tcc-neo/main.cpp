@@ -6,7 +6,7 @@
 #include "tcc-neo/parser/error_handler.hpp"
 #include "tcc-neo/parser/package_def.hpp"
 
-int main(int argc, char* argv[]) {
+int main(int , char**) {
   auto const source = std::string{"package test;"};
 
   using tcc::parser::iterator_type;

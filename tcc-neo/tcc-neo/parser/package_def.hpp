@@ -27,7 +27,5 @@ struct PackageDeclaration_class
 {};
 
 }  // namespace parser
-parser::PackageDeclaration_type const& PackageDeclaration() {
-  return parser::PackageDeclaration;
-}
+
 }  // namespace tcc

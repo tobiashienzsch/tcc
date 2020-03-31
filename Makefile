@@ -1,7 +1,8 @@
 default: config build test
 
 CONFIG ?= Release
-BUILD_DIR = build_$(CONFIG)
+BUILD_DIR_BASE = build
+BUILD_DIR = $(BUILD_DIR_BASE)_$(CONFIG)
 
 CM_GENERATOR ?= Ninja
 
@@ -33,6 +34,16 @@ build:
 .PHONY: test
 test:
 	cd $(BUILD_DIR) && ctest -C $(CONFIG)
+
+.PHONY: sanitize
+sanitize:
+	cmake -S. -G$(CM_GENERATOR) -B$(BUILD_DIR_BASE)_sanitize \
+		-DCMAKE_BUILD_TYPE=$(CONFIG) \
+		-DTCC_BUILD_ASAN=ON \
+		-DTCC_BUILD_UBSAN=ON \
+		.
+	cmake --build $(BUILD_DIR_BASE)_sanitize --config $(CONFIG)
+	cd $(BUILD_DIR_BASE)_sanitize && ctest -c
 
 .PHONY: clean
 clean:

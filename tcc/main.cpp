@@ -69,7 +69,7 @@ auto main(int argc, char** argv) -> int {
   tcc::vmachine vm;                           // Our virtual machine
   tcc::code_gen::program program;             // Our VM program
   tcc::IntermediateRepresentation irBuilder;  // IR builder
-  tcc::ast::statement_list ast;               // Our AST
+  tcc::ast::Statement_list ast;               // Our AST
 
   using boost::spirit::x3::with;
   using tcc::parser::error_handler_type;
@@ -83,7 +83,7 @@ auto main(int argc, char** argv) -> int {
       // we pass our error handler to the parser so we can access
       // it later on in our on_error and on_sucess handlers
       with<tcc::parser::error_handler_tag>(
-          std::ref(error_handler))[tcc::statement()];
+          std::ref(error_handler))[tcc::GetStatement()];
 
   using boost::spirit::x3::ascii::space;
   bool success = phrase_parse(iter, end, parser, space, ast);

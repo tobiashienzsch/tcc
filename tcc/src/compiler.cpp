@@ -188,11 +188,11 @@ auto compiler::operator()(ast::variable_declaration const& x) const -> bool {
   return r;
 }
 
-auto compiler::operator()(ast::statement const& x) const -> bool {
+auto compiler::operator()(ast::Statement const& x) const -> bool {
   return boost::apply_visitor(*this, x);
 }
 
-auto compiler::operator()(ast::statement_list const& x) const -> bool {
+auto compiler::operator()(ast::Statement_list const& x) const -> bool {
   for (auto const& s : x) {
     if (!(*this)(s)) return false;
   }
@@ -235,7 +235,7 @@ auto compiler::operator()(ast::while_statement const& x) const -> bool {
   return true;
 }
 
-auto compiler::start(ast::statement_list const& x) const -> bool {
+auto compiler::start(ast::Statement_list const& x) const -> bool {
   program.clear();
   // op_stk_adj 0 for now. we'll know how many variables we'll have later
   program.op(op_stk_adj, 0);

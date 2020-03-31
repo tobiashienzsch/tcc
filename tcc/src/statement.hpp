@@ -10,13 +10,13 @@ namespace x3 = boost::spirit::x3;
 
 namespace parser {
 
-struct statement_class;
-using statement_type = x3::rule<statement_class, ast::statement_list>;
-using statement_id = statement_type::id;
-BOOST_SPIRIT_DECLARE(statement_type);
+struct Statement_class;
+using Statement_type = x3::rule<Statement_class, ast::Statement_list>;
+using Statement_id = Statement_type::id;
+BOOST_SPIRIT_DECLARE(Statement_type);
 
 }  // namespace parser
 
-parser::statement_type const& statement();
+parser::Statement_type const& GetStatement();
 
 }  // namespace tcc

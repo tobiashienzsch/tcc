@@ -9,8 +9,7 @@
 
 auto main(int argc, char** argv) -> int {
   auto cliArguments = po::variables_map{};
-  if (!tcvm::ProgramOptions::Parse(argc, argv, cliArguments))
-    return EXIT_FAILURE;
+  if (!tcvm::ProgramOptions::Parse(argc, argv, cliArguments)) return EXIT_FAILURE;
 
   auto arg = std::int64_t{};
   if (cliArguments.count("input")) {

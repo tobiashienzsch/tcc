@@ -2,12 +2,9 @@
 
 namespace tcc {
 
-auto IntermediateRepresentation::PushToStack(int x) -> void {
-  m_stack.emplace_back(x);
-}
+auto IntermediateRepresentation::PushToStack(int x) -> void { m_stack.emplace_back(x); }
 
-auto IntermediateRepresentation::PopFromStack()
-    -> std::variant<int, std::string> {
+auto IntermediateRepresentation::PopFromStack() -> std::variant<int, std::string> {
   auto const result = m_stack.back();
   m_stack.pop_back();
   return result;
@@ -26,8 +23,7 @@ auto IntermediateRepresentation::CreateBinaryOperation(byte_code op) -> void {
   auto const first = PopFromStack();
   auto const tmpName = CreateTemporaryOnStack();
 
-  m_mainScope.statements.push_back(
-      ThreeAddressCode{op, tmpName, first, second});
+  m_mainScope.statements.push_back(ThreeAddressCode{op, tmpName, first, second});
 }
 
 auto IntermediateRepresentation::CreateUnaryOperation(byte_code op) -> void {
@@ -38,8 +34,7 @@ auto IntermediateRepresentation::CreateUnaryOperation(byte_code op) -> void {
 
 auto IntermediateRepresentation::CreateStoreOperation(std::string key) -> void {
   auto const first = PopFromStack();
-  m_mainScope.statements.push_back(
-      ThreeAddressCode{op_store, key, first, {}, false});
+  m_mainScope.statements.push_back(ThreeAddressCode{op_store, key, first, {}, false});
 }
 
 auto IntermediateRepresentation::CreateLoadOperation(std::string key) -> void {
@@ -47,15 +42,13 @@ auto IntermediateRepresentation::CreateLoadOperation(std::string key) -> void {
   m_mainScope.statements.push_back(ThreeAddressCode{op_load, tmpName, key, {}});
 }
 
-auto IntermediateRepresentation::CreateAssignment(std::string const& key)
-    -> std::string {
+auto IntermediateRepresentation::CreateAssignment(std::string const& key) -> std::string {
   auto search = m_mainScope.variables.find(key);
   auto newId = search->second++;
   return fmt::format("{}{}", key, newId);
 }
 
-auto IntermediateRepresentation::GetLastVariable(std::string const& key) const
-    -> std::string {
+auto IntermediateRepresentation::GetLastVariable(std::string const& key) const -> std::string {
   auto search = m_mainScope.variables.find(key);
   auto newId = search->second - 1;
   return fmt::format("{}{}", key, newId);

@@ -47,18 +47,13 @@ struct program {
 ////////////////////////////////////////////////////////////////////////////
 struct compiler {
   using result_type = bool;
-  using error_handler_type =
-      std::function<void(x3::position_tagged, std::string const&)>;
+  using error_handler_type = std::function<void(x3::position_tagged, std::string const&)>;
 
   template <typename ErrorHandler>
-  compiler(tcc::code_gen::program& prog,
-           tcc::IntermediateRepresentation& builder,
-           ErrorHandler const& errorHandler)
+  compiler(tcc::code_gen::program& prog, tcc::IntermediateRepresentation& builder, ErrorHandler const& errorHandler)
       : program(prog),
         m_builder(builder),
-        error_handler([&](x3::position_tagged pos, std::string const& msg) {
-          errorHandler(pos, msg);
-        }) {}
+        error_handler([&](x3::position_tagged pos, std::string const& msg) { errorHandler(pos, msg); }) {}
 
   auto operator()(ast::nil) const -> bool { return false; }
   auto operator()(uint64_t x) const -> bool;

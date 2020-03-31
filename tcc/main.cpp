@@ -82,8 +82,7 @@ auto main(int argc, char** argv) -> int {
   auto const parser =
       // we pass our error handler to the parser so we can access
       // it later on in our on_error and on_sucess handlers
-      with<tcc::parser::error_handler_tag>(
-          std::ref(error_handler))[tcc::GetStatement()];
+      with<tcc::parser::error_handler_tag>(std::ref(error_handler))[tcc::GetStatement()];
 
   using boost::spirit::x3::ascii::space;
   bool success = phrase_parse(iter, end, parser, space, ast);
@@ -97,8 +96,7 @@ auto main(int argc, char** argv) -> int {
       optimizer.Optimize();
       auto assembly = tcc::AssemblyGenerator::Build(*irBuilder.CurrentScope());
       auto binaryProgram = tcc::BinaryProgram{1, "test", 0, assembly};
-      if (!tcc::BinaryFormat::WriteToFile("test.tcb", binaryProgram))
-        fmt::print("Error wrtiting binary.\n");
+      if (!tcc::BinaryFormat::WriteToFile("test.tcb", binaryProgram)) fmt::print("Error wrtiting binary.\n");
     } else {
       std::cout << "Compile failure\n";
     }

@@ -9,8 +9,7 @@
 #include <boost/assert.hpp>
 
 namespace tcc {
-auto vmachine::execute(std::vector<int> const& code,
-                       std::vector<int>::const_iterator pc,
+auto vmachine::execute(std::vector<int> const& code, std::vector<int>::const_iterator pc,
                        std::vector<int>::iterator frame_ptr) -> int {
   auto stack_ptr = frame_ptr;
 

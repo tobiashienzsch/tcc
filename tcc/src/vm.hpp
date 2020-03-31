@@ -102,12 +102,9 @@ class vmachine {
  public:
   vmachine(unsigned stackSize = 4096) : stack(stackSize) {}
 
-  int execute(std::vector<int> const& code, std::vector<int>::const_iterator pc,
-              std::vector<int>::iterator frame_ptr);
+  int execute(std::vector<int> const& code, std::vector<int>::const_iterator pc, std::vector<int>::iterator frame_ptr);
 
-  int execute(std::vector<int> const& code) {
-    return execute(code, code.begin(), stack.begin());
-  };
+  int execute(std::vector<int> const& code) { return execute(code, code.begin(), stack.begin()); };
 
   std::vector<int> const& get_stack() const { return stack; };
 

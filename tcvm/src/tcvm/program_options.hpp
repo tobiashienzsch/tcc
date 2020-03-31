@@ -16,8 +16,7 @@ namespace po = boost::program_options;
 namespace tcvm {
 
 struct ProgramOptions {
-  static auto Parse(int argc, char** argv, po::variables_map& outputVariableMap)
-      -> bool {
+  static auto Parse(int argc, char** argv, po::variables_map& outputVariableMap) -> bool {
     try {
       po::options_description desc("tcc: tobante's crappy virtual machine");
       desc.add_options()                                            //

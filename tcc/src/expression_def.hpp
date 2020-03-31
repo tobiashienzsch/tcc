@@ -37,8 +37,7 @@ void add_keywords() {
 
   logical_op.add("&&", ast::op_and)("||", ast::op_or);
   equality_op.add("==", ast::op_equal)("!=", ast::op_not_equal);
-  relational_op.add("<", ast::op_less)("<=", ast::op_less_equal)(
-      ">", ast::op_greater)(">=", ast::op_greater_equal);
+  relational_op.add("<", ast::op_less)("<=", ast::op_less_equal)(">", ast::op_greater)(">=", ast::op_greater_equal);
   additive_op.add("+", ast::op_plus)("-", ast::op_minus);
   multiplicative_op.add("*", ast::op_times)("/", ast::op_divide);
   unary_op.add("+", ast::op_positive)("-", ast::op_negative)("!", ast::op_not);
@@ -61,8 +60,7 @@ using equality_expr_type = x3::rule<equality_expr_class, ast::expression>;
 using relational_expr_type = x3::rule<relational_expr_class, ast::expression>;
 using logical_expr_type = x3::rule<logical_expr_class, ast::expression>;
 using additive_expr_type = x3::rule<additive_expr_class, ast::expression>;
-using multiplicative_expr_type =
-    x3::rule<multiplicative_expr_class, ast::expression>;
+using multiplicative_expr_type = x3::rule<multiplicative_expr_class, ast::expression>;
 using unary_expr_type = x3::rule<unary_expr_class, ast::operand>;
 using primary_expr_type = x3::rule<primary_expr_class, ast::operand>;
 
@@ -76,17 +74,12 @@ unary_expr_type const unary_expr = "unary_expr";
 primary_expr_type const primary_expr = "primary_expr";
 
 auto const logical_expr_def = equality_expr >> *(logical_op > equality_expr);
-auto const equality_expr_def = relational_expr >>
-                               *(equality_op > relational_expr);
-auto const relational_expr_def = additive_expr >>
-                                 *(relational_op > additive_expr);
-auto const additive_expr_def = multiplicative_expr >>
-                               *(additive_op > multiplicative_expr);
-auto const multiplicative_expr_def = unary_expr >>
-                                     *(multiplicative_op > unary_expr);
+auto const equality_expr_def = relational_expr >> *(equality_op > relational_expr);
+auto const relational_expr_def = additive_expr >> *(relational_op > additive_expr);
+auto const additive_expr_def = multiplicative_expr >> *(additive_op > multiplicative_expr);
+auto const multiplicative_expr_def = unary_expr >> *(multiplicative_op > unary_expr);
 auto const unary_expr_def = primary_expr | (unary_op > primary_expr);
-auto const primary_expr_def =
-    uint_ | bool_ | (!keywords >> identifier) | '(' > expression > ')';
+auto const primary_expr_def = uint_ | bool_ | (!keywords >> identifier) | '(' > expression > ')';
 auto const expression_def = logical_expr;
 
 BOOST_SPIRIT_DEFINE(      //

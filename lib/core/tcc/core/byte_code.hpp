@@ -38,8 +38,7 @@ struct Instruction {
   std::string_view name;
   int8_t numberOfOperands;
 
-  constexpr explicit Instruction(std::string_view _name)
-      : name(_name), numberOfOperands(0) {}
+  constexpr explicit Instruction(std::string_view _name) : name(_name), numberOfOperands(0) {}
   constexpr explicit Instruction(std::string_view _name, int8_t numOperands)
       : name(_name), numberOfOperands(numOperands) {}
 };

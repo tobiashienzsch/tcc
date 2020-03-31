@@ -188,9 +188,7 @@ auto compiler::operator()(ast::variable_declaration const& x) const -> bool {
   return r;
 }
 
-auto compiler::operator()(ast::Statement const& x) const -> bool {
-  return boost::apply_visitor(*this, x);
-}
+auto compiler::operator()(ast::Statement const& x) const -> bool { return boost::apply_visitor(*this, x); }
 
 auto compiler::operator()(ast::Statement_list const& x) const -> bool {
   for (auto const& s : x) {
@@ -204,9 +202,7 @@ auto compiler::operator()(ast::if_statement const& x) const -> bool {
   program.op(op_jump_if, 0);              // we shall fill this (0) in later
   std::size_t skip = program.size() - 1;  // mark its position
   if (!(*this)(x.then)) return false;
-  program[skip] =
-      int(program.size() -
-          skip);  // now we know where to jump to (after the if branch)
+  program[skip] = int(program.size() - skip);  // now we know where to jump to (after the if branch)
 
   if (x.else_)  // We got an alse
   {
@@ -214,9 +210,7 @@ auto compiler::operator()(ast::if_statement const& x) const -> bool {
     program.op(op_jump, 0);                 // we shall fill this (0) in later
     std::size_t exit = program.size() - 1;  // mark its position
     if (!(*this)(*x.else_)) return false;
-    program[exit] =
-        int(program.size() -
-            exit);  // now we know where to jump to (after the else branch)
+    program[exit] = int(program.size() - exit);  // now we know where to jump to (after the else branch)
   }
 
   return true;
@@ -230,8 +224,7 @@ auto compiler::operator()(ast::while_statement const& x) const -> bool {
   if (!(*this)(x.body)) return false;
   program.op(op_jump,
              int(loop - 1) - int(program.size()));  // loop back
-  program[exit] = int(program.size() -
-                      exit);  // now we know where to jump to (to exit the loop)
+  program[exit] = int(program.size() - exit);       // now we know where to jump to (to exit the loop)
   return true;
 }
 
@@ -244,8 +237,7 @@ auto compiler::start(ast::Statement_list const& x) const -> bool {
     program.clear();
     return false;
   }
-  program[1] =
-      int(program.nvars());  // now store the actual number of variables
+  program[1] = int(program.nvars());  // now store the actual number of variables
   return true;
 }
 }  // namespace tcc::code_gen

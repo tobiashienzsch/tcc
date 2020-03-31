@@ -19,8 +19,7 @@ struct variable : x3::position_tagged {
   std::string name;
 };
 
-struct operand : x3::variant<nil, uint64_t, variable, x3::forward_ast<unary>,
-                             x3::forward_ast<expression>> {
+struct operand : x3::variant<nil, uint64_t, variable, x3::forward_ast<unary>, x3::forward_ast<expression>> {
   using base_type::base_type;
   using base_type::operator=;
 };
@@ -72,10 +71,8 @@ struct if_statement;
 struct while_statement;
 struct Statement_list;
 
-struct Statement : x3::variant<variable_declaration, assignment,
-                               boost::recursive_wrapper<if_statement>,
-                               boost::recursive_wrapper<while_statement>,
-                               boost::recursive_wrapper<Statement_list>> {
+struct Statement : x3::variant<variable_declaration, assignment, boost::recursive_wrapper<if_statement>,
+                               boost::recursive_wrapper<while_statement>, boost::recursive_wrapper<Statement_list>> {
   using base_type::base_type;
   using base_type::operator=;
 };
@@ -99,8 +96,7 @@ inline auto operator<<(std::ostream& out, nil) -> std::ostream& {
   return out;
 }
 
-inline auto operator<<(std::ostream& out, variable const& var)
-    -> std::ostream& {
+inline auto operator<<(std::ostream& out, variable const& var) -> std::ostream& {
   out << var.name;
   return out;
 }

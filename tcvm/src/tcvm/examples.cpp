@@ -136,9 +136,7 @@ auto CreateFibonacciProgram(int64_t const argument) -> tcc::BinaryProgram {
   };
 }
 
-auto CreateMultipleArgumentsProgram(int64_t const firstArg,
-                                    int64_t const secondArg)
-    -> tcc::BinaryProgram {
+auto CreateMultipleArgumentsProgram(int64_t const firstArg, int64_t const secondArg) -> tcc::BinaryProgram {
   return tcc::BinaryProgram{
       1,                     // version
       "multiple arguments",  // name
@@ -165,8 +163,7 @@ auto CreateMultipleArgumentsProgram(int64_t const firstArg,
   };
 }
 
-auto CreateMultipleFunctionsProgram(int64_t const argument)
-    -> tcc::BinaryProgram {
+auto CreateMultipleFunctionsProgram(int64_t const argument) -> tcc::BinaryProgram {
   return tcc::BinaryProgram{
       1,                     // version
       "multiple functions",  // name

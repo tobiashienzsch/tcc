@@ -6,7 +6,7 @@
 #include "tcc-neo/parser/error_handler.hpp"
 #include "tcc-neo/parser/package_def.hpp"
 
-int main(int , char**) {
+int main(int, char**) {
   auto const source = std::string{"package test;"};
 
   using tcc::parser::iterator_type;
@@ -24,10 +24,8 @@ int main(int , char**) {
   // Our parser
   // we pass our error handler to the parser so we can access
   // it later on in our on_error and on_sucess handlers
-  auto const parser = with<tcc::parser::error_handler_tag>(
-      std::ref(error_handler))[tcc::PackageDeclaration()];
-  bool success = tcc::parser::x3::phrase_parse(iter, end, parser,
-                                               tcc::parser::x3::space, ast);
+  auto const parser = with<tcc::parser::error_handler_tag>(std::ref(error_handler))[tcc::PackageDeclaration()];
+  bool success = tcc::parser::x3::phrase_parse(iter, end, parser, tcc::parser::x3::space, ast);
 
   if (success && iter == end) {
     std::printf("Parse success: %s\n", ast.c_str());

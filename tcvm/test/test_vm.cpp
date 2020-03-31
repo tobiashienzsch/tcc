@@ -77,8 +77,7 @@ TEST_CASE("vm: Factorial", "[vm]") {
 
   for (auto const& test : testCases) {
     auto const factorial = tcvm::CreateFactorialProgram(test.input);
-    auto vm =
-        VirtualMachine(factorial.data, factorial.entryPoint, 0, 200, false);
+    auto vm = VirtualMachine(factorial.data, factorial.entryPoint, 0, 200, false);
     auto const exitCode = vm.Cpu();
     REQUIRE(exitCode == test.expected);
   }

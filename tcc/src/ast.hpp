@@ -19,7 +19,7 @@ struct variable : x3::position_tagged {
   std::string name;
 };
 
-struct operand : x3::variant<Nil, uint64_t, variable, x3::forward_ast<Unary>, x3::forward_ast<Expression>> {
+struct Operand : x3::variant<Nil, uint64_t, variable, x3::forward_ast<Unary>, x3::forward_ast<Expression>> {
   using base_type::base_type;
   using base_type::operator=;
 };
@@ -45,16 +45,16 @@ enum optoken {
 
 struct Unary {
   optoken operator_;
-  operand operand_;
+  Operand operand_;
 };
 
 struct operation : x3::position_tagged {
   optoken operator_;
-  operand operand_;
+  Operand operand_;
 };
 
 struct Expression : x3::position_tagged {
-  operand first;
+  Operand first;
   std::list<operation> rest;
 };
 

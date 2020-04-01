@@ -61,8 +61,8 @@ using relational_expr_type = x3::rule<relational_expr_class, ast::Expression>;
 using logical_expr_type = x3::rule<logical_expr_class, ast::Expression>;
 using additive_expr_type = x3::rule<additive_expr_class, ast::Expression>;
 using multiplicative_expr_type = x3::rule<multiplicative_expr_class, ast::Expression>;
-using UnaryExpr_type = x3::rule<UnaryExpr_class, ast::operand>;
-using primary_expr_type = x3::rule<primary_expr_class, ast::operand>;
+using UnaryExpr_type = x3::rule<UnaryExpr_class, ast::Operand>;
+using primary_expr_type = x3::rule<primary_expr_class, ast::Operand>;
 
 Expression_type const Expression = "Expression";
 equality_expr_type const equality_expr = "equality_expr";

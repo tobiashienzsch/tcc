@@ -22,12 +22,12 @@ using namespace x3::ascii;
 // Tokens
 ////////////////////////////////////////////////////////////////////////////
 
-x3::symbols<ast::OpToken> equality_op;
-x3::symbols<ast::OpToken> relational_op;
-x3::symbols<ast::OpToken> logical_op;
-x3::symbols<ast::OpToken> additive_op;
-x3::symbols<ast::OpToken> multiplicative_op;
-x3::symbols<ast::OpToken> UnaryOp;
+x3::symbols<ast::OpToken> EqualityOperators;
+x3::symbols<ast::OpToken> RelationalOperators;
+x3::symbols<ast::OpToken> LogicalOperators;
+x3::symbols<ast::OpToken> AdditiveOperators;
+x3::symbols<ast::OpToken> MultiplicativeOperators;
+x3::symbols<ast::OpToken> UnaryOperators;
 x3::symbols<> keywords;
 
 void add_keywords() {
@@ -35,12 +35,13 @@ void add_keywords() {
   if (once) return;
   once = true;
 
-  logical_op.add("&&", ast::op_and)("||", ast::op_or);
-  equality_op.add("==", ast::op_equal)("!=", ast::op_not_equal);
-  relational_op.add("<", ast::op_less)("<=", ast::op_less_equal)(">", ast::op_greater)(">=", ast::op_greater_equal);
-  additive_op.add("+", ast::op_plus)("-", ast::op_minus);
-  multiplicative_op.add("*", ast::op_times)("/", ast::op_divide);
-  UnaryOp.add("+", ast::op_positive)("-", ast::op_negative)("!", ast::op_not);
+  LogicalOperators.add("&&", ast::op_and)("||", ast::op_or);
+  EqualityOperators.add("==", ast::op_equal)("!=", ast::op_not_equal);
+  RelationalOperators.add("<", ast::op_less)("<=", ast::op_less_equal)(">", ast::op_greater)(">=",
+                                                                                             ast::op_greater_equal);
+  AdditiveOperators.add("+", ast::op_plus)("-", ast::op_minus);
+  MultiplicativeOperators.add("*", ast::op_times)("/", ast::op_divide);
+  UnaryOperators.add("+", ast::op_positive)("-", ast::op_negative)("!", ast::op_not);
   keywords.add("auto")("true")("false")("if")("else")("while");
 }
 
@@ -73,12 +74,12 @@ multiplicative_expr_type const multiplicative_expr = "multiplicative_expr";
 UnaryExpr_type const UnaryExpr = "UnaryExpr";
 primary_expr_type const primary_expr = "primary_expr";
 
-auto const logical_expr_def = equality_expr >> *(logical_op > equality_expr);
-auto const equality_expr_def = relational_expr >> *(equality_op > relational_expr);
-auto const relational_expr_def = additive_expr >> *(relational_op > additive_expr);
-auto const additive_expr_def = multiplicative_expr >> *(additive_op > multiplicative_expr);
-auto const multiplicative_expr_def = UnaryExpr >> *(multiplicative_op > UnaryExpr);
-auto const UnaryExpr_def = primary_expr | (UnaryOp > primary_expr);
+auto const logical_expr_def = equality_expr >> *(LogicalOperators > equality_expr);
+auto const equality_expr_def = relational_expr >> *(EqualityOperators > relational_expr);
+auto const relational_expr_def = additive_expr >> *(RelationalOperators > additive_expr);
+auto const additive_expr_def = multiplicative_expr >> *(AdditiveOperators > multiplicative_expr);
+auto const multiplicative_expr_def = UnaryExpr >> *(MultiplicativeOperators > UnaryExpr);
+auto const UnaryExpr_def = primary_expr | (UnaryOperators > primary_expr);
 auto const primary_expr_def = uint_ | bool_ | (!keywords >> identifier) | '(' > Expression > ')';
 auto const Expression_def = logical_expr;
 

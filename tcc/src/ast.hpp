@@ -67,25 +67,25 @@ struct variable_declaration {
   assignment assign;
 };
 
-struct if_statement;
-struct while_statement;
+struct IfStatement;
+struct WhileStatement;
 struct StatementList;
 
-struct Statement : x3::variant<variable_declaration, assignment, boost::recursive_wrapper<if_statement>,
-                               boost::recursive_wrapper<while_statement>, boost::recursive_wrapper<StatementList>> {
+struct Statement : x3::variant<variable_declaration, assignment, boost::recursive_wrapper<IfStatement>,
+                               boost::recursive_wrapper<WhileStatement>, boost::recursive_wrapper<StatementList>> {
   using base_type::base_type;
   using base_type::operator=;
 };
 
 struct StatementList : std::list<Statement> {};
 
-struct if_statement {
+struct IfStatement {
   expression condition;
   Statement then;
   boost::optional<Statement> else_;
 };
 
-struct while_statement {
+struct WhileStatement {
   expression condition;
   Statement body;
 };

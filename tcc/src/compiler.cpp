@@ -197,7 +197,7 @@ auto compiler::operator()(ast::StatementList const& x) const -> bool {
   return true;
 }
 
-auto compiler::operator()(ast::if_statement const& x) const -> bool {
+auto compiler::operator()(ast::IfStatement const& x) const -> bool {
   if (!(*this)(x.condition)) return false;
   program.op(op_jump_if, 0);              // we shall fill this (0) in later
   std::size_t skip = program.size() - 1;  // mark its position
@@ -216,7 +216,7 @@ auto compiler::operator()(ast::if_statement const& x) const -> bool {
   return true;
 }
 
-auto compiler::operator()(ast::while_statement const& x) const -> bool {
+auto compiler::operator()(ast::WhileStatement const& x) const -> bool {
   std::size_t loop = program.size();  // mark our position
   if (!(*this)(x.condition)) return false;
   program.op(op_jump_if, 0);              // we shall fill this (0) in later

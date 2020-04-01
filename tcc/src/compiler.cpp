@@ -43,7 +43,7 @@ auto compiler::operator()(bool x) const -> bool {
   return true;
 }
 
-auto compiler::operator()(ast::variable const& x) const -> bool {
+auto compiler::operator()(ast::Variable const& x) const -> bool {
   int const* p = program.find_var(x.name);
   if (p == nullptr) {
     error_handler(x, "Undeclared variable: " + x.name);

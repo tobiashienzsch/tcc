@@ -58,7 +58,7 @@ struct compiler {
   auto operator()(ast::Nil) const -> bool { return false; }
   auto operator()(uint64_t x) const -> bool;
   auto operator()(bool x) const -> bool;
-  auto operator()(ast::variable const& x) const -> bool;
+  auto operator()(ast::Variable const& x) const -> bool;
   auto operator()(ast::operation const& x) const -> bool;
   auto operator()(ast::Unary const& x) const -> bool;
   auto operator()(ast::Expression const& x) const -> bool;

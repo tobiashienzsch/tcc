@@ -14,12 +14,12 @@ struct Nil {};
 struct Unary;
 struct Expression;
 
-struct variable : x3::position_tagged {
-  variable(std::string newName = "") : name(std::move(newName)) {}
+struct Variable : x3::position_tagged {
+  Variable(std::string newName = "") : name(std::move(newName)) {}
   std::string name;
 };
 
-struct Operand : x3::variant<Nil, uint64_t, variable, x3::forward_ast<Unary>, x3::forward_ast<Expression>> {
+struct Operand : x3::variant<Nil, uint64_t, Variable, x3::forward_ast<Unary>, x3::forward_ast<Expression>> {
   using base_type::base_type;
   using base_type::operator=;
 };
@@ -59,7 +59,7 @@ struct Expression : x3::position_tagged {
 };
 
 struct assignment : x3::position_tagged {
-  variable lhs;
+  Variable lhs;
   Expression rhs;
 };
 
@@ -96,7 +96,7 @@ inline auto operator<<(std::ostream& out, Nil) -> std::ostream& {
   return out;
 }
 
-inline auto operator<<(std::ostream& out, variable const& var) -> std::ostream& {
+inline auto operator<<(std::ostream& out, Variable const& var) -> std::ostream& {
   out << var.name;
   return out;
 }

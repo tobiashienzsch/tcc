@@ -63,7 +63,7 @@ struct assignment : x3::position_tagged {
   Expression rhs;
 };
 
-struct variable_declaration {
+struct VariableDeclaration {
   assignment assign;
 };
 
@@ -71,7 +71,7 @@ struct IfStatement;
 struct WhileStatement;
 struct StatementList;
 
-struct Statement : x3::variant<variable_declaration, assignment, boost::recursive_wrapper<IfStatement>,
+struct Statement : x3::variant<VariableDeclaration, assignment, boost::recursive_wrapper<IfStatement>,
                                boost::recursive_wrapper<WhileStatement>, boost::recursive_wrapper<StatementList>> {
   using base_type::base_type;
   using base_type::operator=;

@@ -170,7 +170,7 @@ auto compiler::operator()(ast::assignment const& x) const -> bool {
   return true;
 }
 
-auto compiler::operator()(ast::variable_declaration const& x) const -> bool {
+auto compiler::operator()(ast::VariableDeclaration const& x) const -> bool {
   int const* p = program.find_var(x.assign.lhs.name);
   if (p != nullptr) {
     error_handler(x.assign.lhs, "Duplicate variable: " + x.assign.lhs.name);

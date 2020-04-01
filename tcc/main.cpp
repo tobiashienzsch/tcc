@@ -1,9 +1,9 @@
 #include "tcc/asm/assembly_generator.hpp"
+#include "tcc/optimizer/optimizer.hpp"
 #include "tcc/parser/ast.hpp"
 #include "tcc/parser/compiler.hpp"
 #include "tcc/parser/config.hpp"
 #include "tcc/parser/error_handler.hpp"
-#include "tcc/optimizer/optimizer.hpp"
 #include "tcc/parser/statement.hpp"
 #include "tcc/vm.hpp"
 

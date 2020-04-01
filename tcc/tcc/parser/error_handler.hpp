@@ -4,9 +4,9 @@
 #include <boost/spirit/home/x3/support/ast/position_tagged.hpp>
 #include <boost/spirit/home/x3/support/utility/error_reporting.hpp>
 
+#include "tcc/core.hpp"
 #include "tcc/parser/expression.hpp"
 #include "tcc/parser/statement.hpp"
-#include "tcc/core.hpp"
 
 namespace tcc {
 namespace parser {

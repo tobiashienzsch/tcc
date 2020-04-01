@@ -102,14 +102,14 @@ auto const UnaryExpr_def = PrimaryExpr | (UnaryOperators > PrimaryExpr);
 auto const PrimaryExpr_def = uint_ | bool_ | (!keywords >> identifier) | '(' > Expression > ')';
 auto const Expression_def = LogicalExpr;
 
-BOOST_SPIRIT_DEFINE(      //
-    Expression,           //
+BOOST_SPIRIT_DEFINE(     //
+    Expression,          //
     LogicalExpr,         //
     EqualityExpr,        //
     RelationalExpr,      //
     AdditiveExpr,        //
     MultiplicativeExpr,  //
-    UnaryExpr,            //
+    UnaryExpr,           //
     PrimaryExpr          //
 );
 

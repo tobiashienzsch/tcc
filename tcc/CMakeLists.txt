@@ -20,7 +20,7 @@ source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} FILES ${tcc_lib_source})
 set_target_properties(tcc_lib PROPERTIES CXX_CLANG_TIDY "${CLANG_TIDY_EXE}")
 
 target_include_directories(tcc_lib PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
-target_include_directories(tcc_lib PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/tcc)
+# target_include_directories(tcc_lib PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/tcc)
 target_link_libraries(tcc_lib 
     PUBLIC 
         tcc::Core
@@ -71,5 +71,25 @@ target_link_libraries(${PROJECT_NAME}
 
 # test
 if(TCC_BUILD_TESTS)
-    add_subdirectory(test)
+    set (tcc_test_source
+        main_test.cpp
+        tcc/optimizer/optimizer_test.cpp
+    )
+    source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} FILES ${tcc_test_source})
+
+    add_executable(tcc_tests ${tcc_test_source})
+    target_link_libraries(tcc_tests
+        PRIVATE
+            tcc::tcc
+            tcc::CompilerOptions
+            tcc::CompilerWarnings
+            tcc::CodeCoverage
+            Boost::boost 
+            Catch2::Catch2
+    )
+
+
+    include(CTest)
+    include(Catch)
+    catch_discover_tests(tcc_tests)
 endif()

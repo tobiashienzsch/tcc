@@ -3,7 +3,7 @@
 #include <map>
 #include <vector>
 
-#include "ir/three_address_code.hpp"
+#include "tcc/ir/three_address_code.hpp"
 #include "tcc/core.hpp"
 
 namespace tcc {

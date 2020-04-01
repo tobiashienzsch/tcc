@@ -3,7 +3,7 @@
  * @copyright Copyright 2019-2020 Tobias Hienzsch. MIT license.
  */
 #include "catch2/catch.hpp"
-#include "optimizer/optimizer.hpp"
+#include "tcc/optimizer/optimizer.hpp"
 #include "tcc/core.hpp"
 
 using std::string;

@@ -58,64 +58,64 @@ auto compiler::operator()(ast::Variable const& x) const -> bool {
 auto compiler::operator()(ast::Operation const& x) const -> bool {
   if (!boost::apply_visitor(*this, x.operand_)) return false;
   switch (x.operator_) {
-    case ast::OpToken::op_plus: {
+    case ast::OpToken::Plus: {
       program.op(op_add);
       m_builder.CreateBinaryOperation(op_add);
       break;
     }
-    case ast::OpToken::op_minus: {
+    case ast::OpToken::Minus: {
       program.op(op_sub);
       m_builder.CreateBinaryOperation(op_sub);
       break;
     }
-    case ast::OpToken::op_times: {
+    case ast::OpToken::Times: {
       program.op(op_mul);
       m_builder.CreateBinaryOperation(op_mul);
       break;
     }
-    case ast::OpToken::op_divide: {
+    case ast::OpToken::Divide: {
       program.op(op_div);
       m_builder.CreateBinaryOperation(op_div);
       break;
     }
 
-    case ast::OpToken::op_equal: {
+    case ast::OpToken::Equal: {
       program.op(op_eq);
       m_builder.CreateBinaryOperation(op_eq);
       break;
     }
-    case ast::OpToken::op_not_equal: {
+    case ast::OpToken::NotEqual: {
       program.op(op_neq);
       m_builder.CreateBinaryOperation(op_neq);
       break;
     }
-    case ast::OpToken::op_less: {
+    case ast::OpToken::Less: {
       program.op(op_lt);
       m_builder.CreateBinaryOperation(op_lt);
       break;
     }
-    case ast::OpToken::op_less_equal: {
+    case ast::OpToken::LessEqual: {
       program.op(op_lte);
       m_builder.CreateBinaryOperation(op_lte);
       break;
     }
-    case ast::OpToken::op_greater: {
+    case ast::OpToken::Greater: {
       program.op(op_gt);
       m_builder.CreateBinaryOperation(op_gt);
       break;
     }
-    case ast::OpToken::op_greater_equal: {
+    case ast::OpToken::GreaterEqual: {
       program.op(op_gte);
       m_builder.CreateBinaryOperation(op_gte);
       break;
     }
 
-    case ast::OpToken::op_and: {
+    case ast::OpToken::And: {
       program.op(op_and);
       m_builder.CreateBinaryOperation(op_and);
       break;
     }
-    case ast::OpToken::op_or: {
+    case ast::OpToken::Or: {
       program.op(op_or);
       m_builder.CreateBinaryOperation(op_or);
       break;
@@ -129,15 +129,15 @@ auto compiler::operator()(ast::Operation const& x) const -> bool {
 auto compiler::operator()(ast::Unary const& x) const -> bool {
   if (!boost::apply_visitor(*this, x.operand_)) return false;
   switch (x.operator_) {
-    case ast::OpToken::op_positive:
+    case ast::OpToken::Positive:
       break;
 
-    case ast::OpToken::op_negative: {
+    case ast::OpToken::Negative: {
       program.op(op_neg);
       m_builder.CreateUnaryOperation(op_neg);
       break;
     }
-    case ast::OpToken::op_not: {
+    case ast::OpToken::Not: {
       program.op(op_not);
       m_builder.CreateUnaryOperation(op_not);
       break;

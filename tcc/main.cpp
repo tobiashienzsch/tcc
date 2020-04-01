@@ -1,12 +1,12 @@
 #include <boost/program_options.hpp>
 
 #include "asm/assembly_generator.hpp"
-#include "ast.hpp"
-#include "compiler.hpp"
-#include "config.hpp"
-#include "error_handler.hpp"
+#include "parser/ast.hpp"
+#include "parser/compiler.hpp"
+#include "parser/config.hpp"
+#include "parser/error_handler.hpp"
 #include "optimizer/optimizer.hpp"
-#include "statement.hpp"
+#include "parser/statement.hpp"
 #include "tcc/core.hpp"
 #include "vm.hpp"
 namespace po = boost::program_options;

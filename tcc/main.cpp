@@ -70,7 +70,7 @@ auto main(int argc, char** argv) -> int {
   // tcc::vmachine vm;                           // Our virtual machine
   tcc::code_gen::program program;             // Our VM program
   tcc::IntermediateRepresentation irBuilder;  // IR builder
-  tcc::ast::Statement_list ast;               // Our AST
+  tcc::ast::StatementList ast;                // Our AST
 
   using boost::spirit::x3::with;
   using tcc::parser::error_handler_type;

@@ -64,12 +64,12 @@ struct compiler {
   auto operator()(ast::expression const& x) const -> bool;
   auto operator()(ast::assignment const& x) const -> bool;
   auto operator()(ast::variable_declaration const& x) const -> bool;
-  auto operator()(ast::Statement_list const& x) const -> bool;
+  auto operator()(ast::StatementList const& x) const -> bool;
   auto operator()(ast::Statement const& x) const -> bool;
   auto operator()(ast::if_statement const& x) const -> bool;
   auto operator()(ast::while_statement const& x) const -> bool;
 
-  auto start(ast::Statement_list const& x) const -> bool;
+  auto start(ast::StatementList const& x) const -> bool;
 
   tcc::code_gen::program& program;
   tcc::IntermediateRepresentation& m_builder;

@@ -11,7 +11,7 @@ namespace x3 = boost::spirit::x3;
 namespace parser {
 
 struct Statement_class;
-using Statement_type = x3::rule<Statement_class, ast::Statement_list>;
+using Statement_type = x3::rule<Statement_class, ast::StatementList>;
 using Statement_id = Statement_type::id;
 BOOST_SPIRIT_DECLARE(Statement_type);
 

@@ -35,14 +35,33 @@ void add_keywords() {
   if (once) return;
   once = true;
 
-  LogicalOperators.add("&&", ast::OpToken::And)("||", ast::OpToken::Or);
-  EqualityOperators.add("==", ast::OpToken::Equal)("!=", ast::OpToken::NotEqual);
-  RelationalOperators.add("<", ast::OpToken::Less)("<=", ast::OpToken::LessEqual)(">", ast::OpToken::Greater)(
-      ">=", ast::OpToken::GreaterEqual);
-  AdditiveOperators.add("+", ast::OpToken::Plus)("-", ast::OpToken::Minus);
-  MultiplicativeOperators.add("*", ast::OpToken::Times)("/", ast::OpToken::Divide);
-  UnaryOperators.add("+", ast::OpToken::Positive)("-", ast::OpToken::Negative)("!", ast::OpToken::Not);
-  keywords.add("auto")("true")("false")("if")("else")("while");
+  LogicalOperators.add("&&", ast::OpToken::And);
+  LogicalOperators.add("||", ast::OpToken::Or);
+
+  EqualityOperators.add("==", ast::OpToken::Equal);
+  EqualityOperators.add("!=", ast::OpToken::NotEqual);
+
+  RelationalOperators.add("<", ast::OpToken::Less);
+  RelationalOperators.add("<=", ast::OpToken::LessEqual);
+  RelationalOperators.add(">", ast::OpToken::Greater);
+  RelationalOperators.add(     ">=", ast::OpToken::GreaterEqual);
+
+  AdditiveOperators.add("+", ast::OpToken::Plus);
+  AdditiveOperators.add("-", ast::OpToken::Minus);
+
+  MultiplicativeOperators.add("*", ast::OpToken::Times);
+  MultiplicativeOperators.add("/", ast::OpToken::Divide);
+  
+  UnaryOperators.add("+", ast::OpToken::Positive);
+  UnaryOperators.add("-", ast::OpToken::Negative);
+  UnaryOperators.add("!", ast::OpToken::Not);
+  
+  keywords.add("auto");
+  keywords.add("true");
+  keywords.add("false");
+  keywords.add("if");
+  keywords.add("else");
+  keywords.add("while");
 }
 
 ////////////////////////////////////////////////////////////////////////////

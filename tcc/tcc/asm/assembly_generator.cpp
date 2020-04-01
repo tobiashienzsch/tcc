@@ -1,4 +1,4 @@
-#include "asm/assembly_generator.hpp"
+#include "tcc/asm/assembly_generator.hpp"
 
 #include <algorithm>
 #include <variant>

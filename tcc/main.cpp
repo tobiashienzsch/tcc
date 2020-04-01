@@ -1,14 +1,18 @@
+#include "tcc/asm/assembly_generator.hpp"
+#include "tcc/parser/ast.hpp"
+#include "tcc/parser/compiler.hpp"
+#include "tcc/parser/config.hpp"
+#include "tcc/parser/error_handler.hpp"
+#include "tcc/optimizer/optimizer.hpp"
+#include "tcc/parser/statement.hpp"
+#include "tcc/vm.hpp"
+
+//
+#include "tcc/core.hpp"
+
+//
 #include <boost/program_options.hpp>
 
-#include "asm/assembly_generator.hpp"
-#include "parser/ast.hpp"
-#include "parser/compiler.hpp"
-#include "parser/config.hpp"
-#include "parser/error_handler.hpp"
-#include "optimizer/optimizer.hpp"
-#include "parser/statement.hpp"
-#include "tcc/core.hpp"
-#include "vm.hpp"
 namespace po = boost::program_options;
 
 #include <fstream>

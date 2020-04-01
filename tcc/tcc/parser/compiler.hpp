@@ -7,11 +7,11 @@
 #include <variant>
 #include <vector>
 
-#include "ast.hpp"
-#include "error_handler.hpp"
-#include "ir/intermediate_representation.hpp"
+#include "tcc/parser/ast.hpp"
+#include "tcc/parser/error_handler.hpp"
+#include "tcc/ir/intermediate_representation.hpp"
 #include "tcc/core.hpp"
-#include "vm.hpp"
+#include "tcc/vm.hpp"
 
 namespace tcc {
 namespace code_gen {

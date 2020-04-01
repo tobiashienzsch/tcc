@@ -2,7 +2,7 @@
 
 #include <boost/fusion/include/adapt_struct.hpp>
 
-#include "ast.hpp"
+#include "tcc/parser/ast.hpp"
 
 BOOST_FUSION_ADAPT_STRUCT(tcc::ast::Unary, operator_, operand_)
 BOOST_FUSION_ADAPT_STRUCT(tcc::ast::Operation, operator_, operand_)

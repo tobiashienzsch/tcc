@@ -1,4 +1,4 @@
-#include "ir/intermediate_representation.hpp"
+#include "tcc/ir/intermediate_representation.hpp"
 
 namespace tcc {
 

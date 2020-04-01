@@ -2,7 +2,7 @@
 
 #include <boost/spirit/home/x3.hpp>
 
-#include "ast.hpp"
+#include "tcc/parser/ast.hpp"
 
 namespace tcc {
 

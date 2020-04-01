@@ -2,7 +2,7 @@
 
 #include <boost/spirit/home/x3.hpp>
 
-#include "error_handler.hpp"
+#include "tcc/parser/error_handler.hpp"
 
 namespace tcc {
 namespace parser {

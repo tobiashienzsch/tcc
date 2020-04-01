@@ -2,7 +2,7 @@
 
 #include <vector>
 
-#include "ir/three_address_code.hpp"
+#include "tcc/ir/three_address_code.hpp"
 
 namespace tcc {
 class AssemblyGenerator {

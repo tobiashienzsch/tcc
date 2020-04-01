@@ -3,12 +3,12 @@
 #include <boost/spirit/home/x3.hpp>
 #include <boost/spirit/home/x3/support/utility/annotate_on_success.hpp>
 
-#include "ast.hpp"
-#include "ast_adapted.hpp"
-#include "common.hpp"
-#include "error_handler.hpp"
-#include "expression.hpp"
-#include "statement.hpp"
+#include "tcc/parser/ast.hpp"
+#include "tcc/parser/ast_adapted.hpp"
+#include "tcc/parser/common.hpp"
+#include "tcc/parser/error_handler.hpp"
+#include "tcc/parser/expression.hpp"
+#include "tcc/parser/statement.hpp"
 
 namespace tcc {
 namespace parser {

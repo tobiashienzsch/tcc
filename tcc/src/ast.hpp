@@ -24,7 +24,7 @@ struct Operand : x3::variant<Nil, uint64_t, Variable, x3::forward_ast<Unary>, x3
   using base_type::operator=;
 };
 
-enum optoken {
+enum OpToken {
   op_plus,
   op_minus,
   op_times,
@@ -44,12 +44,12 @@ enum optoken {
 };
 
 struct Unary {
-  optoken operator_;
+  OpToken operator_;
   Operand operand_;
 };
 
 struct Operation : x3::position_tagged {
-  optoken operator_;
+  OpToken operator_;
   Operand operand_;
 };
 

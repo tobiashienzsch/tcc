@@ -22,12 +22,12 @@ using namespace x3::ascii;
 // Tokens
 ////////////////////////////////////////////////////////////////////////////
 
-x3::symbols<ast::optoken> equality_op;
-x3::symbols<ast::optoken> relational_op;
-x3::symbols<ast::optoken> logical_op;
-x3::symbols<ast::optoken> additive_op;
-x3::symbols<ast::optoken> multiplicative_op;
-x3::symbols<ast::optoken> UnaryOp;
+x3::symbols<ast::OpToken> equality_op;
+x3::symbols<ast::OpToken> relational_op;
+x3::symbols<ast::OpToken> logical_op;
+x3::symbols<ast::OpToken> additive_op;
+x3::symbols<ast::OpToken> multiplicative_op;
+x3::symbols<ast::OpToken> UnaryOp;
 x3::symbols<> keywords;
 
 void add_keywords() {

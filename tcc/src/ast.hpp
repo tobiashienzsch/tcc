@@ -24,7 +24,7 @@ struct Operand : x3::variant<Nil, uint64_t, Variable, x3::forward_ast<Unary>, x3
   using base_type::operator=;
 };
 
-enum OpToken {
+enum class OpToken {
   op_plus,
   op_minus,
   op_times,

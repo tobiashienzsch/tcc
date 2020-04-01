@@ -62,7 +62,7 @@ struct compiler {
   auto operator()(ast::operation const& x) const -> bool;
   auto operator()(ast::Unary const& x) const -> bool;
   auto operator()(ast::Expression const& x) const -> bool;
-  auto operator()(ast::assignment const& x) const -> bool;
+  auto operator()(ast::Assignment const& x) const -> bool;
   auto operator()(ast::VariableDeclaration const& x) const -> bool;
   auto operator()(ast::StatementList const& x) const -> bool;
   auto operator()(ast::Statement const& x) const -> bool;

@@ -157,7 +157,7 @@ auto compiler::operator()(ast::Expression const& x) const -> bool {
   return true;
 }
 
-auto compiler::operator()(ast::assignment const& x) const -> bool {
+auto compiler::operator()(ast::Assignment const& x) const -> bool {
   if (!(*this)(x.rhs)) return false;
   int const* p = program.find_var(x.lhs.name);
   if (p == nullptr) {

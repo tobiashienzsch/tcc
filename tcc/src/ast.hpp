@@ -58,20 +58,20 @@ struct Expression : x3::position_tagged {
   std::list<operation> rest;
 };
 
-struct assignment : x3::position_tagged {
+struct Assignment : x3::position_tagged {
   Variable lhs;
   Expression rhs;
 };
 
 struct VariableDeclaration {
-  assignment assign;
+  Assignment assign;
 };
 
 struct IfStatement;
 struct WhileStatement;
 struct StatementList;
 
-struct Statement : x3::variant<VariableDeclaration, assignment, boost::recursive_wrapper<IfStatement>,
+struct Statement : x3::variant<VariableDeclaration, Assignment, boost::recursive_wrapper<IfStatement>,
                                boost::recursive_wrapper<WhileStatement>, boost::recursive_wrapper<StatementList>> {
   using base_type::base_type;
   using base_type::operator=;

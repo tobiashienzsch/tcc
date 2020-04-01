@@ -44,18 +44,18 @@ void add_keywords() {
   RelationalOperators.add("<", ast::OpToken::Less);
   RelationalOperators.add("<=", ast::OpToken::LessEqual);
   RelationalOperators.add(">", ast::OpToken::Greater);
-  RelationalOperators.add(     ">=", ast::OpToken::GreaterEqual);
+  RelationalOperators.add(">=", ast::OpToken::GreaterEqual);
 
   AdditiveOperators.add("+", ast::OpToken::Plus);
   AdditiveOperators.add("-", ast::OpToken::Minus);
 
   MultiplicativeOperators.add("*", ast::OpToken::Times);
   MultiplicativeOperators.add("/", ast::OpToken::Divide);
-  
+
   UnaryOperators.add("+", ast::OpToken::Positive);
   UnaryOperators.add("-", ast::OpToken::Negative);
   UnaryOperators.add("!", ast::OpToken::Not);
-  
+
   keywords.add("auto");
   keywords.add("true");
   keywords.add("false");

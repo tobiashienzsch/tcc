@@ -126,7 +126,7 @@ auto compiler::operator()(ast::operation const& x) const -> bool {
   return true;
 }
 
-auto compiler::operator()(ast::unary const& x) const -> bool {
+auto compiler::operator()(ast::Unary const& x) const -> bool {
   if (!boost::apply_visitor(*this, x.operand_)) return false;
   switch (x.operator_) {
     case ast::op_positive:

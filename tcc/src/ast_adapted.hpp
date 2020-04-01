@@ -4,7 +4,7 @@
 
 #include "ast.hpp"
 
-BOOST_FUSION_ADAPT_STRUCT(tcc::ast::unary, operator_, operand_)
+BOOST_FUSION_ADAPT_STRUCT(tcc::ast::Unary, operator_, operand_)
 BOOST_FUSION_ADAPT_STRUCT(tcc::ast::operation, operator_, operand_)
 BOOST_FUSION_ADAPT_STRUCT(tcc::ast::expression, first, rest)
 BOOST_FUSION_ADAPT_STRUCT(tcc::ast::variable_declaration, assign)

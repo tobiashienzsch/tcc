@@ -10,8 +10,8 @@ namespace tcc {
 namespace ast {
 namespace x3 = boost::spirit::x3;
 
-struct nil {};
-struct unary;
+struct Nil {};
+struct Unary;
 struct expression;
 
 struct variable : x3::position_tagged {
@@ -19,7 +19,7 @@ struct variable : x3::position_tagged {
   std::string name;
 };
 
-struct operand : x3::variant<nil, uint64_t, variable, x3::forward_ast<unary>, x3::forward_ast<expression>> {
+struct operand : x3::variant<Nil, uint64_t, variable, x3::forward_ast<Unary>, x3::forward_ast<expression>> {
   using base_type::base_type;
   using base_type::operator=;
 };
@@ -43,7 +43,7 @@ enum optoken {
 
 };
 
-struct unary {
+struct Unary {
   optoken operator_;
   operand operand_;
 };
@@ -91,8 +91,8 @@ struct WhileStatement {
 };
 
 // print functions for debugging
-inline auto operator<<(std::ostream& out, nil) -> std::ostream& {
-  out << "nil";
+inline auto operator<<(std::ostream& out, Nil) -> std::ostream& {
+  out << "Nil";
   return out;
 }
 

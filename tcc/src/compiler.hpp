@@ -55,12 +55,12 @@ struct compiler {
         m_builder(builder),
         error_handler([&](x3::position_tagged pos, std::string const& msg) { errorHandler(pos, msg); }) {}
 
-  auto operator()(ast::nil) const -> bool { return false; }
+  auto operator()(ast::Nil) const -> bool { return false; }
   auto operator()(uint64_t x) const -> bool;
   auto operator()(bool x) const -> bool;
   auto operator()(ast::variable const& x) const -> bool;
   auto operator()(ast::operation const& x) const -> bool;
-  auto operator()(ast::unary const& x) const -> bool;
+  auto operator()(ast::Unary const& x) const -> bool;
   auto operator()(ast::expression const& x) const -> bool;
   auto operator()(ast::assignment const& x) const -> bool;
   auto operator()(ast::variable_declaration const& x) const -> bool;

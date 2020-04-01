@@ -68,53 +68,53 @@ void add_keywords() {
 // Main expression grammar
 ////////////////////////////////////////////////////////////////////////////
 
-struct equality_expr_class;
-struct relational_expr_class;
-struct logical_expr_class;
-struct additive_expr_class;
-struct multiplicative_expr_class;
+struct EqualityExpr_class;
+struct RelationalExpr_class;
+struct LogicalExpr_class;
+struct AdditiveExpr_class;
+struct MultiplicativeExpr_class;
 struct UnaryExpr_class;
-struct primary_expr_class;
+struct PrimaryExpr_class;
 
-using equality_expr_type = x3::rule<equality_expr_class, ast::Expression>;
-using relational_expr_type = x3::rule<relational_expr_class, ast::Expression>;
-using logical_expr_type = x3::rule<logical_expr_class, ast::Expression>;
-using additive_expr_type = x3::rule<additive_expr_class, ast::Expression>;
-using multiplicative_expr_type = x3::rule<multiplicative_expr_class, ast::Expression>;
+using EqualityExpr_type = x3::rule<EqualityExpr_class, ast::Expression>;
+using RelationalExpr_type = x3::rule<RelationalExpr_class, ast::Expression>;
+using LogicalExpr_type = x3::rule<LogicalExpr_class, ast::Expression>;
+using AdditiveExpr_type = x3::rule<AdditiveExpr_class, ast::Expression>;
+using MultiplicativeExpr_type = x3::rule<MultiplicativeExpr_class, ast::Expression>;
 using UnaryExpr_type = x3::rule<UnaryExpr_class, ast::Operand>;
-using primary_expr_type = x3::rule<primary_expr_class, ast::Operand>;
+using PrimaryExpr_type = x3::rule<PrimaryExpr_class, ast::Operand>;
 
 Expression_type const Expression = "Expression";
-equality_expr_type const equality_expr = "equality_expr";
-relational_expr_type const relational_expr = "relational_expr";
-logical_expr_type const logical_expr = "logical_expr";
-additive_expr_type const additive_expr = "additive_expr";
-multiplicative_expr_type const multiplicative_expr = "multiplicative_expr";
+EqualityExpr_type const EqualityExpr = "EqualityExpr";
+RelationalExpr_type const RelationalExpr = "RelationalExpr";
+LogicalExpr_type const LogicalExpr = "LogicalExpr";
+AdditiveExpr_type const AdditiveExpr = "AdditiveExpr";
+MultiplicativeExpr_type const MultiplicativeExpr = "MultiplicativeExpr";
 UnaryExpr_type const UnaryExpr = "UnaryExpr";
-primary_expr_type const primary_expr = "primary_expr";
+PrimaryExpr_type const PrimaryExpr = "PrimaryExpr";
 
-auto const logical_expr_def = equality_expr >> *(LogicalOperators > equality_expr);
-auto const equality_expr_def = relational_expr >> *(EqualityOperators > relational_expr);
-auto const relational_expr_def = additive_expr >> *(RelationalOperators > additive_expr);
-auto const additive_expr_def = multiplicative_expr >> *(AdditiveOperators > multiplicative_expr);
-auto const multiplicative_expr_def = UnaryExpr >> *(MultiplicativeOperators > UnaryExpr);
-auto const UnaryExpr_def = primary_expr | (UnaryOperators > primary_expr);
-auto const primary_expr_def = uint_ | bool_ | (!keywords >> identifier) | '(' > Expression > ')';
-auto const Expression_def = logical_expr;
+auto const LogicalExpr_def = EqualityExpr >> *(LogicalOperators > EqualityExpr);
+auto const EqualityExpr_def = RelationalExpr >> *(EqualityOperators > RelationalExpr);
+auto const RelationalExpr_def = AdditiveExpr >> *(RelationalOperators > AdditiveExpr);
+auto const AdditiveExpr_def = MultiplicativeExpr >> *(AdditiveOperators > MultiplicativeExpr);
+auto const MultiplicativeExpr_def = UnaryExpr >> *(MultiplicativeOperators > UnaryExpr);
+auto const UnaryExpr_def = PrimaryExpr | (UnaryOperators > PrimaryExpr);
+auto const PrimaryExpr_def = uint_ | bool_ | (!keywords >> identifier) | '(' > Expression > ')';
+auto const Expression_def = LogicalExpr;
 
 BOOST_SPIRIT_DEFINE(      //
     Expression,           //
-    logical_expr,         //
-    equality_expr,        //
-    relational_expr,      //
-    additive_expr,        //
-    multiplicative_expr,  //
+    LogicalExpr,         //
+    EqualityExpr,        //
+    RelationalExpr,      //
+    AdditiveExpr,        //
+    MultiplicativeExpr,  //
     UnaryExpr,            //
-    primary_expr          //
+    PrimaryExpr          //
 );
 
 struct UnaryExpr_class : x3::annotate_on_success {};
-struct primary_expr_class : x3::annotate_on_success {};
+struct PrimaryExpr_class : x3::annotate_on_success {};
 
 }  // namespace parser
 }  // namespace tcc

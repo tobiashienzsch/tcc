@@ -7,10 +7,10 @@
 namespace tcc {
 namespace x3 = boost::spirit::x3;
 namespace parser {
-struct expression_class;
-using expression_type = x3::rule<expression_class, ast::expression>;
-BOOST_SPIRIT_DECLARE(expression_type);
+struct Expression_class;
+using Expression_type = x3::rule<Expression_class, ast::Expression>;
+BOOST_SPIRIT_DECLARE(Expression_type);
 }  // namespace parser
 
-auto expression() -> parser::expression_type const&;
+auto Expression() -> parser::Expression_type const&;
 }  // namespace tcc

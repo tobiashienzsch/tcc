@@ -34,12 +34,12 @@ auto const variable = variable_type("variable");
 
 // Import the expression rule
 namespace {
-auto const& expression = tcc::expression();
+auto const& Expression = tcc::Expression();
 }
 
 auto const StatementList_def = +(variable_declaration | assignment);
 auto const variable_declaration_def = lexeme["auto" >> !(alnum | '_')] > assignment;
-auto const assignment_def = variable > '=' > expression > ';';
+auto const assignment_def = variable > '=' > Expression > ';';
 auto const variable_def = identifier;
 auto const Statement_def = StatementList;
 

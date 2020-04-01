@@ -12,14 +12,14 @@ namespace x3 = boost::spirit::x3;
 
 struct Nil {};
 struct Unary;
-struct expression;
+struct Expression;
 
 struct variable : x3::position_tagged {
   variable(std::string newName = "") : name(std::move(newName)) {}
   std::string name;
 };
 
-struct operand : x3::variant<Nil, uint64_t, variable, x3::forward_ast<Unary>, x3::forward_ast<expression>> {
+struct operand : x3::variant<Nil, uint64_t, variable, x3::forward_ast<Unary>, x3::forward_ast<Expression>> {
   using base_type::base_type;
   using base_type::operator=;
 };
@@ -53,14 +53,14 @@ struct operation : x3::position_tagged {
   operand operand_;
 };
 
-struct expression : x3::position_tagged {
+struct Expression : x3::position_tagged {
   operand first;
   std::list<operation> rest;
 };
 
 struct assignment : x3::position_tagged {
   variable lhs;
-  expression rhs;
+  Expression rhs;
 };
 
 struct variable_declaration {
@@ -80,13 +80,13 @@ struct Statement : x3::variant<variable_declaration, assignment, boost::recursiv
 struct StatementList : std::list<Statement> {};
 
 struct IfStatement {
-  expression condition;
+  Expression condition;
   Statement then;
   boost::optional<Statement> else_;
 };
 
 struct WhileStatement {
-  expression condition;
+  Expression condition;
   Statement body;
 };
 

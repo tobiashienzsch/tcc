@@ -149,7 +149,7 @@ auto compiler::operator()(ast::Unary const& x) const -> bool {
   return true;
 }
 
-auto compiler::operator()(ast::expression const& x) const -> bool {
+auto compiler::operator()(ast::Expression const& x) const -> bool {
   if (!boost::apply_visitor(*this, x.first)) return false;
   for (ast::operation const& oper : x.rest) {
     if (!(*this)(oper)) return false;

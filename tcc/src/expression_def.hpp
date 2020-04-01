@@ -56,15 +56,15 @@ struct multiplicative_expr_class;
 struct UnaryExpr_class;
 struct primary_expr_class;
 
-using equality_expr_type = x3::rule<equality_expr_class, ast::expression>;
-using relational_expr_type = x3::rule<relational_expr_class, ast::expression>;
-using logical_expr_type = x3::rule<logical_expr_class, ast::expression>;
-using additive_expr_type = x3::rule<additive_expr_class, ast::expression>;
-using multiplicative_expr_type = x3::rule<multiplicative_expr_class, ast::expression>;
+using equality_expr_type = x3::rule<equality_expr_class, ast::Expression>;
+using relational_expr_type = x3::rule<relational_expr_class, ast::Expression>;
+using logical_expr_type = x3::rule<logical_expr_class, ast::Expression>;
+using additive_expr_type = x3::rule<additive_expr_class, ast::Expression>;
+using multiplicative_expr_type = x3::rule<multiplicative_expr_class, ast::Expression>;
 using UnaryExpr_type = x3::rule<UnaryExpr_class, ast::operand>;
 using primary_expr_type = x3::rule<primary_expr_class, ast::operand>;
 
-expression_type const expression = "expression";
+Expression_type const Expression = "Expression";
 equality_expr_type const equality_expr = "equality_expr";
 relational_expr_type const relational_expr = "relational_expr";
 logical_expr_type const logical_expr = "logical_expr";
@@ -79,11 +79,11 @@ auto const relational_expr_def = additive_expr >> *(relational_op > additive_exp
 auto const additive_expr_def = multiplicative_expr >> *(additive_op > multiplicative_expr);
 auto const multiplicative_expr_def = UnaryExpr >> *(multiplicative_op > UnaryExpr);
 auto const UnaryExpr_def = primary_expr | (UnaryOp > primary_expr);
-auto const primary_expr_def = uint_ | bool_ | (!keywords >> identifier) | '(' > expression > ')';
-auto const expression_def = logical_expr;
+auto const primary_expr_def = uint_ | bool_ | (!keywords >> identifier) | '(' > Expression > ')';
+auto const Expression_def = logical_expr;
 
 BOOST_SPIRIT_DEFINE(      //
-    expression,           //
+    Expression,           //
     logical_expr,         //
     equality_expr,        //
     relational_expr,      //
@@ -100,8 +100,8 @@ struct primary_expr_class : x3::annotate_on_success {};
 }  // namespace tcc
 
 namespace tcc {
-parser::expression_type const& expression() {
+parser::Expression_type const& Expression() {
   parser::add_keywords();
-  return parser::expression;
+  return parser::Expression;
 }
 }  // namespace tcc

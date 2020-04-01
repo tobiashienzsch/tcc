@@ -26,11 +26,11 @@ script-anchors:
     - mkdir build_coverage && cd build_coverage
     - cmake -GNinja -DTCC_BUILD_COVERAGE=ON -DTCC_BUILD_PLAYGROUND=OFF -DTCC_BUILD_BENCHMARK=OFF ..
     - cmake --build .
-    - ./tcc/tcc
-    - ./tcvm/tcvm
     - ctest
     - bash <(curl -s https://codecov.io/bash) -x /usr/bin/gcov-7
-
+    # - ./tcc/tcc
+    # - ./tcvm/tcvm
+    
 matrix:
   include:
     - os: osx

@@ -7,9 +7,6 @@ project(TobanteCrappyCompilerCollection
 
 # Only do these if this is the main project, and not if it is included through add_subdirectory
 if(CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME)
-
-    # Optionally set things like CMAKE_CXX_STANDARD, CMAKE_POSITION_INDEPENDENT_CODE here
-    
     # Let's ensure -std=c++xx instead of -std=g++xx
     set(CMAKE_CXX_STANDARD 17 CACHE STRING "C++ standard to conform to")
     set(CMAKE_CXX_STANDARD_REQUIRED YES)
@@ -29,9 +26,8 @@ if(CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME)
     include(CheckIPOSupported)
     check_ipo_supported(RESULT TCC_BUILD_LTO)
     if(TCC_BUILD_LTO)
-        message(STATUS "TobanteCrappyCompilerCollection: lto is supported, but not used.")
+        message(STATUS "tcc: LTO is enabled.")
         set(CMAKE_INTERPROCEDURAL_OPTIMIZATION TRUE)
-        # set_target_properties(${PROJECT_NAME} PROPERTIES INTERPROCEDURAL_OPTIMIZATION TRUE)
     endif()
 
     # Docs only available if this is the main app

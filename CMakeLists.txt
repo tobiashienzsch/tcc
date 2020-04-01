@@ -76,6 +76,7 @@ endif(TCC_BUILD_CLANG_TIDY)
 configure_file(.clang-tidy .clang-tidy COPYONLY)
 
 # boost
+# set(Boost_USE_STATIC_LIBS ON)
 find_package(Boost 1.70 REQUIRED COMPONENTS date_time filesystem program_options regex serialization system)
 
 # fmt

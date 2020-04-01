@@ -30,9 +30,9 @@ auto main(int argc, char** argv) -> int {
   tcc::BinaryFormat::ReadFromFile(path, program);
 
   // execute
-  auto vm = tcc::VirtualMachine(program.data, program.entryPoint, 0, 200, true);
-  // auto vm             =
-  // tcc::VirtualMachine(tcvm::CreateFactorialProgram(arg), 22, 0, 1000, true);
+  // auto vm = tcc::VirtualMachine(program.data, program.entryPoint, 0, 200, true);
+  auto const factorial = tcvm::CreateFactorialProgram(arg);
+  auto vm = tcc::VirtualMachine(factorial.data, factorial.entryPoint, 0, 1000, true);
   // auto vm             = tcc::VirtualMachine(tcvm::CreateAdditionProgram(20),
   // 18, 0, 200, true); auto vm             =
   // tcc::VirtualMachine(tcvm::CreateCompiledProgram(), 0, 0, 200, true);

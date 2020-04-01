@@ -33,9 +33,10 @@ auto main(int argc, char** argv) -> int {
   source = "auto y=(1-2*3)*(7+3-1);\n\n";
   source = "auto y=(3)*(7+3-1); auto z = y+2;\n\n";
   source = "auto x = 1+(2+7*8/2)*3;x=x*2;auto y=x+2*2;\n\n";
+  source = "auto x = 1;";
 
   try {
-    po::options_description desc("tcc: tobante's crappy compiler");
+    po::options_description desc("Tobante's Crappy Compiler");
     desc.add_options()                                      //
         ("help,h", "produce this help message")             //
         ("file,f", po::value<std::string>(), "input file")  //
@@ -66,7 +67,7 @@ auto main(int argc, char** argv) -> int {
   iterator_type end(source.end());
   fmt::print("SOURCE:\n{}", source);
 
-  tcc::vmachine vm;                           // Our virtual machine
+  // tcc::vmachine vm;                           // Our virtual machine
   tcc::code_gen::program program;             // Our VM program
   tcc::IntermediateRepresentation irBuilder;  // IR builder
   tcc::ast::Statement_list ast;               // Our AST
@@ -79,17 +80,16 @@ auto main(int argc, char** argv) -> int {
   tcc::code_gen::compiler compile(program, irBuilder, error_handler);
 
   // Our parser
-  auto const parser =
-      // we pass our error handler to the parser so we can access
-      // it later on in our on_error and on_sucess handlers
-      with<tcc::parser::error_handler_tag>(std::ref(error_handler))[tcc::GetStatement()];
+  // We pass our error handler to the parser so we can access
+  // it later on in our on_error and on_sucess handlers
+  auto const parser = with<tcc::parser::error_handler_tag>(std::ref(error_handler))[tcc::GetStatement()];
 
   using boost::spirit::x3::ascii::space;
   bool success = phrase_parse(iter, end, parser, space, ast);
 
   if (success && iter == end) {
     if (compile.start(ast)) {
-      vm.execute(program());
+      // vm.execute(program());
       // program.print_variables(vm.get_stack());
 
       auto optimizer = tcc::Optimizer(*irBuilder.CurrentScope());

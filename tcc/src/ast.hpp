@@ -48,14 +48,14 @@ struct Unary {
   Operand operand_;
 };
 
-struct operation : x3::position_tagged {
+struct Operation : x3::position_tagged {
   optoken operator_;
   Operand operand_;
 };
 
 struct Expression : x3::position_tagged {
   Operand first;
-  std::list<operation> rest;
+  std::list<Operation> rest;
 };
 
 struct Assignment : x3::position_tagged {

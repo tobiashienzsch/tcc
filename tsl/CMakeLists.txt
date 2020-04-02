@@ -28,7 +28,6 @@ target_link_libraries(${PROJECT_NAME}
         tcc::CompilerOptions
         tcc::CompilerWarnings
         tcc::CodeCoverage
-
 )
 
 # Test

@@ -77,6 +77,7 @@ if(TCC_BUILD_TESTS)
         main_test.cpp
         tcc/optimizer/optimizer_test.cpp
         tcc/parser/common_test.cpp
+        tcc/parser/statement_test.cpp
     )
     source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} FILES ${tcc_test_source})
 

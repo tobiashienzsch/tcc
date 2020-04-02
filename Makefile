@@ -11,7 +11,7 @@ win: config-vs build test
 
 .PHONY: config
 config:
-	cmake -B$(BUILD_DIR) -Wno-dev -S. -G"$(CM_GENERATOR)"    \
+	cmake -B$(BUILD_DIR) -S. -G"$(CM_GENERATOR)"    \
     -DCMAKE_BUILD_TYPE:STRING=$(CONFIG)             \
 	-DTCC_BUILD_BENCHMARK=ON						\
     -DBENCHMARK_ENABLE_GTEST_TESTS=OFF              \
@@ -19,7 +19,7 @@ config:
 
 .PHONY: config-vs
 config-vs:
-	cmake -B$(BUILD_DIR) -Wno-dev -S. -G "Visual Studio 16 2019" 		\
+	cmake -B$(BUILD_DIR) -S. -G "Visual Studio 16 2019" 		\
 	-DBOOST_ROOT="C:/boost/boost_1_71_0" 						\
 	-DBOOST_LIBRARYDIR="C:/boost/boost_1_71_0/lib64-msvc-14.2" 	\
 	-DBoost_USE_STATIC_LIBS="ON"								\
@@ -37,7 +37,7 @@ test:
 
 .PHONY: sanitize
 sanitize:
-	cmake -S. -Wno-dev -G$(CM_GENERATOR) -B$(BUILD_DIR_BASE)_sanitize \
+	cmake -S. -G$(CM_GENERATOR) -B$(BUILD_DIR_BASE)_sanitize \
 		-DCMAKE_BUILD_TYPE=$(CONFIG) \
 		-DTCC_BUILD_ASAN=ON \
 		-DTCC_BUILD_UBSAN=ON \

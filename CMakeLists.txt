@@ -1,9 +1,13 @@
 cmake_minimum_required(VERSION 3.12...3.16)
 project(TobanteCrappyCompilerCollection
-    VERSION 0.1
+    VERSION 0.1.0
     DESCRIPTION "tobante's (crappy) compiler collection"
     LANGUAGES CXX
 )
+
+# LTO
+cmake_policy(SET CMP0069 NEW) 
+set(CMAKE_POLICY_DEFAULT_CMP0069 NEW)
 
 # Only do these if this is the main project, and not if it is included through add_subdirectory
 if(CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME)

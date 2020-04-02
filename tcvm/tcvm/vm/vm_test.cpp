@@ -2,16 +2,17 @@
  * @file test_vm.cpp
  * @copyright Copyright 2019-2020 Tobias Hienzsch. MIT license.
  */
+#include "tcvm/vm/vm.hpp"
+
 #include "catch2/catch.hpp"
 #include "tcvm/examples.hpp"
-#include "tcvm/vm/vm.hpp"
 #include "tsl/tsl.hpp"
 
 using tcc::ByteCode;
 using tcc::TestCase;
 using tcc::VirtualMachine;
 
-TEST_CASE("vm: Halt", "[vm]") {
+TEST_CASE("tcvm: Halt", "[tcvm]") {
   auto const assembly = std::vector<int64_t>{
       ByteCode::ICONST, 2,  //
       ByteCode::HALT,       //
@@ -23,7 +24,7 @@ TEST_CASE("vm: Halt", "[vm]") {
   REQUIRE(exitCode == -1);
 }
 
-TEST_CASE("vm: Exit", "[vm]") {
+TEST_CASE("tcvm: Exit", "[tcvm]") {
   auto const assembly = std::vector<int64_t>{
       ByteCode::ICONST, 2,  //
       ByteCode::EXIT,       //
@@ -35,7 +36,7 @@ TEST_CASE("vm: Exit", "[vm]") {
   REQUIRE(exitCode == 2);
 }
 
-TEST_CASE("vm: GlobalMemory", "[vm]") {
+TEST_CASE("tcvm: GlobalMemory", "[tcvm]") {
   auto const assembly = std::vector<int64_t>{
       ByteCode::ICONST, 143,  // push constant to stack
       ByteCode::GSTORE, 0,    // save to global
@@ -54,7 +55,7 @@ TEST_CASE("vm: GlobalMemory", "[vm]") {
   REQUIRE(exitCode == 143);
 }
 
-TEST_CASE("vm: Addition", "[vm]") {
+TEST_CASE("tcvm: Addition", "[tcvm]") {
   auto const testCases = {
       TestCase<int64_t, int64_t>{10, 40},  //
       TestCase<int64_t, int64_t>{20, 50},  //
@@ -68,7 +69,7 @@ TEST_CASE("vm: Addition", "[vm]") {
   }
 }
 
-TEST_CASE("vm: Factorial", "[vm]") {
+TEST_CASE("tcvm: Factorial", "[tcvm]") {
   auto const testCases = {
       TestCase<int64_t, int64_t>{1, 1},    //
       TestCase<int64_t, int64_t>{3, 6},    //
@@ -83,7 +84,7 @@ TEST_CASE("vm: Factorial", "[vm]") {
   }
 }
 
-TEST_CASE("vm: Fibonacci", "[vm]") {
+TEST_CASE("tcvm: Fibonacci", "[tcvm]") {
   auto const testCases = {
       TestCase<int64_t, int64_t>{1, 1},    //
       TestCase<int64_t, int64_t>{5, 5},    //
@@ -97,7 +98,7 @@ TEST_CASE("vm: Fibonacci", "[vm]") {
   }
 }
 
-TEST_CASE("vm: MultipleArguments", "[vm]") {
+TEST_CASE("tcvm: MultipleArguments", "[tcvm]") {
   auto const assembly = tcvm::CreateMultipleArgumentsProgram(10, 2);
   auto vm = VirtualMachine(assembly.data, assembly.entryPoint, 0, 100, false);
   auto const exitCode = vm.Cpu();
@@ -105,7 +106,7 @@ TEST_CASE("vm: MultipleArguments", "[vm]") {
   REQUIRE(exitCode == 3);
 }
 
-TEST_CASE("vm: MultipleFunctions", "[vm]") {
+TEST_CASE("tcvm: MultipleFunctions", "[tcvm]") {
   auto const assembly = tcvm::CreateMultipleFunctionsProgram(2);
   auto vm = VirtualMachine(assembly.data, assembly.entryPoint, 0, 200, false);
   auto const exitCode = vm.Cpu();

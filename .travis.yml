@@ -23,14 +23,11 @@ script-anchors:
 
   - &script-linux-coverage
     - cd $TRAVIS_BUILD_DIR
-    - mkdir build_coverage && cd build_coverage
-    - cmake -GNinja -DTCC_BUILD_COVERAGE=ON -DTCC_BUILD_PLAYGROUND=OFF -DTCC_BUILD_BENCHMARK=OFF ..
-    - cmake --build .
-    - ctest
-    - bash <(curl -s https://codecov.io/bash) -x /usr/bin/gcov-7
+    - make coverage
+    - bash <(curl -s https://codecov.io/bash) -f build_coverage/cov.info
     # - ./tcc/tcc
     # - ./tcvm/tcvm
-    
+
 matrix:
   include:
     - os: osx

@@ -7,10 +7,10 @@
 #include <variant>
 #include <vector>
 
-#include "tcc/core.hpp"
 #include "tcc/ir/intermediate_representation.hpp"
 #include "tcc/parser/ast.hpp"
 #include "tcc/parser/error_handler.hpp"
+#include "tsl/tsl.hpp"
 
 namespace tcc {
 namespace code_gen {

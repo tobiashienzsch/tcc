@@ -5,7 +5,7 @@
 #include <sstream>
 
 #include "catch2/catch.hpp"
-#include "tcc/core.hpp"
+#include "tsl/tsl.hpp"
 
 TEST_CASE("core: BinaryFormat WriteReadStream", "[core]") {
   auto stream = std::stringstream{};

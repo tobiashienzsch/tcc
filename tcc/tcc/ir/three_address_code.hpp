@@ -7,8 +7,8 @@
 #include <variant>
 #include <vector>
 
-#include "tcc/core.hpp"
 #include "tcc/vm.hpp"
+#include "tsl/tsl.hpp"
 
 namespace tcc {
 struct ThreeAddressCode {

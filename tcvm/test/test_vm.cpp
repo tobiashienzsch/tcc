@@ -3,9 +3,9 @@
  * @copyright Copyright 2019-2020 Tobias Hienzsch. MIT license.
  */
 #include "catch2/catch.hpp"
-#include "tcc/core.hpp"
 #include "tcvm/examples.hpp"
 #include "tcvm/vm/vm.hpp"
+#include "tsl/tsl.hpp"
 
 using tcc::ByteCode;
 using tcc::TestCase;

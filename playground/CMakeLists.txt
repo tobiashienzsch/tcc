@@ -8,7 +8,7 @@ target_link_libraries(asio_server
         Boost::system 
         Boost::filesystem
         Boost::serialization 
-        tcc::Core
+        tcc::tsl
         tcc::Threads 
         tcc::CompilerOptions 
         tcc::CompilerWarnings
@@ -23,7 +23,7 @@ target_link_libraries(asio_client
         Boost::system 
         Boost::filesystem
         Boost::serialization 
-        tcc::Core
+        tcc::tsl
         tcc::Threads 
         tcc::CompilerOptions 
         tcc::CompilerWarnings
@@ -37,7 +37,7 @@ target_link_libraries(serialize
         Boost::system 
         Boost::filesystem
         Boost::serialization 
-        tcc::Core
+        tcc::tsl
         tcc::Threads 
         tcc::CompilerOptions 
         tcc::CompilerWarnings

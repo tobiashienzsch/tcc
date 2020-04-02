@@ -3,7 +3,7 @@
 #include <algorithm>
 #include <variant>
 
-#include "tcc/core.hpp"
+#include "tsl/tsl.hpp"
 
 namespace tcc {
 auto AssemblyGenerator::Build(tcc::StatementScope const& scope) -> std::vector<int64_t> {

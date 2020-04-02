@@ -3,7 +3,7 @@
  * @copyright Copyright 2019-2020 Tobias Hienzsch. MIT license.
  */
 
-#include "tcc/core/byte_code.hpp"
+#include "tsl/byte_code.hpp"
 
 namespace tcc {
 

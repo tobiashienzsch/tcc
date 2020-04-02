@@ -5,8 +5,8 @@
 
 #pragma once
 
-#include "tcc/core.hpp"
 #include "tcvm/vm/vm.hpp"
+#include "tsl/tsl.hpp"
 
 namespace tcvm {
 

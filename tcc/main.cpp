@@ -8,7 +8,7 @@
 #include "tcc/vm.hpp"
 
 //
-#include "tcc/core.hpp"
+#include "tsl/tsl.hpp"
 
 //
 #include <boost/program_options.hpp>

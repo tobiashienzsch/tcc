@@ -12,7 +12,7 @@
 #include <string_view>
 #include <vector>
 
-#include "tcc/core.hpp"
+#include "tsl/tsl.hpp"
 
 namespace tcc {
 class VirtualMachine {

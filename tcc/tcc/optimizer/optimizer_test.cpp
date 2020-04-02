@@ -5,7 +5,7 @@
 #include "tcc/optimizer/optimizer.hpp"
 
 #include "catch2/catch.hpp"
-#include "tcc/core.hpp"
+#include "tsl/tsl.hpp"
 
 using std::string;
 

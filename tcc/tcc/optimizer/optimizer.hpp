@@ -2,8 +2,8 @@
 
 #include <algorithm>
 
-#include "tcc/core.hpp"
 #include "tcc/ir/intermediate_representation.hpp"
+#include "tsl/tsl.hpp"
 
 namespace tcc {
 

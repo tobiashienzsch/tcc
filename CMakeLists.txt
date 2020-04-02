@@ -95,7 +95,6 @@ endif()
 # projects
 add_subdirectory(lib/core)
 add_subdirectory(tcc)
-add_subdirectory(tcc-neo)
 add_subdirectory(tcvm)
 
 

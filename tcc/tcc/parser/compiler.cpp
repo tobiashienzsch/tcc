@@ -5,7 +5,6 @@
 #include <iostream>
 #include <set>
 
-
 namespace tcc::code_gen {
 auto program::op(int a) -> void { code.push_back(a); }
 

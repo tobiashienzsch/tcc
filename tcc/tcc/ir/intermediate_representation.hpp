@@ -3,8 +3,8 @@
 #include <map>
 #include <vector>
 
-#include "tcc/ir/three_address_code.hpp"
 #include "tcc/core.hpp"
+#include "tcc/ir/three_address_code.hpp"
 
 namespace tcc {
 struct IntermediateRepresentation {

@@ -2,8 +2,9 @@
  * @file test_optimizer.cpp
  * @copyright Copyright 2019-2020 Tobias Hienzsch. MIT license.
  */
-#include "catch2/catch.hpp"
 #include "tcc/optimizer/optimizer.hpp"
+
+#include "catch2/catch.hpp"
 #include "tcc/core.hpp"
 
 using std::string;

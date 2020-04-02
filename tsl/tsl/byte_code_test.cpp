@@ -8,7 +8,7 @@
 
 #include "catch2/catch.hpp"
 
-TEST_CASE("vm: ByteCode ostream", "[vm]") {
+TEST_CASE("tsl: ByteCode ostream", "[tsl]") {
   auto const input = {
       tcc::ByteCode::ICONST,  //
       tcc::ByteCode::IADD,    //

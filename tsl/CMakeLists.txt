@@ -34,7 +34,7 @@ target_link_libraries(${PROJECT_NAME}
 # Test
 if(TCC_BUILD_TESTS)
     set (tsl_test_source
-        test_main.cpp
+        main_test.cpp
         tsl/binary_format_test.cpp
         tsl/byte_code_test.cpp
     )

@@ -1,5 +1,5 @@
 /**
- * @file test_optimizer.cpp
+ * @file optimizer_test.cpp
  * @copyright Copyright 2019-2020 Tobias Hienzsch. MIT license.
  */
 #include "tcc/optimizer/optimizer.hpp"

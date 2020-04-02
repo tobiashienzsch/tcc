@@ -1,5 +1,5 @@
 /**
- * @file test_main.cpp
+ * @file main_test.cpp
  * @copyright Copyright 2019-2020 Tobias Hienzsch. MIT license.
  */
 

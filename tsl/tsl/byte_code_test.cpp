@@ -1,5 +1,5 @@
 /**
- * @file test_byte_code.cpp
+ * @file byte_code_test.cpp
  * @copyright Copyright 2019-2020 Tobias Hienzsch. MIT license.
  */
 #include "tsl/byte_code.hpp"

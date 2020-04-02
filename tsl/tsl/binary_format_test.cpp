@@ -1,5 +1,5 @@
 /**
- * @file test_binary_format.cpp
+ * @file binary_format_test.cpp
  * @copyright Copyright 2019-2020 Tobias Hienzsch. MIT license.
  */
 #include <sstream>

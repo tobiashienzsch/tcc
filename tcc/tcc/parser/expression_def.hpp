@@ -62,6 +62,7 @@ void add_keywords() {
   keywords.add("if");
   keywords.add("else");
   keywords.add("while");
+  keywords.add("return");
 }
 
 ////////////////////////////////////////////////////////////////////////////

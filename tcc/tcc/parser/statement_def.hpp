@@ -40,7 +40,7 @@ namespace {
 auto const& Expression = tcc::Expression();
 }
 
-auto const StatementList_def = +(VariableDeclaration | Assignment | ReturnStatement);
+auto const StatementList_def = +(ReturnStatement | VariableDeclaration | Assignment);
 auto const ReturnStatement_def = x3::lit("return") > Expression > ';';
 auto const VariableDeclaration_def = lexeme["auto" >> !(alnum | '_')] > Assignment;
 auto const Assignment_def = Variable > '=' > Expression > ';';

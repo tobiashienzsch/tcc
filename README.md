@@ -58,10 +58,10 @@ $PROJECT_ROOT
   benchmark     # benchmarks using google bm
   cmake         # cmake modules
   docs          # documentation
-  lib           # shared code
   tcc           # compiler
   tcvm          # virtual machine
   test_data     # files for testing
+  tsl           # shared code
 ```
 
 ## Resources

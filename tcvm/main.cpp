@@ -25,17 +25,14 @@ auto main(int argc, char** argv) -> int {
   //     tcc::BinaryFormat::WriteToFile(path, program);
   // }
 
-  // read binary
+  // binary
   auto program = tcc::BinaryProgram{};
   tcc::BinaryFormat::ReadFromFile(path, program);
+  auto vm = tcc::VirtualMachine(program.data, program.entryPoint, 0, 200, true);
 
-  // execute
-  // auto vm = tcc::VirtualMachine(program.data, program.entryPoint, 0, 200, true);
-  auto const factorial = tcvm::CreateFactorialProgram(arg);
-  auto vm = tcc::VirtualMachine(factorial.data, factorial.entryPoint, 0, 1000, true);
-  // auto vm             = tcc::VirtualMachine(tcvm::CreateAdditionProgram(20),
-  // 18, 0, 200, true); auto vm             =
-  // tcc::VirtualMachine(tcvm::CreateCompiledProgram(), 0, 0, 200, true);
+  // factorial
+  // auto const factorial = tcvm::CreateFactorialProgram(arg);
+  // auto vm = tcc::VirtualMachine(factorial.data, factorial.entryPoint, 0, 1000, true);
 
   fmt::print("---\nexit code: {}\n", vm.Cpu());
 

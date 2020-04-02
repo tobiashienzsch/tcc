@@ -37,7 +37,7 @@ auto main(int argc, char** argv) -> int {
   source = "auto y=(1-2*3)*(7+3-1);\n\n";
   source = "auto y=(3)*(7+3-1); auto z = y+2;\n\n";
   source = "auto x = 1+(2+7*8/2)*3;x=x*2;auto y=x+2*2;\n\n";
-  source = "auto x = 1;";
+  source = "auto x = 1;\nreturn x;";
 
   try {
     po::options_description desc("Tobante's Crappy Compiler");

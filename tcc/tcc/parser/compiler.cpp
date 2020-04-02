@@ -226,7 +226,11 @@ auto compiler::operator()(ast::WhileStatement const& x) const -> bool {
   return true;
 }
 
-bool compiler::operator()(ast::ReturnStatement const&) const { assert(false && "Not implemented!"); }
+bool compiler::operator()(ast::ReturnStatement const& x) const {
+  if (!(*this)(x.expression)) return false;
+  m_builder.CreateReturnOperation();
+  return true;
+}
 
 auto compiler::start(ast::StatementList const& x) const -> bool {
   program.clear();

@@ -79,6 +79,11 @@ auto AssemblyGenerator::Build(tcc::StatementScope const& scope) -> std::vector<i
         result.push_back(tcc::ByteCode::IMUL);
         break;
       }
+      case byte_code::op_return: {
+        PushConstArgument();
+        result.push_back(tcc::ByteCode::EXIT);
+        break;
+      }
 
         // case byte_code::op_div:
         // {

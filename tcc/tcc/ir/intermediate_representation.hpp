@@ -25,6 +25,7 @@ struct IntermediateRepresentation {
   auto AddVariable(std::string name) -> void;
   auto GetLastVariable(std::string const& key) const -> std::string;
 
+  auto CreateReturnOperation() -> void;
   auto CreateBinaryOperation(byte_code op) -> void;
   auto CreateUnaryOperation(byte_code op) -> void;
   auto CreateStoreOperation(std::string key) -> void;

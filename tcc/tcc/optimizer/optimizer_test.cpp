@@ -13,7 +13,7 @@ using tcc::byte_code;
 using tcc::Optimizer;
 using tcc::ThreeAddressCode;
 
-TEST_CASE("optimizer: BinaryOperation", "[optimizer]") {
+TEST_CASE("tcc/optimizer: BinaryOperation", "[tcc][optimizer]") {
   auto testData = std::vector<tcc::TestCase<byte_code, bool>>{
       {byte_code::op_call, false},   //
       {byte_code::op_store, false},  //
@@ -29,7 +29,7 @@ TEST_CASE("optimizer: BinaryOperation", "[optimizer]") {
   }
 }
 
-TEST_CASE("optimizer: ConstantArgument", "[optimizer]") {
+TEST_CASE("tcc/optimizer: ConstantArgument", "[tcc][optimizer]") {
   using Argument = ThreeAddressCode::Argument;
 
   auto testData = std::vector<tcc::TestCase<Argument, bool>>{
@@ -46,7 +46,7 @@ TEST_CASE("optimizer: ConstantArgument", "[optimizer]") {
   }
 }
 
-TEST_CASE("optimizer: ConstantArgumentOptional", "[optimizer]") {
+TEST_CASE("tcc/optimizer: ConstantArgumentOptional", "[tcc][optimizer]") {
   using Argument = ThreeAddressCode::OptionalArgument;
 
   auto testData = std::vector<tcc::TestCase<Argument, bool>>{
@@ -64,7 +64,7 @@ TEST_CASE("optimizer: ConstantArgumentOptional", "[optimizer]") {
   }
 }
 
-TEST_CASE("optimizer: ConstantStoreExpression", "[optimizer]") {
+TEST_CASE("tcc/optimizer: ConstantStoreExpression", "[tcc][optimizer]") {
   auto testData = std::vector<tcc::TestCase<ThreeAddressCode, bool>>{
       {ThreeAddressCode{byte_code::op_store, string("x1"), 1, std::nullopt}, true},              //
       {ThreeAddressCode{byte_code::op_mul, string("t78"), 123, 1}, false},                       // not store
@@ -76,7 +76,7 @@ TEST_CASE("optimizer: ConstantStoreExpression", "[optimizer]") {
   }
 }
 
-TEST_CASE("optimizer: ConstantBinaryExpression", "[optimizer]") {
+TEST_CASE("tcc/optimizer: ConstantBinaryExpression", "[tcc][optimizer]") {
   auto testData = std::vector<tcc::TestCase<ThreeAddressCode, bool>>{
       {ThreeAddressCode{byte_code::op_store, string("t2"), string("t0"), std::nullopt}, false},  // not binary
       {ThreeAddressCode{byte_code::op_mul, string("t2"), 1, 451}, true},                         //
@@ -87,7 +87,7 @@ TEST_CASE("optimizer: ConstantBinaryExpression", "[optimizer]") {
   }
 }
 
-TEST_CASE("optimizer: UnusedStatement", "[optimizer]") {
+TEST_CASE("tcc/optimizer: UnusedStatement", "[tcc][optimizer]") {
   auto testData = tcc::StatementList{
       ThreeAddressCode{byte_code::op_store, string("x1"), 1, std::nullopt},            //
       ThreeAddressCode{byte_code::op_store, string("x2"), string("x1"), std::nullopt}  //
@@ -97,7 +97,7 @@ TEST_CASE("optimizer: UnusedStatement", "[optimizer]") {
   REQUIRE(Optimizer::IsUnusedStatement(testData.at(1), testData) == true);
 }
 
-TEST_CASE("optimizer: DeleteUnusedStatements", "[optimizer]") {
+TEST_CASE("tcc/optimizer: DeleteUnusedStatements", "[tcc][optimizer]") {
   auto testData = tcc::StatementList{
       ThreeAddressCode{byte_code::op_store, string("t0"), 1, std::nullopt}  //
   };
@@ -107,7 +107,7 @@ TEST_CASE("optimizer: DeleteUnusedStatements", "[optimizer]") {
   REQUIRE(testData.size() == std::size_t{0});
 }
 
-TEST_CASE("optimizer: ReplaceVariableIfConstant", "[optimizer]") {
+TEST_CASE("tcc/optimizer: ReplaceVariableIfConstant", "[tcc][optimizer]") {
   auto testData = tcc::StatementList{
       ThreeAddressCode{byte_code::op_store, string("x1"), 143, std::nullopt},           //
       ThreeAddressCode{byte_code::op_store, string("x2"), string("x1"), std::nullopt},  //

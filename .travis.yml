@@ -23,8 +23,9 @@ script-anchors:
 
   - &script-linux-coverage
     - cd $TRAVIS_BUILD_DIR
-    - cmake -S. -GNinja  -B build_coverage -DTCC_BUILD_COVERAGE=ON
+    - mkdir -p build_coverage
     - cd build_coverage
+    - cmake  -GNinja  -DTCC_BUILD_COVERAGE=ON ..
     - cmake --build .
     - lcov -c -i -d . --base-directory . -o base_cov.info
     - ctest
@@ -64,6 +65,7 @@ matrix:
             - ninja-build
             - libboost1.70-dev
             - clang++-9
+            - lcov
       env:
         - MATRIX_EVAL="CC=clang-9 && CXX=clang++-9"
       script: *script-linux-release

@@ -1,8 +1,11 @@
 # EDITORS
-.atom
-.idea
-.vs
-.vscode
+.atom/*
+.idea/*
+.vs/*
+.vscode/*
+
+#PROJECT
+!.vscode/settings.json
 
 # BUILD
 build

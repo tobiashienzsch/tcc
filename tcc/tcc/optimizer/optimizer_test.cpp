@@ -14,7 +14,7 @@ using tcc::Optimizer;
 using tcc::ThreeAddressCode;
 
 TEST_CASE("tcc/optimizer: BinaryOperation", "[tcc][optimizer]") {
-  auto testData = std::vector<tcc::TestCase<byte_code, bool>>{
+  auto [test_input, expected] = GENERATE(table<byte_code, bool>({
       {byte_code::op_call, false},   //
       {byte_code::op_store, false},  //
       {byte_code::op_jump, false},   //
@@ -22,34 +22,30 @@ TEST_CASE("tcc/optimizer: BinaryOperation", "[tcc][optimizer]") {
       {byte_code::op_sub, true},     //
       {byte_code::op_mul, true},     //
       {byte_code::op_div, true},     //
-  };
+  }));
 
-  for (auto const& test : testData) {
-    REQUIRE(Optimizer::isBinaryOperation(test.input) == test.expected);
-  }
+  REQUIRE(Optimizer::isBinaryOperation(test_input) == expected);
 }
 
 TEST_CASE("tcc/optimizer: ConstantArgument", "[tcc][optimizer]") {
   using Argument = ThreeAddressCode::Argument;
 
-  auto testData = std::vector<tcc::TestCase<Argument, bool>>{
+  auto [test_input, expected] = GENERATE(table<Argument, bool>({
       {Argument{string("x1")}, false},  //
       {Argument{string("t1")}, false},  //
       {Argument{1}, true},              //
       {Argument{42}, true},             //
       {Argument{143}, true},            //
       {Argument{1111111}, true},        //
-  };
+  }));
 
-  for (auto const& test : testData) {
-    REQUIRE(Optimizer::isConstantArgument(test.input) == test.expected);
-  }
+  REQUIRE(Optimizer::isConstantArgument(test_input) == expected);
 }
 
 TEST_CASE("tcc/optimizer: ConstantArgumentOptional", "[tcc][optimizer]") {
   using Argument = ThreeAddressCode::OptionalArgument;
 
-  auto testData = std::vector<tcc::TestCase<Argument, bool>>{
+  auto [test_input, expected] = GENERATE(table<Argument, bool>({
       {Argument{string("x1")}, false},  //
       {Argument{string("t1")}, false},  //
       {Argument{std::nullopt}, false},  //
@@ -57,34 +53,28 @@ TEST_CASE("tcc/optimizer: ConstantArgumentOptional", "[tcc][optimizer]") {
       {Argument{42}, true},             //
       {Argument{143}, true},            //
       {Argument{1111111}, true},        //
-  };
+  }));
 
-  for (auto const& test : testData) {
-    REQUIRE(Optimizer::isConstantArgument(test.input) == test.expected);
-  }
+  REQUIRE(Optimizer::isConstantArgument(test_input) == expected);
 }
 
 TEST_CASE("tcc/optimizer: ConstantStoreExpression", "[tcc][optimizer]") {
-  auto testData = std::vector<tcc::TestCase<ThreeAddressCode, bool>>{
+  auto [test_input, expected] = GENERATE(table<ThreeAddressCode, bool>({
       {ThreeAddressCode{byte_code::op_store, string("x1"), 1, std::nullopt}, true},              //
       {ThreeAddressCode{byte_code::op_mul, string("t78"), 123, 1}, false},                       // not store
       {ThreeAddressCode{byte_code::op_store, string("t1"), string("t0"), std::nullopt}, false},  // not const
-  };
+  }));
 
-  for (auto const& test : testData) {
-    REQUIRE(Optimizer::isConstantStoreExpression(test.input) == test.expected);
-  }
+  REQUIRE(Optimizer::isConstantStoreExpression(test_input) == expected);
 }
 
 TEST_CASE("tcc/optimizer: ConstantBinaryExpression", "[tcc][optimizer]") {
-  auto testData = std::vector<tcc::TestCase<ThreeAddressCode, bool>>{
+  auto [test_input, expected] = GENERATE(table<ThreeAddressCode, bool>({
       {ThreeAddressCode{byte_code::op_store, string("t2"), string("t0"), std::nullopt}, false},  // not binary
       {ThreeAddressCode{byte_code::op_mul, string("t2"), 1, 451}, true},                         //
-  };
+  }));
 
-  for (auto const& test : testData) {
-    REQUIRE(Optimizer::isConstantBinaryExpression(test.input) == test.expected);
-  }
+  REQUIRE(Optimizer::isConstantBinaryExpression(test_input) == expected);
 }
 
 TEST_CASE("tcc/optimizer: UnusedStatement", "[tcc][optimizer]") {

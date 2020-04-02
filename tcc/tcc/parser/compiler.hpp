@@ -54,21 +54,22 @@ struct compiler {
         m_builder(builder),
         error_handler([&](x3::position_tagged pos, std::string const& msg) { errorHandler(pos, msg); }) {}
 
-  auto operator()(ast::Nil) const -> bool { return false; }
-  auto operator()(uint64_t x) const -> bool;
-  auto operator()(bool x) const -> bool;
-  auto operator()(ast::Variable const& x) const -> bool;
-  auto operator()(ast::Operation const& x) const -> bool;
-  auto operator()(ast::Unary const& x) const -> bool;
-  auto operator()(ast::Expression const& x) const -> bool;
-  auto operator()(ast::Assignment const& x) const -> bool;
-  auto operator()(ast::VariableDeclaration const& x) const -> bool;
-  auto operator()(ast::StatementList const& x) const -> bool;
-  auto operator()(ast::Statement const& x) const -> bool;
-  auto operator()(ast::IfStatement const& x) const -> bool;
-  auto operator()(ast::WhileStatement const& x) const -> bool;
+  bool operator()(ast::Nil) const { return false; }
+  bool operator()(uint64_t x) const;
+  bool operator()(bool x) const;
+  bool operator()(ast::Variable const& x) const;
+  bool operator()(ast::Operation const& x) const;
+  bool operator()(ast::Unary const& x) const;
+  bool operator()(ast::Expression const& x) const;
+  bool operator()(ast::Assignment const& x) const;
+  bool operator()(ast::VariableDeclaration const& x) const;
+  bool operator()(ast::StatementList const& x) const;
+  bool operator()(ast::Statement const& x) const;
+  bool operator()(ast::IfStatement const& x) const;
+  bool operator()(ast::WhileStatement const& x) const;
+  bool operator()(ast::ReturnStatement const& x) const;
 
-  auto start(ast::StatementList const& x) const -> bool;
+  bool start(ast::StatementList const& x) const;
 
   tcc::code_gen::program& program;
   tcc::IntermediateRepresentation& m_builder;

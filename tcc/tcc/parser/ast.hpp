@@ -70,9 +70,11 @@ struct VariableDeclaration {
 struct IfStatement;
 struct WhileStatement;
 struct StatementList;
+struct ReturnStatement;
 
 struct Statement : x3::variant<VariableDeclaration, Assignment, boost::recursive_wrapper<IfStatement>,
-                               boost::recursive_wrapper<WhileStatement>, boost::recursive_wrapper<StatementList>> {
+                               boost::recursive_wrapper<WhileStatement>, boost::recursive_wrapper<StatementList>,
+                               boost::recursive_wrapper<ReturnStatement>> {
   using base_type::base_type;
   using base_type::operator=;
 };
@@ -88,6 +90,10 @@ struct IfStatement {
 struct WhileStatement {
   Expression condition;
   Statement body;
+};
+
+struct ReturnStatement {
+  Statement statement;
 };
 
 // print functions for debugging

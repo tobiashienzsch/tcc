@@ -226,6 +226,8 @@ auto compiler::operator()(ast::WhileStatement const& x) const -> bool {
   return true;
 }
 
+bool compiler::operator()(ast::ReturnStatement const&) const { assert(false && "Not implemented!"); }
+
 auto compiler::start(ast::StatementList const& x) const -> bool {
   program.clear();
   // op_stk_adj 0 for now. we'll know how many variables we'll have later

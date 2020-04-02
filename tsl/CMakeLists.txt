@@ -35,7 +35,8 @@ target_link_libraries(${PROJECT_NAME}
 if(TCC_BUILD_TESTS)
     set (tsl_test_source
         test_main.cpp
-        tsl/test_binary_format.cpp
+        tsl/binary_format_test.cpp
+        tsl/byte_code_test.cpp
     )
     source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} FILES ${tsl_test_source})
 

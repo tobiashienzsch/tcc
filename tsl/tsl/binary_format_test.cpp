@@ -7,7 +7,7 @@
 #include "catch2/catch.hpp"
 #include "tsl/tsl.hpp"
 
-TEST_CASE("core: BinaryFormat WriteReadStream", "[core]") {
+TEST_CASE("tsl: BinaryFormat WriteReadStream", "[tsl]") {
   auto stream = std::stringstream{};
 
   // write to stream
@@ -28,7 +28,7 @@ TEST_CASE("core: BinaryFormat WriteReadStream", "[core]") {
   }
 }
 
-TEST_CASE("core: BinaryFormatWriteReadFile", "[core]") {
+TEST_CASE("tsl: BinaryFormatWriteReadFile", "[tsl]") {
   // temporary file
   auto const tempFile = std::string("test_BinaryFormatWriteReadFile.tcb");
 

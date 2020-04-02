@@ -2,10 +2,11 @@
  * @file test_byte_code.cpp
  * @copyright Copyright 2019-2020 Tobias Hienzsch. MIT license.
  */
+#include "tsl/byte_code.hpp"
+
 #include <sstream>
 
 #include "catch2/catch.hpp"
-#include "tsl/tsl.hpp"
 
 TEST_CASE("vm: ByteCode ostream", "[vm]") {
   auto const input = {

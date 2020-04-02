@@ -99,7 +99,7 @@ auto const RelationalExpr_def = AdditiveExpr >> *(RelationalOperators > Additive
 auto const AdditiveExpr_def = MultiplicativeExpr >> *(AdditiveOperators > MultiplicativeExpr);
 auto const MultiplicativeExpr_def = UnaryExpr >> *(MultiplicativeOperators > UnaryExpr);
 auto const UnaryExpr_def = PrimaryExpr | (UnaryOperators > PrimaryExpr);
-auto const PrimaryExpr_def = uint_ | bool_ | (!keywords >> identifier) | '(' > Expression > ')';
+auto const PrimaryExpr_def = uint_ | bool_ | (!keywords >> identifier) | ('(' > Expression > ')');
 auto const Expression_def = LogicalExpr;
 
 BOOST_SPIRIT_DEFINE(     //
@@ -111,7 +111,7 @@ BOOST_SPIRIT_DEFINE(     //
     MultiplicativeExpr,  //
     UnaryExpr,           //
     PrimaryExpr          //
-);
+)
 
 struct UnaryExpr_class : x3::annotate_on_success {};
 struct PrimaryExpr_class : x3::annotate_on_success {};

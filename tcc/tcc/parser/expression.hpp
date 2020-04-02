@@ -9,7 +9,7 @@ namespace x3 = boost::spirit::x3;
 namespace parser {
 struct Expression_class;
 using Expression_type = x3::rule<Expression_class, ast::Expression>;
-BOOST_SPIRIT_DECLARE(Expression_type);
+BOOST_SPIRIT_DECLARE(Expression_type)
 }  // namespace parser
 
 auto Expression() -> parser::Expression_type const&;

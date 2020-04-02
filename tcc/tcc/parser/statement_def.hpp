@@ -43,7 +43,7 @@ auto const Assignment_def = Variable > '=' > Expression > ';';
 auto const Variable_def = identifier;
 auto const Statement_def = StatementList;
 
-BOOST_SPIRIT_DEFINE(Statement, StatementList, VariableDeclaration, Assignment, Variable);
+BOOST_SPIRIT_DEFINE(Statement, StatementList, VariableDeclaration, Assignment, Variable)
 
 struct Statement_class : error_handler_base, x3::annotate_on_success {};
 struct Assignment_class : x3::annotate_on_success {};

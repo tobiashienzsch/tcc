@@ -11,7 +11,6 @@
 #include "tcc/ir/intermediate_representation.hpp"
 #include "tcc/parser/ast.hpp"
 #include "tcc/parser/error_handler.hpp"
-#include "tcc/vm.hpp"
 
 namespace tcc {
 namespace code_gen {

@@ -79,6 +79,7 @@ matrix:
           packages:
             - ninja-build
             - libboost1.70-dev
+            - lcov
       env:
         - MATRIX_EVAL="CC=gcc && CXX=g++"
       script: *script-linux-coverage

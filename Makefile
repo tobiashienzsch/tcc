@@ -47,8 +47,8 @@ sanitize:
 
 .PHONY: coverage
 coverage:
-	cmake -S. -G"Unix Makefiles" $(CMAKE_FLAGS) -B $(BUILD_DIR_BASE)_coverage -DTCC_BUILD_COVERAGE=ON
-	cd $(BUILD_DIR_BASE)_coverage && make -j3
+	cmake -S. -G$(CM_GENERATOR) $(CMAKE_FLAGS) -B $(BUILD_DIR_BASE)_coverage -DTCC_BUILD_COVERAGE=ON
+	cd $(BUILD_DIR_BASE)_coverage && cmake --build .
 	cd $(BUILD_DIR_BASE)_coverage && lcov -c -i -d . --base-directory . -o base_cov.info
 	cd $(BUILD_DIR_BASE)_coverage && ctest
 	cd $(BUILD_DIR_BASE)_coverage && lcov -c -d . --base-directory . -o test_cov.info

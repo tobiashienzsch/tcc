@@ -23,8 +23,19 @@ script-anchors:
 
   - &script-linux-coverage
     - cd $TRAVIS_BUILD_DIR
-    - mkdir -p build_coverage
-    - make coverage
+    - cmake -S. -GNinja  -B build_coverage -DTCC_BUILD_COVERAGE=ON
+    - cd build_coverage
+    - cmake --build .
+    - lcov -c -i -d . --base-directory . -o base_cov.info
+    - ctest
+    - lcov -c -d . --base-directory . -o test_cov.info
+    - lcov -a base_cov.info -a test_cov.info -o cov.info
+    - lcov --remove cov.info "*boost/*" -o cov.info
+    - lcov --remove cov.info "*3rd_party/*" -o cov.info
+    - lcov --remove cov.info "*c++*" -o cov.info
+    - lcov --remove cov.info "*v1*" -o cov.info
+    - lcov --remove cov.info "*Xcode.app*" -o cov.info
+    - cd ..
     - bash <(curl -s https://codecov.io/bash) -f build_coverage/cov.info
     # - ./tcc/tcc
     # - ./tcvm/tcvm

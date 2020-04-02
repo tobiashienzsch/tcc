@@ -2,12 +2,12 @@ project(tcvm)
 
 # Library
 set(tcvm_lib_source
-    src/tcvm/examples.hpp
-    src/tcvm/examples.cpp
-    src/tcvm/program_options.hpp
+    tcvm/examples.hpp
+    tcvm/examples.cpp
+    tcvm/program_options.hpp
     
-    src/tcvm/vm/vm.hpp
-    src/tcvm/vm/vm.cpp
+    tcvm/vm/vm.hpp
+    tcvm/vm/vm.cpp
 )
 source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} FILES ${tcvm_lib_source})
 
@@ -15,7 +15,7 @@ add_library(tcvm_lib ${tcvm_lib_source})
 add_library(tcc::tcvm ALIAS tcvm_lib)
 set_target_properties(tcvm_lib PROPERTIES CXX_CLANG_TIDY "${CLANG_TIDY_EXE}")
 
-target_include_directories(tcvm_lib PUBLIC src)
+target_include_directories(tcvm_lib PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
 target_link_libraries(tcvm_lib  
     PUBLIC
         tcc::tsl 
@@ -49,7 +49,7 @@ target_link_libraries(${PROJECT_NAME}
 if(TCC_BUILD_TESTS)
     set (tcvm_test_source
         main_test.cpp
-        src/tcvm/vm/vm_test.cpp
+        tcvm/vm/vm_test.cpp
     )
     source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} FILES ${tcvm_test_source})
 

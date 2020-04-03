@@ -68,6 +68,7 @@ struct compiler {
   bool operator()(ast::IfStatement const& x) const;
   bool operator()(ast::WhileStatement const& x) const;
   bool operator()(ast::ReturnStatement const& x) const;
+  bool operator()(ast::CompoundStatement const& x) const { return false; }
 
   bool start(ast::StatementList const& x) const;
 

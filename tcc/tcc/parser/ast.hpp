@@ -74,9 +74,11 @@ struct ReturnStatement : x3::position_tagged {
 struct IfStatement;
 struct WhileStatement;
 struct StatementList;
+struct CompoundStatement;
 
 struct Statement : x3::variant<VariableDeclaration, Assignment, ReturnStatement, boost::recursive_wrapper<IfStatement>,
-                               boost::recursive_wrapper<WhileStatement>, boost::recursive_wrapper<StatementList>> {
+                               boost::recursive_wrapper<WhileStatement>, boost::recursive_wrapper<StatementList>,
+                               boost::recursive_wrapper<CompoundStatement>> {
   using base_type::base_type;
   using base_type::operator=;
 };
@@ -91,6 +93,10 @@ struct IfStatement {
 
 struct WhileStatement {
   Expression condition;
+  Statement body;
+};
+
+struct CompoundStatement {
   Statement body;
 };
 

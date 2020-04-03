@@ -55,10 +55,10 @@ TEST_CASE("tcc/parser: StatementInvalid", "[tcc][parser]") {
 }
 
 TEST_CASE("tcc/parser: ReturnStatementValid", "[tcc][parser]") {
-  auto const testCase = std::string{"auto x= 1;\n return x+y;"};
+  auto const testCase = GENERATE(as<std::string>{}, "return x+y;", "return 8;");
   iterator_type iter(testCase.begin());
   iterator_type end(testCase.end());
-  error_handler_type error_handler(iter, end, std::cerr);
+  error_handler_type error_handler(iter, end, null_stream);
 
   auto const grammar = tcc::parser::Statement_type("Statement");
   auto const parser = with<tcc::parser::error_handler_tag>(std::ref(error_handler))[grammar];

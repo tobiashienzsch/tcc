@@ -2,11 +2,10 @@
 
 namespace tcc {
 auto Optimizer::Optimize() -> void {
-  // fmt::print("Before: {} lines\n", m_mainScope.statements.size());
-  // for (ThreeAddressCode const& x : m_mainScope.statements) std::cout << x <<
-  // '\n';
+  fmt::print("\nBefore: {} lines\n", m_mainScope.statements.size());
+  for (ThreeAddressCode const& x : m_mainScope.statements) std::cout << x << '\n';
 
-  for (auto x = 0u; x < 7; x++) {
+  for (auto x = 0u; x < 12; x++) {
     tcc::IgnoreUnused(x);
 
     std::for_each(std::begin(m_mainScope.statements), std::end(m_mainScope.statements),

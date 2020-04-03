@@ -32,12 +32,16 @@ auto readSourceFile(std::string path) -> std::string {
 }
 
 auto main(int argc, char** argv) -> int {
-  std::string source;
-  source = "auto x=4*(1+2)*5; auto y=x+3;\n\n";
-  source = "auto y=(1-2*3)*(7+3-1);\n\n";
-  source = "auto y=(3)*(7+3-1); auto z = y+2;\n\n";
-  source = "auto x = 1+(2+7*8/2)*3;x=x*2;auto y=x+2*2;\n\n";
-  source = "auto x = 1;\nreturn x;";
+  // return = 84
+  std::string source = R"(
+    auto a = 1 + (2 + 8 / 2) * 3;
+    auto b = 1 + (2 + 8 / 2) * 3;
+    
+    auto x = 1 + (2 + 8 / 2) * 3;
+    x = x * 2;
+    auto y = x + 2 * 2;
+    return y * 2;
+  )";
 
   try {
     po::options_description desc("Tobante's Crappy Compiler");

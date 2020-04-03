@@ -20,7 +20,7 @@ auto IntermediateRepresentation::AddVariable(std::string name) -> void {
 
 auto IntermediateRepresentation::CreateReturnOperation() -> void {
   auto const first = PopFromStack();
-  m_mainScope.statements.push_back(ThreeAddressCode{byte_code::op_return, "return", first, std::nullopt, false});
+  m_mainScope.statements.push_back(ThreeAddressCode{byte_code::op_return, "g.0", first, std::nullopt, false});
 }
 
 auto IntermediateRepresentation::CreateBinaryOperation(byte_code op) -> void {

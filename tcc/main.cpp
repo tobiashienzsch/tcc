@@ -73,7 +73,7 @@ auto main(int argc, char** argv) -> int {
   using tcc::parser::iterator_type;
   iterator_type iter(source.begin());
   iterator_type end(source.end());
-  fmt::print("SOURCE:\n{}", source);
+  fmt::print("SOURCE:\n{}\n", source);
 
   // tcc::vmachine vm;                           // Our virtual machine
   tcc::code_gen::program program;             // Our VM program

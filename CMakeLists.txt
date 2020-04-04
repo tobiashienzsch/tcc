@@ -111,5 +111,5 @@ endif()
 
 # playground
 if(TCC_BUILD_PLAYGROUND)
-    # add_subdirectory(playground)
+    add_subdirectory(playground)
 endif()

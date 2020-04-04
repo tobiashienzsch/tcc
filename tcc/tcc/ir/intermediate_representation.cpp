@@ -50,17 +50,17 @@ auto IntermediateRepresentation::CreateLoadOperation(std::string key) -> void {
 auto IntermediateRepresentation::CreateAssignment(std::string const& key) -> std::string {
   auto search = m_mainScope.variables.find(key);
   auto newId = search->second++;
-  return fmt::format("{}{}", key, newId);
+  return fmt::format("{}.{}", key, newId);
 }
 
 auto IntermediateRepresentation::GetLastVariable(std::string const& key) const -> std::string {
   auto search = m_mainScope.variables.find(key);
   auto newId = search->second - 1;
-  return fmt::format("{}{}", key, newId);
+  return fmt::format("{}.{}", key, newId);
 }
 
 auto IntermediateRepresentation::CreateTemporaryOnStack() -> std::string {
-  auto tmp = std::string("t").append(std::to_string(m_varCounter++));
+  auto tmp = std::string("t.").append(std::to_string(m_varCounter++));
   m_stack.emplace_back(tmp);
   return tmp;
 }

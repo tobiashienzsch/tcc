@@ -26,7 +26,7 @@ add_library(spirit_qi_minic ${minic_sources})
 target_include_directories(spirit_qi_minic PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/src)
 target_link_libraries(spirit_qi_minic 
     PUBLIC
-        Boost::headers
+        Boost::boost
     PRIVATE 
         tcc::CompilerOptions
         tcc::CompilerWarnings

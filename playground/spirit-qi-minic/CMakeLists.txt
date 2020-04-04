@@ -12,7 +12,6 @@ set(minic_sources
     src/function.cpp
     src/function.hpp
     src/function_def.hpp
-    src/main.cpp
     src/skipper.hpp
     src/statement.cpp
     src/statement.hpp
@@ -23,13 +22,22 @@ set(minic_sources
 
 source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} FILES ${tcc_lib_source})
 
-add_executable(${PROJECT_NAME} ${minic_sources})
-target_include_directories(${PROJECT_NAME} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/src)
-target_link_libraries(${PROJECT_NAME} 
-    PRIVATE 
+add_library(spirit_qi_minic ${minic_sources})
+target_include_directories(spirit_qi_minic PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/src)
+target_link_libraries(spirit_qi_minic 
+    PUBLIC
         Boost::headers
+    PRIVATE 
         tcc::CompilerOptions
         tcc::CompilerWarnings
 )
 
-set_target_properties(${PROJECT_NAME} PROPERTIES CXX_CLANG_TIDY "${CLANG_TIDY_EXE}")
+set_target_properties(spirit_qi_minic PROPERTIES CXX_CLANG_TIDY "${CLANG_TIDY_EXE}")
+
+add_executable(${PROJECT_NAME} src/main.cpp)
+target_link_libraries(${PROJECT_NAME} 
+    PRIVATE 
+        spirit_qi_minic
+        tcc::CompilerOptions
+        tcc::CompilerWarnings
+)

@@ -56,6 +56,3 @@ struct Variable_class : x3::annotate_on_success {};
 }  // namespace parser
 }  // namespace tcc
 
-namespace tcc {
-parser::Statement_type const& GetStatement() { return parser::Statement; }
-}  // namespace tcc

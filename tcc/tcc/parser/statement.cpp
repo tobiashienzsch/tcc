@@ -4,3 +4,7 @@
 namespace tcc::parser {
 BOOST_SPIRIT_INSTANTIATE(Statement_type, iterator_type, context_type)
 }  // namespace tcc::parser
+
+namespace tcc {
+parser::Statement_type const& GetStatement() { return parser::Statement; }
+}  // namespace tcc

@@ -2,7 +2,6 @@
  * @file statement_test.cpp
  * @copyright Copyright 2019-2020 Tobias Hienzsch. MIT license.
  */
-#include "tcc/parser/statement.hpp"
 
 #include <sstream>
 

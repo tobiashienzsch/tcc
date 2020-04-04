@@ -15,22 +15,23 @@ set(tcc_lib_source
 
     tcc/parser/ast.hpp
     tcc/parser/ast_adapted.hpp
+
     tcc/parser/common.hpp
     tcc/parser/compiler.cpp
     tcc/parser/compiler.hpp
     tcc/parser/config.hpp
     tcc/parser/error_handler.hpp
     tcc/parser/expression_def.hpp
-    tcc/parser/expression.cpp
     tcc/parser/expression.hpp
     tcc/parser/statement_def.hpp
     tcc/parser/statement.cpp
     tcc/parser/statement.hpp
+
     tcc/vm.cpp
-    tcc/vm.hpp
+    tcc/vm.hpp    
 )
 
-add_library(tcc_lib STATIC ${tcc_lib_source})
+add_library(tcc_lib ${tcc_lib_source})
 add_library(tcc::tcc ALIAS tcc_lib)
 source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} FILES ${tcc_lib_source})
 set_target_properties(tcc_lib PROPERTIES CXX_CLANG_TIDY "${CLANG_TIDY_EXE}")
@@ -56,7 +57,7 @@ target_link_libraries(tcc_lib
 # exe
 set(tcc_source 
     main.cpp
-    
+    tcc/parser/expression.cpp
 
 )
 source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} FILES ${tcc_source})
@@ -77,7 +78,7 @@ if(TCC_BUILD_TESTS)
         main_test.cpp
         tcc/optimizer/optimizer_test.cpp
         tcc/parser/common_test.cpp
-        tcc/parser/statement_test.cpp
+        # tcc/parser/statement_test.cpp
     )
     source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} FILES ${tcc_test_source})
 

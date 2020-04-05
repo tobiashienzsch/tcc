@@ -2,10 +2,6 @@
 
 namespace tcc {
 
-auto Optimizer::PrintIR(std::string prefix) -> void {
-  fmt::print("\n{}: {} lines\n", std::move(prefix), m_mainScope.statements.size());
-  for (ThreeAddressCode const& x : m_mainScope.statements) std::cout << x << '\n';
-}
 
 auto Optimizer::Optimize() -> void {
   for (auto x = 0u; x < 12; x++) {

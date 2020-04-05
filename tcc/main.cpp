@@ -148,9 +148,10 @@ auto main(int argc, char** argv) -> int {
   if (compilerFlags.OptimizationLevel > 0) {
     auto optimizer = tcc::Optimizer(*irBuilder.CurrentScope());
     optimizer.Optimize();
-    if (compilerFlags.PrintIR) {
-      optimizer.PrintIR("Post Optimize");
-    }
+  }
+
+  if (compilerFlags.PrintIR) {
+    irBuilder.PrintIR("Post Optimize");
   }
 
   auto assembly = tcc::AssemblyGenerator::Build(*irBuilder.CurrentScope());

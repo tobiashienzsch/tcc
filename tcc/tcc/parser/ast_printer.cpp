@@ -21,64 +21,67 @@ auto AstPrinter::operator()(ast::Variable const& x) -> bool {
 }
 
 auto AstPrinter::operator()(ast::Operation const& x) -> bool {
-  printIndentation();
-  fmt::print("<BinaryOperation>\n");
-  _identationLevel++;
-  if (!boost::apply_visitor(*this, x.operand_)) return false;
+  std::string operation{};
   switch (x.operator_) {
     case ast::OpToken::Plus: {
-      createBinaryOperation(op_add);
+      operation = createBinaryOperation(op_add);
       break;
     }
     case ast::OpToken::Minus: {
-      createBinaryOperation(op_sub);
+      operation = createBinaryOperation(op_sub);
       break;
     }
     case ast::OpToken::Times: {
-      createBinaryOperation(op_mul);
+      operation = createBinaryOperation(op_mul);
       break;
     }
     case ast::OpToken::Divide: {
-      createBinaryOperation(op_div);
+      operation = createBinaryOperation(op_div);
       break;
     }
 
     case ast::OpToken::Equal: {
-      createBinaryOperation(op_eq);
+      operation = createBinaryOperation(op_eq);
       break;
     }
     case ast::OpToken::NotEqual: {
-      createBinaryOperation(op_neq);
+      operation = createBinaryOperation(op_neq);
       break;
     }
     case ast::OpToken::Less: {
-      createBinaryOperation(op_lt);
+      operation = createBinaryOperation(op_lt);
       break;
     }
     case ast::OpToken::LessEqual: {
-      createBinaryOperation(op_lte);
+      operation = createBinaryOperation(op_lte);
       break;
     }
     case ast::OpToken::Greater: {
-      createBinaryOperation(op_gt);
+      operation = createBinaryOperation(op_gt);
       break;
     }
     case ast::OpToken::GreaterEqual: {
-      createBinaryOperation(op_gte);
+      operation = createBinaryOperation(op_gte);
       break;
     }
 
     case ast::OpToken::And: {
-      createBinaryOperation(op_and);
+      operation = createBinaryOperation(op_and);
       break;
     }
     case ast::OpToken::Or: {
-      createBinaryOperation(op_or);
+      operation = createBinaryOperation(op_or);
       break;
     }
     default:
       return false;
   }
+
+  printIndentation();
+  fmt::print("<BinaryOperation type=\"{}\">\n", operation);
+  _identationLevel++;
+
+  if (!boost::apply_visitor(*this, x.operand_)) return false;
 
   _identationLevel--;
   printIndentation();
@@ -117,20 +120,21 @@ auto AstPrinter::operator()(ast::Expression const& x) -> bool {
 
 auto AstPrinter::operator()(ast::Assignment const& x) -> bool {
   if (!(*this)(x.rhs)) return false;
+  printIndentation();
   fmt::print("<Assignment name={}>\n", x.lhs.name);
   return true;
 }
 
 auto AstPrinter::operator()(ast::VariableDeclaration const& x) -> bool {
   printIndentation();
-  fmt::print("<Variable Declaration name={}>\n", x.assign.lhs.name);
+  fmt::print("<VariableDeclaration name=\"{}\">\n", x.assign.lhs.name);
   _identationLevel++;
   auto const r = (*this)(x.assign.rhs);
   if (r) {
   }
   _identationLevel--;
   printIndentation();
-  fmt::print("</Variable Declaration name={}>\n", x.assign.lhs.name);
+  fmt::print("</VariableDeclaration name=\"{}\">\n", x.assign.lhs.name);
   return r;
 }
 
@@ -138,14 +142,14 @@ auto AstPrinter::operator()(ast::Statement const& x) -> bool { return boost::app
 
 auto AstPrinter::operator()(ast::StatementList const& x) -> bool {
   printIndentation();
-  fmt::print("<Statement List>\n");
+  fmt::print("<StatementList>\n");
   _identationLevel++;
   for (auto const& s : x) {
     if (!(*this)(s)) return false;
   }
   _identationLevel--;
   printIndentation();
-  fmt::print("</Statement List>\n");
+  fmt::print("</StatementList>\n");
   return true;
 }
 

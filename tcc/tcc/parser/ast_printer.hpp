@@ -50,16 +50,16 @@ class AstPrinter {
     //   fmt::print("Tried to add {} twice to variable map\n", name);
   }
 
-  auto createBinaryOperation(byte_code op) -> void {
-    auto const second = popFromStack();
-    auto const first = popFromStack();
-    printIndentation();
-    fmt::print("<Operation type={}>\n", op);
+  auto createBinaryOperation(byte_code op) -> std::string {
+    // auto const second = popFromStack();
+    // auto const first = popFromStack();
+
+    return fmt::format("{}", op);
   }
 
   auto createUnaryOperation(byte_code op) -> void {
     auto const first = popFromStack();
-    fmt::print("<Unary op={} first={}>\n", op, first);
+    fmt::print("<Unary op=\"{}\" first=\"{}\">\n", op, first);
   }
 
   auto createStoreOperation(std::string key) -> void {

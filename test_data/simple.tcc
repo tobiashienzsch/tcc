@@ -1,2 +1,3 @@
 auto x = 1+4;
-return x;
+auto y = 2;
+return x+y;

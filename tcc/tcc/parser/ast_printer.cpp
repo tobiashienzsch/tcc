@@ -5,7 +5,8 @@
 namespace tcc::parser {
 
 auto AstPrinter::operator()(uint64_t x) -> bool {
-  pushToStack(x);
+  printIndentation();
+  fmt::print("<IntConstant value={}/>\n", x);
   return true;
 }
 
@@ -15,98 +16,35 @@ auto AstPrinter::operator()(bool x) -> bool {
 }
 
 auto AstPrinter::operator()(ast::Variable const& x) -> bool {
-  // auto const last = m_builder.GetLastVariable(x.name);
-  // createLoadOperation(last);
+  printIndentation();
+  fmt::print("<Variable name=\"{}\"/>\n", x.name);
   return true;
 }
 
 auto AstPrinter::operator()(ast::Operation const& x) -> bool {
-  std::string operation{};
-  switch (x.operator_) {
-    case ast::OpToken::Plus: {
-      operation = createBinaryOperation(op_add);
-      break;
-    }
-    case ast::OpToken::Minus: {
-      operation = createBinaryOperation(op_sub);
-      break;
-    }
-    case ast::OpToken::Times: {
-      operation = createBinaryOperation(op_mul);
-      break;
-    }
-    case ast::OpToken::Divide: {
-      operation = createBinaryOperation(op_div);
-      break;
-    }
-
-    case ast::OpToken::Equal: {
-      operation = createBinaryOperation(op_eq);
-      break;
-    }
-    case ast::OpToken::NotEqual: {
-      operation = createBinaryOperation(op_neq);
-      break;
-    }
-    case ast::OpToken::Less: {
-      operation = createBinaryOperation(op_lt);
-      break;
-    }
-    case ast::OpToken::LessEqual: {
-      operation = createBinaryOperation(op_lte);
-      break;
-    }
-    case ast::OpToken::Greater: {
-      operation = createBinaryOperation(op_gt);
-      break;
-    }
-    case ast::OpToken::GreaterEqual: {
-      operation = createBinaryOperation(op_gte);
-      break;
-    }
-
-    case ast::OpToken::And: {
-      operation = createBinaryOperation(op_and);
-      break;
-    }
-    case ast::OpToken::Or: {
-      operation = createBinaryOperation(op_or);
-      break;
-    }
-    default:
-      return false;
-  }
-
   printIndentation();
-  fmt::print("<BinaryOperation type=\"{}\">\n", operation);
+  fmt::print("<Binary type=\"{}\">\n", x.operator_);
   _identationLevel++;
 
   if (!boost::apply_visitor(*this, x.operand_)) return false;
 
   _identationLevel--;
   printIndentation();
-  fmt::print("<BinaryOperation>\n");
+  fmt::print("</Binary type=\"{}\">\n", x.operator_);
   return true;
 }
 
 auto AstPrinter::operator()(ast::Unary const& x) -> bool {
+  printIndentation();
+  fmt::print("<Unary type=\"{}\">\n", x.operator_);
+  _identationLevel++;
+
   if (!boost::apply_visitor(*this, x.operand_)) return false;
-  switch (x.operator_) {
-    case ast::OpToken::Positive:
-      break;
 
-    case ast::OpToken::Negative: {
-      createUnaryOperation(op_neg);
-      break;
-    }
-    case ast::OpToken::Not: {
-      createUnaryOperation(op_not);
-      break;
-    }
+  _identationLevel--;
+  printIndentation();
+  fmt::print("</Unary type=\"{}\">\n", x.operator_);
 
-    default:
-      return false;
-  }
   return true;
 }
 
@@ -119,22 +57,26 @@ auto AstPrinter::operator()(ast::Expression const& x) -> bool {
 }
 
 auto AstPrinter::operator()(ast::Assignment const& x) -> bool {
-  if (!(*this)(x.rhs)) return false;
   printIndentation();
-  fmt::print("<Assignment name={}>\n", x.lhs.name);
+  fmt::print("<Assignment name=\"{}\">\n", x.lhs.name);
+  _identationLevel++;
+  if (!(*this)(x.rhs)) return false;
+  _identationLevel--;
+  printIndentation();
+  fmt::print("</Assignment name=\"{}\">\n", x.lhs.name);
   return true;
 }
 
 auto AstPrinter::operator()(ast::VariableDeclaration const& x) -> bool {
   printIndentation();
-  fmt::print("<VariableDeclaration name=\"{}\">\n", x.assign.lhs.name);
+  fmt::print("<VarDeclaration name=\"{}\">\n", x.assign.lhs.name);
   _identationLevel++;
   auto const r = (*this)(x.assign.rhs);
   if (r) {
   }
   _identationLevel--;
   printIndentation();
-  fmt::print("</VariableDeclaration name=\"{}\">\n", x.assign.lhs.name);
+  fmt::print("</VarDeclaration name=\"{}\">\n", x.assign.lhs.name);
   return r;
 }
 
@@ -153,7 +95,7 @@ auto AstPrinter::operator()(ast::StatementList const& x) -> bool {
   return true;
 }
 
-auto AstPrinter::operator()(ast::IfStatement const& x) -> bool {
+auto AstPrinter::operator()(ast::IfStatement const&) -> bool {
   // if (!(*this)(x.condition)) return false;
   //
   // std::size_t skip = program.size() - 1;  // mark its position
@@ -172,7 +114,7 @@ auto AstPrinter::operator()(ast::IfStatement const& x) -> bool {
   return true;
 }
 
-auto AstPrinter::operator()(ast::WhileStatement const& x) -> bool {
+auto AstPrinter::operator()(ast::WhileStatement const&) -> bool {
   // std::size_t loop = program.size();  // mark our position
   // if (!(*this)(x.condition)) return false;
   //
@@ -185,8 +127,16 @@ auto AstPrinter::operator()(ast::WhileStatement const& x) -> bool {
 }
 
 bool AstPrinter::operator()(ast::ReturnStatement const& x) {
+  printIndentation();
+  fmt::print("<Return>\n");
+  _identationLevel++;
+
   if (!(*this)(x.expression)) return false;
-  printReturnOperation();
+
+  _identationLevel--;
+  printIndentation();
+  fmt::print("</Return>\n");
+
   return true;
 }
 

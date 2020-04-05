@@ -43,6 +43,57 @@ enum class OpToken {
 
 };
 
+inline auto operator<<(std::ostream& out, OpToken op) -> std::ostream& {
+  switch (op) {
+    case OpToken::Plus:
+      out << "plus";
+      break;
+    case OpToken::Minus:
+      out << "minus";
+      break;
+    case OpToken::Times:
+      out << "times";
+      break;
+    case OpToken::Divide:
+      out << "divide";
+      break;
+    case OpToken::Positive:
+      out << "positive";
+      break;
+    case OpToken::Negative:
+      out << "negative";
+      break;
+    case OpToken::Not:
+      out << "not";
+      break;
+    case OpToken::Equal:
+      out << "equal";
+      break;
+    case OpToken::NotEqual:
+      out << "not equal";
+      break;
+    case OpToken::Less:
+      out << "less";
+      break;
+    case OpToken::LessEqual:
+      out << "less equal";
+      break;
+    case OpToken::Greater:
+      out << "greater";
+      break;
+    case OpToken::GreaterEqual:
+      out << "greater equal";
+      break;
+    case OpToken::And:
+      out << "and";
+      break;
+    case OpToken::Or:
+      out << "or";
+      break;
+  }
+  return out;
+}
+
 struct Unary {
   OpToken operator_;
   Operand operand_;

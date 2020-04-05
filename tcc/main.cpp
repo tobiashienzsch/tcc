@@ -44,12 +44,22 @@ auto main(int argc, char** argv) -> int {
     return y * 2;
   )";
 
+  struct CompilerFlags {
+    int OptimizationLevel = 0;
+    bool PrintSource = false;
+    bool PrintAst = false;
+    bool PrintIR = false;
+  } compilerFlags;
+
   try {
     po::options_description desc("Tobante's Crappy Compiler");
-    desc.add_options()                                      //
-        ("help,h", "produce this help message")             //
-        ("file,f", po::value<std::string>(), "input file")  //
-        ;
+    desc.add_options()                                                  //
+        ("help,h", "produce this help message")                         //
+        ("file,f", po::value<std::string>(), "input file")              //
+        ("optimization,O", po::value<int>(), "set optimization level")  //
+        ("print-source", "print source code")                           //
+        ("print-ast", "print source code")                              //
+        ("print-ir", "print source code");
 
     po::variables_map vm;
     po::store(po::parse_command_line(argc, argv, desc), vm);
@@ -64,6 +74,23 @@ auto main(int argc, char** argv) -> int {
       auto const path = vm["file"].as<std::string>();
       source = readSourceFile(path);
     }
+
+    if (vm.count("optimization")) {
+      compilerFlags.OptimizationLevel = vm["optimization"].as<int>();
+    }
+
+    if (vm.count("print-source")) {
+      compilerFlags.PrintSource = true;
+    }
+
+    if (vm.count("print-ast")) {
+      compilerFlags.PrintAst = true;
+    }
+
+    if (vm.count("print-ir")) {
+      compilerFlags.PrintIR = true;
+    }
+
   } catch (std::exception& e) {
     std::cerr << "error: " << e.what() << "\n";
     return 1;
@@ -74,7 +101,9 @@ auto main(int argc, char** argv) -> int {
   using tcc::parser::iterator_type;
   iterator_type iter(source.begin());
   iterator_type end(source.end());
-  fmt::print("SOURCE:\n{}\n", source);
+  if (compilerFlags.PrintSource) {
+    fmt::print("Source:\n{}\n\n", source);
+  }
 
   // tcc::vmachine vm;                           // Our virtual machine
   tcc::code_gen::program program;             // Our VM program
@@ -94,26 +123,39 @@ auto main(int argc, char** argv) -> int {
   auto const parser = with<tcc::parser::error_handler_tag>(std::ref(error_handler))[tcc::GetStatement()];
 
   using boost::spirit::x3::ascii::space;
+
+  // Parse
   bool success = phrase_parse(iter, end, parser, space, ast);
-
-  if (success && iter == end) {
-    if (compile.start(ast)) {
-      if (auto printer = tcc::parser::AstPrinter{error_handler}; printer.start(ast)) {
-      }
-      // vm.execute(program());
-      // program.print_variables(vm.get_stack());
-
-      auto optimizer = tcc::Optimizer(*irBuilder.CurrentScope());
-      optimizer.Optimize();
-      auto assembly = tcc::AssemblyGenerator::Build(*irBuilder.CurrentScope());
-      auto binaryProgram = tcc::BinaryProgram{1, "test", 0, assembly};
-      if (!tcc::BinaryFormat::WriteToFile("test.tcb", binaryProgram)) fmt::print("Error wrtiting binary.\n");
-    } else {
-      std::cout << "Compile failure\n";
-    }
-  } else {
+  if (!success || iter != end) {
     std::cout << "Parse failure\n";
+    return EXIT_FAILURE;
   }
+
+  // Compile IR
+  if (!compile.start(ast)) {
+    std::cout << "Compile failure\n";
+    return EXIT_FAILURE;
+  }
+
+  // Print AST
+  if (compilerFlags.PrintAst) {
+    auto printer = tcc::parser::AstPrinter{error_handler};
+    if (!printer.start(ast)) {
+      std::cout << "Ast printer failure\n";
+      return EXIT_FAILURE;
+    }
+  }
+  if (compilerFlags.OptimizationLevel > 0) {
+    auto optimizer = tcc::Optimizer(*irBuilder.CurrentScope());
+    optimizer.Optimize();
+    if (compilerFlags.PrintIR) {
+      optimizer.PrintIR("Post Optimize");
+    }
+  }
+
+  auto assembly = tcc::AssemblyGenerator::Build(*irBuilder.CurrentScope());
+  auto binaryProgram = tcc::BinaryProgram{1, "test", 0, assembly};
+  if (!tcc::BinaryFormat::WriteToFile("test.tcb", binaryProgram)) fmt::print("Error wrtiting binary.\n");
 
   return 0;
 }

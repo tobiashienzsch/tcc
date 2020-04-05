@@ -11,6 +11,7 @@ class Optimizer {
  public:
   Optimizer(StatementScope& scope) : m_mainScope(scope) {}
 
+  auto PrintIR(std::string prefix) -> void;
   auto Optimize() -> void;
 
   static auto DeleteUnusedStatements(StatementList& statementList) -> bool;

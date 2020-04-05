@@ -1,10 +1,13 @@
 #include "tcc/optimizer/optimizer.hpp"
 
 namespace tcc {
-auto Optimizer::Optimize() -> void {
-  fmt::print("\nBefore: {} lines\n", m_mainScope.statements.size());
-  for (ThreeAddressCode const& x : m_mainScope.statements) std::cout << x << '\n';
 
+auto Optimizer::PrintIR(std::string prefix) -> void {
+  fmt::print("\n{}: {} lines\n", std::move(prefix), m_mainScope.statements.size());
+  for (ThreeAddressCode const& x : m_mainScope.statements) std::cout << x << '\n';
+}
+
+auto Optimizer::Optimize() -> void {
   for (auto x = 0u; x < 12; x++) {
     tcc::IgnoreUnused(x);
 
@@ -16,9 +19,6 @@ auto Optimizer::Optimize() -> void {
   }
 
   DeleteUnusedStatements(m_mainScope.statements);
-
-  fmt::print("\n\nAfter: {} lines\n", m_mainScope.statements.size());
-  for (ThreeAddressCode const& x : m_mainScope.statements) std::cout << x << '\n';
 }
 
 auto Optimizer::DeleteUnusedStatements(StatementList& statementList) -> bool {

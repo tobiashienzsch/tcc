@@ -2,7 +2,6 @@
 
 namespace tcc {
 
-
 auto Optimizer::Optimize() -> void {
   for (auto x = 0u; x < 12; x++) {
     tcc::IgnoreUnused(x);

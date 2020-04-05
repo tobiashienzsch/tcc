@@ -11,7 +11,6 @@ class Optimizer {
  public:
   Optimizer(StatementScope& scope) : m_mainScope(scope) {}
 
-
   auto Optimize() -> void;
 
   static auto DeleteUnusedStatements(StatementList& statementList) -> bool;

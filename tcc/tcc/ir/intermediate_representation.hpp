@@ -1,8 +1,8 @@
 #pragma once
 
+#include <iostream>
 #include <map>
 #include <vector>
-#include <iostream>
 
 #include "tcc/ir/three_address_code.hpp"
 #include "tsl/tsl.hpp"
@@ -11,9 +11,9 @@ namespace tcc {
 struct IntermediateRepresentation {
   IntermediateRepresentation() : m_currentScope(&m_mainScope) {}
 
-  auto PrintIR(std::string prefix) -> void{
-      fmt::print("\n{}: {} lines\n", std::move(prefix), m_mainScope.statements.size());
-  for (ThreeAddressCode const& x : m_mainScope.statements) std::cout << x << '\n';
+  auto PrintIR(std::string prefix) -> void {
+    fmt::print("\n{}: {} lines\n", std::move(prefix), m_mainScope.statements.size());
+    for (ThreeAddressCode const& x : m_mainScope.statements) std::cout << x << '\n';
   }
   auto CurrentScope() -> StatementScope* {
     if (!m_currentScope) {

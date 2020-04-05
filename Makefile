@@ -66,7 +66,6 @@ clean:
 
 .PHONY: format
 format:
-	find playground -iname '*.hpp' -o -iname '*.cpp' | xargs clang-format -i
 	find tcc -iname '*.hpp' -o -iname '*.cpp' | xargs clang-format -i
 	find tcvm -iname '*.hpp' -o -iname '*.cpp' | xargs clang-format -i
 	find tsl -iname '*.hpp' -o -iname '*.cpp' | xargs clang-format -i

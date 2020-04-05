@@ -55,4 +55,3 @@ struct Assignment_class : x3::annotate_on_success {};
 struct Variable_class : x3::annotate_on_success {};
 }  // namespace parser
 }  // namespace tcc
-

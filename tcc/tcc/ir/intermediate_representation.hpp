@@ -11,10 +11,13 @@ namespace tcc {
 struct IntermediateRepresentation {
   IntermediateRepresentation() : m_currentScope(&m_mainScope) {}
 
-  auto PrintIR(std::string prefix) -> void {
-    fmt::print("\n{}: {} lines\n", std::move(prefix), m_mainScope.statements.size());
-    for (ThreeAddressCode const& x : m_mainScope.statements) std::cout << x << '\n';
+  auto PrintIR() -> void {
+    fmt::print("\nprogram: {} IR instructions\n", m_mainScope.statements.size());
+    fmt::print("func main: args=[]\n");
+    fmt::print("entry:\n");
+    for (ThreeAddressCode const& x : m_mainScope.statements) std::cout << '\t' << x << '\n';
   }
+
   auto CurrentScope() -> StatementScope* {
     if (!m_currentScope) {
       fmt::print("Current scope is nullptr;\n EXIT\n");

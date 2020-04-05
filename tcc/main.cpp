@@ -145,7 +145,7 @@ auto main(int argc, char** argv) -> int {
   }
 
   if (flags.PrintIR) {
-    irBuilder.PrintIR("Post Optimize");
+    irBuilder.PrintIR();
   }
 
   auto assembly = tcc::AssemblyGenerator::Build(*irBuilder.CurrentScope());

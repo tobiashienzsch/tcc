@@ -1,6 +1,7 @@
 #include "tcc/asm/assembly_generator.hpp"
 #include "tcc/optimizer/optimizer.hpp"
 #include "tcc/parser/ast.hpp"
+#include "tcc/parser/ast_printer.hpp"
 #include "tcc/parser/compiler.hpp"
 #include "tcc/parser/config.hpp"
 #include "tcc/parser/error_handler.hpp"
@@ -97,6 +98,8 @@ auto main(int argc, char** argv) -> int {
 
   if (success && iter == end) {
     if (compile.start(ast)) {
+      if (auto printer = tcc::parser::AstPrinter{error_handler}; printer.start(ast)) {
+      }
       // vm.execute(program());
       // program.print_variables(vm.get_stack());
 

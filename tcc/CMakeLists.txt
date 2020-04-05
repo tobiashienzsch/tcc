@@ -15,7 +15,8 @@ set(tcc_lib_source
 
     tcc/parser/ast.hpp
     tcc/parser/ast_adapted.hpp
-
+    tcc/parser/ast_printer.cpp
+    tcc/parser/ast_printer.hpp
     tcc/parser/common.hpp
     tcc/parser/compiler.cpp
     tcc/parser/compiler.hpp

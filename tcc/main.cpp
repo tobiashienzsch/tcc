@@ -45,24 +45,30 @@ auto main(int argc, char** argv) -> int {
   )";
 
   struct CompilerFlags {
-    int OptimizationLevel = 0;
+    int OptLevel = 0;
     bool PrintSource = false;
     bool PrintAst = false;
     bool PrintIR = false;
-  } compilerFlags;
+  } flags;
 
   try {
+    // Declare a group of options that will be
+    // allowed only on command line
     po::options_description desc("Tobante's Crappy Compiler");
-    desc.add_options()                                                  //
-        ("help,h", "produce this help message")                         //
-        ("file,f", po::value<std::string>(), "input file")              //
-        ("optimization,O", po::value<int>(), "set optimization level")  //
-        ("print-source", "print source code")                           //
-        ("print-ast", "print source code")                              //
-        ("print-ir", "print source code");
+    desc.add_options()                                                                 //
+        ("help,h", "produce this help message")                                        //
+        ("input,i", po::value<std::vector<std::string>>(), "input source file")        //
+        ("optimization,O", po::value<int>(&flags.OptLevel), "optimization level 0-1")  //
+        ("print-source", po::bool_switch(&flags.PrintSource), "print source code")     //
+        ("print-ast", po::bool_switch(&flags.PrintAst), "print parsed ast")            //
+        ("print-ir", po::bool_switch(&flags.PrintIR), "print generated ir")            //
+        ;
+
+    po::positional_options_description p;
+    p.add("input", -1);
 
     po::variables_map vm;
-    po::store(po::parse_command_line(argc, argv, desc), vm);
+    po::store(po::command_line_parser(argc, argv).options(desc).positional(p).run(), vm);
     po::notify(vm);
 
     if (vm.count("help")) {
@@ -70,25 +76,13 @@ auto main(int argc, char** argv) -> int {
       return 0;
     }
 
-    if (vm.count("file")) {
-      auto const path = vm["file"].as<std::string>();
-      source = readSourceFile(path);
-    }
-
-    if (vm.count("optimization")) {
-      compilerFlags.OptimizationLevel = vm["optimization"].as<int>();
-    }
-
-    if (vm.count("print-source")) {
-      compilerFlags.PrintSource = true;
-    }
-
-    if (vm.count("print-ast")) {
-      compilerFlags.PrintAst = true;
-    }
-
-    if (vm.count("print-ir")) {
-      compilerFlags.PrintIR = true;
+    if (vm.count("input")) {
+      auto const paths = vm["input"].as<std::vector<std::string>>();
+      if (paths.size() > 1) {
+        fmt::print("Only one source file allowed currently.\n");
+        return EXIT_FAILURE;
+      }
+      source = readSourceFile(paths[0]);
     }
 
   } catch (std::exception& e) {
@@ -101,7 +95,7 @@ auto main(int argc, char** argv) -> int {
   using tcc::parser::iterator_type;
   iterator_type iter(source.begin());
   iterator_type end(source.end());
-  if (compilerFlags.PrintSource) {
+  if (flags.PrintSource) {
     fmt::print("Source:\n{}\n\n", source);
   }
 
@@ -138,19 +132,19 @@ auto main(int argc, char** argv) -> int {
   }
 
   // Print AST
-  if (compilerFlags.PrintAst) {
+  if (flags.PrintAst) {
     auto printer = tcc::parser::AstPrinter{error_handler};
     if (!printer.start(ast)) {
       std::cout << "Ast printer failure\n";
       return EXIT_FAILURE;
     }
   }
-  if (compilerFlags.OptimizationLevel > 0) {
+  if (flags.OptLevel > 0) {
     auto optimizer = tcc::Optimizer(*irBuilder.CurrentScope());
     optimizer.Optimize();
   }
 
-  if (compilerFlags.PrintIR) {
+  if (flags.PrintIR) {
     irBuilder.PrintIR("Post Optimize");
   }
 

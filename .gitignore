@@ -14,3 +14,4 @@ build_*
 
 # TCVM BINARIES
 *.tcb
+test.xml

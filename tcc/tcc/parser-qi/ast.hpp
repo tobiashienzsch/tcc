@@ -16,7 +16,7 @@ namespace ast {
  * Used to annotate the AST with the iterator position.
  * This id is used as a key to a map<int, Iterator> (not really part of the AST.)
  */
-struct tagged {
+struct Tagged {
   int id;
 };
 
@@ -25,12 +25,12 @@ struct Unary;
 struct FunctionCall;
 struct Expression;
 
-struct Identifier : tagged {
+struct Identifier : Tagged {
   Identifier(std::string n = "") : name(std::move(n)) {}
   std::string name;
 };
 
-using operand = boost::variant<              //
+using Operand = boost::variant<              //
     Nil,                                     //
     bool,                                    //
     unsigned int,                            //
@@ -60,12 +60,12 @@ enum class OpToken {
 
 struct Unary {
   OpToken operator_;
-  operand operand_;
+  Operand operand;
 };
 
-struct operation {
+struct Operation {
   OpToken operator_;
-  operand operand_;
+  Operand operand;
 };
 
 struct FunctionCall {
@@ -74,8 +74,8 @@ struct FunctionCall {
 };
 
 struct Expression {
-  operand first;
-  std::list<operation> rest;
+  Operand first;
+  std::list<Operation> rest;
 };
 
 struct Assignment {
@@ -115,7 +115,7 @@ struct WhileStatement {
   Statement body;
 };
 
-struct ReturnStatement : tagged {
+struct ReturnStatement : Tagged {
   boost::optional<Expression> expr;
 };
 
@@ -144,13 +144,13 @@ inline std::ostream& operator<<(std::ostream& out, Identifier const& id) {
 BOOST_FUSION_ADAPT_STRUCT(             //
     client::ast::Unary,                //
     (client::ast::OpToken, operator_)  //
-    (client::ast::operand, operand_)   //
+    (client::ast::Operand, operand)    //
 )
 
 BOOST_FUSION_ADAPT_STRUCT(             //
-    client::ast::operation,            //
+    client::ast::Operation,            //
     (client::ast::OpToken, operator_)  //
-    (client::ast::operand, operand_)   //
+    (client::ast::Operand, operand)    //
 )
 
 BOOST_FUSION_ADAPT_STRUCT(                      //
@@ -161,8 +161,8 @@ BOOST_FUSION_ADAPT_STRUCT(                      //
 
 BOOST_FUSION_ADAPT_STRUCT(                     //
     client::ast::Expression,                   //
-    (client::ast::operand, first)              //
-    (std::list<client::ast::operation>, rest)  //
+    (client::ast::Operand, first)              //
+    (std::list<client::ast::Operation>, rest)  //
 )
 
 BOOST_FUSION_ADAPT_STRUCT(                           //

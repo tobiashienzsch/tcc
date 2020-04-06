@@ -43,7 +43,7 @@ struct Expression : qi::grammar<Iterator, ast::Expression(), Skipper<Iterator>> 
   qi::rule<Iterator, ast::Expression(), Skipper<Iterator>> expr, equality_expr, relational_expr, logical_or_expr,
       logical_and_expr, additive_expr, multiplicative_expr;
 
-  qi::rule<Iterator, ast::operand(), Skipper<Iterator>> UnaryExpr, primary_expr;
+  qi::rule<Iterator, ast::Operand(), Skipper<Iterator>> UnaryExpr, primary_expr;
 
   qi::rule<Iterator, ast::FunctionCall(), Skipper<Iterator>> FunctionCall;
 

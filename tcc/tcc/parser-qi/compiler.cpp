@@ -211,9 +211,9 @@ bool Compiler::operator()(ast::Identifier const& x) {
   return true;
 }
 
-bool Compiler::operator()(ast::operation const& x) {
+bool Compiler::operator()(ast::Operation const& x) {
   assert(current != nullptr);
-  if (!boost::apply_visitor(*this, x.operand_)) return false;
+  if (!boost::apply_visitor(*this, x.operand)) return false;
   switch (x.operator_) {
     case ast::OpToken::Plus:
       current->op(op_add);
@@ -262,7 +262,7 @@ bool Compiler::operator()(ast::operation const& x) {
 
 bool Compiler::operator()(ast::Unary const& x) {
   assert(current != nullptr);
-  if (!boost::apply_visitor(*this, x.operand_)) return false;
+  if (!boost::apply_visitor(*this, x.operand)) return false;
   switch (x.operator_) {
     case ast::OpToken::Negative:
       current->op(op_neg);
@@ -307,7 +307,7 @@ bool Compiler::operator()(ast::FunctionCall const& x) {
 bool Compiler::operator()(ast::Expression const& x) {
   assert(current != nullptr);
   if (!boost::apply_visitor(*this, x.first)) return false;
-  for (ast::operation const& oper : x.rest) {
+  for (ast::Operation const& oper : x.rest) {
     if (!(*this)(oper)) return false;
   }
   return true;

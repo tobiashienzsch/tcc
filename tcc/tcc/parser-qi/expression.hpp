@@ -51,7 +51,7 @@ struct Expression : qi::grammar<Iterator, ast::Expression(), skipper<Iterator>> 
 
   qi::rule<Iterator, std::string(), skipper<Iterator>> Identifier;
 
-  qi::symbols<char, ast::optoken> logical_or_op, logical_and_op, equality_op, relational_op, additive_op,
+  qi::symbols<char, ast::OpToken> logical_or_op, logical_and_op, equality_op, relational_op, additive_op,
       multiplicative_op, UnaryOp;
 
   qi::symbols<char> keywords;

@@ -40,7 +40,7 @@ using operand = boost::variant<              //
     boost::recursive_wrapper<Expression>     //
     >;
 
-enum optoken {
+enum OpToken {
   op_plus,
   op_minus,
   op_times,
@@ -59,12 +59,12 @@ enum optoken {
 };
 
 struct Unary {
-  optoken operator_;
+  OpToken operator_;
   operand operand_;
 };
 
 struct operation {
-  optoken operator_;
+  OpToken operator_;
   operand operand_;
 };
 
@@ -143,13 +143,13 @@ inline std::ostream& operator<<(std::ostream& out, Identifier const& id) {
 
 BOOST_FUSION_ADAPT_STRUCT(             //
     client::ast::Unary,                //
-    (client::ast::optoken, operator_)  //
+    (client::ast::OpToken, operator_)  //
     (client::ast::operand, operand_)   //
 )
 
 BOOST_FUSION_ADAPT_STRUCT(             //
     client::ast::operation,            //
-    (client::ast::optoken, operator_)  //
+    (client::ast::OpToken, operator_)  //
     (client::ast::operand, operand_)   //
 )
 

@@ -31,13 +31,13 @@ int main(int argc, char** argv) {
 
   bool success = phrase_parse(iter, end, statement, skipper, ast);
   if (!success || iter != end) {
-    std::cout << "Parse error!\n";
+    fmt::print("Parse error!\n");
     return EXIT_FAILURE;
   }
 
   // Compile IR
   if (!irGenerator(ast)) {
-    std::cout << "Compile error!\n";
+    fmt::print("Compile error!\n");
     return EXIT_FAILURE;
   }
 

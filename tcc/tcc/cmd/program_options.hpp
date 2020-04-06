@@ -46,7 +46,7 @@ class ProgramOptions {
       po::notify(vm_);
 
       if (vm_.count("help")) {
-        std::cout << desc << "\n";
+        fmt::print("{}\n", desc);
         return {true, EXIT_SUCCESS};
       }
 

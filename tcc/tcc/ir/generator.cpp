@@ -23,11 +23,6 @@ auto Program::add_var(std::string const& name) -> void {
   variables[name] = int(n);
 }
 
-auto Program::print_variables(std::vector<int> const& stack) const -> void {
-  for (auto const& p : variables) {
-    std::cout << "    " << p.first << ": " << stack[p.second] << std::endl;
-  }
-}
 bool IRGenerator::operator()(tcc::ast::Nil) {
   assert(false);
   return false;

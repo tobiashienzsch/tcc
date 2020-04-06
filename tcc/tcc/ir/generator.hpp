@@ -34,8 +34,6 @@ struct Program {
   auto find_var(std::string const& name) const -> int const*;
   auto add_var(std::string const& name) -> void;
 
-  auto print_variables(std::vector<int> const& stack) const -> void;
-
  private:
   std::map<std::string, int> variables;
   std::vector<int> code;

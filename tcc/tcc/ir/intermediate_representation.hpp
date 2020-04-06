@@ -9,13 +9,13 @@
 
 namespace tcc {
 struct IntermediateRepresentation {
-  IntermediateRepresentation() : m_currentScope(&m_mainScope) {}
+  IntermediateRepresentation() = default;
 
   auto PrintIR() -> void {
     fmt::print("\nprogram: {} IR instructions\n", m_mainScope.statements.size());
     fmt::print("func main: args=[]\n");
     fmt::print("entry:\n");
-    for (ThreeAddressCode const& x : m_mainScope.statements) std::cout << '\t' << x << '\n';
+    for (ThreeAddressCode const& x : m_mainScope.statements) fmt::print("\t{}\n", x);
   }
 
   auto CurrentScope() -> StatementScope* {
@@ -47,7 +47,7 @@ struct IntermediateRepresentation {
   int m_varCounter = 0;
   std::vector<std::variant<int, std::string>> m_stack;
   StatementScope m_mainScope{"main"};
-  StatementScope* m_currentScope = nullptr;
+  StatementScope* m_currentScope = &m_mainScope;
 };
 
 }  // namespace tcc

@@ -1,1 +1,1 @@
-add_subdirectory(spirit-qi-minic)
+project(playground)

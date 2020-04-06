@@ -8,6 +8,8 @@ set(tcc_lib_source
     tcc/optimizer/optimizer.cpp
     tcc/optimizer/optimizer.hpp
 
+    tcc/ir/generator.cpp
+    tcc/ir/generator.hpp
     tcc/ir/intermediate_representation.cpp
     tcc/ir/intermediate_representation.hpp
     tcc/ir/three_address_code.cpp

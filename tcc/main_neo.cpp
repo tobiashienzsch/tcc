@@ -1,6 +1,7 @@
 #include <boost/lexical_cast.hpp>
 #include <fstream>
 
+#include "tcc/ir/generator.hpp"
 #include "tcc/parser-qi/compiler.hpp"
 #include "tcc/parser-qi/function.hpp"
 #include "tcc/parser-qi/skipper.hpp"
@@ -33,49 +34,28 @@ int main(int argc, char** argv) {
   IteratorType iter = sourceCode.begin();
   IteratorType end = sourceCode.end();
 
-  client::vmachine vm;            // Our virtual machine
-  client::ast::FunctionList ast;  // Our AST
+  client::vmachine vm;             // Our virtual machine
+  client::ast::StatementList ast;  // Our AST
 
-  client::ErrorHandler<IteratorType> errorHandler(iter, end);     // Our error handler
-  client::parser::function<IteratorType> function(errorHandler);  // Our parser
-  client::parser::Skipper<IteratorType> skipper;                  // Our skipper
-  client::code_gen::Compiler compiler(errorHandler);              // Our compiler
+  client::ErrorHandler<IteratorType> errorHandler(iter, end);       // Our error handler
+  client::parser::Statement<IteratorType> statement(errorHandler);  // Our parser
+  client::parser::Skipper<IteratorType> skipper;                    // Our skipper
+  client::code_gen::Compiler compiler(errorHandler);                // Our compiler
+  tcc::Program program{};                                           // Our VM program
+  tcc::IntermediateRepresentation irBuilder;                        // IR builder
+  tcc::IRGenerator irGenerator{program, irBuilder, errorHandler};   // IR Generator
 
-  bool success = phrase_parse(iter, end, +function, skipper, ast);
-
-  std::cout << "-------------------------\n";
-
-  if (success && iter == end) {
-    if (compiler(ast)) {
-      boost::shared_ptr<client::code_gen::function> p = compiler.find_function("main");
-      if (!p) return 1;
-
-      int nargs = argc - 2;
-      if (p->nargs() != nargs) {
-        std::cerr << "Error: main function requires " << p->nargs() << " arguments." << std::endl;
-        std::cerr << nargs << "supplied." << std::endl;
-        return 1;
-      }
-
-      std::cout << "Success\n";
-      std::cout << "-------------------------\n";
-      std::cout << "Assembler----------------\n\n";
-      compiler.print_assembler();
-
-      // Push the arguments into our stack
-      for (int i = 0; i < nargs; ++i) vm.get_stack()[i] = boost::lexical_cast<int>(argv[i + 2]);
-
-      // Call the interpreter
-      int r = vm.execute(compiler.get_code());
-
-      std::cout << "-------------------------\n";
-      std::cout << "Result: " << r << std::endl;
-      std::cout << "-------------------------\n\n";
-    } else {
-      std::cout << "Compile failure\n";
-    }
-  } else {
-    std::cout << "Parse failure\n";
+  bool success = phrase_parse(iter, end, statement, skipper, ast);
+  if (!success || iter != end) {
+    std::cout << "Parse error!\n";
+    return EXIT_FAILURE;
   }
+
+  // Compile IR
+  if (!irGenerator.start(ast)) {
+    std::cout << "Compile error!\n";
+    return EXIT_FAILURE;
+  }
+
   return 0;
 }

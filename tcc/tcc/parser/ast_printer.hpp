@@ -34,7 +34,6 @@ class AstPrinter {
   bool operator()(ast::CompoundStatement const& x) { return false; }
 
  private:
-
   auto printIndentation() const -> void {
     for (auto i = 0; i < _identationLevel; i++) {
       fmt::print("  ");

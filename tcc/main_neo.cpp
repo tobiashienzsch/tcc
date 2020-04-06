@@ -2,14 +2,12 @@
 #include <fstream>
 
 #include "tcc/ir/generator.hpp"
+#include "tcc/optimizer/optimizer.hpp"
 #include "tcc/parser-qi/compiler.hpp"
 #include "tcc/parser-qi/function.hpp"
 #include "tcc/parser-qi/skipper.hpp"
 #include "tcc/parser-qi/vm.hpp"
 
-///////////////////////////////////////////////////////////////////////////////
-//  Main program
-///////////////////////////////////////////////////////////////////////////////
 int main(int argc, char** argv) {
   char const* filePath;
   if (argc > 1) {
@@ -52,9 +50,25 @@ int main(int argc, char** argv) {
   }
 
   // Compile IR
+  struct CompilerFlags {
+    int OptLevel = 0;
+    bool PrintSource = false;
+    bool PrintAst = false;
+    bool PrintIR = true;
+  } flags;
+
   if (!irGenerator(ast)) {
     std::cout << "Compile error!\n";
     return EXIT_FAILURE;
+  }
+
+  if (flags.OptLevel > 0) {
+    auto optimizer = tcc::Optimizer(*irBuilder.CurrentScope());
+    optimizer.Optimize();
+  }
+
+  if (flags.PrintIR) {
+    irBuilder.PrintIR();
   }
 
   return 0;

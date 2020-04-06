@@ -23,7 +23,7 @@ struct tagged {
 struct Nil {};
 struct Unary;
 struct FunctionCall;
-struct expression;
+struct Expression;
 
 struct Identifier : tagged {
   Identifier(std::string n = "") : name(std::move(n)) {}
@@ -37,7 +37,7 @@ using operand = boost::variant<              //
     Identifier,                              //
     boost::recursive_wrapper<Unary>,         //
     boost::recursive_wrapper<FunctionCall>,  //
-    boost::recursive_wrapper<expression>     //
+    boost::recursive_wrapper<Expression>     //
     >;
 
 enum optoken {
@@ -70,22 +70,22 @@ struct operation {
 
 struct FunctionCall {
   Identifier function_name;
-  std::list<expression> args;
+  std::list<Expression> args;
 };
 
-struct expression {
+struct Expression {
   operand first;
   std::list<operation> rest;
 };
 
 struct Assignment {
   Identifier lhs;
-  expression rhs;
+  Expression rhs;
 };
 
 struct VariableDeclaration {
   Identifier lhs;
-  boost::optional<expression> rhs;
+  boost::optional<Expression> rhs;
 };
 
 struct IfStatement;
@@ -105,18 +105,18 @@ using Statement = boost::variant<               //
 struct StatementList : std::list<Statement> {};
 
 struct IfStatement {
-  expression condition;
+  Expression condition;
   Statement then;
   boost::optional<Statement> else_;
 };
 
 struct WhileStatement {
-  expression condition;
+  Expression condition;
   Statement body;
 };
 
 struct ReturnStatement : tagged {
-  boost::optional<expression> expr;
+  boost::optional<Expression> expr;
 };
 
 struct function {
@@ -156,11 +156,11 @@ BOOST_FUSION_ADAPT_STRUCT(             //
 BOOST_FUSION_ADAPT_STRUCT(                      //
     client::ast::FunctionCall,                  //
     (client::ast::Identifier, function_name)    //
-    (std::list<client::ast::expression>, args)  //
+    (std::list<client::ast::Expression>, args)  //
 )
 
 BOOST_FUSION_ADAPT_STRUCT(                     //
-    client::ast::expression,                   //
+    client::ast::Expression,                   //
     (client::ast::operand, first)              //
     (std::list<client::ast::operation>, rest)  //
 )
@@ -168,31 +168,31 @@ BOOST_FUSION_ADAPT_STRUCT(                     //
 BOOST_FUSION_ADAPT_STRUCT(                           //
     client::ast::VariableDeclaration,                //
     (client::ast::Identifier, lhs)                   //
-    (boost::optional<client::ast::expression>, rhs)  //
+    (boost::optional<client::ast::Expression>, rhs)  //
 )
 
 BOOST_FUSION_ADAPT_STRUCT(          //
     client::ast::Assignment,        //
     (client::ast::Identifier, lhs)  //
-    (client::ast::expression, rhs)  //
+    (client::ast::Expression, rhs)  //
 )
 
 BOOST_FUSION_ADAPT_STRUCT(                            //
     client::ast::IfStatement,                         //
-    (client::ast::expression, condition)              //
+    (client::ast::Expression, condition)              //
     (client::ast::Statement, then)                    //
     (boost::optional<client::ast::Statement>, else_)  //
 )
 
 BOOST_FUSION_ADAPT_STRUCT(                //
     client::ast::WhileStatement,          //
-    (client::ast::expression, condition)  //
+    (client::ast::Expression, condition)  //
     (client::ast::Statement, body)        //
 )
 
 BOOST_FUSION_ADAPT_STRUCT(                            //
     client::ast::ReturnStatement,                     //
-    (boost::optional<client::ast::expression>, expr)  //
+    (boost::optional<client::ast::Expression>, expr)  //
 )
 
 BOOST_FUSION_ADAPT_STRUCT(                      //

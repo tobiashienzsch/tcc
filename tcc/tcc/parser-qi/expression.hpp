@@ -37,17 +37,17 @@ namespace ascii = boost::spirit::ascii;
 //  The expression grammar
 ///////////////////////////////////////////////////////////////////////////////
 template <typename Iterator>
-struct expression : qi::grammar<Iterator, ast::expression(), skipper<Iterator>> {
-  expression(ErrorHandler<Iterator>& errorHandler);
+struct Expression : qi::grammar<Iterator, ast::Expression(), skipper<Iterator>> {
+  Expression(ErrorHandler<Iterator>& errorHandler);
 
-  qi::rule<Iterator, ast::expression(), skipper<Iterator>> expr, equality_expr, relational_expr, logical_or_expr,
+  qi::rule<Iterator, ast::Expression(), skipper<Iterator>> expr, equality_expr, relational_expr, logical_or_expr,
       logical_and_expr, additive_expr, multiplicative_expr;
 
   qi::rule<Iterator, ast::operand(), skipper<Iterator>> UnaryExpr, primary_expr;
 
   qi::rule<Iterator, ast::FunctionCall(), skipper<Iterator>> FunctionCall;
 
-  qi::rule<Iterator, std::list<ast::expression>(), skipper<Iterator>> argument_list;
+  qi::rule<Iterator, std::list<ast::Expression>(), skipper<Iterator>> argument_list;
 
   qi::rule<Iterator, std::string(), skipper<Iterator>> Identifier;
 

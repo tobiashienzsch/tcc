@@ -66,7 +66,7 @@ struct compiler {
   bool operator()(ast::operation const& x);
   bool operator()(ast::Unary const& x);
   bool operator()(ast::FunctionCall const& x);
-  bool operator()(ast::expression const& x);
+  bool operator()(ast::Expression const& x);
   bool operator()(ast::Assignment const& x);
   bool operator()(ast::VariableDeclaration const& x);
   bool operator()(ast::StatementList const& x);

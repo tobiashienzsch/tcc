@@ -12,7 +12,7 @@ template <typename Iterator>
 struct Statement : qi::grammar<Iterator, ast::StatementList(), skipper<Iterator>> {
   Statement(ErrorHandler<Iterator>& errorHandler);
 
-  expression<Iterator> expr;
+  Expression<Iterator> expr;
   qi::rule<Iterator, ast::StatementList(), skipper<Iterator>> StatementList, compound_statement;
 
   qi::rule<Iterator, ast::Statement(), skipper<Iterator>> Statement_;

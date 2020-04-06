@@ -294,7 +294,7 @@ bool compiler::operator()(ast::FunctionCall const& x) {
     return false;
   }
 
-  BOOST_FOREACH (ast::expression const& expr, x.args) {
+  BOOST_FOREACH (ast::Expression const& expr, x.args) {
     if (!(*this)(expr)) return false;
   }
 
@@ -304,7 +304,7 @@ bool compiler::operator()(ast::FunctionCall const& x) {
   return true;
 }
 
-bool compiler::operator()(ast::expression const& x) {
+bool compiler::operator()(ast::Expression const& x) {
   BOOST_ASSERT(current != nullptr);
   if (!boost::apply_visitor(*this, x.first)) return false;
   BOOST_FOREACH (ast::operation const& oper, x.rest) {

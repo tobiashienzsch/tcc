@@ -5,4 +5,4 @@
 #include "tcc/parser-qi/expression_def.hpp"
 
 using iterator_type = std::string::const_iterator;
-template struct client::parser::expression<iterator_type>;
+template struct client::parser::Expression<iterator_type>;

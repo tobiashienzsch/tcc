@@ -1,9 +1,3 @@
-/*=============================================================================
-    Copyright (c) 2001-2011 Joel de Guzman
-
-    Distributed under the Boost Software License, Version 1.0. (See accompanying
-    file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
-=============================================================================*/
 #if !defined(BOOST_SPIRIT_MINIC_ANNOTATION_HPP)
 #define BOOST_SPIRIT_MINIC_ANNOTATION_HPP
 
@@ -15,11 +9,12 @@
 #include "tcc/parser-qi/ast.hpp"
 
 namespace client {
-///////////////////////////////////////////////////////////////////////////////
-//  The annotation handler links the AST to a map of iterator positions
-//  for the purpose of subsequent semantic error handling when the
-//  program is being compiled.
-///////////////////////////////////////////////////////////////////////////////
+
+/**
+ *  The annotation handler links the AST to a map of iterator positions
+ *  for the purpose of subsequent semantic error handling when the
+ *  program is being compiled.
+ */
 template <typename Iterator>
 struct annotation {
   template <typename, typename>

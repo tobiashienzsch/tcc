@@ -1,9 +1,3 @@
-/*=============================================================================
-    Copyright (c) 2001-2011 Joel de Guzman
-
-    Distributed under the Boost Software License, Version 1.0. (See accompanying
-    file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
-=============================================================================*/
 #if !defined(BOOST_SPIRIT_MINIC_AST_HPP)
 #define BOOST_SPIRIT_MINIC_AST_HPP
 
@@ -13,16 +7,17 @@
 #include <boost/optional.hpp>
 #include <boost/variant/recursive_variant.hpp>
 #include <list>
+#include <utility>
 
 namespace client {
 namespace ast {
-///////////////////////////////////////////////////////////////////////////
-//  The AST
-///////////////////////////////////////////////////////////////////////////
+
+/**
+ * Used to annotate the AST with the iterator position.
+ * This id is used as a key to a map<int, Iterator> (not really part of the AST.)
+ */
 struct tagged {
-  int id;  // Used to annotate the AST with the iterator position.
-           // This id is used as a key to a map<int, Iterator>
-           // (not really part of the AST.)
+  int id;
 };
 
 struct Nil {};
@@ -31,13 +26,19 @@ struct FunctionCall;
 struct expression;
 
 struct Identifier : tagged {
-  Identifier(std::string const& name = "") : name(name) {}
+  Identifier(std::string n = "") : name(std::move(n)) {}
   std::string name;
 };
 
-typedef boost::variant<Nil, bool, unsigned int, Identifier, boost::recursive_wrapper<Unary>,
-                       boost::recursive_wrapper<FunctionCall>, boost::recursive_wrapper<expression>>
-    operand;
+using operand = boost::variant<              //
+    Nil,                                     //
+    bool,                                    //
+    unsigned int,                            //
+    Identifier,                              //
+    boost::recursive_wrapper<Unary>,         //
+    boost::recursive_wrapper<FunctionCall>,  //
+    boost::recursive_wrapper<expression>     //
+    >;
 
 enum optoken {
   op_plus,
@@ -92,10 +93,14 @@ struct WhileStatement;
 struct StatementList;
 struct ReturnStatement;
 
-typedef boost::variant<VariableDeclaration, Assignment, boost::recursive_wrapper<IfStatement>,
-                       boost::recursive_wrapper<WhileStatement>, boost::recursive_wrapper<ReturnStatement>,
-                       boost::recursive_wrapper<StatementList>>
-    statement;
+using statement = boost::variant<               //
+    VariableDeclaration,                        //
+    Assignment,                                 //
+    boost::recursive_wrapper<IfStatement>,      //
+    boost::recursive_wrapper<WhileStatement>,   //
+    boost::recursive_wrapper<ReturnStatement>,  //
+    boost::recursive_wrapper<StatementList>     //
+    >;
 
 struct StatementList : std::list<statement> {};
 

@@ -4,6 +4,7 @@
 #include <boost/foreach.hpp>
 #include <boost/lexical_cast.hpp>
 #include <boost/variant/apply_visitor.hpp>
+#include <cassert>
 #include <set>
 
 #include "tcc/parser-qi/vm.hpp"

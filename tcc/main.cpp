@@ -100,7 +100,7 @@ auto main(int argc, char** argv) -> int {
   }
 
   // tcc::vmachine vm;                           // Our virtual machine
-  tcc::code_gen::program program;             // Our VM program
+  tcc::code_gen::program program{};           // Our VM program
   tcc::IntermediateRepresentation irBuilder;  // IR builder
   tcc::ast::StatementList ast;                // Our AST
 
@@ -109,7 +109,7 @@ auto main(int argc, char** argv) -> int {
   error_handler_type error_handler(iter, end, std::cerr);  // Our error handler
 
   // Our compiler
-  tcc::code_gen::compiler compile(program, irBuilder, error_handler);
+  tcc::code_gen::Compiler compiler(program, irBuilder, error_handler);
 
   // Our parser
   // We pass our error handler to the parser so we can access
@@ -126,7 +126,7 @@ auto main(int argc, char** argv) -> int {
   }
 
   // Compile IR
-  if (!compile.start(ast)) {
+  if (!compiler.start(ast)) {
     std::cout << "Compile failure\n";
     return EXIT_FAILURE;
   }

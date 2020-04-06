@@ -17,7 +17,7 @@ namespace ast {
  * This id is used as a key to a map<int, Iterator> (not really part of the AST.)
  */
 struct Tagged {
-  int id;
+  int id{};
 };
 
 struct Nil {};

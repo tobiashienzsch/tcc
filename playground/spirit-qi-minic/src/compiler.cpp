@@ -35,8 +35,8 @@ void function::op(int a, int b, int c) {
 }
 
 int const* function::find_var(std::string const& name) const {
-  std::map<std::string, int>::const_iterator i = variables.find(name);
-  if (i == variables.end()) return 0;
+  auto const i = variables.find(name);
+  if (i == variables.end()) return nullptr;
   return &i->second;
 }
 
@@ -45,14 +45,13 @@ void function::add_var(std::string const& name) {
   variables[name] = n;
 }
 
-void function::link_to(std::string const& name, std::size_t address) { functionCalls[address] = name; }
+void function::link_to(std::string const& name, std::size_t addr) { functionCalls[addr] = name; }
 
 void function::print_assembler() const {
   std::vector<int>::const_iterator pc = code.begin() + address;
 
   std::vector<std::string> locals(variables.size());
-  typedef std::pair<std::string, int> pair;
-  BOOST_FOREACH (pair const& p, variables) {
+  for (auto const& p : variables) {
     locals[p.second] = p.first;
     std::cout << "      local       " << p.first << ", @" << p.second << std::endl;
   }
@@ -62,7 +61,7 @@ void function::print_assembler() const {
 
   while (pc != (code.begin() + address + size_)) {
     std::string line;
-    std::size_t address = pc - code.begin();
+    std::size_t addr = pc - code.begin();
 
     switch (*pc++) {
       case op_neg:
@@ -182,12 +181,11 @@ void function::print_assembler() const {
         line += "      op_return";
         break;
     }
-    lines[address] = line;
+    lines[addr] = line;
   }
 
   std::cout << "start:" << std::endl;
-  typedef std::pair<std::size_t, std::string> line_info;
-  BOOST_FOREACH (line_info const& l, lines) {
+  for (auto const& l : lines) {
     std::size_t pos = l.first;
     if (jumps.find(pos) != jumps.end()) std::cout << pos << ':' << std::endl;
     std::cout << l.second << std::endl;
@@ -197,21 +195,21 @@ void function::print_assembler() const {
 }
 
 bool compiler::operator()(unsigned int x) {
-  BOOST_ASSERT(current != 0);
-  current->op(op_int, x);
+  BOOST_ASSERT(current != nullptr);
+  current->op(op_int, static_cast<int>(x));
   return true;
 }
 
 bool compiler::operator()(bool x) {
-  BOOST_ASSERT(current != 0);
+  BOOST_ASSERT(current != nullptr);
   current->op(x ? op_true : op_false);
   return true;
 }
 
 bool compiler::operator()(ast::Identifier const& x) {
-  BOOST_ASSERT(current != 0);
+  BOOST_ASSERT(current != nullptr);
   int const* p = current->find_var(x.name);
-  if (p == 0) {
+  if (p == nullptr) {
     error_handler(x.id, "Undeclared variable: " + x.name);
     return false;
   }
@@ -220,7 +218,7 @@ bool compiler::operator()(ast::Identifier const& x) {
 }
 
 bool compiler::operator()(ast::operation const& x) {
-  BOOST_ASSERT(current != 0);
+  BOOST_ASSERT(current != nullptr);
   if (!boost::apply_visitor(*this, x.operand_)) return false;
   switch (x.operator_) {
     case ast::op_plus:
@@ -262,14 +260,14 @@ bool compiler::operator()(ast::operation const& x) {
       current->op(op_or);
       break;
     default:
-      BOOST_ASSERT(0);
+      assert(false);
       return false;
   }
   return true;
 }
 
 bool compiler::operator()(ast::Unary const& x) {
-  BOOST_ASSERT(current != 0);
+  BOOST_ASSERT(current != nullptr);
   if (!boost::apply_visitor(*this, x.operand_)) return false;
   switch (x.operator_) {
     case ast::op_negative:
@@ -281,14 +279,14 @@ bool compiler::operator()(ast::Unary const& x) {
     case ast::op_positive:
       break;
     default:
-      BOOST_ASSERT(0);
+      assert(false);
       return false;
   }
   return true;
 }
 
 bool compiler::operator()(ast::FunctionCall const& x) {
-  BOOST_ASSERT(current != 0);
+  BOOST_ASSERT(current != nullptr);
 
   if (functions.find(x.function_name.name) == functions.end()) {
     error_handler(x.function_name.id, "Function not found: " + x.function_name.name);
@@ -297,7 +295,7 @@ bool compiler::operator()(ast::FunctionCall const& x) {
 
   boost::shared_ptr<code_gen::function> p = functions[x.function_name.name];
 
-  if (p->nargs() != x.args.size()) {
+  if (p->nargs() != static_cast<int>(x.args.size())) {
     error_handler(x.function_name.id, "Wrong number of arguments: " + x.function_name.name);
     return false;
   }
@@ -313,7 +311,7 @@ bool compiler::operator()(ast::FunctionCall const& x) {
 }
 
 bool compiler::operator()(ast::expression const& x) {
-  BOOST_ASSERT(current != 0);
+  BOOST_ASSERT(current != nullptr);
   if (!boost::apply_visitor(*this, x.first)) return false;
   BOOST_FOREACH (ast::operation const& oper, x.rest) {
     if (!(*this)(oper)) return false;
@@ -322,10 +320,10 @@ bool compiler::operator()(ast::expression const& x) {
 }
 
 bool compiler::operator()(ast::Assignment const& x) {
-  BOOST_ASSERT(current != 0);
+  BOOST_ASSERT(current != nullptr);
   if (!(*this)(x.rhs)) return false;
   int const* p = current->find_var(x.lhs.name);
-  if (p == 0) {
+  if (p == nullptr) {
     error_handler(x.lhs.id, "Undeclared variable: " + x.lhs.name);
     return false;
   }
@@ -334,7 +332,7 @@ bool compiler::operator()(ast::Assignment const& x) {
 }
 
 bool compiler::operator()(ast::VariableDeclaration const& x) {
-  BOOST_ASSERT(current != 0);
+  BOOST_ASSERT(current != nullptr);
   int const* p = current->find_var(x.lhs.name);
   if (p != 0) {
     error_handler(x.lhs.id, "Duplicate variable: " + x.lhs.name);
@@ -356,12 +354,12 @@ bool compiler::operator()(ast::VariableDeclaration const& x) {
 }
 
 bool compiler::operator()(ast::statement const& x) {
-  BOOST_ASSERT(current != 0);
+  BOOST_ASSERT(current != nullptr);
   return boost::apply_visitor(*this, x);
 }
 
 bool compiler::operator()(ast::StatementList const& x) {
-  BOOST_ASSERT(current != 0);
+  BOOST_ASSERT(current != nullptr);
   BOOST_FOREACH (ast::statement const& s, x) {
     if (!(*this)(s)) return false;
   }
@@ -369,12 +367,13 @@ bool compiler::operator()(ast::StatementList const& x) {
 }
 
 bool compiler::operator()(ast::IfStatement const& x) {
-  BOOST_ASSERT(current != 0);
+  BOOST_ASSERT(current != nullptr);
   if (!(*this)(x.condition)) return false;
   current->op(op_jump_if, 0);              // we shall fill this (0) in later
   std::size_t skip = current->size() - 1;  // mark its position
   if (!(*this)(x.then)) return false;
-  (*current)[skip] = current->size() - skip;  // now we know where to jump to (after the if branch)
+  // now we know where to jump to (after the if branch)
+  (*current)[skip] = current->size() - static_cast<size_t>(skip);
 
   if (x.else_)  // We got an else
   {
@@ -382,14 +381,15 @@ bool compiler::operator()(ast::IfStatement const& x) {
     current->op(op_jump, 0);                 // we shall fill this (0) in later
     std::size_t exit = current->size() - 1;  // mark its position
     if (!(*this)(*x.else_)) return false;
-    (*current)[exit] = current->size() - exit;  // now we know where to jump to (after the else branch)
+    // now we know where to jump to (after the else branch)
+    (*current)[exit] = current->size() - static_cast<size_t>(exit);
   }
 
   return true;
 }
 
 bool compiler::operator()(ast::WhileStatement const& x) {
-  BOOST_ASSERT(current != 0);
+  BOOST_ASSERT(current != nullptr);
   std::size_t loop = current->size();  // mark our position
   if (!(*this)(x.condition)) return false;
   current->op(op_jump_if, 0);              // we shall fill this (0) in later
@@ -397,7 +397,9 @@ bool compiler::operator()(ast::WhileStatement const& x) {
   if (!(*this)(x.body)) return false;
   current->op(op_jump,
               int(loop - 1) - int(current->size()));  // loop back
-  (*current)[exit] = current->size() - exit;          // now we know where to jump to (to exit the loop)
+
+  // now we know where to jump to (to exit the loop)
+  (*current)[exit] = current->size() - static_cast<size_t>(exit);
   return true;
 }
 
@@ -469,8 +471,7 @@ bool compiler::operator()(ast::function_list const& x) {
 }
 
 void compiler::print_assembler() const {
-  typedef std::pair<std::string, boost::shared_ptr<code_gen::function>> pair;
-  BOOST_FOREACH (pair const& p, functions) {
+  for (auto const& p : functions) {
     std::cout << ";;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;" << std::endl;
     std::cout << p.second->get_address() << ": function " << p.first << std::endl;
     p.second->print_assembler();
@@ -478,11 +479,11 @@ void compiler::print_assembler() const {
 }
 
 boost::shared_ptr<code_gen::function> compiler::find_function(std::string const& name) const {
-  function_table::const_iterator i = functions.find(name);
-  if (i == functions.end())
+  if (auto const i = functions.find(name); i == functions.end()) {
     return boost::shared_ptr<code_gen::function>();
-  else
+  } else {
     return i->second;
+  }
 }
 }  // namespace code_gen
 }  // namespace client

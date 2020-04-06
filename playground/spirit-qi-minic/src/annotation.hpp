@@ -24,14 +24,14 @@ template <typename Iterator>
 struct annotation {
   template <typename, typename>
   struct result {
-    typedef void type;
+    using type = void;
   };
 
   std::vector<Iterator>& iters;
   annotation(std::vector<Iterator>& iters) : iters(iters) {}
 
   struct set_id {
-    typedef void result_type;
+    using result_type = void;
 
     int id;
     set_id(int id) : id(id) {}
@@ -41,7 +41,7 @@ struct annotation {
     void operator()(ast::Identifier& x) const { x.id = id; }
 
     template <typename T>
-    void operator()(T& x) const {
+    void operator()(T&) const {
       // no-op
     }
   };

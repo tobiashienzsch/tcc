@@ -31,7 +31,7 @@ class AstPrinter {
   bool operator()(ast::IfStatement const& x);
   bool operator()(ast::WhileStatement const& x);
   bool operator()(ast::ReturnStatement const& x);
-  bool operator()(ast::CompoundStatement const& x) { return false; }
+  bool operator()(ast::CompoundStatement const&) { return false; }
 
  private:
   auto printIndentation() const -> void {
@@ -43,6 +43,6 @@ class AstPrinter {
  private:
   std::vector<int> _stack = {};
   int _identationLevel = 0;
-  error_handler_type error_handler;
+  error_handler_type error_handler{};
 };
 }  // namespace tcc::parser

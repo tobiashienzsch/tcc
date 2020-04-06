@@ -10,7 +10,7 @@ auto AstPrinter::operator()(uint64_t x) -> bool {
   return true;
 }
 
-auto AstPrinter::operator()(bool x) -> bool {
+auto AstPrinter::operator()(bool) -> bool {
   //
   return true;
 }

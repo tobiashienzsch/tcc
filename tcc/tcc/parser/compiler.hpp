@@ -68,13 +68,13 @@ struct compiler {
   bool operator()(ast::IfStatement const& x) const;
   bool operator()(ast::WhileStatement const& x) const;
   bool operator()(ast::ReturnStatement const& x) const;
-  bool operator()(ast::CompoundStatement const& x) const { return false; }
+  bool operator()(ast::CompoundStatement const&) const { return false; }
 
   bool start(ast::StatementList const& x) const;
 
   tcc::code_gen::program& program;
   tcc::IntermediateRepresentation& m_builder;
-  error_handler_type error_handler;
+  error_handler_type error_handler = {};
 };
 }  // namespace code_gen
 }  // namespace tcc

@@ -10,7 +10,7 @@ auto AssemblyGenerator::Build(tcc::StatementScope const& scope) -> std::vector<i
   auto result = std::vector<int64_t>{};
 
   auto const& statements = scope.statements;
-  auto const numLocals = scope.variables.size();
+  // auto const numLocals = scope.variables.size();
 
   auto localVars = std::vector<std::string>{};
   for (auto const& var : scope.variables) {

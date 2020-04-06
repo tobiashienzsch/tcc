@@ -56,10 +56,10 @@ struct function {
 //  The Compiler
 ///////////////////////////////////////////////////////////////////////////
 struct compiler {
-  typedef bool result_type;
+  using result_type = bool;
 
   template <typename ErrorHandler>
-  compiler(ErrorHandler& error_handler_) : current(0) {
+  compiler(ErrorHandler& error_handler_) {
     using namespace boost::phoenix::arg_names;
     namespace phx = boost::phoenix;
     using boost::phoenix::function;
@@ -68,7 +68,7 @@ struct compiler {
   }
 
   bool operator()(ast::Nil) {
-    BOOST_ASSERT(0);
+    assert(false);
     return false;
   }
   bool operator()(unsigned int x);
@@ -96,13 +96,13 @@ struct compiler {
   std::vector<int> const& get_code() const { return code; }
 
  private:
-  typedef std::map<std::string, boost::shared_ptr<code_gen::function>> function_table;
+  using function_table = std::map<std::string, boost::shared_ptr<code_gen::function>>;
 
-  std::vector<int> code;
-  code_gen::function* current;
-  std::string current_function_name;
-  function_table functions;
-  bool void_return;
+  std::vector<int> code{};
+  code_gen::function* current{};
+  std::string current_function_name{};
+  function_table functions{};
+  bool void_return{};
 
   boost::function<void(int tag, std::string const& what)> error_handler;
 };

@@ -18,8 +18,6 @@ set(tcc_lib_source
 
     tcc/parser/annotation.hpp
     tcc/parser/ast.hpp
-    tcc/parser/compiler.cpp
-    tcc/parser/compiler.hpp
     tcc/parser/error_handler.hpp
     tcc/parser/expression.cpp
     tcc/parser/expression_def.hpp

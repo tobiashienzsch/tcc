@@ -5,6 +5,8 @@ set(tcc_lib_source
     tcc/asm/assembly_generator.cpp
     tcc/asm/assembly_generator.hpp
 
+    tcc/cmd/program_options.hpp
+
     tcc/optimizer/optimizer.cpp
     tcc/optimizer/optimizer.hpp
 

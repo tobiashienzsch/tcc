@@ -162,7 +162,7 @@ void function::print_assembler() const {
         int nargs = *pc++;
         std::size_t jump = *pc++;
         line += boost::lexical_cast<std::string>(nargs) + ", ";
-        BOOST_ASSERT(functionCalls.find(jump) != functionCalls.end());
+        assert(functionCalls.find(jump) != functionCalls.end());
         line += functionCalls.find(jump)->second;
       } break;
 
@@ -189,19 +189,19 @@ void function::print_assembler() const {
 }
 
 bool compiler::operator()(unsigned int x) {
-  BOOST_ASSERT(current != nullptr);
+  assert(current != nullptr);
   current->op(op_int, static_cast<int>(x));
   return true;
 }
 
 bool compiler::operator()(bool x) {
-  BOOST_ASSERT(current != nullptr);
+  assert(current != nullptr);
   current->op(x ? op_true : op_false);
   return true;
 }
 
 bool compiler::operator()(ast::Identifier const& x) {
-  BOOST_ASSERT(current != nullptr);
+  assert(current != nullptr);
   int const* p = current->find_var(x.name);
   if (p == nullptr) {
     errorHandler_(x.id, "Undeclared variable: " + x.name);
@@ -212,7 +212,7 @@ bool compiler::operator()(ast::Identifier const& x) {
 }
 
 bool compiler::operator()(ast::operation const& x) {
-  BOOST_ASSERT(current != nullptr);
+  assert(current != nullptr);
   if (!boost::apply_visitor(*this, x.operand_)) return false;
   switch (x.operator_) {
     case ast::OpToken::Plus:
@@ -261,7 +261,7 @@ bool compiler::operator()(ast::operation const& x) {
 }
 
 bool compiler::operator()(ast::Unary const& x) {
-  BOOST_ASSERT(current != nullptr);
+  assert(current != nullptr);
   if (!boost::apply_visitor(*this, x.operand_)) return false;
   switch (x.operator_) {
     case ast::OpToken::Negative:
@@ -280,7 +280,7 @@ bool compiler::operator()(ast::Unary const& x) {
 }
 
 bool compiler::operator()(ast::FunctionCall const& x) {
-  BOOST_ASSERT(current != nullptr);
+  assert(current != nullptr);
 
   if (functions.find(x.function_name.name) == functions.end()) {
     errorHandler_(x.function_name.id, "Function not found: " + x.function_name.name);
@@ -294,7 +294,7 @@ bool compiler::operator()(ast::FunctionCall const& x) {
     return false;
   }
 
-  BOOST_FOREACH (ast::Expression const& expr, x.args) {
+  for (ast::Expression const& expr : x.args) {
     if (!(*this)(expr)) return false;
   }
 
@@ -305,16 +305,16 @@ bool compiler::operator()(ast::FunctionCall const& x) {
 }
 
 bool compiler::operator()(ast::Expression const& x) {
-  BOOST_ASSERT(current != nullptr);
+  assert(current != nullptr);
   if (!boost::apply_visitor(*this, x.first)) return false;
-  BOOST_FOREACH (ast::operation const& oper, x.rest) {
+  for (ast::operation const& oper : x.rest) {
     if (!(*this)(oper)) return false;
   }
   return true;
 }
 
 bool compiler::operator()(ast::Assignment const& x) {
-  BOOST_ASSERT(current != nullptr);
+  assert(current != nullptr);
   if (!(*this)(x.rhs)) return false;
   int const* p = current->find_var(x.lhs.name);
   if (p == nullptr) {
@@ -326,7 +326,7 @@ bool compiler::operator()(ast::Assignment const& x) {
 }
 
 bool compiler::operator()(ast::VariableDeclaration const& x) {
-  BOOST_ASSERT(current != nullptr);
+  assert(current != nullptr);
   int const* p = current->find_var(x.lhs.name);
   if (p != 0) {
     errorHandler_(x.lhs.id, "Duplicate variable: " + x.lhs.name);
@@ -348,12 +348,12 @@ bool compiler::operator()(ast::VariableDeclaration const& x) {
 }
 
 bool compiler::operator()(ast::Statement const& x) {
-  BOOST_ASSERT(current != nullptr);
+  assert(current != nullptr);
   return boost::apply_visitor(*this, x);
 }
 
 bool compiler::operator()(ast::StatementList const& x) {
-  BOOST_ASSERT(current != nullptr);
+  assert(current != nullptr);
   for (auto const& s : x) {
     if (!(*this)(s)) return false;
   }
@@ -361,7 +361,7 @@ bool compiler::operator()(ast::StatementList const& x) {
 }
 
 bool compiler::operator()(ast::IfStatement const& x) {
-  BOOST_ASSERT(current != nullptr);
+  assert(current != nullptr);
   if (!(*this)(x.condition)) return false;
   current->op(op_jump_if, 0);              // we shall fill this (0) in later
   std::size_t skip = current->size() - 1;  // mark its position
@@ -383,7 +383,7 @@ bool compiler::operator()(ast::IfStatement const& x) {
 }
 
 bool compiler::operator()(ast::WhileStatement const& x) {
-  BOOST_ASSERT(current != nullptr);
+  assert(current != nullptr);
   std::size_t loop = current->size();  // mark our position
   if (!(*this)(x.condition)) return false;
   current->op(op_jump_if, 0);              // we shall fill this (0) in later
@@ -431,7 +431,9 @@ bool compiler::operator()(ast::function const& x) {
   // op_stk_adj 0 for now. we'll know how many variables
   // we'll have later and add them
   current->op(op_stk_adj, 0);
-  BOOST_FOREACH (ast::Identifier const& arg, x.args) { current->add_var(arg.name); }
+  for (ast::Identifier const& arg : x.args) {
+    current->add_var(arg.name);
+  }
 
   if (!(*this)(x.body)) return false;
   (*current)[1] = current->nvars();  // now store the actual number of variables
@@ -445,7 +447,7 @@ bool compiler::operator()(ast::FunctionList const& x) {
   code.push_back(0);  // we will fill this in later when we finish compiling
                       // and we know where the main function is
 
-  BOOST_FOREACH (ast::function const& f, x) {
+  for (ast::function const& f : x) {
     if (!(*this)(f)) {
       code.clear();
       return false;

@@ -10,5 +10,5 @@
 
 #include "function_def.hpp"
 
-typedef std::string::const_iterator iterator_type;
+using iterator_type = std::string::const_iterator;
 template struct client::parser::function<iterator_type>;

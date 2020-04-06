@@ -10,5 +10,5 @@
 
 #include "statement_def.hpp"
 
-typedef std::string::const_iterator iterator_type;
+using iterator_type = std::string::const_iterator;
 template struct client::parser::statement<iterator_type>;

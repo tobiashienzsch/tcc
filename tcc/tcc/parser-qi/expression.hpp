@@ -28,7 +28,7 @@
 #include "tcc/parser-qi/error_handler.hpp"
 #include "tcc/parser-qi/skipper.hpp"
 
-namespace client {
+namespace tcc {
 namespace parser {
 namespace qi = boost::spirit::qi;
 namespace ascii = boost::spirit::ascii;
@@ -57,6 +57,6 @@ struct Expression : qi::grammar<Iterator, ast::Expression(), Skipper<Iterator>> 
   qi::symbols<char> keywords;
 };
 }  // namespace parser
-}  // namespace client
+}  // namespace tcc
 
 #endif

@@ -12,7 +12,7 @@
 #include "tcc/parser-qi/ast.hpp"
 #include "tcc/parser-qi/error_handler.hpp"
 
-namespace client {
+namespace tcc {
 namespace code_gen {
 
 struct function {
@@ -96,6 +96,6 @@ struct Compiler {
   boost::function<void(int tag, std::string const& what)> errorHandler_;
 };
 }  // namespace code_gen
-}  // namespace client
+}  // namespace tcc
 
 #endif

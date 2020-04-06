@@ -2,7 +2,7 @@
 #include "tcc/parser-qi/error_handler.hpp"
 #include "tcc/parser-qi/function.hpp"
 
-namespace client {
+namespace tcc {
 namespace parser {
 template <typename Iterator>
 function<Iterator>::function(ErrorHandler<Iterator>& errorHandler) : function::base_type(start), body(errorHandler) {
@@ -23,8 +23,8 @@ function<Iterator>::function(ErrorHandler<Iterator>& errorHandler) : function::b
   using qi::on_error;
   using qi::on_success;
 
-  typedef function<client::ErrorHandler<Iterator>> ErrorHandlerFunction;
-  typedef function<client::annotation<Iterator>> AnnotateFunction;
+  typedef function<tcc::ErrorHandler<Iterator>> ErrorHandlerFunction;
+  typedef function<tcc::annotation<Iterator>> AnnotateFunction;
 
   name = !body.expr.keywords >> raw[lexeme[(alpha | '_') >> *(alnum | '_')]];
 
@@ -44,4 +44,4 @@ function<Iterator>::function(ErrorHandler<Iterator>& errorHandler) : function::b
   on_success(Identifier, AnnotateFunction(errorHandler.iters)(_val, _1));
 }
 }  // namespace parser
-}  // namespace client
+}  // namespace tcc

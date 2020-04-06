@@ -9,7 +9,7 @@
 #include <list>
 #include <utility>
 
-namespace client {
+namespace tcc {
 namespace ast {
 
 /**
@@ -139,68 +139,68 @@ inline std::ostream& operator<<(std::ostream& out, Identifier const& id) {
   return out;
 }
 }  // namespace ast
-}  // namespace client
+}  // namespace tcc
 
-BOOST_FUSION_ADAPT_STRUCT(             //
-    client::ast::Unary,                //
-    (client::ast::OpToken, operator_)  //
-    (client::ast::Operand, operand)    //
-)
-
-BOOST_FUSION_ADAPT_STRUCT(             //
-    client::ast::Operation,            //
-    (client::ast::OpToken, operator_)  //
-    (client::ast::Operand, operand)    //
-)
-
-BOOST_FUSION_ADAPT_STRUCT(                      //
-    client::ast::FunctionCall,                  //
-    (client::ast::Identifier, function_name)    //
-    (std::list<client::ast::Expression>, args)  //
-)
-
-BOOST_FUSION_ADAPT_STRUCT(                     //
-    client::ast::Expression,                   //
-    (client::ast::Operand, first)              //
-    (std::list<client::ast::Operation>, rest)  //
-)
-
-BOOST_FUSION_ADAPT_STRUCT(                           //
-    client::ast::VariableDeclaration,                //
-    (client::ast::Identifier, lhs)                   //
-    (boost::optional<client::ast::Expression>, rhs)  //
+BOOST_FUSION_ADAPT_STRUCT(          //
+    tcc::ast::Unary,                //
+    (tcc::ast::OpToken, operator_)  //
+    (tcc::ast::Operand, operand)    //
 )
 
 BOOST_FUSION_ADAPT_STRUCT(          //
-    client::ast::Assignment,        //
-    (client::ast::Identifier, lhs)  //
-    (client::ast::Expression, rhs)  //
+    tcc::ast::Operation,            //
+    (tcc::ast::OpToken, operator_)  //
+    (tcc::ast::Operand, operand)    //
 )
 
-BOOST_FUSION_ADAPT_STRUCT(                            //
-    client::ast::IfStatement,                         //
-    (client::ast::Expression, condition)              //
-    (client::ast::Statement, then)                    //
-    (boost::optional<client::ast::Statement>, else_)  //
+BOOST_FUSION_ADAPT_STRUCT(                   //
+    tcc::ast::FunctionCall,                  //
+    (tcc::ast::Identifier, function_name)    //
+    (std::list<tcc::ast::Expression>, args)  //
 )
 
-BOOST_FUSION_ADAPT_STRUCT(                //
-    client::ast::WhileStatement,          //
-    (client::ast::Expression, condition)  //
-    (client::ast::Statement, body)        //
+BOOST_FUSION_ADAPT_STRUCT(                  //
+    tcc::ast::Expression,                   //
+    (tcc::ast::Operand, first)              //
+    (std::list<tcc::ast::Operation>, rest)  //
 )
 
-BOOST_FUSION_ADAPT_STRUCT(                            //
-    client::ast::ReturnStatement,                     //
-    (boost::optional<client::ast::Expression>, expr)  //
+BOOST_FUSION_ADAPT_STRUCT(                        //
+    tcc::ast::VariableDeclaration,                //
+    (tcc::ast::Identifier, lhs)                   //
+    (boost::optional<tcc::ast::Expression>, rhs)  //
 )
 
-BOOST_FUSION_ADAPT_STRUCT(                      //
-    client::ast::function,                      //
-    (std::string, return_type)                  //
-    (client::ast::Identifier, function_name)    //
-    (std::list<client::ast::Identifier>, args)  //
-    (client::ast::StatementList, body)          //
+BOOST_FUSION_ADAPT_STRUCT(       //
+    tcc::ast::Assignment,        //
+    (tcc::ast::Identifier, lhs)  //
+    (tcc::ast::Expression, rhs)  //
+)
+
+BOOST_FUSION_ADAPT_STRUCT(                         //
+    tcc::ast::IfStatement,                         //
+    (tcc::ast::Expression, condition)              //
+    (tcc::ast::Statement, then)                    //
+    (boost::optional<tcc::ast::Statement>, else_)  //
+)
+
+BOOST_FUSION_ADAPT_STRUCT(             //
+    tcc::ast::WhileStatement,          //
+    (tcc::ast::Expression, condition)  //
+    (tcc::ast::Statement, body)        //
+)
+
+BOOST_FUSION_ADAPT_STRUCT(                         //
+    tcc::ast::ReturnStatement,                     //
+    (boost::optional<tcc::ast::Expression>, expr)  //
+)
+
+BOOST_FUSION_ADAPT_STRUCT(                   //
+    tcc::ast::function,                      //
+    (std::string, return_type)               //
+    (tcc::ast::Identifier, function_name)    //
+    (std::list<tcc::ast::Identifier>, args)  //
+    (tcc::ast::StatementList, body)          //
 )
 
 #endif

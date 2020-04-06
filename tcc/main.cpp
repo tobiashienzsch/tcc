@@ -87,13 +87,13 @@ int main(int argc, char** argv) {
   IteratorType iter = source.begin();
   IteratorType end = source.end();
 
-  client::ErrorHandler<IteratorType> errorHandler(iter, end);       // Our error handler
-  client::parser::Statement<IteratorType> statement(errorHandler);  // Our parser
-  client::parser::Skipper<IteratorType> skipper;                    // Our skipper
-  client::ast::StatementList ast;                                   // Our AST
-  tcc::Program program{};                                           // Our VM program
-  tcc::IntermediateRepresentation irBuilder;                        // IR builder
-  tcc::IRGenerator irGenerator{program, irBuilder, errorHandler};   // IR Generator
+  tcc::ErrorHandler<IteratorType> errorHandler(iter, end);         // Our error handler
+  tcc::parser::Statement<IteratorType> statement(errorHandler);    // Our parser
+  tcc::parser::Skipper<IteratorType> skipper;                      // Our skipper
+  tcc::ast::StatementList ast;                                     // Our AST
+  tcc::Program program{};                                          // Our VM program
+  tcc::IntermediateRepresentation irBuilder;                       // IR builder
+  tcc::IRGenerator irGenerator{program, irBuilder, errorHandler};  // IR Generator
 
   bool success = phrase_parse(iter, end, statement, skipper, ast);
   if (!success || iter != end) {

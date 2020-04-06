@@ -4,7 +4,7 @@
 #include "tcc/parser-qi/error_handler.hpp"
 #include "tcc/parser-qi/expression.hpp"
 
-namespace client {
+namespace tcc {
 namespace parser {
 template <typename Iterator>
 Expression<Iterator>::Expression(ErrorHandler<Iterator>& errorHandler) : Expression::base_type(expr) {
@@ -27,8 +27,8 @@ Expression<Iterator>::Expression(ErrorHandler<Iterator>& errorHandler) : Express
   using qi::on_error;
   using qi::on_success;
 
-  typedef function<client::ErrorHandler<Iterator>> ErrorHandlerFunction;
-  typedef function<client::annotation<Iterator>> AnnotationFunction;
+  typedef function<tcc::ErrorHandler<Iterator>> ErrorHandlerFunction;
+  typedef function<tcc::annotation<Iterator>> AnnotationFunction;
 
   ///////////////////////////////////////////////////////////////////////
   // Tokens

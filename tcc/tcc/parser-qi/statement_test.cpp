@@ -11,7 +11,7 @@
 #include "tcc/parser-qi/skipper.hpp"
 
 TEST_CASE("tcc/parser-qi: StatementValid", "[tcc][parser][qi]") {
-  using namespace client;
+  using namespace tcc;
 
   auto testCase = GENERATE(as<std::string>{}, "int x = 0;", "x = y+z;");
 
@@ -30,7 +30,7 @@ TEST_CASE("tcc/parser-qi: StatementValid", "[tcc][parser][qi]") {
 }
 
 TEST_CASE("tcc/parser-qi: StatementInvalid", "[tcc][parser][qi]") {
-  using namespace client;
+  using namespace tcc;
 
   auto testCase = GENERATE(as<std::string>{}, "auto x = 0;", "= y+z;");
 
@@ -48,7 +48,7 @@ TEST_CASE("tcc/parser-qi: StatementInvalid", "[tcc][parser][qi]") {
   REQUIRE(success == false);
 }
 TEST_CASE("tcc/parser-qi: ReturnStatementValid", "[tcc][parser][qi]") {
-  using namespace client;
+  using namespace tcc;
 
   auto testCase = GENERATE(as<std::string>{}, "return;", "return x;", "return 1+2;");
 

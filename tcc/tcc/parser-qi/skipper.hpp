@@ -3,7 +3,7 @@
 
 #include <boost/spirit/include/qi.hpp>
 
-namespace client {
+namespace tcc {
 namespace parser {
 namespace qi = boost::spirit::qi;
 namespace ascii = boost::spirit::ascii;
@@ -25,6 +25,6 @@ struct Skipper : qi::grammar<Iterator> {
   qi::rule<Iterator> start;
 };
 }  // namespace parser
-}  // namespace client
+}  // namespace tcc
 
 #endif

@@ -5,7 +5,7 @@
 #include <string>
 #include <vector>
 
-namespace client {
+namespace tcc {
 
 template <typename Iterator>
 struct ErrorHandler {
@@ -66,6 +66,6 @@ struct ErrorHandler {
   Iterator last;
   std::vector<Iterator> iters;
 };
-}  // namespace client
+}  // namespace tcc
 
 #endif

@@ -56,21 +56,21 @@ struct IRGenerator {
 
   bool operator()(unsigned int x);
   bool operator()(bool x);
-  bool operator()(client::ast::Nil);
-  bool operator()(client::ast::Identifier const& x);
-  bool operator()(client::ast::Operation const& x);
-  bool operator()(client::ast::Unary const& x);
-  bool operator()(client::ast::FunctionCall const& x);
-  bool operator()(client::ast::Expression const& x);
-  bool operator()(client::ast::Assignment const& x);
-  bool operator()(client::ast::VariableDeclaration const& x);
-  bool operator()(client::ast::StatementList const& x);
-  bool operator()(client::ast::Statement const& x);
-  bool operator()(client::ast::IfStatement const& x);
-  bool operator()(client::ast::WhileStatement const& x);
-  bool operator()(client::ast::ReturnStatement const& x);
-  bool operator()(client::ast::function const& x);
-  bool operator()(client::ast::FunctionList const& x);
+  bool operator()(tcc::ast::Nil);
+  bool operator()(tcc::ast::Identifier const& x);
+  bool operator()(tcc::ast::Operation const& x);
+  bool operator()(tcc::ast::Unary const& x);
+  bool operator()(tcc::ast::FunctionCall const& x);
+  bool operator()(tcc::ast::Expression const& x);
+  bool operator()(tcc::ast::Assignment const& x);
+  bool operator()(tcc::ast::VariableDeclaration const& x);
+  bool operator()(tcc::ast::StatementList const& x);
+  bool operator()(tcc::ast::Statement const& x);
+  bool operator()(tcc::ast::IfStatement const& x);
+  bool operator()(tcc::ast::WhileStatement const& x);
+  bool operator()(tcc::ast::ReturnStatement const& x);
+  bool operator()(tcc::ast::function const& x);
+  bool operator()(tcc::ast::FunctionList const& x);
 
  private:
  private:

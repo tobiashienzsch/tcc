@@ -2,7 +2,7 @@
 #include "tcc/parser-qi/error_handler.hpp"
 #include "tcc/parser-qi/statement.hpp"
 
-namespace client {
+namespace tcc {
 namespace parser {
 template <typename Iterator>
 Statement<Iterator>::Statement(ErrorHandler<Iterator>& errorHandler)
@@ -24,8 +24,8 @@ Statement<Iterator>::Statement(ErrorHandler<Iterator>& errorHandler)
   using qi::on_error;
   using qi::on_success;
 
-  using ErrorHandlerFunction = function<client::ErrorHandler<Iterator>>;
-  using AnnotateFunction = function<client::annotation<Iterator>>;
+  using ErrorHandlerFunction = function<tcc::ErrorHandler<Iterator>>;
+  using AnnotateFunction = function<tcc::annotation<Iterator>>;
 
   // clang-format off
     StatementList =
@@ -105,4 +105,4 @@ Statement<Iterator>::Statement(ErrorHandler<Iterator>& errorHandler)
   on_success(ReturnStatement, AnnotateFunction(errorHandler.iters)(_val, _1));
 }
 }  // namespace parser
-}  // namespace client
+}  // namespace tcc

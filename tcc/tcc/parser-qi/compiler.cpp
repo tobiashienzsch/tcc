@@ -7,9 +7,9 @@
 #include <cassert>
 #include <set>
 
-#include "tcc/parser-qi/vm.hpp"
+#include "tcc/vm.hpp"
 
-namespace client {
+namespace tcc {
 namespace code_gen {
 void function::op(int a) {
   code.push_back(a);
@@ -483,4 +483,4 @@ boost::shared_ptr<code_gen::function> Compiler::find_function(std::string const&
   }
 }
 }  // namespace code_gen
-}  // namespace client
+}  // namespace tcc

@@ -3,7 +3,7 @@
 
 #include "tcc/parser-qi/expression.hpp"
 
-namespace client {
+namespace tcc {
 namespace parser {
 ///////////////////////////////////////////////////////////////////////////////
 //  The statement grammar
@@ -24,6 +24,6 @@ struct Statement : qi::grammar<Iterator, ast::StatementList(), Skipper<Iterator>
   qi::rule<Iterator, std::string(), Skipper<Iterator>> Identifier;
 };
 }  // namespace parser
-}  // namespace client
+}  // namespace tcc
 
 #endif

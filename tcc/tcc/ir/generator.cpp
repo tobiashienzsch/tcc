@@ -28,7 +28,7 @@ auto Program::print_variables(std::vector<int> const& stack) const -> void {
     std::cout << "    " << p.first << ": " << stack[p.second] << std::endl;
   }
 }
-bool IRGenerator::operator()(client::ast::Nil) {
+bool IRGenerator::operator()(tcc::ast::Nil) {
   assert(false);
   return false;
 }
@@ -42,7 +42,7 @@ bool IRGenerator::operator()(bool x) {
   program_.op(x ? op_true : op_false);
   return true;
 }
-bool IRGenerator::operator()(client::ast::Identifier const& x) {
+bool IRGenerator::operator()(tcc::ast::Identifier const& x) {
   int const* p = program_.find_var(x.name);
   if (p == nullptr) {
     errorHandler_(x.id, "Undeclared variable: " + x.name);
@@ -54,67 +54,67 @@ bool IRGenerator::operator()(client::ast::Identifier const& x) {
   return true;
 }
 
-bool IRGenerator::operator()(client::ast::Operation const& x) {
+bool IRGenerator::operator()(tcc::ast::Operation const& x) {
   if (!boost::apply_visitor(*this, x.operand)) return false;
   switch (x.operator_) {
-    case client::ast::OpToken::Plus: {
+    case tcc::ast::OpToken::Plus: {
       program_.op(op_add);
       builder_.CreateBinaryOperation(op_add);
       break;
     }
-    case client::ast::OpToken::Minus: {
+    case tcc::ast::OpToken::Minus: {
       program_.op(op_sub);
       builder_.CreateBinaryOperation(op_sub);
       break;
     }
-    case client::ast::OpToken::Times: {
+    case tcc::ast::OpToken::Times: {
       program_.op(op_mul);
       builder_.CreateBinaryOperation(op_mul);
       break;
     }
-    case client::ast::OpToken::Divide: {
+    case tcc::ast::OpToken::Divide: {
       program_.op(op_div);
       builder_.CreateBinaryOperation(op_div);
       break;
     }
 
-    case client::ast::OpToken::Equal: {
+    case tcc::ast::OpToken::Equal: {
       program_.op(op_eq);
       builder_.CreateBinaryOperation(op_eq);
       break;
     }
-    case client::ast::OpToken::NotEqual: {
+    case tcc::ast::OpToken::NotEqual: {
       program_.op(op_neq);
       builder_.CreateBinaryOperation(op_neq);
       break;
     }
-    case client::ast::OpToken::Less: {
+    case tcc::ast::OpToken::Less: {
       program_.op(op_lt);
       builder_.CreateBinaryOperation(op_lt);
       break;
     }
-    case client::ast::OpToken::LessEqual: {
+    case tcc::ast::OpToken::LessEqual: {
       program_.op(op_lte);
       builder_.CreateBinaryOperation(op_lte);
       break;
     }
-    case client::ast::OpToken::Greater: {
+    case tcc::ast::OpToken::Greater: {
       program_.op(op_gt);
       builder_.CreateBinaryOperation(op_gt);
       break;
     }
-    case client::ast::OpToken::GreaterEqual: {
+    case tcc::ast::OpToken::GreaterEqual: {
       program_.op(op_gte);
       builder_.CreateBinaryOperation(op_gte);
       break;
     }
 
-    case client::ast::OpToken::And: {
+    case tcc::ast::OpToken::And: {
       program_.op(op_and);
       builder_.CreateBinaryOperation(op_and);
       break;
     }
-    case client::ast::OpToken::Or: {
+    case tcc::ast::OpToken::Or: {
       program_.op(op_or);
       builder_.CreateBinaryOperation(op_or);
       break;
@@ -124,18 +124,18 @@ bool IRGenerator::operator()(client::ast::Operation const& x) {
   }
   return true;
 }
-bool IRGenerator::operator()(client::ast::Unary const& x) {
+bool IRGenerator::operator()(tcc::ast::Unary const& x) {
   if (!boost::apply_visitor(*this, x.operand)) return false;
   switch (x.operator_) {
-    case client::ast::OpToken::Positive:
+    case tcc::ast::OpToken::Positive:
       break;
 
-    case client::ast::OpToken::Negative: {
+    case tcc::ast::OpToken::Negative: {
       program_.op(op_neg);
       builder_.CreateUnaryOperation(op_neg);
       break;
     }
-    case client::ast::OpToken::Not: {
+    case tcc::ast::OpToken::Not: {
       program_.op(op_not);
       builder_.CreateUnaryOperation(op_not);
       break;
@@ -146,15 +146,15 @@ bool IRGenerator::operator()(client::ast::Unary const& x) {
   }
   return true;
 }
-bool IRGenerator::operator()(client::ast::FunctionCall const& x) { return true; }
-bool IRGenerator::operator()(client::ast::Expression const& x) {
+bool IRGenerator::operator()(tcc::ast::FunctionCall const& x) { return true; }
+bool IRGenerator::operator()(tcc::ast::Expression const& x) {
   if (!boost::apply_visitor(*this, x.first)) return false;
-  for (client::ast::Operation const& oper : x.rest) {
+  for (tcc::ast::Operation const& oper : x.rest) {
     if (!(*this)(oper)) return false;
   }
   return true;
 }
-bool IRGenerator::operator()(client::ast::Assignment const& x) {
+bool IRGenerator::operator()(tcc::ast::Assignment const& x) {
   if (!(*this)(x.rhs)) return false;
   int const* p = program_.find_var(x.lhs.name);
   if (p == nullptr) {
@@ -167,7 +167,7 @@ bool IRGenerator::operator()(client::ast::Assignment const& x) {
   return true;
 }
 
-bool IRGenerator::operator()(client::ast::VariableDeclaration const& x) {
+bool IRGenerator::operator()(tcc::ast::VariableDeclaration const& x) {
   int const* p = program_.find_var(x.lhs.name);
   if (p != nullptr) {
     errorHandler_(x.lhs.id, "Duplicate variable: " + x.lhs.name);
@@ -184,14 +184,14 @@ bool IRGenerator::operator()(client::ast::VariableDeclaration const& x) {
   }
   return r;
 }
-bool IRGenerator::operator()(client::ast::Statement const& x) { return boost::apply_visitor(*this, x); }
-bool IRGenerator::operator()(client::ast::StatementList const& x) {
+bool IRGenerator::operator()(tcc::ast::Statement const& x) { return boost::apply_visitor(*this, x); }
+bool IRGenerator::operator()(tcc::ast::StatementList const& x) {
   for (auto const& s : x) {
     if (!(*this)(s)) return false;
   }
   return true;
 }
-bool IRGenerator::operator()(client::ast::IfStatement const& x) {
+bool IRGenerator::operator()(tcc::ast::IfStatement const& x) {
   if (!(*this)(x.condition)) return false;
   program_.op(op_jump_if, 0);              // we shall fill this (0) in later
   std::size_t skip = program_.size() - 1;  // mark its position
@@ -209,7 +209,7 @@ bool IRGenerator::operator()(client::ast::IfStatement const& x) {
 
   return true;
 }
-bool IRGenerator::operator()(client::ast::WhileStatement const& x) {
+bool IRGenerator::operator()(tcc::ast::WhileStatement const& x) {
   std::size_t loop = program_.size();  // mark our position
   if (!(*this)(x.condition)) return false;
   program_.op(op_jump_if, 0);              // we shall fill this (0) in later
@@ -220,12 +220,12 @@ bool IRGenerator::operator()(client::ast::WhileStatement const& x) {
   program_[exit] = int(program_.size() - exit);       // now we know where to jump to (to exit the loop)
   return true;
 }
-bool IRGenerator::operator()(client::ast::ReturnStatement const& x) {
+bool IRGenerator::operator()(tcc::ast::ReturnStatement const& x) {
   if (!(*this)(*x.expr)) return false;
   builder_.CreateReturnOperation();
   return true;
 }
-bool IRGenerator::operator()(client::ast::function const& x) { return true; }
-bool IRGenerator::operator()(client::ast::FunctionList const& x) { return true; }
+bool IRGenerator::operator()(tcc::ast::function const& x) { return true; }
+bool IRGenerator::operator()(tcc::ast::FunctionList const& x) { return true; }
 
 }  // namespace tcc

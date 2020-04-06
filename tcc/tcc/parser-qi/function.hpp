@@ -3,7 +3,7 @@
 
 #include "tcc/parser-qi/statement.hpp"
 
-namespace client {
+namespace tcc {
 namespace parser {
 
 template <typename Iterator>
@@ -17,6 +17,6 @@ struct function : qi::grammar<Iterator, ast::function(), Skipper<Iterator>> {
   qi::rule<Iterator, ast::function(), Skipper<Iterator>> start;
 };
 }  // namespace parser
-}  // namespace client
+}  // namespace tcc
 
 #endif

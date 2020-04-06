@@ -5,4 +5,4 @@
 #include "tcc/parser-qi/function_def.hpp"
 
 using iterator_type = std::string::const_iterator;
-template struct client::parser::function<iterator_type>;
+template struct tcc::parser::function<iterator_type>;

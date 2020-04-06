@@ -8,7 +8,7 @@
 
 #include "tcc/parser-qi/ast.hpp"
 
-namespace client {
+namespace tcc {
 
 /**
  *  The annotation handler links the AST to a map of iterator positions
@@ -71,6 +71,6 @@ struct annotation {
     ast.id = id;
   }
 };
-}  // namespace client
+}  // namespace tcc
 
 #endif

@@ -30,8 +30,6 @@ set(tcc_lib_source
     tcc/parser-qi/statement.cpp
     tcc/parser-qi/statement_def.hpp
     tcc/parser-qi/statement.hpp
-    tcc/parser-qi/vm.cpp
-    tcc/parser-qi/vm.hpp
 
     tcc/vm.cpp
     tcc/vm.hpp    

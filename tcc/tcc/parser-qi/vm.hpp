@@ -1,5 +1,5 @@
-#if !defined(BOOST_SPIRIT_MINIC_VM_HPP)
-#define BOOST_SPIRIT_MINIC_VM_HPP
+#if !defined(TCC_PARSER_QI_VM_HPP)
+#define TCC_PARSER_QI_VM_HPP
 
 #include <vector>
 

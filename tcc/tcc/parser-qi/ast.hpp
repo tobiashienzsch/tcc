@@ -1,5 +1,5 @@
-#if !defined(BOOST_SPIRIT_MINIC_AST_HPP)
-#define BOOST_SPIRIT_MINIC_AST_HPP
+#if !defined(TCC_PARSER_QI_AST_HPP)
+#define TCC_PARSER_QI_AST_HPP
 
 #include <boost/config/warning_disable.hpp>
 #include <boost/fusion/include/adapt_struct.hpp>

@@ -1,5 +1,5 @@
-#if !defined(BOOST_SPIRIT_MINIC_SKIPPER_HPP)
-#define BOOST_SPIRIT_MINIC_SKIPPER_HPP
+#if !defined(TCC_PARSER_QI_SKIPPER_HPP)
+#define TCC_PARSER_QI_SKIPPER_HPP
 
 #include <boost/spirit/include/qi.hpp>
 

@@ -1,5 +1,5 @@
-#if !defined(BOOST_SPIRIT_MINIC_ANNOTATION_HPP)
-#define BOOST_SPIRIT_MINIC_ANNOTATION_HPP
+#if !defined(TCC_PARSER_QI_ANNOTATION_HPP)
+#define TCC_PARSER_QI_ANNOTATION_HPP
 
 #include <boost/mpl/bool.hpp>
 #include <boost/type_traits/is_base_of.hpp>

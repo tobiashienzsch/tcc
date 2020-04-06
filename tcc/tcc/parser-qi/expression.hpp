@@ -4,8 +4,8 @@
     Distributed under the Boost Software License, Version 1.0. (See accompanying
     file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 =============================================================================*/
-#if !defined(BOOST_SPIRIT_MINIC_EXPRESSION_HPP)
-#define BOOST_SPIRIT_MINIC_EXPRESSION_HPP
+#if !defined(TCC_PARSER_QI_EXPRESSION_HPP)
+#define TCC_PARSER_QI_EXPRESSION_HPP
 
 ///////////////////////////////////////////////////////////////////////////////
 // Spirit v2.5 allows you to suppress automatic generation

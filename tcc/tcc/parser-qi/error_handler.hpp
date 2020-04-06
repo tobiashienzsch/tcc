@@ -1,5 +1,5 @@
-#if !defined(BOOST_SPIRIT_MINIC_ERROR_HANDLER_HPP)
-#define BOOST_SPIRIT_MINIC_ERROR_HANDLER_HPP
+#if !defined(TCC_PARSER_QI_ERROR_HANDLER_HPP)
+#define TCC_PARSER_QI_ERROR_HANDLER_HPP
 
 #include <iostream>
 #include <string>

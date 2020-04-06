@@ -1,5 +1,5 @@
-#if !defined(BOOST_SPIRIT_MINIC_FUNCTION_HPP)
-#define BOOST_SPIRIT_MINIC_FUNCTION_HPP
+#if !defined(TCC_PARSER_QI_FUNCTION_HPP)
+#define TCC_PARSER_QI_FUNCTION_HPP
 
 #include "tcc/parser-qi/statement.hpp"
 

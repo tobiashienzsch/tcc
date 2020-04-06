@@ -1,5 +1,5 @@
-#if !defined(BOOST_SPIRIT_MINIC_COMPILER_HPP)
-#define BOOST_SPIRIT_MINIC_COMPILER_HPP
+#if !defined(TCC_PARSER_QI_COMPILER_HPP)
+#define TCC_PARSER_QI_COMPILER_HPP
 
 #include <boost/function.hpp>
 #include <boost/shared_ptr.hpp>

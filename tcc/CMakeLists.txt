@@ -57,12 +57,11 @@ target_link_libraries(tcc_lib
         tcc::CompilerOptions
         tcc::CompilerWarnings
         tcc::CodeCoverage
-
 )
 
 # exe
 set(tcc_source 
-    main_neo.cpp
+    main.cpp
 )
 source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} FILES ${tcc_source})
 add_executable(${PROJECT_NAME} ${tcc_source})

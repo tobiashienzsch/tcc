@@ -4,41 +4,41 @@
     Distributed under the Boost Software License, Version 1.0. (See accompanying
     file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 =============================================================================*/
-#include "expression.hpp"
-#include "error_handler.hpp"
-#include "annotation.hpp"
 #include <boost/spirit/include/phoenix_function.hpp>
 
-namespace client { namespace parser
-{
-    template <typename Iterator>
-    expression<Iterator>::expression(error_handler<Iterator>& error_handler)
-      : expression::base_type(expr)
-    {
-        qi::_1_type _1;
-        qi::_2_type _2;
-        qi::_3_type _3;
-        qi::_4_type _4;
+#include "annotation.hpp"
+#include "error_handler.hpp"
+#include "expression.hpp"
 
-        qi::char_type char_;
-        qi::uint_type uint_;
-        qi::_val_type _val;
-        qi::raw_type raw;
-        qi::lexeme_type lexeme;
-        qi::alpha_type alpha;
-        qi::alnum_type alnum;
-        qi::bool_type bool_;
+namespace client {
+namespace parser {
+template <typename Iterator>
+expression<Iterator>::expression(error_handler<Iterator>& error_handler) : expression::base_type(expr) {
+  qi::_1_type _1;
+  qi::_2_type _2;
+  qi::_3_type _3;
+  qi::_4_type _4;
 
-        using qi::on_error;
-        using qi::on_success;
-        using qi::fail;
-        using boost::phoenix::function;
+  qi::char_type char_;
+  qi::uint_type uint_;
+  qi::_val_type _val;
+  qi::raw_type raw;
+  qi::lexeme_type lexeme;
+  qi::alpha_type alpha;
+  qi::alnum_type alnum;
+  qi::bool_type bool_;
 
-        typedef function<client::error_handler<Iterator> > error_handler_function;
-        typedef function<client::annotation<Iterator> > annotation_function;
+  using boost::phoenix::function;
+  using qi::fail;
+  using qi::on_error;
+  using qi::on_success;
 
-        ///////////////////////////////////////////////////////////////////////
-        // Tokens
+  typedef function<client::error_handler<Iterator>> error_handler_function;
+  typedef function<client::annotation<Iterator>> annotation_function;
+
+  ///////////////////////////////////////////////////////////////////////
+  // Tokens
+  // clang-format off
         logical_or_op.add
             ("||", ast::op_or)
             ;
@@ -69,7 +69,7 @@ namespace client { namespace parser
             ("/", ast::op_divide)
             ;
 
-        unary_op.add
+        UnaryOp.add
             ("+", ast::op_positive)
             ("-", ast::op_negative)
             ("!", ast::op_not)
@@ -118,32 +118,32 @@ namespace client { namespace parser
             ;
 
         multiplicative_expr =
-                unary_expr
-            >> *(multiplicative_op > unary_expr)
+                UnaryExpr
+            >> *(multiplicative_op > UnaryExpr)
             ;
 
-        unary_expr =
+        UnaryExpr =
                 primary_expr
-            |   (unary_op > unary_expr)
+            |   (UnaryOp > UnaryExpr)
             ;
 
         primary_expr =
                 uint_
-            |   function_call
-            |   identifier
+            |   FunctionCall
+            |   Identifier
             |   bool_
             |   '(' > expr > ')'
             ;
 
-        function_call =
-                (identifier >> '(')
+        FunctionCall =
+                (Identifier >> '(')
             >   argument_list
             >   ')'
             ;
 
         argument_list = -(expr % ',');
 
-        identifier =
+        Identifier =
                 !lexeme[keywords >> !(alnum | '_')]
             >>  raw[lexeme[(alpha | '_') >> *(alnum | '_')]]
             ;
@@ -158,11 +158,11 @@ namespace client { namespace parser
             (relational_expr)
             (additive_expr)
             (multiplicative_expr)
-            (unary_expr)
+            (UnaryExpr)
             (primary_expr)
-            (function_call)
+            (FunctionCall)
             (argument_list)
-            (identifier)
+            (Identifier)
         );
 
         ///////////////////////////////////////////////////////////////////////
@@ -175,6 +175,9 @@ namespace client { namespace parser
         // Annotation: on success in primary_expr, call annotation.
         on_success(primary_expr,
             annotation_function(error_handler.iters)(_val, _1));
+
+        // clang-format off
+
     }
 }}
 

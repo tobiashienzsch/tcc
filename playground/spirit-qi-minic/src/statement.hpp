@@ -9,30 +9,27 @@
 
 #include "expression.hpp"
 
-namespace client { namespace parser
-{
-    ///////////////////////////////////////////////////////////////////////////////
-    //  The statement grammar
-    ///////////////////////////////////////////////////////////////////////////////
-    template <typename Iterator>
-    struct statement : qi::grammar<Iterator, ast::statement_list(), skipper<Iterator> >
-    {
-        statement(error_handler<Iterator>& error_handler);
+namespace client {
+namespace parser {
+///////////////////////////////////////////////////////////////////////////////
+//  The statement grammar
+///////////////////////////////////////////////////////////////////////////////
+template <typename Iterator>
+struct statement : qi::grammar<Iterator, ast::StatementList(), skipper<Iterator>> {
+  statement(error_handler<Iterator>& error_handler);
 
-        expression<Iterator> expr;
-        qi::rule<Iterator, ast::statement_list(), skipper<Iterator> >
-            statement_list, compound_statement;
+  expression<Iterator> expr;
+  qi::rule<Iterator, ast::StatementList(), skipper<Iterator>> StatementList, compound_statement;
 
-        qi::rule<Iterator, ast::statement(), skipper<Iterator> > statement_;
-        qi::rule<Iterator, ast::variable_declaration(), skipper<Iterator> > variable_declaration;
-        qi::rule<Iterator, ast::assignment(), skipper<Iterator> > assignment;
-        qi::rule<Iterator, ast::if_statement(), skipper<Iterator> > if_statement;
-        qi::rule<Iterator, ast::while_statement(), skipper<Iterator> > while_statement;
-        qi::rule<Iterator, ast::return_statement(), skipper<Iterator> > return_statement;
-        qi::rule<Iterator, std::string(), skipper<Iterator> > identifier;
-    };
-}}
+  qi::rule<Iterator, ast::statement(), skipper<Iterator>> statement_;
+  qi::rule<Iterator, ast::VariableDeclaration(), skipper<Iterator>> VariableDeclaration;
+  qi::rule<Iterator, ast::Assignment(), skipper<Iterator>> Assignment;
+  qi::rule<Iterator, ast::IfStatement(), skipper<Iterator>> IfStatement;
+  qi::rule<Iterator, ast::WhileStatement(), skipper<Iterator>> WhileStatement;
+  qi::rule<Iterator, ast::ReturnStatement(), skipper<Iterator>> ReturnStatement;
+  qi::rule<Iterator, std::string(), skipper<Iterator>> Identifier;
+};
+}  // namespace parser
+}  // namespace client
 
 #endif
-
-

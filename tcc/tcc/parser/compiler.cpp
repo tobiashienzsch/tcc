@@ -7,7 +7,7 @@
 #include <cassert>
 #include <set>
 
-#include "tcc/vm.hpp"
+#include "tcc/ir/instruction_set.hpp"
 
 namespace tcc {
 namespace code_gen {

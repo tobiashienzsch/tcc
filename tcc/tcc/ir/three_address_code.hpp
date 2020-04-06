@@ -7,7 +7,7 @@
 #include <variant>
 #include <vector>
 
-#include "tcc/vm.hpp"
+#include "tcc/ir/instruction_set.hpp"
 #include "tsl/tsl.hpp"
 
 namespace tcc {

@@ -10,6 +10,7 @@ set(tcc_lib_source
 
     tcc/ir/generator.cpp
     tcc/ir/generator.hpp
+    tcc/ir/instruction_set.hpp    
     tcc/ir/intermediate_representation.cpp
     tcc/ir/intermediate_representation.hpp
     tcc/ir/three_address_code.cpp
@@ -30,9 +31,6 @@ set(tcc_lib_source
     tcc/parser/statement.cpp
     tcc/parser/statement_def.hpp
     tcc/parser/statement.hpp
-
-    tcc/vm.cpp
-    tcc/vm.hpp    
 )
 
 add_library(tcc_lib ${tcc_lib_source})

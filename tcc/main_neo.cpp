@@ -52,7 +52,7 @@ int main(int argc, char** argv) {
   }
 
   // Compile IR
-  if (!irGenerator.start(ast)) {
+  if (!irGenerator(ast)) {
     std::cout << "Compile error!\n";
     return EXIT_FAILURE;
   }

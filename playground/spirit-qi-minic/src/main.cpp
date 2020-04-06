@@ -48,8 +48,8 @@ int main(int argc, char** argv) {
   iterator_type iter = source_code.begin();
   iterator_type end = source_code.end();
 
-  client::vmachine vm;             // Our virtual machine
-  client::ast::function_list ast;  // Our AST
+  client::vmachine vm;            // Our virtual machine
+  client::ast::FunctionList ast;  // Our AST
 
   client::error_handler<iterator_type> error_handler(iter, end);    // Our error handler
   client::parser::function<iterator_type> function(error_handler);  // Our parser

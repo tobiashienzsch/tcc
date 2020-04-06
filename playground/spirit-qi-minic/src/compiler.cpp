@@ -445,7 +445,7 @@ bool compiler::operator()(ast::function const& x) {
   return true;
 }
 
-bool compiler::operator()(ast::function_list const& x) {
+bool compiler::operator()(ast::FunctionList const& x) {
   // Jump to the main function
   code.push_back(op_jump);
   code.push_back(0);  // we will fill this in later when we finish compiling

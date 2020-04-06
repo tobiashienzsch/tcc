@@ -30,18 +30,18 @@ auto program::print_variables(std::vector<int> const& stack) const -> void {
   }
 }
 
-auto compiler::operator()(uint64_t x) const -> bool {
+auto Compiler::operator()(uint64_t x) const -> bool {
   program.op(op_int, x);
   m_builder.PushToStack(x);
   return true;
 }
 
-auto compiler::operator()(bool x) const -> bool {
+auto Compiler::operator()(bool x) const -> bool {
   program.op(x ? op_true : op_false);
   return true;
 }
 
-auto compiler::operator()(ast::Variable const& x) const -> bool {
+auto Compiler::operator()(ast::Variable const& x) const -> bool {
   int const* p = program.find_var(x.name);
   if (p == nullptr) {
     error_handler(x, "Undeclared variable: " + x.name);
@@ -53,7 +53,7 @@ auto compiler::operator()(ast::Variable const& x) const -> bool {
   return true;
 }
 
-auto compiler::operator()(ast::Operation const& x) const -> bool {
+auto Compiler::operator()(ast::Operation const& x) const -> bool {
   if (!boost::apply_visitor(*this, x.operand_)) return false;
   switch (x.operator_) {
     case ast::OpToken::Plus: {
@@ -124,7 +124,7 @@ auto compiler::operator()(ast::Operation const& x) const -> bool {
   return true;
 }
 
-auto compiler::operator()(ast::Unary const& x) const -> bool {
+auto Compiler::operator()(ast::Unary const& x) const -> bool {
   if (!boost::apply_visitor(*this, x.operand_)) return false;
   switch (x.operator_) {
     case ast::OpToken::Positive:
@@ -147,7 +147,7 @@ auto compiler::operator()(ast::Unary const& x) const -> bool {
   return true;
 }
 
-auto compiler::operator()(ast::Expression const& x) const -> bool {
+auto Compiler::operator()(ast::Expression const& x) const -> bool {
   if (!boost::apply_visitor(*this, x.first)) return false;
   for (ast::Operation const& oper : x.rest) {
     if (!(*this)(oper)) return false;
@@ -155,7 +155,7 @@ auto compiler::operator()(ast::Expression const& x) const -> bool {
   return true;
 }
 
-auto compiler::operator()(ast::Assignment const& x) const -> bool {
+auto Compiler::operator()(ast::Assignment const& x) const -> bool {
   if (!(*this)(x.rhs)) return false;
   int const* p = program.find_var(x.lhs.name);
   if (p == nullptr) {
@@ -168,7 +168,7 @@ auto compiler::operator()(ast::Assignment const& x) const -> bool {
   return true;
 }
 
-auto compiler::operator()(ast::VariableDeclaration const& x) const -> bool {
+auto Compiler::operator()(ast::VariableDeclaration const& x) const -> bool {
   int const* p = program.find_var(x.assign.lhs.name);
   if (p != nullptr) {
     error_handler(x.assign.lhs, "Duplicate variable: " + x.assign.lhs.name);
@@ -186,16 +186,16 @@ auto compiler::operator()(ast::VariableDeclaration const& x) const -> bool {
   return r;
 }
 
-auto compiler::operator()(ast::Statement const& x) const -> bool { return boost::apply_visitor(*this, x); }
+auto Compiler::operator()(ast::Statement const& x) const -> bool { return boost::apply_visitor(*this, x); }
 
-auto compiler::operator()(ast::StatementList const& x) const -> bool {
+auto Compiler::operator()(ast::StatementList const& x) const -> bool {
   for (auto const& s : x) {
     if (!(*this)(s)) return false;
   }
   return true;
 }
 
-auto compiler::operator()(ast::IfStatement const& x) const -> bool {
+auto Compiler::operator()(ast::IfStatement const& x) const -> bool {
   if (!(*this)(x.condition)) return false;
   program.op(op_jump_if, 0);              // we shall fill this (0) in later
   std::size_t skip = program.size() - 1;  // mark its position
@@ -214,7 +214,7 @@ auto compiler::operator()(ast::IfStatement const& x) const -> bool {
   return true;
 }
 
-auto compiler::operator()(ast::WhileStatement const& x) const -> bool {
+auto Compiler::operator()(ast::WhileStatement const& x) const -> bool {
   std::size_t loop = program.size();  // mark our position
   if (!(*this)(x.condition)) return false;
   program.op(op_jump_if, 0);              // we shall fill this (0) in later
@@ -226,13 +226,13 @@ auto compiler::operator()(ast::WhileStatement const& x) const -> bool {
   return true;
 }
 
-bool compiler::operator()(ast::ReturnStatement const& x) const {
+bool Compiler::operator()(ast::ReturnStatement const& x) const {
   if (!(*this)(x.expression)) return false;
   m_builder.CreateReturnOperation();
   return true;
 }
 
-auto compiler::start(ast::StatementList const& x) const -> bool {
+auto Compiler::start(ast::StatementList const& x) const -> bool {
   program.clear();
   // op_stk_adj 0 for now. we'll know how many variables we'll have later
   program.op(op_stk_adj, 0);

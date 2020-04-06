@@ -6,9 +6,6 @@
 #include "fmt/format.h"
 
 namespace tcc {
-///////////////////////////////////////////////////////////////////////////
-//  The Virtual Machine
-///////////////////////////////////////////////////////////////////////////
 enum byte_code {
   op_neg,  //  negate the top stack entry
   op_add,  //  add top two stack entries
@@ -98,17 +95,4 @@ inline std::ostream& operator<<(std::ostream& out, byte_code const data) {
   return out;
 }
 
-class vmachine {
- public:
-  vmachine(unsigned stackSize = 4096) : stack(stackSize) {}
-
-  int execute(std::vector<int> const& code, std::vector<int>::const_iterator pc, std::vector<int>::iterator frame_ptr);
-
-  int execute(std::vector<int> const& code) { return execute(code, code.begin(), stack.begin()); };
-
-  std::vector<int> const& get_stack() const { return stack; };
-
- private:
-  std::vector<int> stack;
-};
 }  // namespace tcc

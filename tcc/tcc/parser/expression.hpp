@@ -1,16 +1,62 @@
-#pragma once
+/*=============================================================================
+    Copyright (c) 2001-2011 Joel de Guzman
 
-#include <boost/spirit/home/x3.hpp>
+    Distributed under the Boost Software License, Version 1.0. (See accompanying
+    file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
+=============================================================================*/
+#if !defined(TCC_PARSER_QI_EXPRESSION_HPP)
+#define TCC_PARSER_QI_EXPRESSION_HPP
+
+///////////////////////////////////////////////////////////////////////////////
+// Spirit v2.5 allows you to suppress automatic generation
+// of predefined terminals to speed up complation. With
+// BOOST_SPIRIT_NO_PREDEFINED_TERMINALS defined, you are
+// responsible in creating instances of the terminals that
+// you need (e.g. see qi::uint_type uint_ below).
+#define BOOST_SPIRIT_NO_PREDEFINED_TERMINALS
+///////////////////////////////////////////////////////////////////////////////
+
+///////////////////////////////////////////////////////////////////////////////
+// Uncomment this if you want to enable debugging
+// #define BOOST_SPIRIT_QI_DEBUG
+///////////////////////////////////////////////////////////////////////////////
+
+#include <boost/spirit/include/qi.hpp>
+#include <vector>
 
 #include "tcc/parser/ast.hpp"
+#include "tcc/parser/error_handler.hpp"
+#include "tcc/parser/skipper.hpp"
 
 namespace tcc {
-namespace x3 = boost::spirit::x3;
 namespace parser {
-struct Expression_class;
-using Expression_type = x3::rule<Expression_class, ast::Expression>;
-BOOST_SPIRIT_DECLARE(Expression_type)
-}  // namespace parser
+namespace qi = boost::spirit::qi;
+namespace ascii = boost::spirit::ascii;
 
-auto Expression() -> parser::Expression_type const&;
+///////////////////////////////////////////////////////////////////////////////
+//  The expression grammar
+///////////////////////////////////////////////////////////////////////////////
+template <typename Iterator>
+struct Expression : qi::grammar<Iterator, ast::Expression(), Skipper<Iterator>> {
+  Expression(ErrorHandler<Iterator>& errorHandler);
+
+  qi::rule<Iterator, ast::Expression(), Skipper<Iterator>> expr, equality_expr, relational_expr, logical_or_expr,
+      logical_and_expr, additive_expr, multiplicative_expr;
+
+  qi::rule<Iterator, ast::Operand(), Skipper<Iterator>> UnaryExpr, primary_expr;
+
+  qi::rule<Iterator, ast::FunctionCall(), Skipper<Iterator>> FunctionCall;
+
+  qi::rule<Iterator, std::list<ast::Expression>(), Skipper<Iterator>> argument_list;
+
+  qi::rule<Iterator, std::string(), Skipper<Iterator>> Identifier;
+
+  qi::symbols<char, ast::OpToken> logical_or_op, logical_and_op, equality_op, relational_op, additive_op,
+      multiplicative_op, UnaryOp;
+
+  qi::symbols<char> keywords;
+};
+}  // namespace parser
 }  // namespace tcc
+
+#endif

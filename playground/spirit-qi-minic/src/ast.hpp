@@ -121,7 +121,7 @@ struct function {
   StatementList body;
 };
 
-typedef std::list<function> function_list;
+using FunctionList = std::list<function>;
 
 // print functions for debugging
 inline std::ostream& operator<<(std::ostream& out, Nil) {
@@ -136,33 +136,66 @@ inline std::ostream& operator<<(std::ostream& out, Identifier const& id) {
 }  // namespace ast
 }  // namespace client
 
-BOOST_FUSION_ADAPT_STRUCT(client::ast::Unary, (client::ast::optoken, operator_)(client::ast::operand, operand_))
+BOOST_FUSION_ADAPT_STRUCT(             //
+    client::ast::Unary,                //
+    (client::ast::optoken, operator_)  //
+    (client::ast::operand, operand_)   //
+)
 
-BOOST_FUSION_ADAPT_STRUCT(client::ast::operation, (client::ast::optoken, operator_)(client::ast::operand, operand_))
+BOOST_FUSION_ADAPT_STRUCT(             //
+    client::ast::operation,            //
+    (client::ast::optoken, operator_)  //
+    (client::ast::operand, operand_)   //
+)
 
-BOOST_FUSION_ADAPT_STRUCT(client::ast::FunctionCall,
-                          (client::ast::Identifier, function_name)(std::list<client::ast::expression>, args))
+BOOST_FUSION_ADAPT_STRUCT(                      //
+    client::ast::FunctionCall,                  //
+    (client::ast::Identifier, function_name)    //
+    (std::list<client::ast::expression>, args)  //
+)
 
-BOOST_FUSION_ADAPT_STRUCT(client::ast::expression,
-                          (client::ast::operand, first)(std::list<client::ast::operation>, rest))
+BOOST_FUSION_ADAPT_STRUCT(                     //
+    client::ast::expression,                   //
+    (client::ast::operand, first)              //
+    (std::list<client::ast::operation>, rest)  //
+)
 
-BOOST_FUSION_ADAPT_STRUCT(client::ast::VariableDeclaration,
-                          (client::ast::Identifier, lhs)(boost::optional<client::ast::expression>, rhs))
+BOOST_FUSION_ADAPT_STRUCT(                           //
+    client::ast::VariableDeclaration,                //
+    (client::ast::Identifier, lhs)                   //
+    (boost::optional<client::ast::expression>, rhs)  //
+)
 
-BOOST_FUSION_ADAPT_STRUCT(client::ast::Assignment, (client::ast::Identifier, lhs)(client::ast::expression, rhs))
+BOOST_FUSION_ADAPT_STRUCT(          //
+    client::ast::Assignment,        //
+    (client::ast::Identifier, lhs)  //
+    (client::ast::expression, rhs)  //
+)
 
-BOOST_FUSION_ADAPT_STRUCT(client::ast::IfStatement,
-                          (client::ast::expression, condition)(client::ast::statement,
-                                                               then)(boost::optional<client::ast::statement>, else_))
+BOOST_FUSION_ADAPT_STRUCT(                            //
+    client::ast::IfStatement,                         //
+    (client::ast::expression, condition)              //
+    (client::ast::statement, then)                    //
+    (boost::optional<client::ast::statement>, else_)  //
+)
 
-BOOST_FUSION_ADAPT_STRUCT(client::ast::WhileStatement,
-                          (client::ast::expression, condition)(client::ast::statement, body))
+BOOST_FUSION_ADAPT_STRUCT(                //
+    client::ast::WhileStatement,          //
+    (client::ast::expression, condition)  //
+    (client::ast::statement, body)        //
+)
 
-BOOST_FUSION_ADAPT_STRUCT(client::ast::ReturnStatement, (boost::optional<client::ast::expression>, expr))
+BOOST_FUSION_ADAPT_STRUCT(                            //
+    client::ast::ReturnStatement,                     //
+    (boost::optional<client::ast::expression>, expr)  //
+)
 
-BOOST_FUSION_ADAPT_STRUCT(client::ast::function,
-                          (std::string, return_type)(client::ast::Identifier,
-                                                     function_name)(std::list<client::ast::Identifier>,
-                                                                    args)(client::ast::StatementList, body))
+BOOST_FUSION_ADAPT_STRUCT(                      //
+    client::ast::function,                      //
+    (std::string, return_type)                  //
+    (client::ast::Identifier, function_name)    //
+    (std::list<client::ast::Identifier>, args)  //
+    (client::ast::StatementList, body)          //
+)
 
 #endif

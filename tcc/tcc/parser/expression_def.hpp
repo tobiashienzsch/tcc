@@ -1,88 +1,178 @@
-#pragma once
+#include <boost/spirit/include/phoenix_function.hpp>
 
-#include <boost/spirit/home/x3.hpp>
-#include <boost/spirit/home/x3/support/utility/annotate_on_success.hpp>
-
-#include "tcc/parser/ast.hpp"
-#include "tcc/parser/ast_adapted.hpp"
-#include "tcc/parser/common.hpp"
+#include "tcc/parser/annotation.hpp"
 #include "tcc/parser/error_handler.hpp"
 #include "tcc/parser/expression.hpp"
 
 namespace tcc {
 namespace parser {
-using x3::bool_;
-using x3::char_;
-using x3::lexeme;
-using x3::raw;
-using x3::uint_;
-using namespace x3::ascii;
+template <typename Iterator>
+Expression<Iterator>::Expression(ErrorHandler<Iterator>& errorHandler) : Expression::base_type(expr) {
+  qi::_1_type _1;
+  //   qi::_2_type _2;
+  qi::_3_type _3;
+  qi::_4_type _4;
 
-////////////////////////////////////////////////////////////////////////////
-// Tokens
-////////////////////////////////////////////////////////////////////////////
+  qi::char_type char_;
+  qi::uint_type uint_;
+  qi::_val_type _val;
+  qi::raw_type raw;
+  qi::lexeme_type lexeme;
+  qi::alpha_type alpha;
+  qi::alnum_type alnum;
+  qi::bool_type bool_;
 
-x3::symbols<ast::OpToken> EqualityOperators;
-x3::symbols<ast::OpToken> RelationalOperators;
-x3::symbols<ast::OpToken> LogicalOperators;
-x3::symbols<ast::OpToken> AdditiveOperators;
-x3::symbols<ast::OpToken> MultiplicativeOperators;
-x3::symbols<ast::OpToken> UnaryOperators;
-x3::symbols<> keywords;
+  using boost::phoenix::function;
+  using qi::fail;
+  using qi::on_error;
+  using qi::on_success;
 
-void add_keywords();
+  typedef function<tcc::ErrorHandler<Iterator>> ErrorHandlerFunction;
+  typedef function<tcc::annotation<Iterator>> AnnotationFunction;
 
-////////////////////////////////////////////////////////////////////////////
-// Main expression grammar
-////////////////////////////////////////////////////////////////////////////
+  ///////////////////////////////////////////////////////////////////////
+  // Tokens
+  // clang-format off
+        logical_or_op.add
+            ("||", ast::OpToken::Or)
+            ;
 
-struct EqualityExpr_class;
-struct RelationalExpr_class;
-struct LogicalExpr_class;
-struct AdditiveExpr_class;
-struct MultiplicativeExpr_class;
-struct UnaryExpr_class;
-struct PrimaryExpr_class;
+        logical_and_op.add
+            ("&&", ast::OpToken::And)
+            ;
 
-using EqualityExpr_type = x3::rule<EqualityExpr_class, ast::Expression>;
-using RelationalExpr_type = x3::rule<RelationalExpr_class, ast::Expression>;
-using LogicalExpr_type = x3::rule<LogicalExpr_class, ast::Expression>;
-using AdditiveExpr_type = x3::rule<AdditiveExpr_class, ast::Expression>;
-using MultiplicativeExpr_type = x3::rule<MultiplicativeExpr_class, ast::Expression>;
-using UnaryExpr_type = x3::rule<UnaryExpr_class, ast::Operand>;
-using PrimaryExpr_type = x3::rule<PrimaryExpr_class, ast::Operand>;
+        equality_op.add
+            ("==", ast::OpToken::Equal)
+            ("!=", ast::OpToken::NotEqual)
+            ;
 
-Expression_type const Expression = "Expression";
-EqualityExpr_type const EqualityExpr = "EqualityExpr";
-RelationalExpr_type const RelationalExpr = "RelationalExpr";
-LogicalExpr_type const LogicalExpr = "LogicalExpr";
-AdditiveExpr_type const AdditiveExpr = "AdditiveExpr";
-MultiplicativeExpr_type const MultiplicativeExpr = "MultiplicativeExpr";
-UnaryExpr_type const UnaryExpr = "UnaryExpr";
-PrimaryExpr_type const PrimaryExpr = "PrimaryExpr";
+        relational_op.add
+            ("<", ast::OpToken::Less)
+            ("<=", ast::OpToken::LessEqual)
+            (">", ast::OpToken::Greater)
+            (">=", ast::OpToken::GreaterEqual)
+            ;
 
-auto const LogicalExpr_def = EqualityExpr >> *(LogicalOperators > EqualityExpr);
-auto const EqualityExpr_def = RelationalExpr >> *(EqualityOperators > RelationalExpr);
-auto const RelationalExpr_def = AdditiveExpr >> *(RelationalOperators > AdditiveExpr);
-auto const AdditiveExpr_def = MultiplicativeExpr >> *(AdditiveOperators > MultiplicativeExpr);
-auto const MultiplicativeExpr_def = UnaryExpr >> *(MultiplicativeOperators > UnaryExpr);
-auto const UnaryExpr_def = PrimaryExpr | (UnaryOperators > PrimaryExpr);
-auto const PrimaryExpr_def = uint_ | bool_ | (!keywords >> identifier) | ('(' > Expression > ')');
-auto const Expression_def = LogicalExpr;
+        additive_op.add
+            ("+", ast::OpToken::Plus)
+            ("-", ast::OpToken::Minus)
+            ;
 
-BOOST_SPIRIT_DEFINE(     //
-    Expression,          //
-    LogicalExpr,         //
-    EqualityExpr,        //
-    RelationalExpr,      //
-    AdditiveExpr,        //
-    MultiplicativeExpr,  //
-    UnaryExpr,           //
-    PrimaryExpr          //
-)
+        multiplicative_op.add
+            ("*", ast::OpToken::Times)
+            ("/", ast::OpToken::Divide)
+            ;
 
-struct UnaryExpr_class : x3::annotate_on_success {};
-struct PrimaryExpr_class : x3::annotate_on_success {};
+        UnaryOp.add
+            ("+", ast::OpToken::Positive)
+            ("-", ast::OpToken::Negative)
+            ("!", ast::OpToken::Not)
+            ;
 
-}  // namespace parser
-}  // namespace tcc
+        keywords.add
+            ("true")
+            ("false")
+            ("if")
+            ("else")
+            ("while")
+            ("int")
+            ("void")
+            ("return")
+            ;
+
+        ///////////////////////////////////////////////////////////////////////
+        // Main expression grammar
+        expr =
+            logical_or_expr.alias()
+            ;
+
+        logical_or_expr =
+                logical_and_expr
+            >> *(logical_or_op > logical_and_expr)
+            ;
+
+        logical_and_expr =
+                equality_expr
+            >> *(logical_and_op > equality_expr)
+            ;
+
+        equality_expr =
+                relational_expr
+            >> *(equality_op > relational_expr)
+            ;
+
+        relational_expr =
+                additive_expr
+            >> *(relational_op > additive_expr)
+            ;
+
+        additive_expr =
+                multiplicative_expr
+            >> *(additive_op > multiplicative_expr)
+            ;
+
+        multiplicative_expr =
+                UnaryExpr
+            >> *(multiplicative_op > UnaryExpr)
+            ;
+
+        UnaryExpr =
+                primary_expr
+            |   (UnaryOp > UnaryExpr)
+            ;
+
+        primary_expr =
+                uint_
+            |   FunctionCall
+            |   Identifier
+            |   bool_
+            |   '(' > expr > ')'
+            ;
+
+        FunctionCall =
+                (Identifier >> '(')
+            >   argument_list
+            >   ')'
+            ;
+
+        argument_list = -(expr % ',');
+
+        Identifier =
+                !lexeme[keywords >> !(alnum | '_')]
+            >>  raw[lexeme[(alpha | '_') >> *(alnum | '_')]]
+            ;
+
+        ///////////////////////////////////////////////////////////////////////
+        // Debugging and error handling and reporting support.
+        BOOST_SPIRIT_DEBUG_NODES(
+            (expr)
+            (logical_or_expr)
+            (logical_and_expr)
+            (equality_expr)
+            (relational_expr)
+            (additive_expr)
+            (multiplicative_expr)
+            (UnaryExpr)
+            (primary_expr)
+            (FunctionCall)
+            (argument_list)
+            (Identifier)
+        );
+
+        ///////////////////////////////////////////////////////////////////////
+        // Error handling: on error in expr, call errorHandler.
+        on_error<fail>(expr,
+            ErrorHandlerFunction(errorHandler)(
+                "Error! Expecting ", _4, _3));
+
+        ///////////////////////////////////////////////////////////////////////
+        // Annotation: on success in primary_expr, call annotation.
+        on_success(primary_expr,
+            AnnotationFunction(errorHandler.iters)(_val, _1));
+
+        // clang-format off
+
+    }
+}}
+
+

@@ -1,37 +1,71 @@
-#pragma once
+#if !defined(TCC_PARSER_QI_ERROR_HANDLER_HPP)
+#define TCC_PARSER_QI_ERROR_HANDLER_HPP
 
-#include <boost/spirit/home/x3.hpp>
-#include <boost/spirit/home/x3/support/ast/position_tagged.hpp>
-#include <boost/spirit/home/x3/support/utility/error_reporting.hpp>
-
-#include "tcc/parser/expression.hpp"
-#include "tcc/parser/statement.hpp"
-#include "tsl/tsl.hpp"
+#include <iostream>
+#include <string>
+#include <vector>
 
 namespace tcc {
-namespace parser {
-namespace x3 = boost::spirit::x3;
 
-////////////////////////////////////////////////////////////////////////////
-//  Our error handler
-////////////////////////////////////////////////////////////////////////////
 template <typename Iterator>
-using error_handler = x3::error_handler<Iterator>;
+struct ErrorHandler {
+  template <typename, typename, typename>
+  struct result {
+    using type = void;
+  };
 
-// tag used to get our error handler from the context
-using error_handler_tag = x3::error_handler_tag;
+  ErrorHandler(Iterator first, Iterator last) : first(first), last(last) {}
 
-struct error_handler_base {
-  template <typename Iterator, typename Exception, typename Context>
-  auto on_error(Iterator& first, Iterator const& last, Exception const& x, Context const& context)
-      -> x3::error_handler_result {
-    tcc::IgnoreUnused(first);
-    tcc::IgnoreUnused(last);
-    std::string message = "Error! Expecting: " + x.which() + " here:";
-    auto& error_handler = x3::get<error_handler_tag>(context).get();
-    error_handler(x.where(), message);
-    return x3::error_handler_result::fail;
+  template <typename Message, typename What>
+  void operator()(Message const& message, What const& what, Iterator err_pos) const {
+    int line;
+    Iterator line_start = get_pos(err_pos, line);
+    if (err_pos != last) {
+      std::cout << message << what << " line " << line << ':' << std::endl;
+      std::cout << get_line(line_start) << std::endl;
+      for (; line_start != err_pos; ++line_start) std::cout << ' ';
+      std::cout << '^' << std::endl;
+    } else {
+      std::cout << "Unexpected end of file. ";
+      std::cout << message << what << " line " << line << std::endl;
+    }
   }
+
+  Iterator get_pos(Iterator err_pos, int& line) const {
+    line = 1;
+    Iterator i = first;
+    Iterator line_start = first;
+    while (i != err_pos) {
+      bool eol = false;
+      if (i != err_pos && *i == '\r')  // CR
+      {
+        eol = true;
+        line_start = ++i;
+      }
+      if (i != err_pos && *i == '\n')  // LF
+      {
+        eol = true;
+        line_start = ++i;
+      }
+      if (eol)
+        ++line;
+      else
+        ++i;
+    }
+    return line_start;
+  }
+
+  std::string get_line(Iterator err_pos) const {
+    Iterator i = err_pos;
+    // position i to the next EOL
+    while (i != last && (*i != '\r' && *i != '\n')) ++i;
+    return std::string(err_pos, i);
+  }
+
+  Iterator first;
+  Iterator last;
+  std::vector<Iterator> iters;
 };
-}  // namespace parser
 }  // namespace tcc
+
+#endif

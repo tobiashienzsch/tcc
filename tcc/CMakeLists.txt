@@ -8,28 +8,27 @@ set(tcc_lib_source
     tcc/optimizer/optimizer.cpp
     tcc/optimizer/optimizer.hpp
 
+    tcc/ir/generator.cpp
+    tcc/ir/generator.hpp
+    tcc/ir/instruction_set.hpp    
     tcc/ir/intermediate_representation.cpp
     tcc/ir/intermediate_representation.hpp
     tcc/ir/three_address_code.cpp
     tcc/ir/three_address_code.hpp
 
+    tcc/parser/annotation.hpp
     tcc/parser/ast.hpp
-    tcc/parser/ast_adapted.hpp
-    tcc/parser/ast_printer.cpp
-    tcc/parser/ast_printer.hpp
-    tcc/parser/common.hpp
-    tcc/parser/compiler.cpp
-    tcc/parser/compiler.hpp
-    tcc/parser/config.hpp
     tcc/parser/error_handler.hpp
+    tcc/parser/expression.cpp
     tcc/parser/expression_def.hpp
     tcc/parser/expression.hpp
-    tcc/parser/statement_def.hpp
+    tcc/parser/function.cpp
+    tcc/parser/function_def.hpp
+    tcc/parser/function.hpp
+    tcc/parser/skipper.hpp
     tcc/parser/statement.cpp
+    tcc/parser/statement_def.hpp
     tcc/parser/statement.hpp
-
-    tcc/vm.cpp
-    tcc/vm.hpp    
 )
 
 add_library(tcc_lib ${tcc_lib_source})
@@ -52,14 +51,11 @@ target_link_libraries(tcc_lib
         tcc::CompilerOptions
         tcc::CompilerWarnings
         tcc::CodeCoverage
-
 )
 
 # exe
 set(tcc_source 
     main.cpp
-    tcc/parser/expression.cpp
-
 )
 source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} FILES ${tcc_source})
 add_executable(${PROJECT_NAME} ${tcc_source})
@@ -77,10 +73,9 @@ target_link_libraries(${PROJECT_NAME}
 if(TCC_BUILD_TESTS)
     set (tcc_test_source
         main_test.cpp
-        tcc/parser/expression.cpp
 
         tcc/optimizer/optimizer_test.cpp
-        tcc/parser/common_test.cpp
+        tcc/parser/expression_test.cpp
         tcc/parser/statement_test.cpp
     )
     source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} FILES ${tcc_test_source})

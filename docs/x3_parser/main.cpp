@@ -1,28 +1,46 @@
-#include <boost/lexical_cast.hpp>
-#include <boost/program_options.hpp>
-#include <fstream>
-#include <iostream>
-#include <iterator>
-#include <string>
-#include <vector>
-
 #include "tcc/asm/assembly_generator.hpp"
-#include "tcc/ir/generator.hpp"
 #include "tcc/optimizer/optimizer.hpp"
-#include "tcc/parser/function.hpp"
-#include "tcc/parser/skipper.hpp"
+#include "tcc/parser/ast.hpp"
+#include "tcc/parser/ast_printer.hpp"
+#include "tcc/parser/compiler.hpp"
+#include "tcc/parser/config.hpp"
+#include "tcc/parser/error_handler.hpp"
+#include "tcc/parser/statement.hpp"
+#include "tcc/vm.hpp"
+
+//
 #include "tsl/tsl.hpp"
+
+//
+#include <boost/program_options.hpp>
 
 namespace po = boost::program_options;
 
-int main(int argc, char** argv) {
+#include <fstream>
+#include <iostream>
+#include <iterator>
+
+auto readSourceFile(std::string path) -> std::string {
+  std::ifstream f(path);
+  std::string str;
+
+  if (f) {
+    std::ostringstream ss;
+    ss << f.rdbuf();  // reading data
+    str = ss.str();
+  }
+  return str;
+}
+
+auto main(int argc, char** argv) -> int {
+  // return = 84
   std::string source = R"(
-    int a = 1 + (2 + 8 / 2) * 3;
-    int b = 1 + (2 + 8 / 2) * 3;
+    auto a = 1 + (2 + 8 / 2) * 3;
+    auto b = 1 + (2 + 8 / 2) * 3;
     
-    int x = 1 + (2 + 8 / 2) * 3;
+    auto x = 1 + (2 + 8 / 2) * 3;
     x = x * 2;
-    int y = x + 2 * 2;
+    auto y = x + 2 * 2;
     return y * 2;
   )";
 
@@ -30,7 +48,7 @@ int main(int argc, char** argv) {
     int OptLevel = 0;
     bool PrintSource = false;
     bool PrintAst = false;
-    bool PrintIR = true;
+    bool PrintIR = false;
   } flags;
 
   try {
@@ -64,16 +82,7 @@ int main(int argc, char** argv) {
         fmt::print("Only one source file allowed currently.\n");
         return EXIT_FAILURE;
       }
-
-      std::ifstream in(paths[0], std::ios_base::in);
-      if (!in) {
-        std::cerr << "Error: Could not open input file: " << paths[0] << std::endl;
-        return 1;
-      }
-
-      in.unsetf(std::ios::skipws);  // No white space skipping!
-      source = "";
-      std::copy(std::istream_iterator<char>(in), std::istream_iterator<char>(), std::back_inserter(source));
+      source = readSourceFile(paths[0]);
     }
 
   } catch (std::exception& e) {
@@ -83,30 +92,53 @@ int main(int argc, char** argv) {
     std::cerr << "Exception of unknown type!\n";
   }
 
-  using IteratorType = std::string::const_iterator;
-  IteratorType iter = source.begin();
-  IteratorType end = source.end();
+  using tcc::parser::iterator_type;
+  iterator_type iter(source.begin());
+  iterator_type end(source.end());
+  if (flags.PrintSource) {
+    fmt::print("Source:\n{}\n\n", source);
+  }
 
-  tcc::ErrorHandler<IteratorType> errorHandler(iter, end);         // Our error handler
-  tcc::parser::Statement<IteratorType> statement(errorHandler);    // Our parser
-  tcc::parser::Skipper<IteratorType> skipper;                      // Our skipper
-  tcc::ast::StatementList ast;                                     // Our AST
-  tcc::Program program{};                                          // Our VM program
-  tcc::IntermediateRepresentation irBuilder;                       // IR builder
-  tcc::IRGenerator irGenerator{program, irBuilder, errorHandler};  // IR Generator
+  // tcc::vmachine vm;                           // Our virtual machine
+  tcc::code_gen::program program{};           // Our VM program
+  tcc::IntermediateRepresentation irBuilder;  // IR builder
+  tcc::ast::StatementList ast;                // Our AST
 
-  bool success = phrase_parse(iter, end, statement, skipper, ast);
+  using boost::spirit::x3::with;
+  using tcc::parser::error_handler_type;
+  error_handler_type error_handler(iter, end, std::cerr);  // Our error handler
+
+  // Our compiler
+  tcc::code_gen::Compiler compiler(program, irBuilder, error_handler);
+
+  // Our parser
+  // We pass our error handler to the parser so we can access
+  // it later on in our on_error and on_sucess handlers
+  auto const parser = with<tcc::parser::error_handler_tag>(std::ref(error_handler))[tcc::GetStatement()];
+
+  using boost::spirit::x3::ascii::space;
+
+  // Parse
+  bool success = phrase_parse(iter, end, parser, space, ast);
   if (!success || iter != end) {
-    std::cout << "Parse error!\n";
+    std::cout << "Parse failure\n";
     return EXIT_FAILURE;
   }
 
   // Compile IR
-  if (!irGenerator(ast)) {
-    std::cout << "Compile error!\n";
+  if (!compiler.start(ast)) {
+    std::cout << "Compile failure\n";
     return EXIT_FAILURE;
   }
 
+  // Print AST
+  if (flags.PrintAst) {
+    auto printer = tcc::parser::AstPrinter{error_handler};
+    if (!printer.start(ast)) {
+      std::cout << "Ast printer failure\n";
+      return EXIT_FAILURE;
+    }
+  }
   if (flags.OptLevel > 0) {
     auto optimizer = tcc::Optimizer(*irBuilder.CurrentScope());
     optimizer.Optimize();

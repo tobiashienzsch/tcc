@@ -86,7 +86,7 @@ struct compiler {
   bool operator()(ast::WhileStatement const& x);
   bool operator()(ast::ReturnStatement const& x);
   bool operator()(ast::function const& x);
-  bool operator()(ast::function_list const& x);
+  bool operator()(ast::FunctionList const& x);
 
   void print_assembler() const;
 

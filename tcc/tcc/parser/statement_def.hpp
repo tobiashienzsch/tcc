@@ -1,57 +1,108 @@
-#pragma once
-
-#include <boost/spirit/home/x3.hpp>
-#include <boost/spirit/home/x3/support/utility/annotate_on_success.hpp>
-
-#include "tcc/parser/ast.hpp"
-#include "tcc/parser/ast_adapted.hpp"
-#include "tcc/parser/common.hpp"
+#include "tcc/parser/annotation.hpp"
 #include "tcc/parser/error_handler.hpp"
-#include "tcc/parser/expression.hpp"
 #include "tcc/parser/statement.hpp"
 
 namespace tcc {
 namespace parser {
-using x3::lexeme;
-using x3::raw;
-using namespace x3::ascii;
+template <typename Iterator>
+Statement<Iterator>::Statement(ErrorHandler<Iterator>& errorHandler)
+    : Statement::base_type(StatementList), expr(errorHandler) {
+  qi::_1_type _1;
+  //   qi::_2_type _2;
+  qi::_3_type _3;
+  qi::_4_type _4;
 
-struct StatementList_class;
-struct ReturnStatement_class;
-struct VariableDeclaration_class;
-struct Assignment_class;
-struct Variable_class;
+  qi::_val_type _val;
+  qi::raw_type raw;
+  qi::lexeme_type lexeme;
+  qi::alpha_type alpha;
+  qi::alnum_type alnum;
+  qi::lit_type lit;
 
-using StatementList_type = x3::rule<StatementList_class, ast::StatementList>;
-using ReturnStatement_type = x3::rule<ReturnStatement_class, ast::ReturnStatement>;
-using VariableDeclaration_type = x3::rule<VariableDeclaration_class, ast::VariableDeclaration>;
-using Assignment_type = x3::rule<Assignment_class, ast::Assignment>;
-using Variable_type = x3::rule<Variable_class, ast::Variable>;
+  using boost::phoenix::function;
+  using qi::fail;
+  using qi::on_error;
+  using qi::on_success;
 
-auto const Statement = Statement_type("Statement");
-auto const StatementList = StatementList_type("StatementList");
-auto const ReturnStatement = ReturnStatement_type("ReturnStatement");
-auto const VariableDeclaration = VariableDeclaration_type("VariableDeclaration");
-auto const Assignment = Assignment_type("Assignment");
-auto const Variable = Variable_type("Variable");
+  using ErrorHandlerFunction = function<tcc::ErrorHandler<Iterator>>;
+  using AnnotateFunction = function<tcc::annotation<Iterator>>;
 
-// Import the expression rule
-namespace {
-auto const& Expression = tcc::Expression();
+  // clang-format off
+    StatementList =
+        +Statement_
+        ;
+
+    Statement_ =
+            VariableDeclaration
+        |   Assignment
+        |   compound_statement
+        |   IfStatement
+        |   WhileStatement
+        |   ReturnStatement
+        ;
+
+    Identifier =
+            !expr.keywords
+        >>  raw[lexeme[(alpha | '_') >> *(alnum | '_')]]
+        ;
+
+    VariableDeclaration =
+            lexeme["int" >> !(alnum | '_')] // make sure we have whole words
+        >   Identifier
+        >   -('=' > expr)
+        >   ';'
+        ;
+
+    Assignment =
+            Identifier
+        >   '='
+        >   expr
+        >   ';'
+        ;
+
+    IfStatement =
+            lit("if")
+        >   '('
+        >   expr
+        >   ')'
+        >   Statement_
+        >
+            -(
+                lexeme["else" >> !(alnum | '_')] // make sure we have whole words
+            >   Statement_
+            )
+        ;
+
+    WhileStatement =
+            lit("while")
+        >   '('
+        >   expr
+        >   ')'
+        >   Statement_
+        ;
+
+    compound_statement =
+        '{' >> -StatementList >> '}'
+        ;
+
+    ReturnStatement =
+            lexeme["return" >> !(alnum | '_')] // make sure we have whole words
+        >  -expr
+        >   ';'
+        ;
+  // clang-format on
+
+  // Debugging and error handling and reporting support.
+  BOOST_SPIRIT_DEBUG_NODES((StatementList)(Identifier)(VariableDeclaration)(Assignment));
+
+  // Error handling: on error in StatementList, call error handler.
+  on_error<fail>(StatementList, ErrorHandlerFunction(errorHandler)("Error! Expecting ", _4, _3));
+
+  // Annotation: on success in VariableDeclaration,
+  // Assignment and ReturnStatement, call annotation.
+  on_success(VariableDeclaration, AnnotateFunction(errorHandler.iters)(_val, _1));
+  on_success(Assignment, AnnotateFunction(errorHandler.iters)(_val, _1));
+  on_success(ReturnStatement, AnnotateFunction(errorHandler.iters)(_val, _1));
 }
-
-auto const StatementList_def = +(ReturnStatement | VariableDeclaration | Assignment);
-auto const ReturnStatement_def = x3::lit("return") > Expression > ';';
-auto const VariableDeclaration_def = lexeme["auto" >> !(alnum | '_')] > Assignment;
-auto const Assignment_def = Variable > '=' > Expression > ';';
-auto const Variable_def = identifier;
-auto const Statement_def = StatementList;
-
-BOOST_SPIRIT_DEFINE(Statement, StatementList, ReturnStatement, VariableDeclaration, Assignment, Variable)
-
-struct Statement_class : error_handler_base, x3::annotate_on_success {};
-struct ReturnStatement_class : x3::annotate_on_success {};
-struct Assignment_class : x3::annotate_on_success {};
-struct Variable_class : x3::annotate_on_success {};
 }  // namespace parser
 }  // namespace tcc

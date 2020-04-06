@@ -3,80 +3,65 @@
  * @copyright Copyright 2019-2020 Tobias Hienzsch. MIT license.
  */
 
+#include "tcc/parser/statement.hpp"
+
 #include <sstream>
 
 #include "catch2/catch.hpp"
-#include "tcc/parser/config.hpp"
+#include "tcc/parser/skipper.hpp"
 
-using boost::spirit::x3::with;
-using boost::spirit::x3::ascii::space;
-using tcc::parser::error_handler_type;
-using tcc::parser::iterator_type;
+TEST_CASE("tcc/parser: StatementValid", "[tcc][parser][qi]") {
+  using namespace tcc;
 
-namespace {
-class NullBuffer : public std::streambuf {
- public:
-  int overflow(int c) { return c; }
-};
+  auto testCase = GENERATE(as<std::string>{}, "int x = 0;", "x = y+z;");
 
-NullBuffer null_buffer;
-std::ostream null_stream(&null_buffer);
-}  // namespace
+  using IteratorType = std::string::const_iterator;
+  IteratorType iter = testCase.begin();
+  IteratorType end = testCase.end();
 
-TEST_CASE("tcc/parser: Statement", "[tcc][parser]") {
-  auto testCase = GENERATE(as<std::string>{}, "auto x = 0;", "x = y+z;");
+  auto errorHandler = ErrorHandler<IteratorType>(iter, end);       // Our error handler
+  auto statement = parser::Statement<IteratorType>(errorHandler);  // Our parser
+  auto skipper = parser::Skipper<IteratorType>{};                  // Our skipper
+  auto ast = ast::StatementList{};                                 // Our AST
 
-  iterator_type iter(testCase.begin());
-  iterator_type end(testCase.end());
-  error_handler_type error_handler(iter, end, null_stream);
+  bool success = phrase_parse(iter, end, statement, skipper, ast);
 
-  auto const grammar = tcc::parser::Statement_type("Statement");
-  auto const parser = with<tcc::parser::error_handler_tag>(std::ref(error_handler))[grammar];
-
-  tcc::ast::StatementList ast;
-  bool success = tcc::parser::x3::phrase_parse(iter, end, parser, space, ast);
   REQUIRE(success == true);
 }
 
-TEST_CASE("tcc/parser: StatementInvalid", "[tcc][parser]") {
-  auto testCase = GENERATE(as<std::string>{}, "auto 8x = 0;", "x = y+z");
+TEST_CASE("tcc/parser: StatementInvalid", "[tcc][parser][qi]") {
+  using namespace tcc;
 
-  iterator_type iter(testCase.begin());
-  iterator_type end(testCase.end());
-  error_handler_type error_handler(iter, end, null_stream);
+  auto testCase = GENERATE(as<std::string>{}, "auto x = 0;", "= y+z;");
 
-  auto const grammar = tcc::parser::Statement_type("Statement");
-  auto const parser = with<tcc::parser::error_handler_tag>(std::ref(error_handler))[grammar];
+  using IteratorType = std::string::const_iterator;
+  IteratorType iter = testCase.begin();
+  IteratorType end = testCase.end();
 
-  tcc::ast::StatementList ast;
-  bool success = tcc::parser::x3::phrase_parse(iter, end, parser, space, ast);
+  auto errorHandler = ErrorHandler<IteratorType>(iter, end);       // Our error handler
+  auto statement = parser::Statement<IteratorType>(errorHandler);  // Our parser
+  auto skipper = parser::Skipper<IteratorType>{};                  // Our skipper
+  auto ast = ast::StatementList{};                                 // Our AST
+
+  bool success = phrase_parse(iter, end, statement, skipper, ast);
+
   REQUIRE(success == false);
 }
+TEST_CASE("tcc/parser: ReturnStatementValid", "[tcc][parser][qi]") {
+  using namespace tcc;
 
-TEST_CASE("tcc/parser: ReturnStatementValid", "[tcc][parser]") {
-  auto const testCase = GENERATE(as<std::string>{}, "return x+y;", "return 8;");
-  iterator_type iter(testCase.begin());
-  iterator_type end(testCase.end());
-  error_handler_type error_handler(iter, end, null_stream);
+  auto testCase = GENERATE(as<std::string>{}, "return;", "return x;", "return 1+2;");
 
-  auto const grammar = tcc::parser::Statement_type("Statement");
-  auto const parser = with<tcc::parser::error_handler_tag>(std::ref(error_handler))[grammar];
+  using IteratorType = std::string::const_iterator;
+  IteratorType iter = testCase.begin();
+  IteratorType end = testCase.end();
 
-  tcc::ast::StatementList ast;
-  bool success = tcc::parser::x3::phrase_parse(iter, end, parser, space, ast);
+  auto errorHandler = ErrorHandler<IteratorType>(iter, end);       // Our error handler
+  auto statement = parser::Statement<IteratorType>(errorHandler);  // Our parser
+  auto skipper = parser::Skipper<IteratorType>{};                  // Our skipper
+  auto ast = ast::ReturnStatement{};                               // Our AST
+
+  bool success = phrase_parse(iter, end, statement.ReturnStatement, skipper, ast);
+
   REQUIRE(success == true);
-}
-
-TEST_CASE("tcc/parser: ReturnStatementInvalid", "[tcc][parser]") {
-  auto testCase = GENERATE(as<std::string>{}, "return $", "return false");
-  iterator_type iter(testCase.begin());
-  iterator_type end(testCase.end());
-  error_handler_type error_handler(iter, end, null_stream);
-
-  auto const grammar = tcc::parser::Statement_type("Statement");
-  auto const parser = with<tcc::parser::error_handler_tag>(std::ref(error_handler))[grammar];
-
-  tcc::ast::StatementList ast;
-  bool success = tcc::parser::x3::phrase_parse(iter, end, parser, space, ast);
-  REQUIRE(success == false);
 }

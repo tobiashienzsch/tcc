@@ -1,28 +1,44 @@
-#pragma once
+#if !defined(TCC_PARSER_QI_AST_HPP)
+#define TCC_PARSER_QI_AST_HPP
 
+#include <boost/config/warning_disable.hpp>
+#include <boost/fusion/include/adapt_struct.hpp>
 #include <boost/fusion/include/io.hpp>
 #include <boost/optional.hpp>
-#include <boost/spirit/home/x3/support/ast/position_tagged.hpp>
-#include <boost/spirit/home/x3/support/ast/variant.hpp>
+#include <boost/variant/recursive_variant.hpp>
 #include <list>
+#include <utility>
 
 namespace tcc {
 namespace ast {
-namespace x3 = boost::spirit::x3;
+
+/**
+ * Used to annotate the AST with the iterator position.
+ * This id is used as a key to a map<int, Iterator> (not really part of the AST.)
+ */
+struct Tagged {
+  int id{};
+};
 
 struct Nil {};
 struct Unary;
+struct FunctionCall;
 struct Expression;
 
-struct Variable : x3::position_tagged {
-  Variable(std::string newName = "") : name(std::move(newName)) {}
+struct Identifier : Tagged {
+  Identifier(std::string n = "") : name(std::move(n)) {}
   std::string name;
 };
 
-struct Operand : x3::variant<Nil, uint64_t, Variable, x3::forward_ast<Unary>, x3::forward_ast<Expression>> {
-  using base_type::base_type;
-  using base_type::operator=;
-};
+using Operand = boost::variant<              //
+    Nil,                                     //
+    bool,                                    //
+    unsigned int,                            //
+    Identifier,                              //
+    boost::recursive_wrapper<Unary>,         //
+    boost::recursive_wrapper<FunctionCall>,  //
+    boost::recursive_wrapper<Expression>     //
+    >;
 
 enum class OpToken {
   Plus,
@@ -40,99 +56,51 @@ enum class OpToken {
   GreaterEqual,
   And,
   Or
-
 };
-
-inline auto operator<<(std::ostream& out, OpToken op) -> std::ostream& {
-  switch (op) {
-    case OpToken::Plus:
-      out << "plus";
-      break;
-    case OpToken::Minus:
-      out << "minus";
-      break;
-    case OpToken::Times:
-      out << "times";
-      break;
-    case OpToken::Divide:
-      out << "divide";
-      break;
-    case OpToken::Positive:
-      out << "positive";
-      break;
-    case OpToken::Negative:
-      out << "negative";
-      break;
-    case OpToken::Not:
-      out << "not";
-      break;
-    case OpToken::Equal:
-      out << "equal";
-      break;
-    case OpToken::NotEqual:
-      out << "not equal";
-      break;
-    case OpToken::Less:
-      out << "less";
-      break;
-    case OpToken::LessEqual:
-      out << "less equal";
-      break;
-    case OpToken::Greater:
-      out << "greater";
-      break;
-    case OpToken::GreaterEqual:
-      out << "greater equal";
-      break;
-    case OpToken::And:
-      out << "and";
-      break;
-    case OpToken::Or:
-      out << "or";
-      break;
-  }
-  return out;
-}
 
 struct Unary {
   OpToken operator_;
-  Operand operand_;
+  Operand operand;
 };
 
-struct Operation : x3::position_tagged {
+struct Operation {
   OpToken operator_;
-  Operand operand_;
+  Operand operand;
 };
 
-struct Expression : x3::position_tagged {
+struct FunctionCall {
+  Identifier function_name;
+  std::list<Expression> args;
+};
+
+struct Expression {
   Operand first;
   std::list<Operation> rest;
 };
 
-struct Assignment : x3::position_tagged {
-  Variable lhs;
+struct Assignment {
+  Identifier lhs;
   Expression rhs;
 };
 
 struct VariableDeclaration {
-  Assignment assign;
-};
-
-struct ReturnStatement : x3::position_tagged {
-  Expression expression;
+  Identifier lhs;
+  boost::optional<Expression> rhs;
 };
 
 struct IfStatement;
 struct WhileStatement;
 struct StatementList;
-struct CompoundStatement;
+struct ReturnStatement;
 
-struct Statement : x3::variant<VariableDeclaration, Assignment, ReturnStatement, boost::recursive_wrapper<IfStatement>,
-                               boost::recursive_wrapper<WhileStatement>, boost::recursive_wrapper<StatementList>,
-                               boost::recursive_wrapper<CompoundStatement>> {
-  using base_type::base_type;
-  using base_type::operator=;
-};
+using Statement = boost::variant<               //
+    VariableDeclaration,                        //
+    Assignment,                                 //
+    boost::recursive_wrapper<IfStatement>,      //
+    boost::recursive_wrapper<WhileStatement>,   //
+    boost::recursive_wrapper<ReturnStatement>,  //
+    boost::recursive_wrapper<StatementList>     //
+    >;
 
 struct StatementList : std::list<Statement> {};
 
@@ -147,19 +115,92 @@ struct WhileStatement {
   Statement body;
 };
 
-struct CompoundStatement {
-  Statement body;
+struct ReturnStatement : Tagged {
+  boost::optional<Expression> expr;
 };
 
+struct function {
+  std::string return_type;
+  Identifier function_name;
+  std::list<Identifier> args;
+  StatementList body;
+};
+
+using FunctionList = std::list<function>;
+
 // print functions for debugging
-inline auto operator<<(std::ostream& out, Nil) -> std::ostream& {
+inline std::ostream& operator<<(std::ostream& out, Nil) {
   out << "Nil";
   return out;
 }
 
-inline auto operator<<(std::ostream& out, Variable const& var) -> std::ostream& {
-  out << var.name;
+inline std::ostream& operator<<(std::ostream& out, Identifier const& id) {
+  out << id.name;
   return out;
 }
 }  // namespace ast
 }  // namespace tcc
+
+BOOST_FUSION_ADAPT_STRUCT(          //
+    tcc::ast::Unary,                //
+    (tcc::ast::OpToken, operator_)  //
+    (tcc::ast::Operand, operand)    //
+)
+
+BOOST_FUSION_ADAPT_STRUCT(          //
+    tcc::ast::Operation,            //
+    (tcc::ast::OpToken, operator_)  //
+    (tcc::ast::Operand, operand)    //
+)
+
+BOOST_FUSION_ADAPT_STRUCT(                   //
+    tcc::ast::FunctionCall,                  //
+    (tcc::ast::Identifier, function_name)    //
+    (std::list<tcc::ast::Expression>, args)  //
+)
+
+BOOST_FUSION_ADAPT_STRUCT(                  //
+    tcc::ast::Expression,                   //
+    (tcc::ast::Operand, first)              //
+    (std::list<tcc::ast::Operation>, rest)  //
+)
+
+BOOST_FUSION_ADAPT_STRUCT(                        //
+    tcc::ast::VariableDeclaration,                //
+    (tcc::ast::Identifier, lhs)                   //
+    (boost::optional<tcc::ast::Expression>, rhs)  //
+)
+
+BOOST_FUSION_ADAPT_STRUCT(       //
+    tcc::ast::Assignment,        //
+    (tcc::ast::Identifier, lhs)  //
+    (tcc::ast::Expression, rhs)  //
+)
+
+BOOST_FUSION_ADAPT_STRUCT(                         //
+    tcc::ast::IfStatement,                         //
+    (tcc::ast::Expression, condition)              //
+    (tcc::ast::Statement, then)                    //
+    (boost::optional<tcc::ast::Statement>, else_)  //
+)
+
+BOOST_FUSION_ADAPT_STRUCT(             //
+    tcc::ast::WhileStatement,          //
+    (tcc::ast::Expression, condition)  //
+    (tcc::ast::Statement, body)        //
+)
+
+BOOST_FUSION_ADAPT_STRUCT(                         //
+    tcc::ast::ReturnStatement,                     //
+    (boost::optional<tcc::ast::Expression>, expr)  //
+)
+
+BOOST_FUSION_ADAPT_STRUCT(                   //
+    tcc::ast::function,                      //
+    (std::string, return_type)               //
+    (tcc::ast::Identifier, function_name)    //
+    (std::list<tcc::ast::Identifier>, args)  //
+    (tcc::ast::StatementList, body)          //
+)
+
+#endif

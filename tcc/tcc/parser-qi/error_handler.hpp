@@ -16,13 +16,13 @@ namespace client {
 //  The error handler
 ///////////////////////////////////////////////////////////////////////////////
 template <typename Iterator>
-struct error_handler {
+struct ErrorHandler {
   template <typename, typename, typename>
   struct result {
     typedef void type;
   };
 
-  error_handler(Iterator first, Iterator last) : first(first), last(last) {}
+  ErrorHandler(Iterator first, Iterator last) : first(first), last(last) {}
 
   template <typename Message, typename What>
   void operator()(Message const& message, What const& what, Iterator err_pos) const {

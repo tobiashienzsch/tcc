@@ -36,10 +36,10 @@ int main(int argc, char** argv) {
   client::vmachine vm;            // Our virtual machine
   client::ast::FunctionList ast;  // Our AST
 
-  client::error_handler<iterator_type> error_handler(iter, end);    // Our error handler
-  client::parser::function<iterator_type> function(error_handler);  // Our parser
-  client::parser::skipper<iterator_type> skipper;                   // Our skipper
-  client::code_gen::compiler compiler(error_handler);               // Our compiler
+  client::ErrorHandler<iterator_type> errorHandler(iter, end);     // Our error handler
+  client::parser::function<iterator_type> function(errorHandler);  // Our parser
+  client::parser::skipper<iterator_type> skipper;                  // Our skipper
+  client::code_gen::compiler compiler(errorHandler);               // Our compiler
 
   bool success = phrase_parse(iter, end, +function, skipper, ast);
 

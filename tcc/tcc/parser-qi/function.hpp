@@ -16,7 +16,7 @@ namespace parser {
 ///////////////////////////////////////////////////////////////////////////////
 template <typename Iterator>
 struct function : qi::grammar<Iterator, ast::function(), skipper<Iterator>> {
-  function(error_handler<Iterator>& error_handler);
+  function(ErrorHandler<Iterator>& errorHandler);
 
   statement<Iterator> body;
   qi::rule<Iterator, std::string(), skipper<Iterator>> name;

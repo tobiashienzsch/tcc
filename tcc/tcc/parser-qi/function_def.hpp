@@ -11,7 +11,7 @@
 namespace client {
 namespace parser {
 template <typename Iterator>
-function<Iterator>::function(error_handler<Iterator>& error_handler) : function::base_type(start), body(error_handler) {
+function<Iterator>::function(ErrorHandler<Iterator>& errorHandler) : function::base_type(start), body(errorHandler) {
   qi::_1_type _1;
   // qi::_2_type _2;
   qi::_3_type _3;
@@ -29,8 +29,8 @@ function<Iterator>::function(error_handler<Iterator>& error_handler) : function:
   using qi::on_error;
   using qi::on_success;
 
-  typedef function<client::error_handler<Iterator>> error_handler_function;
-  typedef function<client::annotation<Iterator>> annotation_function;
+  typedef function<client::ErrorHandler<Iterator>> ErrorHandlerFunction;
+  typedef function<client::annotation<Iterator>> AnnotateFunction;
 
   name = !body.expr.keywords >> raw[lexeme[(alpha | '_') >> *(alnum | '_')]];
 
@@ -43,11 +43,11 @@ function<Iterator>::function(error_handler<Iterator>& error_handler) : function:
   // Debugging and error handling and reporting support.
   BOOST_SPIRIT_DEBUG_NODES((Identifier)(argument_list)(start));
 
-  // Error handling: on error in start, call error_handler.
-  on_error<fail>(start, error_handler_function(error_handler)("Error! Expecting ", _4, _3));
+  // Error handling: on error in start, call error handler.
+  on_error<fail>(start, ErrorHandlerFunction(errorHandler)("Error! Expecting ", _4, _3));
 
   // Annotation: on success in start, call annotation.
-  on_success(Identifier, annotation_function(error_handler.iters)(_val, _1));
+  on_success(Identifier, AnnotateFunction(errorHandler.iters)(_val, _1));
 }
 }  // namespace parser
 }  // namespace client

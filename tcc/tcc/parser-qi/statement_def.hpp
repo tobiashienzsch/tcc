@@ -11,8 +11,8 @@
 namespace client {
 namespace parser {
 template <typename Iterator>
-statement<Iterator>::statement(error_handler<Iterator>& error_handler)
-    : statement::base_type(StatementList), expr(error_handler) {
+statement<Iterator>::statement(ErrorHandler<Iterator>& errorHandler)
+    : statement::base_type(StatementList), expr(errorHandler) {
   qi::_1_type _1;
   //   qi::_2_type _2;
   qi::_3_type _3;
@@ -30,8 +30,8 @@ statement<Iterator>::statement(error_handler<Iterator>& error_handler)
   using qi::on_error;
   using qi::on_success;
 
-  using error_handler_function = function<client::error_handler<Iterator>>;
-  using annotation_function = function<client::annotation<Iterator>>;
+  using ErrorHandlerFunction = function<client::ErrorHandler<Iterator>>;
+  using AnnotateFunction = function<client::annotation<Iterator>>;
 
   // clang-format off
     StatementList =
@@ -101,14 +101,14 @@ statement<Iterator>::statement(error_handler<Iterator>& error_handler)
   // Debugging and error handling and reporting support.
   BOOST_SPIRIT_DEBUG_NODES((StatementList)(Identifier)(VariableDeclaration)(Assignment));
 
-  // Error handling: on error in StatementList, call error_handler.
-  on_error<fail>(StatementList, error_handler_function(error_handler)("Error! Expecting ", _4, _3));
+  // Error handling: on error in StatementList, call error handler.
+  on_error<fail>(StatementList, ErrorHandlerFunction(errorHandler)("Error! Expecting ", _4, _3));
 
   // Annotation: on success in VariableDeclaration,
   // Assignment and ReturnStatement, call annotation.
-  on_success(VariableDeclaration, annotation_function(error_handler.iters)(_val, _1));
-  on_success(Assignment, annotation_function(error_handler.iters)(_val, _1));
-  on_success(ReturnStatement, annotation_function(error_handler.iters)(_val, _1));
+  on_success(VariableDeclaration, AnnotateFunction(errorHandler.iters)(_val, _1));
+  on_success(Assignment, AnnotateFunction(errorHandler.iters)(_val, _1));
+  on_success(ReturnStatement, AnnotateFunction(errorHandler.iters)(_val, _1));
 }
 }  // namespace parser
 }  // namespace client

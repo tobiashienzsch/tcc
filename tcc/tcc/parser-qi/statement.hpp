@@ -16,7 +16,7 @@ namespace parser {
 ///////////////////////////////////////////////////////////////////////////////
 template <typename Iterator>
 struct statement : qi::grammar<Iterator, ast::StatementList(), skipper<Iterator>> {
-  statement(error_handler<Iterator>& error_handler);
+  statement(ErrorHandler<Iterator>& errorHandler);
 
   expression<Iterator> expr;
   qi::rule<Iterator, ast::StatementList(), skipper<Iterator>> StatementList, compound_statement;

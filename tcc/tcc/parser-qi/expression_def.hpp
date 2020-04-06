@@ -13,7 +13,7 @@
 namespace client {
 namespace parser {
 template <typename Iterator>
-expression<Iterator>::expression(error_handler<Iterator>& error_handler) : expression::base_type(expr) {
+expression<Iterator>::expression(ErrorHandler<Iterator>& errorHandler) : expression::base_type(expr) {
   qi::_1_type _1;
   //   qi::_2_type _2;
   qi::_3_type _3;
@@ -33,8 +33,8 @@ expression<Iterator>::expression(error_handler<Iterator>& error_handler) : expre
   using qi::on_error;
   using qi::on_success;
 
-  typedef function<client::error_handler<Iterator>> error_handler_function;
-  typedef function<client::annotation<Iterator>> annotation_function;
+  typedef function<client::ErrorHandler<Iterator>> ErrorHandlerFunction;
+  typedef function<client::annotation<Iterator>> AnnotationFunction;
 
   ///////////////////////////////////////////////////////////////////////
   // Tokens
@@ -166,15 +166,15 @@ expression<Iterator>::expression(error_handler<Iterator>& error_handler) : expre
         );
 
         ///////////////////////////////////////////////////////////////////////
-        // Error handling: on error in expr, call error_handler.
+        // Error handling: on error in expr, call errorHandler.
         on_error<fail>(expr,
-            error_handler_function(error_handler)(
+            ErrorHandlerFunction(errorHandler)(
                 "Error! Expecting ", _4, _3));
 
         ///////////////////////////////////////////////////////////////////////
         // Annotation: on success in primary_expr, call annotation.
         on_success(primary_expr,
-            annotation_function(error_handler.iters)(_val, _1));
+            AnnotationFunction(errorHandler.iters)(_val, _1));
 
         // clang-format off
 

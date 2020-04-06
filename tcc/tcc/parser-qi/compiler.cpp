@@ -210,7 +210,7 @@ bool compiler::operator()(ast::Identifier const& x) {
   BOOST_ASSERT(current != nullptr);
   int const* p = current->find_var(x.name);
   if (p == nullptr) {
-    error_handler(x.id, "Undeclared variable: " + x.name);
+    errorHandler_(x.id, "Undeclared variable: " + x.name);
     return false;
   }
   current->op(op_load, *p);
@@ -289,14 +289,14 @@ bool compiler::operator()(ast::FunctionCall const& x) {
   BOOST_ASSERT(current != nullptr);
 
   if (functions.find(x.function_name.name) == functions.end()) {
-    error_handler(x.function_name.id, "Function not found: " + x.function_name.name);
+    errorHandler_(x.function_name.id, "Function not found: " + x.function_name.name);
     return false;
   }
 
   boost::shared_ptr<code_gen::function> p = functions[x.function_name.name];
 
   if (p->nargs() != static_cast<int>(x.args.size())) {
-    error_handler(x.function_name.id, "Wrong number of arguments: " + x.function_name.name);
+    errorHandler_(x.function_name.id, "Wrong number of arguments: " + x.function_name.name);
     return false;
   }
 
@@ -324,7 +324,7 @@ bool compiler::operator()(ast::Assignment const& x) {
   if (!(*this)(x.rhs)) return false;
   int const* p = current->find_var(x.lhs.name);
   if (p == nullptr) {
-    error_handler(x.lhs.id, "Undeclared variable: " + x.lhs.name);
+    errorHandler_(x.lhs.id, "Undeclared variable: " + x.lhs.name);
     return false;
   }
   current->op(op_store, *p);
@@ -335,7 +335,7 @@ bool compiler::operator()(ast::VariableDeclaration const& x) {
   BOOST_ASSERT(current != nullptr);
   int const* p = current->find_var(x.lhs.name);
   if (p != 0) {
-    error_handler(x.lhs.id, "Duplicate variable: " + x.lhs.name);
+    errorHandler_(x.lhs.id, "Duplicate variable: " + x.lhs.name);
     return false;
   }
   if (x.rhs)  // if there's an RHS initializer
@@ -406,12 +406,12 @@ bool compiler::operator()(ast::WhileStatement const& x) {
 bool compiler::operator()(ast::ReturnStatement const& x) {
   if (void_return) {
     if (x.expr) {
-      error_handler(x.id, "'void' function returning a value: ");
+      errorHandler_(x.id, "'void' function returning a value: ");
       return false;
     }
   } else {
     if (!x.expr) {
-      error_handler(x.id, current_function_name + " function must return a value: ");
+      errorHandler_(x.id, current_function_name + " function must return a value: ");
       return false;
     }
   }
@@ -426,7 +426,7 @@ bool compiler::operator()(ast::ReturnStatement const& x) {
 bool compiler::operator()(ast::function const& x) {
   void_return = x.return_type == "void";
   if (functions.find(x.function_name.name) != functions.end()) {
-    error_handler(x.function_name.id, "Duplicate function: " + x.function_name.name);
+    errorHandler_(x.function_name.id, "Duplicate function: " + x.function_name.name);
     return false;
   }
   boost::shared_ptr<code_gen::function>& p = functions[x.function_name.name];

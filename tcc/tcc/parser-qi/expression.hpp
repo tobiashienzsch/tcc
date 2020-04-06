@@ -38,7 +38,7 @@ namespace ascii = boost::spirit::ascii;
 ///////////////////////////////////////////////////////////////////////////////
 template <typename Iterator>
 struct expression : qi::grammar<Iterator, ast::expression(), skipper<Iterator>> {
-  expression(error_handler<Iterator>& error_handler);
+  expression(ErrorHandler<Iterator>& errorHandler);
 
   qi::rule<Iterator, ast::expression(), skipper<Iterator>> expr, equality_expr, relational_expr, logical_or_expr,
       logical_and_expr, additive_expr, multiplicative_expr;

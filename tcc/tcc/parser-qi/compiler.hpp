@@ -48,12 +48,12 @@ struct compiler {
   using result_type = bool;
 
   template <typename ErrorHandler>
-  compiler(ErrorHandler& error_handler_) {
+  compiler(ErrorHandler& errorHandler) {
     using namespace boost::phoenix::arg_names;
     namespace phx = boost::phoenix;
     using boost::phoenix::function;
 
-    error_handler = function<ErrorHandler>(error_handler_)("Error! ", _2, phx::cref(error_handler_.iters)[_1]);
+    errorHandler_ = function<ErrorHandler>(errorHandler)("Error! ", _2, phx::cref(errorHandler.iters)[_1]);
   }
 
   bool operator()(ast::Nil) {
@@ -93,7 +93,7 @@ struct compiler {
   function_table functions{};
   bool void_return{};
 
-  boost::function<void(int tag, std::string const& what)> error_handler;
+  boost::function<void(int tag, std::string const& what)> errorHandler_;
 };
 }  // namespace code_gen
 }  // namespace client

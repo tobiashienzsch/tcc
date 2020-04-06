@@ -9,13 +9,13 @@ namespace parser {
 //  The statement grammar
 ///////////////////////////////////////////////////////////////////////////////
 template <typename Iterator>
-struct statement : qi::grammar<Iterator, ast::StatementList(), skipper<Iterator>> {
-  statement(ErrorHandler<Iterator>& errorHandler);
+struct Statement : qi::grammar<Iterator, ast::StatementList(), skipper<Iterator>> {
+  Statement(ErrorHandler<Iterator>& errorHandler);
 
   expression<Iterator> expr;
   qi::rule<Iterator, ast::StatementList(), skipper<Iterator>> StatementList, compound_statement;
 
-  qi::rule<Iterator, ast::statement(), skipper<Iterator>> statement_;
+  qi::rule<Iterator, ast::Statement(), skipper<Iterator>> Statement_;
   qi::rule<Iterator, ast::VariableDeclaration(), skipper<Iterator>> VariableDeclaration;
   qi::rule<Iterator, ast::Assignment(), skipper<Iterator>> Assignment;
   qi::rule<Iterator, ast::IfStatement(), skipper<Iterator>> IfStatement;

@@ -347,14 +347,14 @@ bool compiler::operator()(ast::VariableDeclaration const& x) {
   return true;
 }
 
-bool compiler::operator()(ast::statement const& x) {
+bool compiler::operator()(ast::Statement const& x) {
   BOOST_ASSERT(current != nullptr);
   return boost::apply_visitor(*this, x);
 }
 
 bool compiler::operator()(ast::StatementList const& x) {
   BOOST_ASSERT(current != nullptr);
-  BOOST_FOREACH (ast::statement const& s, x) {
+  for (auto const& s : x) {
     if (!(*this)(s)) return false;
   }
   return true;

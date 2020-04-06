@@ -70,7 +70,7 @@ struct compiler {
   bool operator()(ast::Assignment const& x);
   bool operator()(ast::VariableDeclaration const& x);
   bool operator()(ast::StatementList const& x);
-  bool operator()(ast::statement const& x);
+  bool operator()(ast::Statement const& x);
   bool operator()(ast::IfStatement const& x);
   bool operator()(ast::WhileStatement const& x);
   bool operator()(ast::ReturnStatement const& x);

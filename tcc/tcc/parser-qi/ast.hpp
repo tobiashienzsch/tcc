@@ -93,7 +93,7 @@ struct WhileStatement;
 struct StatementList;
 struct ReturnStatement;
 
-using statement = boost::variant<               //
+using Statement = boost::variant<               //
     VariableDeclaration,                        //
     Assignment,                                 //
     boost::recursive_wrapper<IfStatement>,      //
@@ -102,17 +102,17 @@ using statement = boost::variant<               //
     boost::recursive_wrapper<StatementList>     //
     >;
 
-struct StatementList : std::list<statement> {};
+struct StatementList : std::list<Statement> {};
 
 struct IfStatement {
   expression condition;
-  statement then;
-  boost::optional<statement> else_;
+  Statement then;
+  boost::optional<Statement> else_;
 };
 
 struct WhileStatement {
   expression condition;
-  statement body;
+  Statement body;
 };
 
 struct ReturnStatement : tagged {
@@ -180,14 +180,14 @@ BOOST_FUSION_ADAPT_STRUCT(          //
 BOOST_FUSION_ADAPT_STRUCT(                            //
     client::ast::IfStatement,                         //
     (client::ast::expression, condition)              //
-    (client::ast::statement, then)                    //
-    (boost::optional<client::ast::statement>, else_)  //
+    (client::ast::Statement, then)                    //
+    (boost::optional<client::ast::Statement>, else_)  //
 )
 
 BOOST_FUSION_ADAPT_STRUCT(                //
     client::ast::WhileStatement,          //
     (client::ast::expression, condition)  //
-    (client::ast::statement, body)        //
+    (client::ast::Statement, body)        //
 )
 
 BOOST_FUSION_ADAPT_STRUCT(                            //

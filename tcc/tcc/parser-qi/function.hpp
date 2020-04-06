@@ -10,7 +10,7 @@ template <typename Iterator>
 struct function : qi::grammar<Iterator, ast::function(), skipper<Iterator>> {
   function(ErrorHandler<Iterator>& errorHandler);
 
-  statement<Iterator> body;
+  Statement<Iterator> body;
   qi::rule<Iterator, std::string(), skipper<Iterator>> name;
   qi::rule<Iterator, ast::Identifier(), skipper<Iterator>> Identifier;
   qi::rule<Iterator, std::list<ast::Identifier>(), skipper<Iterator>> argument_list;

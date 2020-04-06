@@ -5,8 +5,8 @@
 namespace client {
 namespace parser {
 template <typename Iterator>
-statement<Iterator>::statement(ErrorHandler<Iterator>& errorHandler)
-    : statement::base_type(StatementList), expr(errorHandler) {
+Statement<Iterator>::Statement(ErrorHandler<Iterator>& errorHandler)
+    : Statement::base_type(StatementList), expr(errorHandler) {
   qi::_1_type _1;
   //   qi::_2_type _2;
   qi::_3_type _3;
@@ -29,10 +29,10 @@ statement<Iterator>::statement(ErrorHandler<Iterator>& errorHandler)
 
   // clang-format off
     StatementList =
-        +statement_
+        +Statement_
         ;
 
-    statement_ =
+    Statement_ =
             VariableDeclaration
         |   Assignment
         |   compound_statement
@@ -65,11 +65,11 @@ statement<Iterator>::statement(ErrorHandler<Iterator>& errorHandler)
         >   '('
         >   expr
         >   ')'
-        >   statement_
+        >   Statement_
         >
             -(
                 lexeme["else" >> !(alnum | '_')] // make sure we have whole words
-            >   statement_
+            >   Statement_
             )
         ;
 
@@ -78,7 +78,7 @@ statement<Iterator>::statement(ErrorHandler<Iterator>& errorHandler)
         >   '('
         >   expr
         >   ')'
-        >   statement_
+        >   Statement_
         ;
 
     compound_statement =

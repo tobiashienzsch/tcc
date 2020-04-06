@@ -1,7 +1,7 @@
 #if !defined(TCC_PARSER_QI_STATEMENT_HPP)
 #define TCC_PARSER_QI_STATEMENT_HPP
 
-#include "tcc/parser-qi/expression.hpp"
+#include "tcc/parser/expression.hpp"
 
 namespace tcc {
 namespace parser {

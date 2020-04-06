@@ -24,9 +24,9 @@
 #include <boost/spirit/include/qi.hpp>
 #include <vector>
 
-#include "tcc/parser-qi/ast.hpp"
-#include "tcc/parser-qi/error_handler.hpp"
-#include "tcc/parser-qi/skipper.hpp"
+#include "tcc/parser/ast.hpp"
+#include "tcc/parser/error_handler.hpp"
+#include "tcc/parser/skipper.hpp"
 
 namespace tcc {
 namespace parser {

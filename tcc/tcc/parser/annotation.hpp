@@ -6,7 +6,7 @@
 #include <boost/variant/apply_visitor.hpp>
 #include <map>
 
-#include "tcc/parser-qi/ast.hpp"
+#include "tcc/parser/ast.hpp"
 
 namespace tcc {
 

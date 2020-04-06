@@ -1,6 +1,6 @@
-#include "tcc/parser-qi/annotation.hpp"
-#include "tcc/parser-qi/error_handler.hpp"
-#include "tcc/parser-qi/function.hpp"
+#include "tcc/parser/annotation.hpp"
+#include "tcc/parser/error_handler.hpp"
+#include "tcc/parser/function.hpp"
 
 namespace tcc {
 namespace parser {

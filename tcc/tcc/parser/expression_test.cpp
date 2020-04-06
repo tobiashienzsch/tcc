@@ -3,14 +3,14 @@
  * @copyright Copyright 2019-2020 Tobias Hienzsch. MIT license.
  */
 
-#include "tcc/parser-qi/expression.hpp"
+#include "tcc/parser/expression.hpp"
 
 #include <sstream>
 
 #include "catch2/catch.hpp"
-#include "tcc/parser-qi/skipper.hpp"
+#include "tcc/parser/skipper.hpp"
 
-TEST_CASE("tcc/parser-qi: IdentifierValid", "[tcc][parser][qi]") {
+TEST_CASE("tcc/parser: IdentifierValid", "[tcc][parser][qi]") {
   using namespace tcc;
 
   auto testCase = GENERATE(as<std::string>{}, "test", "TEST", "foo8", "test_foo");
@@ -29,7 +29,7 @@ TEST_CASE("tcc/parser-qi: IdentifierValid", "[tcc][parser][qi]") {
   REQUIRE(success == true);
 }
 
-TEST_CASE("tcc/parser-qi: IdentifierInvalid", "[tcc][parser][qi]") {
+TEST_CASE("tcc/parser: IdentifierInvalid", "[tcc][parser][qi]") {
   using namespace tcc;
 
   auto testCase = GENERATE(as<std::string>{}, "#y", "8foo", "@foo");
@@ -47,7 +47,7 @@ TEST_CASE("tcc/parser-qi: IdentifierInvalid", "[tcc][parser][qi]") {
 
   REQUIRE(success == false);
 }
-TEST_CASE("tcc/parser-qi: ExpressionValid", "[tcc][parser][qi]") {
+TEST_CASE("tcc/parser: ExpressionValid", "[tcc][parser][qi]") {
   using namespace tcc;
 
   auto testCase = GENERATE(as<std::string>{}, "1+2", "x*9+z;");
@@ -66,7 +66,7 @@ TEST_CASE("tcc/parser-qi: ExpressionValid", "[tcc][parser][qi]") {
   REQUIRE(success == true);
 }
 
-TEST_CASE("tcc/parser-qi: ExpressionInvalid", "[tcc][parser][qi]") {
+TEST_CASE("tcc/parser: ExpressionInvalid", "[tcc][parser][qi]") {
   using namespace tcc;
 
   auto testCase = GENERATE(as<std::string>{}, "&", "y+");

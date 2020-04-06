@@ -15,21 +15,21 @@ set(tcc_lib_source
     tcc/ir/three_address_code.cpp
     tcc/ir/three_address_code.hpp
 
-    tcc/parser-qi/annotation.hpp
-    tcc/parser-qi/ast.hpp
-    tcc/parser-qi/compiler.cpp
-    tcc/parser-qi/compiler.hpp
-    tcc/parser-qi/error_handler.hpp
-    tcc/parser-qi/expression.cpp
-    tcc/parser-qi/expression_def.hpp
-    tcc/parser-qi/expression.hpp
-    tcc/parser-qi/function.cpp
-    tcc/parser-qi/function_def.hpp
-    tcc/parser-qi/function.hpp
-    tcc/parser-qi/skipper.hpp
-    tcc/parser-qi/statement.cpp
-    tcc/parser-qi/statement_def.hpp
-    tcc/parser-qi/statement.hpp
+    tcc/parser/annotation.hpp
+    tcc/parser/ast.hpp
+    tcc/parser/compiler.cpp
+    tcc/parser/compiler.hpp
+    tcc/parser/error_handler.hpp
+    tcc/parser/expression.cpp
+    tcc/parser/expression_def.hpp
+    tcc/parser/expression.hpp
+    tcc/parser/function.cpp
+    tcc/parser/function_def.hpp
+    tcc/parser/function.hpp
+    tcc/parser/skipper.hpp
+    tcc/parser/statement.cpp
+    tcc/parser/statement_def.hpp
+    tcc/parser/statement.hpp
 
     tcc/vm.cpp
     tcc/vm.hpp    
@@ -79,8 +79,8 @@ if(TCC_BUILD_TESTS)
         main_test.cpp
 
         tcc/optimizer/optimizer_test.cpp
-        tcc/parser-qi/expression_test.cpp
-        tcc/parser-qi/statement_test.cpp
+        tcc/parser/expression_test.cpp
+        tcc/parser/statement_test.cpp
     )
     source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} FILES ${tcc_test_source})
 

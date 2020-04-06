@@ -2,7 +2,7 @@
 #pragma warning(disable : 4345)
 #endif
 
-#include "tcc/parser-qi/expression_def.hpp"
+#include "tcc/parser/statement_def.hpp"
 
 using iterator_type = std::string::const_iterator;
-template struct tcc::parser::Expression<iterator_type>;
+template struct tcc::parser::Statement<iterator_type>;

@@ -9,8 +9,8 @@
 #include "tcc/asm/assembly_generator.hpp"
 #include "tcc/ir/generator.hpp"
 #include "tcc/optimizer/optimizer.hpp"
-#include "tcc/parser-qi/function.hpp"
-#include "tcc/parser-qi/skipper.hpp"
+#include "tcc/parser/function.hpp"
+#include "tcc/parser/skipper.hpp"
 #include "tsl/tsl.hpp"
 
 namespace po = boost::program_options;

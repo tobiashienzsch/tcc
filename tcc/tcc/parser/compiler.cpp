@@ -1,4 +1,4 @@
-#include "tcc/parser-qi/compiler.hpp"
+#include "tcc/parser/compiler.hpp"
 
 #include <boost/assert.hpp>
 #include <boost/foreach.hpp>

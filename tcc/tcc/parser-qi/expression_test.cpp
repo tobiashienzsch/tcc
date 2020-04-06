@@ -10,6 +10,43 @@
 #include "catch2/catch.hpp"
 #include "tcc/parser-qi/skipper.hpp"
 
+TEST_CASE("tcc/parser-qi: IdentifierValid", "[tcc][parser][qi]") {
+  using namespace client;
+
+  auto testCase = GENERATE(as<std::string>{}, "test", "TEST", "foo8", "test_foo");
+
+  using IteratorType = std::string::const_iterator;
+  IteratorType iter = testCase.begin();
+  IteratorType end = testCase.end();
+
+  auto errorHandler = ErrorHandler<IteratorType>(iter, end);         // Our error handler
+  auto expression = parser::Expression<IteratorType>(errorHandler);  // Our parser
+  auto skipper = parser::Skipper<IteratorType>{};                    // Our skipper
+  auto ast = std::string{};                                          // Our AST
+
+  bool success = phrase_parse(iter, end, expression.Identifier, skipper, ast);
+
+  REQUIRE(success == true);
+}
+
+TEST_CASE("tcc/parser-qi: IdentifierInvalid", "[tcc][parser][qi]") {
+  using namespace client;
+
+  auto testCase = GENERATE(as<std::string>{}, "#y", "8foo", "@foo");
+
+  using IteratorType = std::string::const_iterator;
+  IteratorType iter = testCase.begin();
+  IteratorType end = testCase.end();
+
+  auto errorHandler = ErrorHandler<IteratorType>(iter, end);         // Our error handler
+  auto expression = parser::Expression<IteratorType>(errorHandler);  // Our parser
+  auto skipper = parser::Skipper<IteratorType>{};                    // Our skipper
+  auto ast = std::string{};                                          // Our AST
+
+  bool success = phrase_parse(iter, end, expression.Identifier, skipper, ast);
+
+  REQUIRE(success == false);
+}
 TEST_CASE("tcc/parser-qi: ExpressionValid", "[tcc][parser][qi]") {
   using namespace client;
 

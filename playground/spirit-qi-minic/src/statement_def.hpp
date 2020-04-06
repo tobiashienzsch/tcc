@@ -14,7 +14,7 @@ template <typename Iterator>
 statement<Iterator>::statement(error_handler<Iterator>& error_handler)
     : statement::base_type(StatementList), expr(error_handler) {
   qi::_1_type _1;
-  qi::_2_type _2;
+  //   qi::_2_type _2;
   qi::_3_type _3;
   qi::_4_type _4;
 
@@ -30,8 +30,8 @@ statement<Iterator>::statement(error_handler<Iterator>& error_handler)
   using qi::on_error;
   using qi::on_success;
 
-  typedef function<client::error_handler<Iterator>> error_handler_function;
-  typedef function<client::annotation<Iterator>> annotation_function;
+  using error_handler_function = function<client::error_handler<Iterator>>;
+  using annotation_function = function<client::annotation<Iterator>>;
 
   // clang-format off
     StatementList =

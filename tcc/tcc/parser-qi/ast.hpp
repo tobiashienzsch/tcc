@@ -40,7 +40,7 @@ using operand = boost::variant<              //
     boost::recursive_wrapper<Expression>     //
     >;
 
-enum OpToken {
+enum class OpToken {
   Plus,
   Minus,
   Times,

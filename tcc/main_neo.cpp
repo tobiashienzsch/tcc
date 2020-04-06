@@ -38,8 +38,8 @@ int main(int argc, char** argv) {
 
   client::ErrorHandler<IteratorType> errorHandler(iter, end);     // Our error handler
   client::parser::function<IteratorType> function(errorHandler);  // Our parser
-  client::parser::skipper<IteratorType> skipper;                  // Our skipper
-  client::code_gen::compiler compiler(errorHandler);              // Our compiler
+  client::parser::Skipper<IteratorType> skipper;                  // Our skipper
+  client::code_gen::Compiler compiler(errorHandler);              // Our compiler
 
   bool success = phrase_parse(iter, end, +function, skipper, ast);
 

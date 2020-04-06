@@ -188,19 +188,19 @@ void function::print_assembler() const {
   std::cout << "end:" << std::endl << std::endl;
 }
 
-bool compiler::operator()(unsigned int x) {
+bool Compiler::operator()(unsigned int x) {
   assert(current != nullptr);
   current->op(op_int, static_cast<int>(x));
   return true;
 }
 
-bool compiler::operator()(bool x) {
+bool Compiler::operator()(bool x) {
   assert(current != nullptr);
   current->op(x ? op_true : op_false);
   return true;
 }
 
-bool compiler::operator()(ast::Identifier const& x) {
+bool Compiler::operator()(ast::Identifier const& x) {
   assert(current != nullptr);
   int const* p = current->find_var(x.name);
   if (p == nullptr) {
@@ -211,7 +211,7 @@ bool compiler::operator()(ast::Identifier const& x) {
   return true;
 }
 
-bool compiler::operator()(ast::operation const& x) {
+bool Compiler::operator()(ast::operation const& x) {
   assert(current != nullptr);
   if (!boost::apply_visitor(*this, x.operand_)) return false;
   switch (x.operator_) {
@@ -260,7 +260,7 @@ bool compiler::operator()(ast::operation const& x) {
   return true;
 }
 
-bool compiler::operator()(ast::Unary const& x) {
+bool Compiler::operator()(ast::Unary const& x) {
   assert(current != nullptr);
   if (!boost::apply_visitor(*this, x.operand_)) return false;
   switch (x.operator_) {
@@ -279,7 +279,7 @@ bool compiler::operator()(ast::Unary const& x) {
   return true;
 }
 
-bool compiler::operator()(ast::FunctionCall const& x) {
+bool Compiler::operator()(ast::FunctionCall const& x) {
   assert(current != nullptr);
 
   if (functions.find(x.function_name.name) == functions.end()) {
@@ -304,7 +304,7 @@ bool compiler::operator()(ast::FunctionCall const& x) {
   return true;
 }
 
-bool compiler::operator()(ast::Expression const& x) {
+bool Compiler::operator()(ast::Expression const& x) {
   assert(current != nullptr);
   if (!boost::apply_visitor(*this, x.first)) return false;
   for (ast::operation const& oper : x.rest) {
@@ -313,7 +313,7 @@ bool compiler::operator()(ast::Expression const& x) {
   return true;
 }
 
-bool compiler::operator()(ast::Assignment const& x) {
+bool Compiler::operator()(ast::Assignment const& x) {
   assert(current != nullptr);
   if (!(*this)(x.rhs)) return false;
   int const* p = current->find_var(x.lhs.name);
@@ -325,7 +325,7 @@ bool compiler::operator()(ast::Assignment const& x) {
   return true;
 }
 
-bool compiler::operator()(ast::VariableDeclaration const& x) {
+bool Compiler::operator()(ast::VariableDeclaration const& x) {
   assert(current != nullptr);
   int const* p = current->find_var(x.lhs.name);
   if (p != 0) {
@@ -347,12 +347,12 @@ bool compiler::operator()(ast::VariableDeclaration const& x) {
   return true;
 }
 
-bool compiler::operator()(ast::Statement const& x) {
+bool Compiler::operator()(ast::Statement const& x) {
   assert(current != nullptr);
   return boost::apply_visitor(*this, x);
 }
 
-bool compiler::operator()(ast::StatementList const& x) {
+bool Compiler::operator()(ast::StatementList const& x) {
   assert(current != nullptr);
   for (auto const& s : x) {
     if (!(*this)(s)) return false;
@@ -360,7 +360,7 @@ bool compiler::operator()(ast::StatementList const& x) {
   return true;
 }
 
-bool compiler::operator()(ast::IfStatement const& x) {
+bool Compiler::operator()(ast::IfStatement const& x) {
   assert(current != nullptr);
   if (!(*this)(x.condition)) return false;
   current->op(op_jump_if, 0);              // we shall fill this (0) in later
@@ -382,7 +382,7 @@ bool compiler::operator()(ast::IfStatement const& x) {
   return true;
 }
 
-bool compiler::operator()(ast::WhileStatement const& x) {
+bool Compiler::operator()(ast::WhileStatement const& x) {
   assert(current != nullptr);
   std::size_t loop = current->size();  // mark our position
   if (!(*this)(x.condition)) return false;
@@ -397,7 +397,7 @@ bool compiler::operator()(ast::WhileStatement const& x) {
   return true;
 }
 
-bool compiler::operator()(ast::ReturnStatement const& x) {
+bool Compiler::operator()(ast::ReturnStatement const& x) {
   if (void_return) {
     if (x.expr) {
       errorHandler_(x.id, "'void' function returning a value: ");
@@ -417,7 +417,7 @@ bool compiler::operator()(ast::ReturnStatement const& x) {
   return true;
 }
 
-bool compiler::operator()(ast::function const& x) {
+bool Compiler::operator()(ast::function const& x) {
   void_return = x.return_type == "void";
   if (functions.find(x.function_name.name) != functions.end()) {
     errorHandler_(x.function_name.id, "Duplicate function: " + x.function_name.name);
@@ -441,7 +441,7 @@ bool compiler::operator()(ast::function const& x) {
   return true;
 }
 
-bool compiler::operator()(ast::FunctionList const& x) {
+bool Compiler::operator()(ast::FunctionList const& x) {
   // Jump to the main function
   code.push_back(op_jump);
   code.push_back(0);  // we will fill this in later when we finish compiling
@@ -466,7 +466,7 @@ bool compiler::operator()(ast::FunctionList const& x) {
   return true;
 }
 
-void compiler::print_assembler() const {
+void Compiler::print_assembler() const {
   for (auto const& p : functions) {
     std::cout << ";;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;" << std::endl;
     std::cout << p.second->get_address() << ": function " << p.first << std::endl;
@@ -474,7 +474,7 @@ void compiler::print_assembler() const {
   }
 }
 
-boost::shared_ptr<code_gen::function> compiler::find_function(std::string const& name) const {
+boost::shared_ptr<code_gen::function> Compiler::find_function(std::string const& name) const {
   if (auto const i = functions.find(name); i == functions.end()) {
     return boost::shared_ptr<code_gen::function>();
   } else {

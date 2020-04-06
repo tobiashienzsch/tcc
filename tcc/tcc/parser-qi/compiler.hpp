@@ -44,11 +44,11 @@ struct function {
   std::size_t nargs_;
 };
 
-struct compiler {
+struct Compiler {
   using result_type = bool;
 
   template <typename ErrorHandler>
-  compiler(ErrorHandler& errorHandler) {
+  Compiler(ErrorHandler& errorHandler) {
     using namespace boost::phoenix::arg_names;
     namespace phx = boost::phoenix;
     using boost::phoenix::function;

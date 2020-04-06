@@ -41,21 +41,21 @@ using operand = boost::variant<              //
     >;
 
 enum OpToken {
-  op_plus,
-  op_minus,
-  op_times,
-  op_divide,
-  op_positive,
-  op_negative,
-  op_not,
-  op_equal,
-  op_not_equal,
-  op_less,
-  op_less_equal,
-  op_greater,
-  op_greater_equal,
-  op_and,
-  op_or
+  Plus,
+  Minus,
+  Times,
+  Divide,
+  Positive,
+  Negative,
+  Not,
+  Equal,
+  NotEqual,
+  Less,
+  LessEqual,
+  Greater,
+  GreaterEqual,
+  And,
+  Or
 };
 
 struct Unary {

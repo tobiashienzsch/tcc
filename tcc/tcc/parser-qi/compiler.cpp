@@ -215,42 +215,42 @@ bool compiler::operator()(ast::operation const& x) {
   BOOST_ASSERT(current != nullptr);
   if (!boost::apply_visitor(*this, x.operand_)) return false;
   switch (x.operator_) {
-    case ast::op_plus:
+    case ast::Plus:
       current->op(op_add);
       break;
-    case ast::op_minus:
+    case ast::Minus:
       current->op(op_sub);
       break;
-    case ast::op_times:
+    case ast::Times:
       current->op(op_mul);
       break;
-    case ast::op_divide:
+    case ast::Divide:
       current->op(op_div);
       break;
 
-    case ast::op_equal:
+    case ast::Equal:
       current->op(op_eq);
       break;
-    case ast::op_not_equal:
+    case ast::NotEqual:
       current->op(op_neq);
       break;
-    case ast::op_less:
+    case ast::Less:
       current->op(op_lt);
       break;
-    case ast::op_less_equal:
+    case ast::LessEqual:
       current->op(op_lte);
       break;
-    case ast::op_greater:
+    case ast::Greater:
       current->op(op_gt);
       break;
-    case ast::op_greater_equal:
+    case ast::GreaterEqual:
       current->op(op_gte);
       break;
 
-    case ast::op_and:
+    case ast::And:
       current->op(op_and);
       break;
-    case ast::op_or:
+    case ast::Or:
       current->op(op_or);
       break;
     default:
@@ -264,13 +264,13 @@ bool compiler::operator()(ast::Unary const& x) {
   BOOST_ASSERT(current != nullptr);
   if (!boost::apply_visitor(*this, x.operand_)) return false;
   switch (x.operator_) {
-    case ast::op_negative:
+    case ast::Negative:
       current->op(op_neg);
       break;
-    case ast::op_not:
+    case ast::Not:
       current->op(op_not);
       break;
-    case ast::op_positive:
+    case ast::Positive:
       break;
     default:
       assert(false);

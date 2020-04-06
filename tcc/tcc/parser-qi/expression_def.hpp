@@ -34,39 +34,39 @@ Expression<Iterator>::Expression(ErrorHandler<Iterator>& errorHandler) : Express
   // Tokens
   // clang-format off
         logical_or_op.add
-            ("||", ast::op_or)
+            ("||", ast::Or)
             ;
 
         logical_and_op.add
-            ("&&", ast::op_and)
+            ("&&", ast::And)
             ;
 
         equality_op.add
-            ("==", ast::op_equal)
-            ("!=", ast::op_not_equal)
+            ("==", ast::Equal)
+            ("!=", ast::NotEqual)
             ;
 
         relational_op.add
-            ("<", ast::op_less)
-            ("<=", ast::op_less_equal)
-            (">", ast::op_greater)
-            (">=", ast::op_greater_equal)
+            ("<", ast::Less)
+            ("<=", ast::LessEqual)
+            (">", ast::Greater)
+            (">=", ast::GreaterEqual)
             ;
 
         additive_op.add
-            ("+", ast::op_plus)
-            ("-", ast::op_minus)
+            ("+", ast::Plus)
+            ("-", ast::Minus)
             ;
 
         multiplicative_op.add
-            ("*", ast::op_times)
-            ("/", ast::op_divide)
+            ("*", ast::Times)
+            ("/", ast::Divide)
             ;
 
         UnaryOp.add
-            ("+", ast::op_positive)
-            ("-", ast::op_negative)
-            ("!", ast::op_not)
+            ("+", ast::Positive)
+            ("-", ast::Negative)
+            ("!", ast::Not)
             ;
 
         keywords.add

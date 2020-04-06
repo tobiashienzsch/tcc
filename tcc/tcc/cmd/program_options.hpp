@@ -16,6 +16,7 @@ class ProgramOptions {
  public:
   struct CompilerFlags {
     std::string Source = "";
+    std::string OutputName = "";
     int OptLevel = 0;
     bool PrintSource = false;
     bool PrintAst = false;
@@ -33,6 +34,7 @@ class ProgramOptions {
       desc.add_options()                                                                  //
           ("help,h", "produce this help message")                                         //
           ("input,i", po::value<std::vector<std::string>>(), "input source file")         //
+          ("output,o", po::value<std::string>(&flags_.OutputName), "output binary file")  //
           ("optimization,O", po::value<int>(&flags_.OptLevel), "optimization level 0-1")  //
           ("print-source", po::bool_switch(&flags_.PrintSource), "print source code")     //
           ("print-ast", po::bool_switch(&flags_.PrintAst), "print parsed ast")            //

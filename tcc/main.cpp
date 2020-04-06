@@ -50,9 +50,11 @@ int main(int argc, char** argv) {
     irBuilder.PrintIR();
   }
 
-  auto assembly = tcc::AssemblyGenerator::Build(*irBuilder.CurrentScope());
-  auto binaryProgram = tcc::BinaryProgram{1, "test", 0, assembly};
-  if (!tcc::BinaryFormat::WriteToFile("test.tcb", binaryProgram)) fmt::print("Error wrtiting binary.\n");
+  if (!flags.OutputName.empty()) {
+    auto assembly = tcc::AssemblyGenerator::Build(*irBuilder.CurrentScope());
+    auto binaryProgram = tcc::BinaryProgram{1, "test", 0, assembly};
+    if (!tcc::BinaryFormat::WriteToFile(flags.OutputName, binaryProgram)) fmt::print("Error wrtiting binary.\n");
+  }
 
-  return 0;
+  return EXIT_SUCCESS;
 }

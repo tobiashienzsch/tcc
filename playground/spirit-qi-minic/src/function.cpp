@@ -5,7 +5,7 @@
     file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 =============================================================================*/
 #if defined(_MSC_VER)
-# pragma warning(disable: 4345)
+#pragma warning(disable : 4345)
 #endif
 
 #include "function_def.hpp"

@@ -121,7 +121,7 @@ struct function {
   StatementList body;
 };
 
-using function_list = std::list<function>;
+using FunctionList = std::list<function>;
 
 // print functions for debugging
 inline std::ostream& operator<<(std::ostream& out, Nil) {

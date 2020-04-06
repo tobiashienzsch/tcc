@@ -28,6 +28,24 @@ set(tcc_lib_source
     tcc/parser/statement.cpp
     tcc/parser/statement.hpp
 
+    tcc/parser-qi/annotation.hpp
+    tcc/parser-qi/ast.hpp
+    tcc/parser-qi/compiler.cpp
+    tcc/parser-qi/compiler.hpp
+    tcc/parser-qi/error_handler.hpp
+    tcc/parser-qi/expression.cpp
+    tcc/parser-qi/expression_def.hpp
+    tcc/parser-qi/expression.hpp
+    tcc/parser-qi/function.cpp
+    tcc/parser-qi/function_def.hpp
+    tcc/parser-qi/function.hpp
+    tcc/parser-qi/skipper.hpp
+    tcc/parser-qi/statement.cpp
+    tcc/parser-qi/statement_def.hpp
+    tcc/parser-qi/statement.hpp
+    tcc/parser-qi/vm.cpp
+    tcc/parser-qi/vm.hpp
+
     tcc/vm.cpp
     tcc/vm.hpp    
 )
@@ -57,7 +75,7 @@ target_link_libraries(tcc_lib
 
 # exe
 set(tcc_source 
-    main.cpp
+    main_neo.cpp
     tcc/parser/expression.cpp
 
 )

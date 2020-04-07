@@ -14,7 +14,7 @@ bool IRGenerator::operator()(unsigned int x) {
   builder_.PushToStack(x);
   return true;
 }
-bool IRGenerator::operator()(bool x) { return true; }
+bool IRGenerator::operator()(bool) { return true; }
 
 bool IRGenerator::operator()(tcc::ast::Identifier const& x) {
   if (!builder_.HasVariable(x.name)) {
@@ -104,7 +104,7 @@ bool IRGenerator::operator()(tcc::ast::Unary const& x) {
   }
   return true;
 }
-bool IRGenerator::operator()(tcc::ast::FunctionCall const& x) { return true; }
+bool IRGenerator::operator()(tcc::ast::FunctionCall const&) { return true; }
 bool IRGenerator::operator()(tcc::ast::Expression const& x) {
   if (!boost::apply_visitor(*this, x.first)) return false;
   for (tcc::ast::Operation const& oper : x.rest) {
@@ -144,7 +144,7 @@ bool IRGenerator::operator()(tcc::ast::StatementList const& x) {
   }
   return true;
 }
-bool IRGenerator::operator()(tcc::ast::IfStatement const& x) {
+bool IRGenerator::operator()(tcc::ast::IfStatement const&) {
   // if (!(*this)(x.condition)) return false;
   // program_.op(op_jump_if, 0);              // we shall fill this (0) in later
   // std::size_t skip = program_.size() - 1;  // mark its position
@@ -162,7 +162,7 @@ bool IRGenerator::operator()(tcc::ast::IfStatement const& x) {
 
   return true;
 }
-bool IRGenerator::operator()(tcc::ast::WhileStatement const& x) {
+bool IRGenerator::operator()(tcc::ast::WhileStatement const&) {
   // std::size_t loop = program_.size();  // mark our position
   // if (!(*this)(x.condition)) return false;
   // program_.op(op_jump_if, 0);              // we shall fill this (0) in later
@@ -178,7 +178,7 @@ bool IRGenerator::operator()(tcc::ast::ReturnStatement const& x) {
   builder_.CreateReturnOperation();
   return true;
 }
-bool IRGenerator::operator()(tcc::ast::Function const& x) { return true; }
-bool IRGenerator::operator()(tcc::ast::FunctionList const& x) { return true; }
+bool IRGenerator::operator()(tcc::ast::Function const&) { return true; }
+bool IRGenerator::operator()(tcc::ast::FunctionList const&) { return true; }
 
 }  // namespace tcc

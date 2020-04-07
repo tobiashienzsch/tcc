@@ -55,52 +55,52 @@ class IRGenerator {
     Builder() = default;
 
     auto PrintIR() -> void {
-      fmt::print("\nprogram: {} IR instructions\n", m_mainScope.statements.size());
+      fmt::print("\nprogram: {} IR instructions\n", rootScope_.statements.size());
       fmt::print("func main: args=[]\n");
       fmt::print("entry:\n");
-      for (ThreeAddressCode const& x : m_mainScope.statements) fmt::print("\t{}\n", x);
+      for (ThreeAddressCode const& x : rootScope_.statements) fmt::print("\t{}\n", x);
     }
 
     auto CurrentScope() -> StatementScope* {
-      if (!m_currentScope) {
+      if (!currentScope_) {
         fmt::print("Current scope is nullptr;\n EXIT\n");
         std::exit(1);
       }
 
-      return m_currentScope;
+      return currentScope_;
     }
 
     auto HasVariable(std::string const& name) const -> bool {
-      auto i = m_mainScope.variables.find(name);
-      if (i == m_mainScope.variables.end()) return false;
+      auto i = rootScope_.variables.find(name);
+      if (i == rootScope_.variables.end()) return false;
       return true;
     }
 
-    auto PushToStack(int x) -> void { m_stack.emplace_back(x); }
+    auto PushToStack(int x) -> void { stack_.emplace_back(x); }
 
     auto PopFromStack() -> std::variant<int, std::string> {
-      auto const result = m_stack.back();
-      m_stack.pop_back();
+      auto const result = stack_.back();
+      stack_.pop_back();
       return result;
     }
 
     auto AddVariable(std::string name) -> void {
-      auto search = m_mainScope.variables.find(name);
-      if (search == m_mainScope.variables.end())
-        m_mainScope.variables.insert({name, 0});
+      auto search = rootScope_.variables.find(name);
+      if (search == rootScope_.variables.end())
+        rootScope_.variables.insert({name, 0});
       else
         fmt::print("Tried to add {} twice to variable map\n", name);
     }
 
     auto GetLastVariable(std::string const& key) const -> std::string {
-      auto search = m_mainScope.variables.find(key);
+      auto search = rootScope_.variables.find(key);
       auto newId = search->second - 1;
       return fmt::format("{}.{}", key, newId);
     }
 
     auto CreateReturnOperation() -> void {
       auto const first = PopFromStack();
-      m_mainScope.statements.push_back(ThreeAddressCode{byte_code::op_return, "g.0", first, std::nullopt, false});
+      rootScope_.statements.push_back(ThreeAddressCode{byte_code::op_return, "g.0", first, std::nullopt, false});
     }
 
     auto CreateBinaryOperation(byte_code op) -> void {
@@ -108,44 +108,44 @@ class IRGenerator {
       auto const first = PopFromStack();
       auto const tmpName = CreateTemporaryOnStack();
 
-      m_mainScope.statements.push_back(ThreeAddressCode{op, tmpName, first, second});
+      rootScope_.statements.push_back(ThreeAddressCode{op, tmpName, first, second});
     }
 
     auto CreateUnaryOperation(byte_code op) -> void {
       auto const first = PopFromStack();
       auto const tmpName = CreateTemporaryOnStack();
-      m_mainScope.statements.push_back(ThreeAddressCode{op, tmpName, first, {}});
+      rootScope_.statements.push_back(ThreeAddressCode{op, tmpName, first, {}});
     }
 
     auto CreateStoreOperation(std::string key) -> void {
       auto const first = PopFromStack();
-      m_mainScope.statements.push_back(ThreeAddressCode{op_store, key, first, {}, false});
+      rootScope_.statements.push_back(ThreeAddressCode{op_store, key, first, {}, false});
     }
 
     auto CreateLoadOperation(std::string key) -> void {
       auto const tmpName = CreateTemporaryOnStack();
-      m_mainScope.statements.push_back(ThreeAddressCode{op_load, tmpName, key, {}});
+      rootScope_.statements.push_back(ThreeAddressCode{op_load, tmpName, key, {}});
     }
 
     auto CreateAssignment(std::string const& key) -> std::string {
-      auto search = m_mainScope.variables.find(key);
+      auto search = rootScope_.variables.find(key);
       auto newId = search->second++;
       return fmt::format("{}.{}", key, newId);
     }
 
     auto CreateTemporaryOnStack() -> std::string {
-      auto tmp = std::string("t.").append(std::to_string(m_varCounter++));
-      m_stack.emplace_back(tmp);
+      auto tmp = std::string("t.").append(std::to_string(tmpCounter_++));
+      stack_.emplace_back(tmp);
       return tmp;
     }
 
-    auto GetStatementList() -> StatementList& { return m_mainScope.statements; }
+    auto GetStatementList() -> StatementList& { return rootScope_.statements; }
 
    private:
-    int m_varCounter = 0;
-    std::vector<std::variant<int, std::string>> m_stack;
-    StatementScope m_mainScope{"main"};
-    StatementScope* m_currentScope = &m_mainScope;
+    int tmpCounter_ = 0;
+    std::vector<std::variant<int, std::string>> stack_;
+    StatementScope rootScope_{"main"};
+    StatementScope* currentScope_ = &rootScope_;
   };
 
  private:

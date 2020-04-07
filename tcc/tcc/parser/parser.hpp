@@ -24,8 +24,8 @@ class Parser {
 
  private:
   tcc::ErrorHandler<IteratorType>& errorHandler_;
-  tcc::parser::Function<IteratorType> grammar_{errorHandler_};  // Our grammar
-  tcc::parser::Skipper<IteratorType> skipper_;                  // Our skipper
-  AstType ast_;                                                 // Our AST
+  tcc::parser::Function<IteratorType> grammar_{errorHandler_};
+  tcc::parser::Skipper<IteratorType> skipper_;
+  AstType ast_;
 };
 }  // namespace tcc

@@ -8,7 +8,7 @@ template <typename Iterator>
 Statement<Iterator>::Statement(ErrorHandler<Iterator>& errorHandler)
     : Statement::base_type(StatementList), expr(errorHandler) {
   qi::_1_type _1;
-    qi::_2_type _2;
+  qi::_2_type _2;
   qi::_3_type _3;
   qi::_4_type _4;
 

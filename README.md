@@ -12,7 +12,7 @@ Everything is in development. See test files for details.
 
 ### Compiler
 
-Source code is parsed using the `boost spirit x3` library. It creates an intermediate representation which generates the assembly.
+Source code is parsed using the `Boost Spirit.Qi` library. It creates an intermediate representation which generates the assembly.
 
 ### Virtual Machine
 
@@ -24,11 +24,11 @@ Current implementation is a stack only based virtual machine.
 
 - C++17
 - CMake 3.12
-- Boost 1.70
+- Boost 1.69
   - Filesystem
   - Program Options
   - System
-  - Spirit X3
+  - Spirit.Qi
 
 ### Clone
 

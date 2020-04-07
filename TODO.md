@@ -2,15 +2,10 @@
 
 ## tcc
 
-### Parser
-
-- Migrate to `Spirit.Qi`
-  - Better documentation
-  - Maybe use `Spirit.Karma` Generators
-
 ### Ast
 
 - Fix printer
+  - Maybe use `Spirit.Karma` Generators
 
 ### IR
 

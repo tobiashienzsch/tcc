@@ -16,30 +16,6 @@
 
 namespace tcc {
 
-struct Program {
-  auto op(int a) -> void;
-  auto op(int a, int b) -> void;
-
-  auto operator[](std::size_t i) -> int& { return code[i]; }
-  auto operator[](std::size_t i) const -> int { return code[i]; }
-
-  auto clear() -> void {
-    code.clear();
-    variables.clear();
-  }
-
-  auto size() const -> std::size_t { return code.size(); }
-  auto operator()() const -> std::vector<int> const& { return code; }
-
-  auto nvars() const -> std::size_t { return variables.size(); }
-  auto find_var(std::string const& name) const -> int const*;
-  auto add_var(std::string const& name) -> void;
-
- private:
-  std::map<std::string, int> variables;
-  std::vector<int> code;
-};
-
 class IRGenerator {
  public:
   using result_type = bool;
@@ -92,6 +68,12 @@ class IRGenerator {
       }
 
       return m_currentScope;
+    }
+
+    auto HasVariable(std::string const& name) const -> bool {
+      auto i = m_mainScope.variables.find(name);
+      if (i == m_mainScope.variables.end()) return false;
+      return true;
     }
 
     auto PushToStack(int x) -> void { m_stack.emplace_back(x); }
@@ -167,7 +149,6 @@ class IRGenerator {
   };
 
  private:
-  Program program_{};
   Builder builder_{};
   boost::function<void(int tag, std::string const& what)> errorHandler_;
 };

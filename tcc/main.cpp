@@ -22,21 +22,21 @@ int main(int argc, char** argv) {
   IteratorType end = flags.Source.end();
 
   tcc::ErrorHandler<IteratorType> errorHandler(iter, end);         // Our error handler
-  tcc::parser::Statement<IteratorType> statement(errorHandler);    // Our parser
+  tcc::parser::Function<IteratorType> function(errorHandler);      // Our parser
   tcc::parser::Skipper<IteratorType> skipper;                      // Our skipper
-  tcc::ast::StatementList ast;                                     // Our AST
+  tcc::ast::Function ast;                                          // Our AST
   tcc::Program program{};                                          // Our VM program
   tcc::IntermediateRepresentation irBuilder;                       // IR builder
   tcc::IRGenerator irGenerator{program, irBuilder, errorHandler};  // IR Generator
 
-  bool success = phrase_parse(iter, end, statement, skipper, ast);
+  bool success = phrase_parse(iter, end, function, skipper, ast);
   if (!success || iter != end) {
     fmt::print("Parse error!\n");
     return EXIT_FAILURE;
   }
 
   // Compile IR
-  if (!irGenerator(ast)) {
+  if (!irGenerator(ast.body)) {
     fmt::print("Compile error!\n");
     return EXIT_FAILURE;
   }

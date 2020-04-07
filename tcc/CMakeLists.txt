@@ -32,6 +32,7 @@ set(tcc_lib_source
     tcc/parser/statement.cpp
     tcc/parser/statement_def.hpp
     tcc/parser/statement.hpp
+    tcc/parser/testing.hpp
 )
 
 add_library(tcc_lib ${tcc_lib_source})

@@ -10,41 +10,42 @@
 
 #include "catch2/catch.hpp"
 #include "tcc/parser/skipper.hpp"
+#include "tcc/parser/testing.hpp"
+
+using namespace tcc::parser::testing;
 
 TEST_CASE("tcc/parser: FunctionValid", "[tcc][parser][qi]") {
-  using namespace tcc;
-
   auto testCase = GENERATE(as<std::string>{}, "void foo(){ int foo = 5; }", "int foo(){return 1;}");
 
   using IteratorType = std::string::const_iterator;
   IteratorType iter = testCase.begin();
   IteratorType end = testCase.end();
 
-  auto errorHandler = ErrorHandler<IteratorType>(iter, end, std::cerr);  // Our error handler
-  auto function = parser::Function<IteratorType>(errorHandler);          // Our parser
-  auto skipper = parser::Skipper<IteratorType>{};                        // Our skipper
-  auto ast = ast::FunctionList{};                                        // Our AST
+  NullBuffer null_buffer;
+  std::ostream null_stream(&null_buffer);
+  auto errorHandler = tcc::ErrorHandler<IteratorType>(iter, end, null_stream);
 
-  bool success = phrase_parse(iter, end, function, skipper, ast);
+  auto function = tcc::parser::Function<IteratorType>(errorHandler);
+  auto skipper = tcc::parser::Skipper<IteratorType>{};
+  auto ast = tcc::ast::FunctionList{};
 
-  REQUIRE(success == true);
+  REQUIRE(phrase_parse(iter, end, function, skipper, ast) == true);
 }
 
 TEST_CASE("tcc/parser: FunctionInvalid", "[tcc][parser][qi]") {
-  using namespace tcc;
-
   auto testCase = GENERATE(as<std::string>{}, "int int(){}", "void void(){}");
 
   using IteratorType = std::string::const_iterator;
   IteratorType iter = testCase.begin();
   IteratorType end = testCase.end();
 
-  auto errorHandler = ErrorHandler<IteratorType>(iter, end, std::cerr);  // Our error handler
-  auto function = parser::Function<IteratorType>(errorHandler);          // Our parser
-  auto skipper = parser::Skipper<IteratorType>{};                        // Our skipper
-  auto ast = ast::FunctionList{};                                        // Our AST
+  NullBuffer null_buffer;
+  std::ostream null_stream(&null_buffer);
+  auto errorHandler = tcc::ErrorHandler<IteratorType>(iter, end, null_stream);
 
-  bool success = phrase_parse(iter, end, function, skipper, ast);
+  auto function = tcc::parser::Function<IteratorType>(errorHandler);
+  auto skipper = tcc::parser::Skipper<IteratorType>{};
+  auto ast = tcc::ast::FunctionList{};
 
-  REQUIRE(success == false);
+  REQUIRE(phrase_parse(iter, end, function, skipper, ast) == false);
 }

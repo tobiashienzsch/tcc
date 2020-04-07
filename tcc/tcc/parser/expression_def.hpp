@@ -27,11 +27,9 @@ Expression<Iterator>::Expression(ErrorHandler<Iterator>& errorHandler) : Express
   using qi::on_error;
   using qi::on_success;
 
-  typedef function<tcc::ErrorHandler<Iterator>> ErrorHandlerFunction;
-  typedef function<tcc::Annotation<Iterator>> AnnotationFunction;
+  using ErrorHandlerFunction = function<tcc::ErrorHandler<Iterator>>;
+  using AnnotationFunction = function<tcc::Annotation<Iterator>>;
 
-  ///////////////////////////////////////////////////////////////////////
-  // Tokens
   // clang-format off
         logical_or_op.add
             ("||", ast::OpToken::Or)
@@ -80,7 +78,6 @@ Expression<Iterator>::Expression(ErrorHandler<Iterator>& errorHandler) : Express
             ("return")
             ;
 
-        ///////////////////////////////////////////////////////////////////////
         // Main expression grammar
         expr =
             logical_or_expr.alias()
@@ -142,7 +139,6 @@ Expression<Iterator>::Expression(ErrorHandler<Iterator>& errorHandler) : Express
             >>  raw[lexeme[(alpha | '_') >> *(alnum | '_')]]
             ;
 
-        ///////////////////////////////////////////////////////////////////////
         // Debugging and error handling and reporting support.
         BOOST_SPIRIT_DEBUG_NODES(
             (expr)
@@ -159,13 +155,11 @@ Expression<Iterator>::Expression(ErrorHandler<Iterator>& errorHandler) : Express
             (Identifier)
         );
 
-        ///////////////////////////////////////////////////////////////////////
         // Error handling: on error in expr, call errorHandler.
         on_error<fail>(expr,
             ErrorHandlerFunction(errorHandler)(
                 "Error! Expecting ", _4, _3));
 
-        ///////////////////////////////////////////////////////////////////////
         // Annotation: on success in primary_expr, call Annotation.
         on_success(primary_expr,
             AnnotationFunction(errorHandler.iters)(_val, _1));

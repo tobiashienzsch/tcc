@@ -5,9 +5,7 @@
 
 namespace tcc {
 namespace parser {
-///////////////////////////////////////////////////////////////////////////////
 //  The statement grammar
-///////////////////////////////////////////////////////////////////////////////
 template <typename Iterator>
 struct Statement : qi::grammar<Iterator, ast::StatementList(), Skipper<Iterator>> {
   Statement(ErrorHandler<Iterator>& errorHandler);

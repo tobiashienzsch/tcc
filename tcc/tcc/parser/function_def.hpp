@@ -23,8 +23,8 @@ Function<Iterator>::Function(ErrorHandler<Iterator>& errorHandler) : Function::b
   using qi::on_error;
   using qi::on_success;
 
-  typedef function<tcc::ErrorHandler<Iterator>> ErrorHandlerFunction;
-  typedef function<tcc::Annotation<Iterator>> AnnotateFunction;
+  using ErrorHandlerFunction = function<tcc::ErrorHandler<Iterator>>;
+  using AnnotateFunction = function<tcc::Annotation<Iterator>>;
 
   name = !body.expr.keywords >> raw[lexeme[(alpha | '_') >> *(alnum | '_')]];
 

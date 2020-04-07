@@ -21,7 +21,7 @@ int main(int argc, char** argv) {
   auto iter = flags.Source.begin();
   auto end = flags.Source.end();
 
-  auto errorHandler = tcc::ErrorHandler<IteratorType>{iter, end, std::cerr}; 
+  auto errorHandler = tcc::ErrorHandler<IteratorType>{iter, end, std::cerr};
 
   auto parser = tcc::Parser{errorHandler};
   if (!parser.ParseSource(iter, end)) {
@@ -36,16 +36,16 @@ int main(int argc, char** argv) {
   }
 
   if (flags.OptLevel > 0) {
-    auto optimizer = tcc::Optimizer(*irGenerator.GetBuilder().CurrentScope());
+    auto optimizer = tcc::Optimizer(*irGenerator.CurrentScope());
     optimizer.Optimize();
   }
 
   if (flags.PrintIR) {
-    irGenerator.GetBuilder().PrintIR();
+    irGenerator.PrintIR();
   }
 
   if (!flags.OutputName.empty()) {
-    auto assembly = tcc::AssemblyGenerator::Build(*irGenerator.GetBuilder().CurrentScope());
+    auto assembly = tcc::AssemblyGenerator::Build(*irGenerator.CurrentScope());
     auto binaryProgram = tcc::BinaryProgram{1, flags.OutputName, 0, assembly};
     if (!tcc::BinaryFormat::WriteToFile(flags.OutputName, binaryProgram)) {
       fmt::print("Error while writing binary!\n");

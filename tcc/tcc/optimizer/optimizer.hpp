@@ -2,7 +2,7 @@
 
 #include <algorithm>
 
-#include "tcc/ir/intermediate_representation.hpp"
+#include "tcc/ir/three_address_code.hpp"
 #include "tsl/tsl.hpp"
 
 namespace tcc {

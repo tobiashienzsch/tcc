@@ -26,6 +26,6 @@ class Parser {
   tcc::ErrorHandler<IteratorType>& errorHandler_;
   tcc::parser::Function<IteratorType> grammar_{errorHandler_};
   tcc::parser::Skipper<IteratorType> skipper_;
-  AstType ast_;
+  AstType ast_{};
 };
 }  // namespace tcc

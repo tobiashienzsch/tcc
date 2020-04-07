@@ -21,13 +21,12 @@ int main(int argc, char** argv) {
   IteratorType iter = flags.Source.begin();
   IteratorType end = flags.Source.end();
 
-  tcc::ErrorHandler<IteratorType> errorHandler(iter, end);         // Our error handler
-  tcc::parser::Function<IteratorType> function(errorHandler);      // Our parser
-  tcc::parser::Skipper<IteratorType> skipper;                      // Our skipper
-  tcc::ast::Function ast;                                          // Our AST
-  tcc::Program program{};                                          // Our VM program
-  tcc::IntermediateRepresentation irBuilder;                       // IR builder
-  tcc::IRGenerator irGenerator{program, irBuilder, errorHandler};  // IR Generator
+  tcc::ErrorHandler<IteratorType> errorHandler(iter, end);     // Our error handler
+  tcc::parser::Function<IteratorType> function(errorHandler);  // Our parser
+  tcc::parser::Skipper<IteratorType> skipper;                  // Our skipper
+  tcc::ast::Function ast;                                      // Our AST
+  tcc::IntermediateRepresentation irBuilder;                   // IR builder
+  tcc::IRGenerator irGenerator{irBuilder, errorHandler};       // IR Generator
 
   bool success = phrase_parse(iter, end, function, skipper, ast);
   if (!success || iter != end) {

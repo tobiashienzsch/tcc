@@ -43,8 +43,7 @@ struct IRGenerator {
   using result_type = bool;
 
   template <typename ErrorHandler>
-  IRGenerator(Program& prog, tcc::IntermediateRepresentation& builder, ErrorHandler& errorHandler)
-      : program_(prog), builder_(builder) {
+  IRGenerator(tcc::IntermediateRepresentation& builder, ErrorHandler& errorHandler) : builder_(builder) {
     using namespace boost::phoenix::arg_names;
     namespace phx = boost::phoenix;
     using boost::phoenix::function;
@@ -71,8 +70,7 @@ struct IRGenerator {
   bool operator()(tcc::ast::FunctionList const& x);
 
  private:
- private:
-  Program& program_;
+  Program program_{};
   tcc::IntermediateRepresentation& builder_;
   boost::function<void(int tag, std::string const& what)> errorHandler_;
 };

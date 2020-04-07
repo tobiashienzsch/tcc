@@ -25,8 +25,7 @@ int main(int argc, char** argv) {
   tcc::parser::Function<IteratorType> function(errorHandler);  // Our parser
   tcc::parser::Skipper<IteratorType> skipper;                  // Our skipper
   tcc::ast::Function ast;                                      // Our AST
-  tcc::IntermediateRepresentation irBuilder;                   // IR builder
-  tcc::IRGenerator irGenerator{irBuilder, errorHandler};       // IR Generator
+  tcc::IRGenerator irGenerator{errorHandler};                  // IR Generator
 
   bool success = phrase_parse(iter, end, function, skipper, ast);
   if (!success || iter != end) {
@@ -41,16 +40,16 @@ int main(int argc, char** argv) {
   }
 
   if (flags.OptLevel > 0) {
-    auto optimizer = tcc::Optimizer(*irBuilder.CurrentScope());
+    auto optimizer = tcc::Optimizer(*irGenerator.GetBuilder().CurrentScope());
     optimizer.Optimize();
   }
 
   if (flags.PrintIR) {
-    irBuilder.PrintIR();
+    irGenerator.GetBuilder().PrintIR();
   }
 
   if (!flags.OutputName.empty()) {
-    auto assembly = tcc::AssemblyGenerator::Build(*irBuilder.CurrentScope());
+    auto assembly = tcc::AssemblyGenerator::Build(*irGenerator.GetBuilder().CurrentScope());
     auto binaryProgram = tcc::BinaryProgram{1, "test", 0, assembly};
     if (!tcc::BinaryFormat::WriteToFile(flags.OutputName, binaryProgram)) fmt::print("Error wrtiting binary.\n");
   }

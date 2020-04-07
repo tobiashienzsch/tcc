@@ -13,23 +13,33 @@ namespace tcc {
 namespace ast {
 
 /**
- * Used to annotate the AST with the iterator position.
- * This id is used as a key to a map<int, Iterator> (not really part of the AST.)
+ * @brief Used to annotate the AST with the iterator position.
+ * This id is used as a key to a map<int, Iterator>.
+ * Not really part of the AST.
  */
 struct Tagged {
   int id{};
 };
 
+/**
+ * @brief Placeholder for nothing.
+ */
 struct Nil {};
 struct Unary;
 struct FunctionCall;
 struct Expression;
 
+/**
+ * @brief Identifier.
+ */
 struct Identifier : Tagged {
   Identifier(std::string n = "") : name(std::move(n)) {}
   std::string name;
 };
 
+/**
+ * @brief Operand.
+ */
 using Operand = boost::variant<              //
     Nil,                                     //
     bool,                                    //
@@ -40,6 +50,9 @@ using Operand = boost::variant<              //
     boost::recursive_wrapper<Expression>     //
     >;
 
+/**
+ * @brief Operation Token.
+ */
 enum class OpToken {
   Plus,
   Minus,
@@ -58,31 +71,49 @@ enum class OpToken {
   Or
 };
 
+/**
+ * @brief Unary Expression.
+ */
 struct Unary {
   OpToken operator_;
   Operand operand;
 };
 
+/**
+ * @brief Operation.
+ */
 struct Operation {
   OpToken operator_;
   Operand operand;
 };
 
+/**
+ * @brief Function call.
+ */
 struct FunctionCall {
   Identifier function_name;
   std::list<Expression> args;
 };
 
+/**
+ * @brief Expression.
+ */
 struct Expression {
   Operand first;
   std::list<Operation> rest;
 };
 
+/**
+ * @brief Assignment.
+ */
 struct Assignment {
   Identifier lhs;
   Expression rhs;
 };
 
+/**
+ * @brief Variable Declaration.
+ */
 struct VariableDeclaration {
   Identifier lhs;
   boost::optional<Expression> rhs;
@@ -93,6 +124,9 @@ struct WhileStatement;
 struct StatementList;
 struct ReturnStatement;
 
+/**
+ * @brief Statement.
+ */
 using Statement = boost::variant<               //
     VariableDeclaration,                        //
     Assignment,                                 //
@@ -102,23 +136,38 @@ using Statement = boost::variant<               //
     boost::recursive_wrapper<StatementList>     //
     >;
 
+/**
+ * @brief Statement list.
+ */
 struct StatementList : std::list<Statement> {};
 
+/**
+ * @brief If statement.
+ */
 struct IfStatement {
   Expression condition;
   Statement then;
   boost::optional<Statement> else_;
 };
 
+/**
+ * @brief While statement.
+ */
 struct WhileStatement {
   Expression condition;
   Statement body;
 };
 
+/**
+ * @brief Return statement.
+ */
 struct ReturnStatement : Tagged {
   boost::optional<Expression> expr;
 };
 
+/**
+ * @brief Function.
+ */
 struct Function {
   std::string return_type;
   Identifier function_name;
@@ -126,14 +175,22 @@ struct Function {
   StatementList body;
 };
 
+/**
+ * @brief Function list.
+ */
 using FunctionList = std::list<Function>;
 
-// print functions for debugging
+/**
+ * @brief Nil ostream operator.
+ */
 inline std::ostream& operator<<(std::ostream& out, Nil) {
   out << "Nil";
   return out;
 }
 
+/**
+ * @brief Identifier ostream operator.
+ */
 inline std::ostream& operator<<(std::ostream& out, Identifier const& id) {
   out << id.name;
   return out;

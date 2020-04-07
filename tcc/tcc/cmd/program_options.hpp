@@ -12,8 +12,14 @@
 namespace tcc {
 namespace po = boost::program_options;
 
+/**
+ * @brief Simple wrapper around boost program options.
+ */
 class ProgramOptions {
  public:
+  /**
+   * @brief Compiler flags.
+   */
   struct CompilerFlags {
     std::string Source = "";
     std::string OutputName = "";
@@ -24,12 +30,19 @@ class ProgramOptions {
   };
 
  public:
+  /**
+   * @brief Defaulted constructor.
+   */
   ProgramOptions() = default;
 
+  /**
+   * @brief Parses commandline arguments via argc & argv.
+   *
+   * @return First: Should exit program directly.
+   * @return Second: Return code.
+   */
   std::pair<bool, int> ParseArguments(int argc, char** argv) {
     try {
-      // Declare a group of options that will be
-      // allowed only on command line
       po::options_description desc("Tobante's Crappy Compiler");
       desc.add_options()                                                                  //
           ("help,h", "produce this help message")                                         //
@@ -61,7 +74,7 @@ class ProgramOptions {
 
         std::ifstream in(paths[0], std::ios_base::in);
         if (!in) {
-          std::cerr << "Error: Could not open input file: " << paths[0] << std::endl;
+          fmt::print("Error: Could not open input file: {}\n", paths[0]);
           return {true, EXIT_FAILURE};
         }
 
@@ -71,15 +84,19 @@ class ProgramOptions {
       }
 
     } catch (std::exception& e) {
-      std::cerr << "error: " << e.what() << "\n";
+      fmt::print("error: {}\n", e.what());
       return {true, EXIT_FAILURE};
     } catch (...) {
-      std::cerr << "Exception of unknown type!\n";
+      fmt::print("Exception of unknown type!\n");
+      return {true, EXIT_FAILURE};
     }
 
     return {false, EXIT_SUCCESS};
   }
 
+  /**
+   * @brief Returns the current compiler flags. They could change after parsing argv.
+   */
   CompilerFlags const& GetCompilerFlags() const noexcept { return flags_; }
 
  private:

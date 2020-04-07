@@ -23,22 +23,18 @@ struct annotation {
   };
 
   std::vector<Iterator>& iters;
-  annotation(std::vector<Iterator>& iters) : iters(iters) {}
+  annotation(std::vector<Iterator>& it) : iters(it) {}
 
   struct set_id {
     using result_type = void;
-
     int id;
-    set_id(int id) : id(id) {}
 
-    void operator()(ast::FunctionCall& x) const { x.function_name.id = id; }
-
-    void operator()(ast::Identifier& x) const { x.id = id; }
+    set_id(int i) : id(i) {}
 
     template <typename T>
-    void operator()(T&) const {
-      // no-op
-    }
+    void operator()(T&) const {}
+    void operator()(ast::FunctionCall& x) const { x.function_name.id = id; }
+    void operator()(ast::Identifier& x) const { x.id = id; }
   };
 
   void operator()(ast::Operand& ast, Iterator pos) const {

@@ -14,7 +14,7 @@ struct ErrorHandler {
     using type = void;
   };
 
-  ErrorHandler(Iterator first, Iterator last) : first(first), last(last) {}
+  ErrorHandler(Iterator f, Iterator l) : first(f), last(l) {}
 
   template <typename Message, typename What>
   void operator()(Message const& message, What const& what, Iterator err_pos) const {

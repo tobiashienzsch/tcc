@@ -11,19 +11,19 @@
 namespace tcc {
 
 /**
- *  The annotation handler links the AST to a map of iterator positions
+ *  @brief The annotation handler links the AST to a map of iterator positions
  *  for the purpose of subsequent semantic error handling when the
  *  program is being compiled.
  */
 template <typename Iterator>
-struct annotation {
+struct Annotation {
   template <typename, typename>
   struct result {
     using type = void;
   };
 
   std::vector<Iterator>& iters;
-  annotation(std::vector<Iterator>& it) : iters(it) {}
+  Annotation(std::vector<Iterator>& it) : iters(it) {}
 
   struct set_id {
     using result_type = void;

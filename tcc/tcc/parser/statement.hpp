@@ -13,7 +13,8 @@ struct Statement : qi::grammar<Iterator, ast::StatementList(), Skipper<Iterator>
   Statement(ErrorHandler<Iterator>& errorHandler);
 
   Expression<Iterator> expr;
-  qi::rule<Iterator, ast::StatementList(), Skipper<Iterator>> StatementList, compound_statement;
+  qi::rule<Iterator, ast::StatementList(), Skipper<Iterator>> CompoundStatement;
+  qi::rule<Iterator, ast::StatementList(), Skipper<Iterator>> StatementList;
 
   qi::rule<Iterator, ast::Statement(), Skipper<Iterator>> Statement_;
   qi::rule<Iterator, ast::VariableDeclaration(), Skipper<Iterator>> VariableDeclaration;

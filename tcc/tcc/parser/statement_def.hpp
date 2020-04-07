@@ -8,7 +8,7 @@ template <typename Iterator>
 Statement<Iterator>::Statement(ErrorHandler<Iterator>& errorHandler)
     : Statement::base_type(StatementList), expr(errorHandler) {
   qi::_1_type _1;
-  //   qi::_2_type _2;
+    qi::_2_type _2;
   qi::_3_type _3;
   qi::_4_type _4;
 
@@ -25,7 +25,7 @@ Statement<Iterator>::Statement(ErrorHandler<Iterator>& errorHandler)
   using qi::on_success;
 
   using ErrorHandlerFunction = function<tcc::ErrorHandler<Iterator>>;
-  using AnnotateFunction = function<tcc::annotation<Iterator>>;
+  using AnnotateFunction = function<tcc::Annotation<Iterator>>;
 
   // clang-format off
     StatementList =
@@ -35,7 +35,7 @@ Statement<Iterator>::Statement(ErrorHandler<Iterator>& errorHandler)
     Statement_ =
             VariableDeclaration
         |   Assignment
-        |   compound_statement
+        |   CompoundStatement
         |   IfStatement
         |   WhileStatement
         |   ReturnStatement
@@ -81,7 +81,7 @@ Statement<Iterator>::Statement(ErrorHandler<Iterator>& errorHandler)
         >   Statement_
         ;
 
-    compound_statement =
+    CompoundStatement =
         '{' >> -StatementList >> '}'
         ;
 

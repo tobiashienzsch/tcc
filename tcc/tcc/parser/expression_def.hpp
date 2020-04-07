@@ -9,7 +9,7 @@ namespace parser {
 template <typename Iterator>
 Expression<Iterator>::Expression(ErrorHandler<Iterator>& errorHandler) : Expression::base_type(expr) {
   qi::_1_type _1;
-  //   qi::_2_type _2;
+    qi::_2_type _2;
   qi::_3_type _3;
   qi::_4_type _4;
 
@@ -28,7 +28,7 @@ Expression<Iterator>::Expression(ErrorHandler<Iterator>& errorHandler) : Express
   using qi::on_success;
 
   typedef function<tcc::ErrorHandler<Iterator>> ErrorHandlerFunction;
-  typedef function<tcc::annotation<Iterator>> AnnotationFunction;
+  typedef function<tcc::Annotation<Iterator>> AnnotationFunction;
 
   ///////////////////////////////////////////////////////////////////////
   // Tokens
@@ -166,7 +166,7 @@ Expression<Iterator>::Expression(ErrorHandler<Iterator>& errorHandler) : Express
                 "Error! Expecting ", _4, _3));
 
         ///////////////////////////////////////////////////////////////////////
-        // Annotation: on success in primary_expr, call annotation.
+        // Annotation: on success in primary_expr, call Annotation.
         on_success(primary_expr,
             AnnotationFunction(errorHandler.iters)(_val, _1));
 

@@ -7,7 +7,7 @@ namespace parser {
 template <typename Iterator>
 Function<Iterator>::Function(ErrorHandler<Iterator>& errorHandler) : Function::base_type(start), body(errorHandler) {
   qi::_1_type _1;
-  // qi::_2_type _2;
+  qi::_2_type _2;
   qi::_3_type _3;
   qi::_4_type _4;
 
@@ -24,7 +24,7 @@ Function<Iterator>::Function(ErrorHandler<Iterator>& errorHandler) : Function::b
   using qi::on_success;
 
   typedef function<tcc::ErrorHandler<Iterator>> ErrorHandlerFunction;
-  typedef function<tcc::annotation<Iterator>> AnnotateFunction;
+  typedef function<tcc::Annotation<Iterator>> AnnotateFunction;
 
   name = !body.expr.keywords >> raw[lexeme[(alpha | '_') >> *(alnum | '_')]];
 

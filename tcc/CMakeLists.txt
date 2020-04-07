@@ -27,6 +27,7 @@ set(tcc_lib_source
     tcc/parser/function.cpp
     tcc/parser/function_def.hpp
     tcc/parser/function.hpp
+    tcc/parser/parser.hpp
     tcc/parser/skipper.hpp
     tcc/parser/statement.cpp
     tcc/parser/statement_def.hpp
@@ -77,7 +78,7 @@ if(TCC_BUILD_TESTS)
         main_test.cpp
 
         tcc/optimizer/optimizer_test.cpp
-        
+
         tcc/parser/function_test.cpp
         tcc/parser/expression_test.cpp
         tcc/parser/statement_test.cpp

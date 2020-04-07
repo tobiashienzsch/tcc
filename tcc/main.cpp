@@ -5,8 +5,7 @@
 #include "tcc/cmd/program_options.hpp"
 #include "tcc/ir/generator.hpp"
 #include "tcc/optimizer/optimizer.hpp"
-#include "tcc/parser/function.hpp"
-#include "tcc/parser/skipper.hpp"
+#include "tcc/parser/parser.hpp"
 #include "tsl/tsl.hpp"
 
 int main(int argc, char** argv) {
@@ -21,19 +20,16 @@ int main(int argc, char** argv) {
   auto iter = flags.Source.begin();
   auto end = flags.Source.end();
 
-  auto errorHandler = tcc::ErrorHandler<IteratorType>{iter, end};     // Our error handler
-  auto function = tcc::parser::Function<IteratorType>{errorHandler};  // Our parser
-  auto skipper = tcc::parser::Skipper<IteratorType>{};                // Our skipper
-  auto ast = tcc::ast::Function{};                                    // Our AST
-  auto irGenerator = tcc::IRGenerator{errorHandler};                  // IR Generator
+  auto errorHandler = tcc::ErrorHandler<IteratorType>{iter, end};  // Our error handler
 
-  bool success = phrase_parse(iter, end, function, skipper, ast);
-  if (!success || iter != end) {
+  auto parser = tcc::Parser{errorHandler};
+  if (!parser.ParseSource(iter, end)) {
     fmt::print("Error while parsing!\n");
     return EXIT_FAILURE;
   }
 
-  if (!irGenerator(ast.body)) {
+  auto irGenerator = tcc::IRGenerator{errorHandler};  // IR Generator
+  if (!irGenerator(parser.GetAst().body)) {
     fmt::print("Error while compiling!\n");
     return EXIT_FAILURE;
   }

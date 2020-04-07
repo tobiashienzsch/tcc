@@ -12,30 +12,29 @@
 int main(int argc, char** argv) {
   auto programOptions = tcc::ProgramOptions{};
   auto const [shouldExit, exitCode] = programOptions.ParseArguments(argc, argv);
-  auto const flags = programOptions.GetCompilerFlags();
   if (shouldExit) {
     return exitCode;
   }
 
   using IteratorType = std::string::const_iterator;
-  IteratorType iter = flags.Source.begin();
-  IteratorType end = flags.Source.end();
+  auto const flags = programOptions.GetCompilerFlags();
+  auto iter = flags.Source.begin();
+  auto end = flags.Source.end();
 
-  tcc::ErrorHandler<IteratorType> errorHandler(iter, end);     // Our error handler
-  tcc::parser::Function<IteratorType> function(errorHandler);  // Our parser
-  tcc::parser::Skipper<IteratorType> skipper;                  // Our skipper
-  tcc::ast::Function ast;                                      // Our AST
-  tcc::IRGenerator irGenerator{errorHandler};                  // IR Generator
+  auto errorHandler = tcc::ErrorHandler<IteratorType>{iter, end};     // Our error handler
+  auto function = tcc::parser::Function<IteratorType>{errorHandler};  // Our parser
+  auto skipper = tcc::parser::Skipper<IteratorType>{};                // Our skipper
+  auto ast = tcc::ast::Function{};                                    // Our AST
+  auto irGenerator = tcc::IRGenerator{errorHandler};                  // IR Generator
 
   bool success = phrase_parse(iter, end, function, skipper, ast);
   if (!success || iter != end) {
-    fmt::print("Parse error!\n");
+    fmt::print("Error while parsing!\n");
     return EXIT_FAILURE;
   }
 
-  // Compile IR
   if (!irGenerator(ast.body)) {
-    fmt::print("Compile error!\n");
+    fmt::print("Error while compiling!\n");
     return EXIT_FAILURE;
   }
 
@@ -50,8 +49,11 @@ int main(int argc, char** argv) {
 
   if (!flags.OutputName.empty()) {
     auto assembly = tcc::AssemblyGenerator::Build(*irGenerator.GetBuilder().CurrentScope());
-    auto binaryProgram = tcc::BinaryProgram{1, "test", 0, assembly};
-    if (!tcc::BinaryFormat::WriteToFile(flags.OutputName, binaryProgram)) fmt::print("Error wrtiting binary.\n");
+    auto binaryProgram = tcc::BinaryProgram{1, flags.OutputName, 0, assembly};
+    if (!tcc::BinaryFormat::WriteToFile(flags.OutputName, binaryProgram)) {
+      fmt::print("Error while writing binary!\n");
+      return EXIT_FAILURE;
+    }
   }
 
   return EXIT_SUCCESS;

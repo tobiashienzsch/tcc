@@ -1,6 +1,7 @@
 #include "tcc/parser/annotation.hpp"
 #include "tcc/parser/error_handler.hpp"
 #include "tcc/parser/statement.hpp"
+#include "tsl/tsl.hpp"
 
 namespace tcc {
 namespace parser {
@@ -11,6 +12,8 @@ Statement<Iterator>::Statement(ErrorHandler<Iterator>& errorHandler)
   qi::_2_type _2;
   qi::_3_type _3;
   qi::_4_type _4;
+
+  tcc::IgnoreUnused(_2);
 
   qi::_val_type _val;
   qi::raw_type raw;

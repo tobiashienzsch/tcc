@@ -3,6 +3,7 @@
 #include "tcc/parser/annotation.hpp"
 #include "tcc/parser/error_handler.hpp"
 #include "tcc/parser/expression.hpp"
+#include "tsl/tsl.hpp"
 
 namespace tcc {
 namespace parser {
@@ -12,6 +13,8 @@ Expression<Iterator>::Expression(ErrorHandler<Iterator>& errorHandler) : Express
   qi::_2_type _2;
   qi::_3_type _3;
   qi::_4_type _4;
+
+  tcc::IgnoreUnused(_2);
 
   qi::char_type char_;
   qi::uint_type uint_;

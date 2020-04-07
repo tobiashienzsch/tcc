@@ -38,31 +38,31 @@ struct Annotation {
   };
 
   void operator()(ast::Operand& ast, Iterator pos) const {
-    int id = iters.size();
+    auto const id = static_cast<int>(iters.size());
     iters.push_back(pos);
     boost::apply_visitor(set_id(id), ast);
   }
 
   void operator()(ast::VariableDeclaration& ast, Iterator pos) const {
-    int id = iters.size();
+    auto const id = static_cast<int>(iters.size());
     iters.push_back(pos);
     ast.lhs.id = id;
   }
 
   void operator()(ast::Assignment& ast, Iterator pos) const {
-    int id = iters.size();
+    auto const id = static_cast<int>(iters.size());
     iters.push_back(pos);
     ast.lhs.id = id;
   }
 
   void operator()(ast::ReturnStatement& ast, Iterator pos) const {
-    int id = iters.size();
+    auto const id = static_cast<int>(iters.size());
     iters.push_back(pos);
     ast.id = id;
   }
 
   void operator()(ast::Identifier& ast, Iterator pos) const {
-    int id = iters.size();
+    auto const id = static_cast<int>(iters.size());
     iters.push_back(pos);
     ast.id = id;
   }

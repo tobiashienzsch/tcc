@@ -67,7 +67,7 @@ struct IRGenerator {
   bool operator()(tcc::ast::IfStatement const& x);
   bool operator()(tcc::ast::WhileStatement const& x);
   bool operator()(tcc::ast::ReturnStatement const& x);
-  bool operator()(tcc::ast::function const& x);
+  bool operator()(tcc::ast::Function const& x);
   bool operator()(tcc::ast::FunctionList const& x);
 
  private:

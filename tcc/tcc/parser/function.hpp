@@ -7,14 +7,14 @@ namespace tcc {
 namespace parser {
 
 template <typename Iterator>
-struct function : qi::grammar<Iterator, ast::function(), Skipper<Iterator>> {
-  function(ErrorHandler<Iterator>& errorHandler);
+struct Function : qi::grammar<Iterator, ast::Function(), Skipper<Iterator>> {
+  Function(ErrorHandler<Iterator>& errorHandler);
 
   Statement<Iterator> body;
   qi::rule<Iterator, std::string(), Skipper<Iterator>> name;
   qi::rule<Iterator, ast::Identifier(), Skipper<Iterator>> Identifier;
   qi::rule<Iterator, std::list<ast::Identifier>(), Skipper<Iterator>> argument_list;
-  qi::rule<Iterator, ast::function(), Skipper<Iterator>> start;
+  qi::rule<Iterator, ast::Function(), Skipper<Iterator>> start;
 };
 }  // namespace parser
 }  // namespace tcc

@@ -220,7 +220,7 @@ bool IRGenerator::operator()(tcc::ast::ReturnStatement const& x) {
   builder_.CreateReturnOperation();
   return true;
 }
-bool IRGenerator::operator()(tcc::ast::function const& x) { return true; }
+bool IRGenerator::operator()(tcc::ast::Function const& x) { return true; }
 bool IRGenerator::operator()(tcc::ast::FunctionList const& x) { return true; }
 
 }  // namespace tcc

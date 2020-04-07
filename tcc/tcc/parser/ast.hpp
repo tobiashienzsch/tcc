@@ -119,14 +119,14 @@ struct ReturnStatement : Tagged {
   boost::optional<Expression> expr;
 };
 
-struct function {
+struct Function {
   std::string return_type;
   Identifier function_name;
   std::list<Identifier> args;
   StatementList body;
 };
 
-using FunctionList = std::list<function>;
+using FunctionList = std::list<Function>;
 
 // print functions for debugging
 inline std::ostream& operator<<(std::ostream& out, Nil) {
@@ -196,7 +196,7 @@ BOOST_FUSION_ADAPT_STRUCT(                         //
 )
 
 BOOST_FUSION_ADAPT_STRUCT(                   //
-    tcc::ast::function,                      //
+    tcc::ast::Function,                      //
     (std::string, return_type)               //
     (tcc::ast::Identifier, function_name)    //
     (std::list<tcc::ast::Identifier>, args)  //

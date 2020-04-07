@@ -5,7 +5,7 @@
 namespace tcc {
 namespace parser {
 template <typename Iterator>
-function<Iterator>::function(ErrorHandler<Iterator>& errorHandler) : function::base_type(start), body(errorHandler) {
+Function<Iterator>::Function(ErrorHandler<Iterator>& errorHandler) : Function::base_type(start), body(errorHandler) {
   qi::_1_type _1;
   // qi::_2_type _2;
   qi::_3_type _3;

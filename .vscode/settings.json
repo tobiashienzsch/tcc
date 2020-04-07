@@ -2,6 +2,8 @@
     "C_Cpp.default.configurationProvider": "vector-of-bool.cmake-tools",
     "cmake.configureOnOpen": true,
     "files.associations": {
-        "iterator": "cpp"
+        "iterator": "cpp",
+        "__functional_03": "cpp",
+        "functional": "cpp"
     }
 }

@@ -1,6 +1,6 @@
-auto x = 1+4*3;
-auto y = x+x+x+x;
-auto z = (y+x)*2;
-auto a = 2*z;
+int x = 1 + 4 * 3;
+int y = x + x + x + x;
+int z = (y + x) * 2;
+int a = 2 * z;
 x = -(a - x);
 return x;

@@ -14,20 +14,20 @@ struct ErrorHandler {
     using type = void;
   };
 
-  ErrorHandler(Iterator f, Iterator l) : first(f), last(l) {}
+  ErrorHandler(Iterator f, Iterator l, std::ostream& o) : first(f), last(l), out(o) {}
 
   template <typename Message, typename What>
   void operator()(Message const& message, What const& what, Iterator err_pos) const {
     int line;
     Iterator line_start = get_pos(err_pos, line);
     if (err_pos != last) {
-      std::cout << message << what << " line " << line << ':' << std::endl;
-      std::cout << get_line(line_start) << std::endl;
-      for (; line_start != err_pos; ++line_start) std::cout << ' ';
-      std::cout << '^' << std::endl;
+      out << message << what << " line " << line << ':' << std::endl;
+      out << get_line(line_start) << std::endl;
+      for (; line_start != err_pos; ++line_start) out << ' ';
+      out << '^' << std::endl;
     } else {
-      std::cout << "Unexpected end of file. ";
-      std::cout << message << what << " line " << line << std::endl;
+      out << "Unexpected end of file. ";
+      out << message << what << " line " << line << std::endl;
     }
   }
 
@@ -65,6 +65,7 @@ struct ErrorHandler {
   Iterator first;
   Iterator last;
   std::vector<Iterator> iters;
+  std::ostream& out;
 };
 }  // namespace tcc
 

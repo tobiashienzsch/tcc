@@ -17,7 +17,7 @@ TEST_CASE("tcc/parser: ParserValid", "[tcc][parser][qi]") {
 
   IteratorType iter = testCase.begin();
   IteratorType end = testCase.end();
-  auto errorHandler = tcc::ErrorHandler<IteratorType>{iter, end};
+  auto errorHandler = tcc::ErrorHandler<IteratorType>{iter, end, std::cerr};
   auto parser = tcc::Parser{errorHandler};
 
   auto const result = parser.ParseSource(iter, end);
@@ -30,7 +30,7 @@ TEST_CASE("tcc/parser: ParserInvalid", "[tcc][parser][qi]") {
 
   IteratorType iter = testCase.begin();
   IteratorType end = testCase.end();
-  auto errorHandler = tcc::ErrorHandler<IteratorType>{iter, end};
+  auto errorHandler = tcc::ErrorHandler<IteratorType>{iter, end, std::cerr};
   auto parser = tcc::Parser{errorHandler};
 
   auto const result = parser.ParseSource(iter, end);

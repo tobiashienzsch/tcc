@@ -5,6 +5,7 @@
 
 #include "tcc/parser/function.hpp"
 
+#include <iostream>
 #include <sstream>
 
 #include "catch2/catch.hpp"
@@ -19,10 +20,10 @@ TEST_CASE("tcc/parser: FunctionValid", "[tcc][parser][qi]") {
   IteratorType iter = testCase.begin();
   IteratorType end = testCase.end();
 
-  auto errorHandler = ErrorHandler<IteratorType>(iter, end);     // Our error handler
-  auto function = parser::Function<IteratorType>(errorHandler);  // Our parser
-  auto skipper = parser::Skipper<IteratorType>{};                // Our skipper
-  auto ast = ast::FunctionList{};                                // Our AST
+  auto errorHandler = ErrorHandler<IteratorType>(iter, end, std::cerr);  // Our error handler
+  auto function = parser::Function<IteratorType>(errorHandler);          // Our parser
+  auto skipper = parser::Skipper<IteratorType>{};                        // Our skipper
+  auto ast = ast::FunctionList{};                                        // Our AST
 
   bool success = phrase_parse(iter, end, function, skipper, ast);
 
@@ -38,10 +39,10 @@ TEST_CASE("tcc/parser: FunctionInvalid", "[tcc][parser][qi]") {
   IteratorType iter = testCase.begin();
   IteratorType end = testCase.end();
 
-  auto errorHandler = ErrorHandler<IteratorType>(iter, end);     // Our error handler
-  auto function = parser::Function<IteratorType>(errorHandler);  // Our parser
-  auto skipper = parser::Skipper<IteratorType>{};                // Our skipper
-  auto ast = ast::FunctionList{};                                // Our AST
+  auto errorHandler = ErrorHandler<IteratorType>(iter, end, std::cerr);  // Our error handler
+  auto function = parser::Function<IteratorType>(errorHandler);          // Our parser
+  auto skipper = parser::Skipper<IteratorType>{};                        // Our skipper
+  auto ast = ast::FunctionList{};                                        // Our AST
 
   bool success = phrase_parse(iter, end, function, skipper, ast);
 

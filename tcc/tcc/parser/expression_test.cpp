@@ -5,6 +5,7 @@
 
 #include "tcc/parser/expression.hpp"
 
+#include <iostream>
 #include <sstream>
 
 #include "catch2/catch.hpp"
@@ -19,10 +20,10 @@ TEST_CASE("tcc/parser: IdentifierValid", "[tcc][parser][qi]") {
   IteratorType iter = testCase.begin();
   IteratorType end = testCase.end();
 
-  auto errorHandler = ErrorHandler<IteratorType>(iter, end);         // Our error handler
-  auto expression = parser::Expression<IteratorType>(errorHandler);  // Our parser
-  auto skipper = parser::Skipper<IteratorType>{};                    // Our skipper
-  auto ast = std::string{};                                          // Our AST
+  auto errorHandler = ErrorHandler<IteratorType>(iter, end, std::cerr);  // Our error handler
+  auto expression = parser::Expression<IteratorType>(errorHandler);      // Our parser
+  auto skipper = parser::Skipper<IteratorType>{};                        // Our skipper
+  auto ast = std::string{};                                              // Our AST
 
   bool success = phrase_parse(iter, end, expression.Identifier, skipper, ast);
 
@@ -38,10 +39,10 @@ TEST_CASE("tcc/parser: IdentifierInvalid", "[tcc][parser][qi]") {
   IteratorType iter = testCase.begin();
   IteratorType end = testCase.end();
 
-  auto errorHandler = ErrorHandler<IteratorType>(iter, end);         // Our error handler
-  auto expression = parser::Expression<IteratorType>(errorHandler);  // Our parser
-  auto skipper = parser::Skipper<IteratorType>{};                    // Our skipper
-  auto ast = std::string{};                                          // Our AST
+  auto errorHandler = ErrorHandler<IteratorType>(iter, end, std::cerr);  // Our error handler
+  auto expression = parser::Expression<IteratorType>(errorHandler);      // Our parser
+  auto skipper = parser::Skipper<IteratorType>{};                        // Our skipper
+  auto ast = std::string{};                                              // Our AST
 
   bool success = phrase_parse(iter, end, expression.Identifier, skipper, ast);
 
@@ -56,10 +57,10 @@ TEST_CASE("tcc/parser: ExpressionValid", "[tcc][parser][qi]") {
   IteratorType iter = testCase.begin();
   IteratorType end = testCase.end();
 
-  auto errorHandler = ErrorHandler<IteratorType>(iter, end);         // Our error handler
-  auto expression = parser::Expression<IteratorType>(errorHandler);  // Our parser
-  auto skipper = parser::Skipper<IteratorType>{};                    // Our skipper
-  auto ast = ast::Expression{};                                      // Our AST
+  auto errorHandler = ErrorHandler<IteratorType>(iter, end, std::cerr);  // Our error handler
+  auto expression = parser::Expression<IteratorType>(errorHandler);      // Our parser
+  auto skipper = parser::Skipper<IteratorType>{};                        // Our skipper
+  auto ast = ast::Expression{};                                          // Our AST
 
   bool success = phrase_parse(iter, end, expression, skipper, ast);
 
@@ -75,10 +76,10 @@ TEST_CASE("tcc/parser: ExpressionInvalid", "[tcc][parser][qi]") {
   IteratorType iter = testCase.begin();
   IteratorType end = testCase.end();
 
-  auto errorHandler = ErrorHandler<IteratorType>(iter, end);         // Our error handler
-  auto expression = parser::Expression<IteratorType>(errorHandler);  // Our parser
-  auto skipper = parser::Skipper<IteratorType>{};                    // Our skipper
-  auto ast = ast::Expression{};                                      // Our AST
+  auto errorHandler = ErrorHandler<IteratorType>(iter, end, std::cerr);  // Our error handler
+  auto expression = parser::Expression<IteratorType>(errorHandler);      // Our parser
+  auto skipper = parser::Skipper<IteratorType>{};                        // Our skipper
+  auto ast = ast::Expression{};                                          // Our AST
 
   bool success = phrase_parse(iter, end, expression, skipper, ast);
 

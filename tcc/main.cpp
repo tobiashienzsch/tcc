@@ -1,4 +1,5 @@
 #include <boost/lexical_cast.hpp>
+#include <iostream>
 #include <iterator>
 
 #include "tcc/asm/assembly_generator.hpp"
@@ -20,7 +21,7 @@ int main(int argc, char** argv) {
   auto iter = flags.Source.begin();
   auto end = flags.Source.end();
 
-  auto errorHandler = tcc::ErrorHandler<IteratorType>{iter, end};  // Our error handler
+  auto errorHandler = tcc::ErrorHandler<IteratorType>{iter, end, std::cerr}; 
 
   auto parser = tcc::Parser{errorHandler};
   if (!parser.ParseSource(iter, end)) {

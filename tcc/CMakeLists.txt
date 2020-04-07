@@ -77,6 +77,8 @@ if(TCC_BUILD_TESTS)
         main_test.cpp
 
         tcc/optimizer/optimizer_test.cpp
+        
+        tcc/parser/function_test.cpp
         tcc/parser/expression_test.cpp
         tcc/parser/statement_test.cpp
     )

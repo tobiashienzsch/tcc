@@ -5,6 +5,8 @@
 #include <string>
 #include <vector>
 
+#include "tsl/tsl.hpp"
+
 namespace tcc {
 
 template <typename Iterator>
@@ -21,13 +23,13 @@ struct ErrorHandler {
     int line;
     Iterator line_start = get_pos(err_pos, line);
     if (err_pos != last) {
-      out << message << what << " line " << line << ':' << std::endl;
-      out << get_line(line_start) << std::endl;
-      for (; line_start != err_pos; ++line_start) out << ' ';
-      out << '^' << std::endl;
+      auto msg = fmt::format("{0}{1} line {2}:\n{3}\n", message, what, line, get_line(line_start));
+      for (; line_start != err_pos; ++line_start) msg.append(" ");
+      msg.append("^\n");
+      out << msg;
     } else {
-      out << "Unexpected end of file. ";
-      out << message << what << " line " << line << std::endl;
+      auto const msg = fmt::format("Unexpected end of file. {0}{1} line {2}:\n", message, what, line);
+      out << msg;
     }
   }
 

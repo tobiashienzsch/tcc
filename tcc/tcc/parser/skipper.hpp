@@ -17,9 +17,13 @@ struct Skipper : qi::grammar<Iterator> {
     qi::char_type char_;
     ascii::space_type space;
 
-    start = space                              // tab/space/cr/lf
-            | "/*" >> *(char_ - "*/") >> "*/"  // C-style comments
-        ;
+    // clang-format off
+    start = space                               
+        | "/*"                              
+        >> *(char_ - "*/") 
+        >> "*/"  
+    ;
+    // clang-format on
   }
 
   qi::rule<Iterator> start;

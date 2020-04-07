@@ -1,7 +1,3 @@
-#include <boost/lexical_cast.hpp>
-#include <iostream>
-#include <iterator>
-
 #include "tcc/asm/assembly_generator.hpp"
 #include "tcc/cmd/program_options.hpp"
 #include "tcc/ir/generator.hpp"
@@ -16,11 +12,11 @@ int main(int argc, char** argv) {
     return exitCode;
   }
 
-  using IteratorType = std::string::const_iterator;
   auto const flags = programOptions.GetCompilerFlags();
-  auto iter = flags.Source.begin();
-  auto end = flags.Source.end();
+  auto iter = flags.Source.cbegin();
+  auto end = flags.Source.cend();
 
+  using IteratorType = std::string::const_iterator;
   auto errorHandler = tcc::ErrorHandler<IteratorType>{iter, end, std::cerr};
 
   auto parser = tcc::Parser{errorHandler};

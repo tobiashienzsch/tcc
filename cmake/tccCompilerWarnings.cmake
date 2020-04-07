@@ -16,7 +16,7 @@ else()
         # -Wdouble-promotion
         # -Wconversion
   )
-  # GCC ONLY
+  # GCC 
   target_compile_options(
     compiler_warnings
     INTERFACE
@@ -25,6 +25,17 @@ else()
         -Wlogical-op
         -Wduplicated-branches
         -Wduplicated-cond
+        -Wno-parentheses
+        -Wno-sequence-point
+    >
+  )
+
+  # CLANG 
+  target_compile_options(
+    compiler_warnings
+    INTERFACE
+    $<$<CXX_COMPILER_ID:Clang>:
+        -Wshadow-all
     >
   )
 endif()

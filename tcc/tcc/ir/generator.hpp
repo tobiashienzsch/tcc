@@ -165,7 +165,7 @@ private:
             return tmp;
         }
 
-        [[nodiscard]] auto GetStatementList() -> StatementList& { return rootScope_.statements; }
+        // [[nodiscard]] auto GetIRStatementList() -> IRStatementList& { return rootScope_.statements; }
 
     private:
         int tmpCounter_ = 0;

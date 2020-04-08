@@ -84,7 +84,7 @@ TEST_CASE("tcc/optimizer: ConstantBinaryExpression", "[tcc][optimizer]")
 
 TEST_CASE("tcc/optimizer: UnusedStatement", "[tcc][optimizer]")
 {
-    auto testData = tcc::StatementList {
+    auto testData = tcc::IRStatementList {
         ThreeAddressCode {IRByteCode::Store, string("x1"), 1, std::nullopt},            //
         ThreeAddressCode {IRByteCode::Store, string("x2"), string("x1"), std::nullopt}  //
     };
@@ -95,7 +95,7 @@ TEST_CASE("tcc/optimizer: UnusedStatement", "[tcc][optimizer]")
 
 TEST_CASE("tcc/optimizer: DeleteUnusedStatements", "[tcc][optimizer]")
 {
-    auto testData = tcc::StatementList {
+    auto testData = tcc::IRStatementList {
         ThreeAddressCode {IRByteCode::Store, string("t0"), 1, std::nullopt}  //
     };
 
@@ -106,7 +106,7 @@ TEST_CASE("tcc/optimizer: DeleteUnusedStatements", "[tcc][optimizer]")
 
 TEST_CASE("tcc/optimizer: ReplaceVariableIfConstant", "[tcc][optimizer]")
 {
-    auto testData = tcc::StatementList {
+    auto testData = tcc::IRStatementList {
         ThreeAddressCode {IRByteCode::Store, string("x1"), 143, std::nullopt},           //
         ThreeAddressCode {IRByteCode::Store, string("x2"), string("x1"), std::nullopt},  //
         ThreeAddressCode {IRByteCode::Store, string("t0"), string("x1"), std::nullopt},  //

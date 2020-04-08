@@ -15,9 +15,9 @@ public:
 
     auto Optimize() -> void;
 
-    static auto DeleteUnusedStatements(StatementList& statementList) -> bool;
-    static auto IsUnusedStatement(ThreeAddressCode const& statement, StatementList const& statementList) -> bool;
-    static auto ReplaceVariableIfConstant(ThreeAddressCode& statement, StatementList& statementList) -> bool;
+    static auto DeleteUnusedStatements(IRStatementList& statementList) -> bool;
+    static auto IsUnusedStatement(ThreeAddressCode const& statement, IRStatementList const& statementList) -> bool;
+    static auto ReplaceVariableIfConstant(ThreeAddressCode& statement, IRStatementList& statementList) -> bool;
 
     // replace constant expression with store of result.
     static auto ReplaceWithConstantStore(ThreeAddressCode& statement) -> bool;

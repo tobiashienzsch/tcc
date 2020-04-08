@@ -26,13 +26,19 @@ struct ThreeAddressCode
 
 auto operator<<(std::ostream& out, ThreeAddressCode const& data) -> std::ostream&;
 
-using StatementList = std::vector<ThreeAddressCode>;
+using IRStatementList = std::vector<ThreeAddressCode>;
 
 struct IRFunction
 {
     std::string name                     = "";
-    StatementList statements             = {};
+    IRStatementList statements           = {};
     std::map<std::string, int> variables = {};
+};
+
+struct IRPackage
+{
+    std::string name                  = "";
+    std::vector<IRFunction> functions = {};
 };
 
 inline auto operator<<(std::ostream& out, IRFunction const& data) -> std::ostream& { return out << data.name; }

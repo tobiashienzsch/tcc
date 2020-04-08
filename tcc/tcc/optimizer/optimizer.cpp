@@ -20,7 +20,7 @@ auto Optimizer::Optimize() -> void
     DeleteUnusedStatements(m_mainScope.statements);
 }
 
-auto Optimizer::DeleteUnusedStatements(StatementList& statementList) -> bool
+auto Optimizer::DeleteUnusedStatements(IRStatementList& statementList) -> bool
 {
     while (true)
     {
@@ -40,7 +40,7 @@ auto Optimizer::DeleteUnusedStatements(StatementList& statementList) -> bool
     return false;
 }
 
-auto Optimizer::IsUnusedStatement(ThreeAddressCode const& statement, StatementList const& statementList) -> bool
+auto Optimizer::IsUnusedStatement(ThreeAddressCode const& statement, IRStatementList const& statementList) -> bool
 {
     return statement.isTemporary
            && !std::any_of(std::begin(statementList), std::end(statementList),
@@ -76,7 +76,7 @@ auto Optimizer::IsUnusedStatement(ThreeAddressCode const& statement, StatementLi
                            });
 }
 
-auto Optimizer::ReplaceVariableIfConstant(ThreeAddressCode& statement, StatementList& statementList) -> bool
+auto Optimizer::ReplaceVariableIfConstant(ThreeAddressCode& statement, IRStatementList& statementList) -> bool
 {
     if (isConstantStoreExpression(statement))
     {

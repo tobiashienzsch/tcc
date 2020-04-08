@@ -17,11 +17,7 @@ public:
     bool ParseSource(IteratorType& iter, IteratorType& end)
     {
         bool success = phrase_parse(iter, end, grammar_, skipper_, ast_);
-        if (!success || iter != end)
-        {
-            return false;
-        }
-        return true;
+        return !static_cast<bool>(!success || iter != end);
     }
 
     AstType& GetAst() noexcept { return ast_; }

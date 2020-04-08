@@ -85,11 +85,7 @@ private:
         [[nodiscard]] auto HasVariable(std::string const& name) const -> bool
         {
             auto i = rootScope_.variables.find(name);
-            if (i == rootScope_.variables.end())
-            {
-                return false;
-            }
-            return true;
+            return i != rootScope_.variables.end();
         }
 
         auto PushToStack(std::uint32_t x) -> void { stack_.emplace_back(x); }
@@ -101,13 +97,17 @@ private:
             return result;
         }
 
-        auto AddVariable(std::string name) -> void
+        auto AddVariable(const std::string& name) -> void
         {
             auto search = rootScope_.variables.find(name);
             if (search == rootScope_.variables.end())
+            {
                 rootScope_.variables.insert({name, 0});
+            }
             else
+            {
                 fmt::print("Tried to add {} twice to variable map\n", name);
+            }
         }
 
         [[nodiscard]] auto GetLastVariable(std::string const& key) const -> std::string

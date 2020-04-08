@@ -65,13 +65,13 @@ public:
             po::store(po::command_line_parser(argc, argv).options(desc).positional(p).run(), vm_);
             po::notify(vm_);
 
-            if (vm_.count("help"))
+            if (vm_.count("help") != 0u)
             {
                 fmt::print("{}\n", desc);
                 return {true, EXIT_SUCCESS};
             }
 
-            if (vm_.count("input"))
+            if (vm_.count("input") != 0u)
             {
                 auto const paths = vm_["input"].as<std::vector<std::string>>();
                 if (paths.size() > 1)

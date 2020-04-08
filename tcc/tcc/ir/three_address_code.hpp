@@ -14,7 +14,7 @@ namespace tcc
 {
 struct ThreeAddressCode
 {
-    using Argument         = std::variant<int, std::string>;
+    using Argument         = std::variant<std::uint32_t, std::string>;
     using OptionalArgument = std::optional<Argument>;
 
     tcc::IRByteCode type;

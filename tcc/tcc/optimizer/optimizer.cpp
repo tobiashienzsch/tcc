@@ -44,7 +44,7 @@ auto Optimizer::IsUnusedStatement(ThreeAddressCode const& statement, StatementLi
                                auto result = false;
 
                                std::visit(tcc::overloaded {
-                                              [](int) { ; },
+                                              [](std::uint32_t) { ; },
                                               [&statement, &result](std::string const& name) {
                                                   if (name == statement.destination) result = true;
                                               },
@@ -54,7 +54,7 @@ auto Optimizer::IsUnusedStatement(ThreeAddressCode const& statement, StatementLi
                                if (item.second.has_value())
                                {
                                    std::visit(tcc::overloaded {
-                                                  [](int) { ; },
+                                                  [](std::uint32_t) { ; },
                                                   [&statement, &result](std::string const& name) {
                                                       if (name == statement.destination) result = true;
                                                   },
@@ -76,11 +76,11 @@ auto Optimizer::ReplaceVariableIfConstant(ThreeAddressCode& statement, Statement
             {
                 // first
                 std::visit(tcc::overloaded {
-                               [](int) { ; },
+                               [](std::uint32_t) { ; },
                                [&statement, &otherStatement](std::string const& name) {
                                    if (name == statement.destination)
                                    {
-                                       otherStatement.first = std::get<int>(statement.first);
+                                       otherStatement.first = std::get<std::uint32_t>(statement.first);
                                    };
                                },
                            },
@@ -90,11 +90,11 @@ auto Optimizer::ReplaceVariableIfConstant(ThreeAddressCode& statement, Statement
                 if (otherStatement.second.has_value())
                 {
                     std::visit(tcc::overloaded {
-                                   [](int) { ; },
+                                   [](std::uint32_t) { ; },
                                    [&statement, &otherStatement](std::string const& name) {
                                        if (name == statement.destination)
                                        {
-                                           otherStatement.second = std::get<int>(statement.first);
+                                           otherStatement.second = std::get<std::uint32_t>(statement.first);
                                        };
                                    },
                                },
@@ -114,8 +114,8 @@ auto Optimizer::ReplaceWithConstantStore(ThreeAddressCode& statement) -> bool
 {
     if (isConstantBinaryExpression(statement))
     {
-        auto const first  = std::get<int>(statement.first);
-        auto const second = std::get<int>(statement.second.value());
+        auto const first  = std::get<std::uint32_t>(statement.first);
+        auto const second = std::get<std::uint32_t>(statement.second.value());
 
         switch (statement.type)
         {

@@ -26,7 +26,7 @@ auto AssemblyGenerator::Build(tcc::StatementScope const& scope) -> std::vector<i
     {
         auto const PushConstArgument = [&]() -> void {
             auto const& first = statement.first;
-            if (auto* value = std::get_if<int>(&first); value != nullptr)
+            if (auto* value = std::get_if<std::uint32_t>(&first); value != nullptr)
             {
                 result.push_back(tcc::ByteCode::ICONST);
                 result.push_back(*value);
@@ -35,7 +35,7 @@ auto AssemblyGenerator::Build(tcc::StatementScope const& scope) -> std::vector<i
             if (statement.second.has_value())
             {
                 auto const& second = statement.second.value();
-                if (auto* value = std::get_if<int>(&second); value != nullptr)
+                if (auto* value = std::get_if<std::uint32_t>(&second); value != nullptr)
                 {
                     result.push_back(tcc::ByteCode::ICONST);
                     result.push_back(*value);
@@ -47,7 +47,7 @@ auto AssemblyGenerator::Build(tcc::StatementScope const& scope) -> std::vector<i
         {
             case IRByteCode::op_store:
             {
-                if (auto* value = std::get_if<int>(&statement.first); value != nullptr)
+                if (auto* value = std::get_if<std::uint32_t>(&statement.first); value != nullptr)
                 {
                     result.push_back(tcc::ByteCode::ICONST);
                     result.push_back(*value);

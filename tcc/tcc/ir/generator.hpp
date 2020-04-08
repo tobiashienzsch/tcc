@@ -84,9 +84,9 @@ private:
             return true;
         }
 
-        auto PushToStack(int x) -> void { stack_.emplace_back(x); }
+        auto PushToStack(std::uint32_t x) -> void { stack_.emplace_back(x); }
 
-        [[nodiscard]] auto PopFromStack() -> std::variant<int, std::string>
+        [[nodiscard]] auto PopFromStack() -> std::variant<std::uint32_t, std::string>
         {
             auto const result = stack_.back();
             stack_.pop_back();
@@ -162,7 +162,7 @@ private:
 
     private:
         int tmpCounter_ = 0;
-        std::vector<std::variant<int, std::string>> stack_;
+        std::vector<std::variant<std::uint32_t, std::string>> stack_;
         StatementScope rootScope_ {"main"};
         StatementScope* currentScope_ = &rootScope_;
     };

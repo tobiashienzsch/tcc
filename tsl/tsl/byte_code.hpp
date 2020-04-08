@@ -5,6 +5,7 @@
 
 #pragma once
 
+#include <array>
 #include <cstdint>
 #include <iostream>
 #include <string_view>
@@ -38,17 +39,13 @@ std::ostream& operator<<(std::ostream& out, ByteCode byteCode);
 
 struct Instruction
 {
-    std::string_view name;
+    constexpr explicit Instruction(std::string_view n) : name(n), numberOfOperands(0) { }
+    constexpr explicit Instruction(std::string_view n, int8_t numOperands) : name(n), numberOfOperands(numOperands) { }
+    std::string_view name = {};
     int8_t numberOfOperands;
-
-    constexpr explicit Instruction(std::string_view _name) : name(_name), numberOfOperands(0) { }
-    constexpr explicit Instruction(std::string_view _name, int8_t numOperands)
-        : name(_name), numberOfOperands(numOperands)
-    {
-    }
 };
 
-constexpr Instruction Instructions[] = {
+constexpr auto Instructions = std::array {
     Instruction {"invalid"},    //
     Instruction {"iadd"},       //
     Instruction {"isub"},       //

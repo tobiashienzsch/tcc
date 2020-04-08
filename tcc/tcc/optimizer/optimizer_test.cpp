@@ -114,7 +114,7 @@ TEST_CASE("tcc/optimizer: ReplaceVariableIfConstant", "[tcc][optimizer]")
     };
 
     REQUIRE(Optimizer::ReplaceVariableIfConstant(testData.at(0), testData) == true);
-    REQUIRE(std::get<int>(testData[1].first) == 143);
-    REQUIRE(std::get<int>(testData[2].first) == 143);
-    REQUIRE(std::get<int>(testData[3].second.value()) == 143);
+    REQUIRE(std::get<std::uint32_t>(testData[1].first) == 143);
+    REQUIRE(std::get<std::uint32_t>(testData[2].first) == 143);
+    REQUIRE(std::get<std::uint32_t>(testData[3].second.value()) == 143);
 }

@@ -64,6 +64,7 @@ using Operand = boost::variant<              //
  */
 enum class OpToken
 {
+    Invalid,
     Plus,
     Minus,
     Times,
@@ -86,7 +87,7 @@ enum class OpToken
  */
 struct Unary
 {
-    OpToken operator_;
+    OpToken operator_ {OpToken::Invalid};
     Operand operand;
 };
 
@@ -95,7 +96,7 @@ struct Unary
  */
 struct Operation
 {
-    OpToken operator_;
+    OpToken operator_ {OpToken::Invalid};
     Operand operand;
 };
 

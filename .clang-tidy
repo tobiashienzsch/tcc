@@ -1,3 +1,4 @@
 Checks:          '-*,cppcoreguidelines-*,modernize-*,cert-*,clang-diagnostic-*,-cppcoreguidelines-pro-type-vararg,-cppcoreguidelines-macro-usage,-cppcoreguidelines-avoid-magic-numbers,-cppcoreguidelines-pro-bounds-array-to-pointer-decay,-modernize-use-trailing-return-type'
 WarningsAsErrors: '-*'
+HeaderFilterRegex: '(tcc|tcvm|tsl)'
 ...

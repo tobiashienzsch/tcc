@@ -22,8 +22,8 @@ public:
     explicit VirtualMachine(std::vector<int64_t> code,  //
                             uint64_t main,              //
                             uint64_t dataSize,          //
-                            uint64_t stackSize = 100,   //
-                            bool shouldTrace   = true   //
+                            uint64_t stackSize,         //
+                            bool shouldTrace = true     //
     );
 
     int64_t Cpu();

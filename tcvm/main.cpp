@@ -9,6 +9,7 @@
 
 auto main(int argc, char** argv) -> int
 {
+
     auto cliArguments = po::variables_map {};
     if (!tcvm::ProgramOptions::Parse(argc, argv, cliArguments))
     {
@@ -33,7 +34,8 @@ auto main(int argc, char** argv) -> int
     // binary
     auto program = tcc::BinaryProgram {};
     tcc::BinaryFormat::ReadFromFile(path, program);
-    auto vm = tcc::VirtualMachine(program.data, program.entryPoint, 0, 200, true);
+    auto const stackSize = 200;
+    auto vm              = tcc::VirtualMachine(program.data, program.entryPoint, 0, stackSize, true);
 
     // factorial
     // auto const factorial = tcvm::CreateFactorialProgram(arg);

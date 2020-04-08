@@ -14,6 +14,7 @@ source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} FILES ${tsl_source})
 
 add_library(${PROJECT_NAME} ${tsl_source})
 add_library(tcc::tsl ALIAS ${PROJECT_NAME})
+set_target_properties(${PROJECT_NAME} PROPERTIES CXX_CLANG_TIDY "${DO_CLANG_TIDY}")
 
 target_include_directories(${PROJECT_NAME} PUBLIC 
     ${CMAKE_CURRENT_SOURCE_DIR}

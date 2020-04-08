@@ -48,7 +48,6 @@ option(TCC_BUILD_TESTS      "Build the unit tests with Catch2"  ON)
 option(TCC_BUILD_PLAYGROUND "Build playground project"          ON)
 option(TCC_BUILD_BENCHMARK  "Build benchmark tests"             OFF)
 option(TCC_BUILD_COVERAGE   "Build with code coverage"          OFF)
-option(TCC_BUILD_CLANG_TIDY "Run clang-tidy with the compiler"  OFF)
 
 # cmake modules
 list (APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
@@ -57,29 +56,6 @@ include(tccCompilerOptions)
 include(tccCompilerWarnings)
 include(tccThreads)
 
-# tidy, has to be enabled for each target.
-if(TCC_BUILD_CLANG_TIDY)
-  if(CMake_SOURCE_DIR STREQUAL CMake_BINARY_DIR)
-    message(FATAL_ERROR "TCC_BUILD_CLANG_TIDY requires an out-of-source build!")
-  endif()
-  find_program(CLANG_TIDY_EXE NAMES clang-tidy)
-  if(NOT CLANG_TIDY_EXE)
-    message(WARNING "TCC_BUILD_CLANG_TIDY is ON but clang-tidy is not found!")
-  endif()
-
-  # Create a preprocessor definition that depends on .clang-tidy content so
-  # the compile command will change when .clang-tidy changes.  This ensures
-  # that a subsequent build re-runs clang-tidy on all sources even if they
-  # do not otherwise need to be recompiled.  Nothing actually uses this
-  # definition.  We add it to targets on which we run clang-tidy just to
-  # get the build dependency on the .clang-tidy file.
-  file(SHA1 ${CMAKE_CURRENT_SOURCE_DIR}/.clang-tidy clang_tidy_sha1)
-  set(CLANG_TIDY_DEFINITIONS "CLANG_TIDY_SHA1=${clang_tidy_sha1}")
-  unset(clang_tidy_sha1)
-endif(TCC_BUILD_CLANG_TIDY)
-configure_file(.clang-tidy .clang-tidy COPYONLY)
-
-# boost
 # set(Boost_USE_STATIC_LIBS ON)
 # set(Boost_USE_MULTITHREADED ON)
 find_package(Boost 1.69 REQUIRED COMPONENTS date_time filesystem program_options regex serialization system)

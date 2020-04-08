@@ -36,7 +36,6 @@ set(tcc_lib_source
 add_library(tcc_lib ${tcc_lib_source})
 add_library(tcc::tcc ALIAS tcc_lib)
 source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} FILES ${tcc_lib_source})
-set_target_properties(tcc_lib PROPERTIES CXX_CLANG_TIDY "${CLANG_TIDY_EXE}")
 
 target_include_directories(tcc_lib PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
 target_include_directories(tcc_lib PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/tcc)
@@ -61,7 +60,6 @@ set(tcc_source
 )
 source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} FILES ${tcc_source})
 add_executable(${PROJECT_NAME} ${tcc_source})
-set_target_properties(${PROJECT_NAME} PROPERTIES CXX_CLANG_TIDY "${CLANG_TIDY_EXE}")
 
 target_link_libraries(${PROJECT_NAME} 
     PRIVATE

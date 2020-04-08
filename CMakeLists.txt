@@ -62,17 +62,20 @@ if(TCC_CLANG_TIDY)
   if(CMake_SOURCE_DIR STREQUAL CMake_BINARY_DIR)
     message(FATAL_ERROR "TCC_CLANG_TIDY requires an out-of-source build!")
   endif()
+
   find_program(CLANG_TIDY_EXE NAMES clang-tidy)
   if(NOT CLANG_TIDY_EXE)
     message(WARNING "TCC_CLANG_TIDY is ON but clang-tidy is not found!")
-  endif()
-  # Fix should only be run with 1 core. Otherwise it messes up the headers.
-  if(TCC_CLANG_TIDY_FIX)
-    set(DO_CLANG_TIDY "${CLANG_TIDY_EXE}" "--config=file -fix")
+    set(DO_CLANG_TIDY "")
   else()
-    set(DO_CLANG_TIDY "${CLANG_TIDY_EXE}")
-  endif(TCC_CLANG_TIDY_FIX)
-
+    # Fix should only be run with 1 core. Otherwise it messes up the headers.
+    if(TCC_CLANG_TIDY_FIX)
+      set(DO_CLANG_TIDY "${CLANG_TIDY_EXE}" "--config=file -fix")
+    else()
+      set(DO_CLANG_TIDY "${CLANG_TIDY_EXE}")
+    endif(TCC_CLANG_TIDY_FIX)
+  endif()
+  
   # Create a preprocessor definition that depends on .clang-tidy content so
   # the compile command will change when .clang-tidy changes.  This ensures
   # that a subsequent build re-runs clang-tidy on all sources even if they

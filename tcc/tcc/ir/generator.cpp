@@ -130,7 +130,20 @@ bool IRGenerator::operator()(tcc::ast::Unary const& x)
     }
     return true;
 }
-bool IRGenerator::operator()(tcc::ast::FunctionCall const& /*unused*/) { return true; }
+bool IRGenerator::operator()(tcc::ast::FunctionCall const& call)
+{
+    for (auto const& expr : call.args)
+    {
+        if (!(*this)(expr)) return false;
+    }
+
+    if (!builder_.CreateFunctionCall(call.function_name.name, call.args.size()))
+    {
+        return false;
+    }
+
+    return true;
+}
 bool IRGenerator::operator()(tcc::ast::Expression const& x)
 {
     if (!boost::apply_visitor(*this, x.first))

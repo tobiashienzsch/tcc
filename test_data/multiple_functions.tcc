@@ -5,9 +5,4 @@ int main()
     return x + y;
 }
 
-int foo(bar, baz)
-{
-    int a = 1 + 4;
-    int b = 2;
-    return (a + b) * 143;
-}
+int foo(bar) { return funcToCall(bar); }

@@ -155,6 +155,14 @@ private:
             return true;
         }
 
+        [[nodiscard]] auto CreateFunctionCall(std::string name, size_t numArgs) -> bool
+        {
+            auto args = std::vector<std::string> {};
+            currentFunction_->statements.emplace_back(
+                IRStatement {IRByteCode::Call, CreateTemporaryOnStack(), std::move(name), args, {}});
+            return true;
+        }
+
     private:
         int tmpCounter_ = 0;
         std::vector<IRStatement::Argument> stack_;

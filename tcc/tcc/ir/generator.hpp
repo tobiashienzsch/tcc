@@ -150,6 +150,8 @@ private:
             for (auto const& arg : currentFunction_->args)
             {
                 AddVariable(arg);
+                PushToStack(0);
+                CreateStoreOperation(CreateAssignment(arg));
             }
 
             return true;

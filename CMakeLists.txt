@@ -68,12 +68,7 @@ if(TCC_CLANG_TIDY)
     message(WARNING "TCC_CLANG_TIDY is ON but clang-tidy is not found!")
     set(DO_CLANG_TIDY "")
   else()
-    # Fix should only be run with 1 core. Otherwise it messes up the headers.
-    if(TCC_CLANG_TIDY_FIX)
-      set(DO_CLANG_TIDY "${CLANG_TIDY_EXE}" "--config=file -fix")
-    else()
-      set(DO_CLANG_TIDY "${CLANG_TIDY_EXE}")
-    endif(TCC_CLANG_TIDY_FIX)
+    set(DO_CLANG_TIDY "${CLANG_TIDY_EXE}")
   endif()
   
   # Create a preprocessor definition that depends on .clang-tidy content so

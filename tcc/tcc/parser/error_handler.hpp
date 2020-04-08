@@ -19,7 +19,7 @@ struct ErrorHandler
         using type = void;
     };
 
-    ErrorHandler(Iterator f, Iterator l, std::ostream& o) : first(f), last(l), out(o) {}
+    ErrorHandler(Iterator f, Iterator l, std::ostream& o) : first(f), last(l), out(o) { }
 
     template<typename Message, typename What>
     void operator()(Message const& message, What const& what, Iterator err_pos) const
@@ -74,9 +74,12 @@ struct ErrorHandler
         return std::string(err_pos, i);
     }
 
-    Iterator first;
-    Iterator last;
-    std::vector<Iterator> iters;
+    std::vector<Iterator>& GetIterators() { return iters; }
+
+private:
+    Iterator first              = {};
+    Iterator last               = {};
+    std::vector<Iterator> iters = {};
     std::ostream& out;
 };
 }  // namespace tcc

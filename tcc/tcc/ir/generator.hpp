@@ -29,7 +29,7 @@ public:
         namespace phx = boost::phoenix;
         using boost::phoenix::function;
 
-        errorHandler_ = function<ErrorHandler>(errorHandler)("Error! ", _2, phx::cref(errorHandler.iters)[_1]);
+        errorHandler_ = function<ErrorHandler>(errorHandler)("Error! ", _2, phx::cref(errorHandler.GetIterators())[_1]);
     }
 
     bool operator()(unsigned int x);

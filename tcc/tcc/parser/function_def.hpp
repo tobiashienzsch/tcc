@@ -47,7 +47,7 @@ Function<Iterator>::Function(ErrorHandler<Iterator>& errorHandler) : Function::b
     on_error<fail>(start, ErrorHandlerFunction(errorHandler)("Error! Expecting ", _4, _3));
 
     // Annotation: on success in start, call annotation.
-    on_success(Identifier, AnnotateFunction(errorHandler.iters)(_val, _1));
+    on_success(Identifier, AnnotateFunction(errorHandler.GetIterators())(_val, _1));
 }
 }  // namespace parser
 }  // namespace tcc

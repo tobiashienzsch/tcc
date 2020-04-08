@@ -106,9 +106,9 @@ Statement<Iterator>::Statement(ErrorHandler<Iterator>& errorHandler)
 
     // Annotation: on success in VariableDeclaration,
     // Assignment and ReturnStatement, call annotation.
-    on_success(VariableDeclaration, AnnotateFunction(errorHandler.iters)(_val, _1));
-    on_success(Assignment, AnnotateFunction(errorHandler.iters)(_val, _1));
-    on_success(ReturnStatement, AnnotateFunction(errorHandler.iters)(_val, _1));
+    on_success(VariableDeclaration, AnnotateFunction(errorHandler.GetIterators())(_val, _1));
+    on_success(Assignment, AnnotateFunction(errorHandler.GetIterators())(_val, _1));
+    on_success(ReturnStatement, AnnotateFunction(errorHandler.GetIterators())(_val, _1));
 }
 }  // namespace parser
 }  // namespace tcc

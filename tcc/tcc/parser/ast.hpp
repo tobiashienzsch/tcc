@@ -30,8 +30,11 @@ struct Tagged
 struct Nil
 {
 };
+
 struct Unary;
+
 struct FunctionCall;
+
 struct Expression;
 
 /**
@@ -39,7 +42,7 @@ struct Expression;
  */
 struct Identifier : Tagged
 {
-    Identifier(std::string n = "") : name(std::move(n)) {}
+    Identifier(std::string n = "") : name(std::move(n)) { }
     std::string name;
 };
 

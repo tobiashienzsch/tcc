@@ -17,31 +17,16 @@ namespace tcc
  *  program is being compiled.
  */
 template<typename Iterator>
-struct Annotation
+class Annotation
 {
+public:
     template<typename, typename>
     struct result
     {
         using type = void;
     };
 
-    std::vector<Iterator>& iters;
-    Annotation(std::vector<Iterator>& it) : iters(it) {}
-
-    struct set_id
-    {
-        using result_type = void;
-        int id;
-
-        set_id(int i) : id(i) {}
-
-        template<typename T>
-        void operator()(T&) const
-        {
-        }
-        void operator()(ast::FunctionCall& x) const { x.function_name.id = id; }
-        void operator()(ast::Identifier& x) const { x.id = id; }
-    };
+    Annotation(std::vector<Iterator>& it) : iters(it) { }
 
     void operator()(ast::Operand& ast, Iterator pos) const
     {
@@ -77,6 +62,25 @@ struct Annotation
         iters.push_back(pos);
         ast.id = id;
     }
+
+private:
+    struct set_id
+    {
+        using result_type = void;
+        int id;
+
+        set_id(int i) : id(i) { }
+
+        template<typename T>
+        void operator()(T&) const
+        {
+        }
+        void operator()(ast::FunctionCall& x) const { x.function_name.id = id; }
+        void operator()(ast::Identifier& x) const { x.id = id; }
+    };
+
+private:
+    std::vector<Iterator>& iters;
 };
 }  // namespace tcc
 

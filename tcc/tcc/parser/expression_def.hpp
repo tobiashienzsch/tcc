@@ -168,7 +168,7 @@ Expression<Iterator>::Expression(ErrorHandler<Iterator>& errorHandler) : Express
 
     // Annotation: on success in primary_expr, call Annotation.
     on_success(primary_expr,
-        AnnotationFunction(errorHandler.iters)(_val, _1));
+        AnnotationFunction(errorHandler.GetIterators())(_val, _1));
 
     // clang-format off
 

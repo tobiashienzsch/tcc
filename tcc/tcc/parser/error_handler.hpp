@@ -40,7 +40,7 @@ struct ErrorHandler
         }
     }
 
-    Iterator get_pos(Iterator err_pos, int& line) const
+    [[nodiscard]] Iterator get_pos(Iterator err_pos, int& line) const
     {
         line                = 1;
         Iterator i          = first;
@@ -66,7 +66,7 @@ struct ErrorHandler
         return line_start;
     }
 
-    std::string get_line(Iterator err_pos) const
+    [[nodiscard]] std::string get_line(Iterator err_pos) const
     {
         Iterator i = err_pos;
         // position i to the next EOL
@@ -74,7 +74,7 @@ struct ErrorHandler
         return std::string(err_pos, i);
     }
 
-    std::vector<Iterator>& GetIterators() { return iters; }
+    [[nodiscard]] std::vector<Iterator>& GetIterators() { return iters; }
 
 private:
     Iterator first              = {};

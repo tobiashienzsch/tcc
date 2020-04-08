@@ -12,7 +12,7 @@ public:
     using AstType = tcc::ast::Function;
 
 public:
-    Parser(tcc::ErrorHandler<IteratorType>& err) : errorHandler_(err) {}
+    Parser(tcc::ErrorHandler<IteratorType>& err) : errorHandler_(err) { }
 
     bool ParseSource(IteratorType& iter, IteratorType& end)
     {

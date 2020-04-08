@@ -33,6 +33,7 @@ target_link_libraries(tcvm_lib
 set(tcvm_source main.cpp)
 source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} FILES ${tcvm_source})
 add_executable(${PROJECT_NAME} ${tcvm_source})
+set_target_properties(${PROJECT_NAME} PROPERTIES CXX_CLANG_TIDY "${DO_CLANG_TIDY}")
 
 target_link_libraries(${PROJECT_NAME}  
     PUBLIC 
@@ -52,6 +53,8 @@ if(TCC_BUILD_TESTS)
     source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} FILES ${tcvm_test_source})
 
     add_executable(tcvm-tests ${tcvm_test_source})
+    set_target_properties(tcvm-tests PROPERTIES CXX_CLANG_TIDY "${DO_CLANG_TIDY}")
+
     target_link_libraries(tcvm-tests
         PRIVATE
             tcc::tcvm

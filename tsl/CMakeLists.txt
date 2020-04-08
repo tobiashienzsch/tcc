@@ -40,6 +40,8 @@ if(TCC_BUILD_TESTS)
     source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} FILES ${tsl_test_source})
 
     add_executable(tsl-tests ${tsl_test_source})
+    set_target_properties(tsl-tests PROPERTIES CXX_CLANG_TIDY "${DO_CLANG_TIDY}")
+
     target_link_libraries(tsl-tests
     PRIVATE
         tcc::tsl

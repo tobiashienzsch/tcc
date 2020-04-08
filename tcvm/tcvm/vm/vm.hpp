@@ -28,7 +28,7 @@ public:
 
     int64_t Cpu();
 
-    void EnableTracing(bool const shouldTrace);
+    void EnableTracing(bool shouldTrace);
 
     void Reset(int64_t const entryPoint)
     {
@@ -38,7 +38,7 @@ public:
     }
 
 private:
-    void disassemble(int64_t const opcode);
+    void disassemble(int64_t opcode);
     void printStack();
     void printGlobalMemory();
 

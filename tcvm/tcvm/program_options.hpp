@@ -32,13 +32,13 @@ struct ProgramOptions
             po::store(po::parse_command_line(argc, argv, desc), outputVariableMap);
             po::notify(outputVariableMap);
 
-            if (outputVariableMap.count("help"))
+            if (outputVariableMap.count("help") != 0)
             {
                 fmt::print("{}\n", desc);
                 std::exit(0);
             }
 
-            if (outputVariableMap.count("version"))
+            if (outputVariableMap.count("version") != 0)
             {
                 fmt::print("{}\n", "0.1.0");
                 std::exit(0);

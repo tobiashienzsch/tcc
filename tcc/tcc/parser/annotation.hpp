@@ -72,7 +72,7 @@ private:
         set_id(int i) : id(i) { }
 
         template<typename T>
-        void operator()(T&) const
+        void operator()(T& /*unused*/) const
         {
         }
         void operator()(ast::FunctionCall& x) const { x.function_name.id = id; }

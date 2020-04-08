@@ -16,7 +16,7 @@ auto main(int argc, char** argv) -> int
     }
 
     auto arg = std::int64_t {};
-    if (cliArguments.count("input") != 0u)
+    if (cliArguments.count("input") != 0U)
     {
         arg = cliArguments["input"].as<std::int64_t>();
         fmt::print("{}\n", arg);

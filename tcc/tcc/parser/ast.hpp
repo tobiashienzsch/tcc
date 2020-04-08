@@ -206,7 +206,7 @@ using FunctionList = std::list<Function>;
 /**
  * @brief Nil ostream operator.
  */
-inline std::ostream& operator<<(std::ostream& out, Nil)
+inline std::ostream& operator<<(std::ostream& out, Nil /*unused*/)
 {
     out << "Nil";
     return out;

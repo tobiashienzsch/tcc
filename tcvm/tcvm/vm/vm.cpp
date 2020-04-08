@@ -4,6 +4,7 @@
  */
 
 #include "tcvm/vm/vm.hpp"
+#include "tsl/tsl.hpp"
 
 namespace tcc
 {
@@ -181,6 +182,7 @@ auto VirtualMachine::Cpu() -> int64_t
 
             case ByteCode::EXIT: return m_stack.at(m_stackPointer);
             case ByteCode::HALT: return -1;
+            default: TCC_ASSERT(false, "unknown instruction"); std::exit(EXIT_FAILURE);
         }
     }
 

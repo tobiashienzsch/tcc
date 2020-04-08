@@ -29,7 +29,10 @@ struct ErrorHandler
         if (err_pos != last)
         {
             auto msg = fmt::format("{0}{1} line {2}:\n{3}\n", message, what, line, get_line(line_start));
-            for (; line_start != err_pos; ++line_start) msg.append(" ");
+            for (; line_start != err_pos; ++line_start)
+            {
+                msg.append(" ");
+            }
             msg.append("^\n");
             out << msg;
         }
@@ -59,9 +62,13 @@ struct ErrorHandler
                 line_start = ++i;
             }
             if (eol)
+            {
                 ++line;
+            }
             else
+            {
                 ++i;
+            }
         }
         return line_start;
     }
@@ -70,7 +77,10 @@ struct ErrorHandler
     {
         Iterator i = err_pos;
         // position i to the next EOL
-        while (i != last && (*i != '\r' && *i != '\n')) ++i;
+        while (i != last && (*i != '\r' && *i != '\n'))
+        {
+            ++i;
+        }
         return std::string(err_pos, i);
     }
 

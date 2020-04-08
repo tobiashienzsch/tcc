@@ -1,18 +1,20 @@
 #if !defined(TCC_IR_GENERATOR_HPP)
 #define TCC_IR_GENERATOR_HPP
 
+#include "tcc/ir/three_address_code.hpp"
+#include "tcc/parser/ast.hpp"
+#include "tcc/parser/error_handler.hpp"
+
 #include <boost/function.hpp>
 #include <boost/spirit/include/phoenix_core.hpp>
 #include <boost/spirit/include/phoenix_function.hpp>
 #include <boost/spirit/include/phoenix_operator.hpp>
+
 #include <iostream>
 #include <map>
 #include <string>
+#include <utility>
 #include <vector>
-
-#include "tcc/ir/three_address_code.hpp"
-#include "tcc/parser/ast.hpp"
-#include "tcc/parser/error_handler.hpp"
 
 namespace tcc
 {
@@ -34,7 +36,7 @@ public:
 
     bool operator()(unsigned int x);
     bool operator()(bool x);
-    bool operator()(tcc::ast::Nil);
+    bool operator()(tcc::ast::Nil x);
     bool operator()(tcc::ast::Identifier const& x);
     bool operator()(tcc::ast::Operation const& x);
     bool operator()(tcc::ast::Unary const& x);
@@ -63,12 +65,15 @@ private:
             fmt::print("\nprogram: {} IR instructions\n", rootScope_.statements.size());
             fmt::print("func main: args=[]\n");
             fmt::print("entry:\n");
-            for (ThreeAddressCode const& x : rootScope_.statements) fmt::print("\t{}\n", x);
+            for (ThreeAddressCode const& x : rootScope_.statements)
+            {
+                fmt::print("\t{}\n", x);
+            }
         }
 
         [[nodiscard]] auto CurrentScope() -> StatementScope*
         {
-            if (!currentScope_)
+            if (currentScope_ == nullptr)
             {
                 fmt::print("Current scope is nullptr;\n EXIT\n");
                 std::exit(1);
@@ -80,7 +85,10 @@ private:
         [[nodiscard]] auto HasVariable(std::string const& name) const -> bool
         {
             auto i = rootScope_.variables.find(name);
-            if (i == rootScope_.variables.end()) return false;
+            if (i == rootScope_.variables.end())
+            {
+                return false;
+            }
             return true;
         }
 
@@ -135,7 +143,7 @@ private:
         auto CreateStoreOperation(std::string key) -> void
         {
             auto const first = PopFromStack();
-            rootScope_.statements.push_back(ThreeAddressCode {op_store, key, first, {}, false});
+            rootScope_.statements.push_back(ThreeAddressCode {op_store, std::move(key), first, {}, false});
         }
 
         auto CreateLoadOperation(std::string key) -> void

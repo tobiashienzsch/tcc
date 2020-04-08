@@ -99,7 +99,8 @@ private:
         auto CreateReturnOperation() -> void
         {
             auto const first = PopFromStack();
-            currentFunction_->statements.push_back(IRStatement {IRByteCode::Return, "g.0", first, std::nullopt, false});
+            currentFunction_->statements.emplace_back(
+                IRStatement {IRByteCode::Return, "ret", first, std::nullopt, false});
         }
 
         auto CreateBinaryOperation(IRByteCode op) -> void
@@ -108,26 +109,24 @@ private:
             auto const first   = PopFromStack();
             auto const tmpName = CreateTemporaryOnStack();
 
-            currentFunction_->statements.push_back(IRStatement {op, tmpName, first, second});
+            currentFunction_->statements.emplace_back(IRStatement {op, tmpName, first, second});
         }
 
         auto CreateUnaryOperation(IRByteCode op) -> void
         {
-            auto const first   = PopFromStack();
-            auto const tmpName = CreateTemporaryOnStack();
-            currentFunction_->statements.push_back(IRStatement {op, tmpName, first, {}});
+            currentFunction_->statements.emplace_back(IRStatement {op, CreateTemporaryOnStack(), PopFromStack(), {}});
         }
 
         auto CreateStoreOperation(std::string key) -> void
         {
-            auto const first = PopFromStack();
-            currentFunction_->statements.push_back(IRStatement {IRByteCode::Store, std::move(key), first, {}, false});
+            currentFunction_->statements.emplace_back(
+                IRStatement {IRByteCode::Store, std::move(key), PopFromStack(), {}, false});
         }
 
         auto CreateLoadOperation(std::string key) -> void
         {
-            auto const tmpName = CreateTemporaryOnStack();
-            currentFunction_->statements.push_back(IRStatement {IRByteCode::Load, tmpName, key, {}});
+            currentFunction_->statements.emplace_back(
+                IRStatement {IRByteCode::Load, CreateTemporaryOnStack(), key, {}});
         }
 
         [[nodiscard]] auto CreateAssignment(std::string const& key) -> std::string
@@ -139,15 +138,20 @@ private:
 
         [[nodiscard]] auto CreateTemporaryOnStack() -> std::string
         {
-            auto tmp = std::string("t.").append(std::to_string(tmpCounter_++));
+            auto const tmp = fmt::format("t.{}", tmpCounter_++);
             stack_.emplace_back(tmp);
             return tmp;
         }
 
         [[nodiscard]] auto CreateFunction(std::string name, std::vector<std::string> args) -> bool
         {
-            package_.functions.push_back({std::move(name), {}, std::move(args), {}});
+            package_.functions.emplace_back(IRFunction {std::move(name), std::move(args), {}, {}});
             currentFunction_ = &package_.functions.back();
+            for (auto const& arg : currentFunction_->args)
+            {
+                AddVariable(arg);
+            }
+
             return true;
         }
 

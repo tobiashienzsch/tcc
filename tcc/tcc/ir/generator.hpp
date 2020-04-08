@@ -65,7 +65,7 @@ private:
             fmt::print("\n{0}: functions={1}\n", package_.name, package_.functions.size());
             for (auto const& func : package_.functions)
             {
-                fmt::print("func {0}: args=[] instructions={1}\nentry:\n", func.name, func.statements.size());
+                fmt::print("\nfunc {0}: args=[] instructions={1}\nentry:\n", func.name, func.statements.size());
                 for (auto const& x : func.statements)
                 {
                     fmt::print("\t{}\n", x);

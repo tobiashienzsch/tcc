@@ -245,6 +245,18 @@ bool IRGenerator::operator()(tcc::ast::Function const& func)
 
     return true;
 }
-bool IRGenerator::operator()(tcc::ast::FunctionList const& /*unused*/) { return true; }
+
+bool IRGenerator::operator()(tcc::ast::FunctionList const& funcList)
+{
+    for (auto const& func : funcList)
+    {
+        if (!(*this)(func))
+        {
+            return false;
+        }
+    }
+
+    return true;
+}
 
 }  // namespace tcc

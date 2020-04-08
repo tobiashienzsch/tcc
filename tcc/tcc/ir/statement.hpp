@@ -42,5 +42,19 @@ struct IRPackage
 };
 
 inline auto operator<<(std::ostream& out, IRFunction const& data) -> std::ostream& { return out << data.name; }
+inline auto operator<<(std::ostream& out, IRPackage const& pkg) -> std::ostream&
+{
+    out << fmt::format("\n{0}: functions={1}\n", pkg.name, pkg.functions.size());
+    for (auto const& func : pkg.functions)
+    {
+        out << fmt::format("\nfunc {0}: args=[] instructions={1}\nentry:\n", func.name, func.statements.size());
+        for (auto const& x : func.statements)
+        {
+            out << fmt::format("\t{}\n", x);
+        }
+    }
+
+    return out;
+}
 
 }  // namespace tcc

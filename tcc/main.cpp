@@ -43,9 +43,14 @@ int main(int argc, char** argv)
         optimizer.Optimize();
     }
 
+    if (flags.PrintSource)
+    {
+        fmt::print("source:\n{}\n", flags.Source);
+    }
+
     if (flags.PrintIR)
     {
-        irGenerator.PrintIR();
+        fmt::print("{}", irGenerator.CurrentPackage());
     }
 
     if (!flags.OutputName.empty())

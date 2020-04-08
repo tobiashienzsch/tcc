@@ -5,7 +5,8 @@ namespace tcc
 
 auto Optimizer::Optimize() -> void
 {
-    for (auto x = 0U; x < 12; x++)
+    auto const passes = 12U;
+    for (auto x = 0U; x < passes; x++)
     {
         tcc::IgnoreUnused(x);
 

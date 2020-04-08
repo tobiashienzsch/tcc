@@ -81,7 +81,7 @@ auto Optimizer::ReplaceVariableIfConstant(ThreeAddressCode& statement, Statement
     {
         for (auto& otherStatement : statementList)
         {
-            if (otherStatement.type != IRByteCode::op_load)
+            if (otherStatement.type != IRByteCode::Load)
             {
                 // first
                 std::visit(tcc::overloaded {
@@ -128,15 +128,15 @@ auto Optimizer::ReplaceWithConstantStore(ThreeAddressCode& statement) -> bool
 
         switch (statement.type)
         {
-            case IRByteCode::op_add: statement.first = first + second; break;
-            case IRByteCode::op_sub: statement.first = first - second; break;
-            case IRByteCode::op_mul: statement.first = first * second; break;
-            case IRByteCode::op_div: statement.first = first / second; break;
+            case IRByteCode::Addition: statement.first = first + second; break;
+            case IRByteCode::Subtraction: statement.first = first - second; break;
+            case IRByteCode::Multiplication: statement.first = first * second; break;
+            case IRByteCode::Division: statement.first = first / second; break;
             default: break;
         }
 
         statement.second = std::nullopt;
-        statement.type   = IRByteCode::op_store;
+        statement.type   = IRByteCode::Store;
 
         return true;
     }
@@ -168,7 +168,7 @@ auto Optimizer::isConstantArgument(ThreeAddressCode::OptionalArgument const& arg
 
 auto Optimizer::isConstantStoreExpression(ThreeAddressCode const& statement) -> bool
 {
-    return statement.type == IRByteCode::op_store && isConstantArgument(statement.first);
+    return statement.type == IRByteCode::Store && isConstantArgument(statement.first);
 }
 
 auto Optimizer::isConstantBinaryExpression(ThreeAddressCode const& statement) -> bool
@@ -186,19 +186,19 @@ auto Optimizer::isConstantBinaryExpression(ThreeAddressCode const& statement) ->
 
 auto Optimizer::isBinaryOperation(IRByteCode op) noexcept -> bool
 {
-    if (op == IRByteCode::op_add)
+    if (op == IRByteCode::Addition)
     {
         return true;
     }
-    if (op == IRByteCode::op_sub)
+    if (op == IRByteCode::Subtraction)
     {
         return true;
     }
-    if (op == IRByteCode::op_mul)
+    if (op == IRByteCode::Multiplication)
     {
         return true;
     }
-    if (op == IRByteCode::op_div)
+    if (op == IRByteCode::Division)
     {
         return true;
     }

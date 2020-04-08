@@ -41,64 +41,64 @@ bool IRGenerator::operator()(tcc::ast::Operation const& x)
     {
         case tcc::ast::OpToken::Plus:
         {
-            builder_.CreateBinaryOperation(IRByteCode::op_add);
+            builder_.CreateBinaryOperation(IRByteCode::Addition);
             break;
         }
         case tcc::ast::OpToken::Minus:
         {
-            builder_.CreateBinaryOperation(IRByteCode::op_sub);
+            builder_.CreateBinaryOperation(IRByteCode::Subtraction);
             break;
         }
         case tcc::ast::OpToken::Times:
         {
-            builder_.CreateBinaryOperation(IRByteCode::op_mul);
+            builder_.CreateBinaryOperation(IRByteCode::Multiplication);
             break;
         }
         case tcc::ast::OpToken::Divide:
         {
-            builder_.CreateBinaryOperation(IRByteCode::op_div);
+            builder_.CreateBinaryOperation(IRByteCode::Division);
             break;
         }
 
         case tcc::ast::OpToken::Equal:
         {
-            builder_.CreateBinaryOperation(IRByteCode::op_eq);
+            builder_.CreateBinaryOperation(IRByteCode::Equal);
             break;
         }
         case tcc::ast::OpToken::NotEqual:
         {
-            builder_.CreateBinaryOperation(IRByteCode::op_neq);
+            builder_.CreateBinaryOperation(IRByteCode::NotEqual);
             break;
         }
         case tcc::ast::OpToken::Less:
         {
-            builder_.CreateBinaryOperation(IRByteCode::op_lt);
+            builder_.CreateBinaryOperation(IRByteCode::Less);
             break;
         }
         case tcc::ast::OpToken::LessEqual:
         {
-            builder_.CreateBinaryOperation(IRByteCode::op_lte);
+            builder_.CreateBinaryOperation(IRByteCode::LessEqual);
             break;
         }
         case tcc::ast::OpToken::Greater:
         {
-            builder_.CreateBinaryOperation(IRByteCode::op_gt);
+            builder_.CreateBinaryOperation(IRByteCode::Greater);
             break;
         }
         case tcc::ast::OpToken::GreaterEqual:
         {
-            builder_.CreateBinaryOperation(IRByteCode::op_gte);
+            builder_.CreateBinaryOperation(IRByteCode::GreaterEqual);
             break;
         }
 
         case tcc::ast::OpToken::And:
         {
-            builder_.CreateBinaryOperation(IRByteCode::op_and);
+            builder_.CreateBinaryOperation(IRByteCode::And);
             break;
         }
         case tcc::ast::OpToken::Or:
         {
-            builder_.CreateBinaryOperation(IRByteCode::op_or);
+            builder_.CreateBinaryOperation(IRByteCode::Or);
             break;
         }
         default: return false;
@@ -117,12 +117,12 @@ bool IRGenerator::operator()(tcc::ast::Unary const& x)
 
         case tcc::ast::OpToken::Negative:
         {
-            builder_.CreateUnaryOperation(IRByteCode::op_neg);
+            builder_.CreateUnaryOperation(IRByteCode::Negate);
             break;
         }
         case tcc::ast::OpToken::Not:
         {
-            builder_.CreateUnaryOperation(IRByteCode::op_not);
+            builder_.CreateUnaryOperation(IRByteCode::Not);
             break;
         }
 
@@ -193,7 +193,7 @@ bool IRGenerator::operator()(tcc::ast::StatementList const& x)
 bool IRGenerator::operator()(tcc::ast::IfStatement const& /*unused*/)
 {
     // if (!(*this)(x.condition)) return false;
-    // program_.op(IRByteCode::op_jump_if, 0);              // we shall fill this (0) in later
+    // program_.op(IRByteCode::JumpIf, 0);              // we shall fill this (0) in later
     // std::size_t skip = program_.size() - 1;  // mark its position
     // if (!(*this)(x.then)) return false;
     // program_[skip] = int(program_.size() - skip);  // now we know where to jump to (after the if branch)
@@ -201,7 +201,7 @@ bool IRGenerator::operator()(tcc::ast::IfStatement const& /*unused*/)
     // if (x.else_)  // We got an alse
     // {
     //   program_[skip] += 2;                     // adjust for the "else" jump
-    //   program_.op(IRByteCode::op_jump, 0);                 // we shall fill this (0) in later
+    //   program_.op(IRByteCode::Jump, 0);                 // we shall fill this (0) in later
     //   std::size_t exit = program_.size() - 1;  // mark its position
     //   if (!(*this)(*x.else_)) return false;
     //   program_[exit] = int(program_.size() - exit);  // now we know where to jump to (after the else branch)
@@ -213,10 +213,10 @@ bool IRGenerator::operator()(tcc::ast::WhileStatement const& /*unused*/)
 {
     // std::size_t loop = program_.size();  // mark our position
     // if (!(*this)(x.condition)) return false;
-    // program_.op(IRByteCode::op_jump_if, 0);              // we shall fill this (0) in later
+    // program_.op(IRByteCode::JumpIf, 0);              // we shall fill this (0) in later
     // std::size_t exit = program_.size() - 1;  // mark its position
     // if (!(*this)(x.body)) return false;
-    // program_.op(IRByteCode::op_jump,
+    // program_.op(IRByteCode::Jump,
     //             int(loop - 1) - int(program_.size()));  // loop back
     // program_[exit] = int(program_.size() - exit);       // now we know where to jump to (to exit the loop)
     return true;

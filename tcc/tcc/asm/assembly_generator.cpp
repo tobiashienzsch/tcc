@@ -45,7 +45,7 @@ auto AssemblyGenerator::Build(tcc::StatementScope const& scope) -> std::vector<i
 
         switch (statement.type)
         {
-            case IRByteCode::op_store:
+            case IRByteCode::Store:
             {
                 if (auto* value = std::get_if<std::uint32_t>(&statement.first); value != nullptr)
                 {
@@ -62,7 +62,7 @@ auto AssemblyGenerator::Build(tcc::StatementScope const& scope) -> std::vector<i
                 break;
             }
 
-            case IRByteCode::op_load:
+            case IRByteCode::Load:
             {
                 auto const destIter  = std::find(std::begin(localVars), std::end(localVars),
                                                 std::string(1, std::get<std::string>(statement.first)[0]));
@@ -74,32 +74,32 @@ auto AssemblyGenerator::Build(tcc::StatementScope const& scope) -> std::vector<i
                 break;
             }
 
-            case IRByteCode::op_add:
+            case IRByteCode::Addition:
             {
                 PushConstArgument();
                 result.push_back(tcc::ByteCode::IADD);
                 break;
             }
-            case IRByteCode::op_sub:
+            case IRByteCode::Subtraction:
             {
                 PushConstArgument();
                 result.push_back(tcc::ByteCode::ISUB);
                 break;
             }
-            case IRByteCode::op_mul:
+            case IRByteCode::Multiplication:
             {
                 PushConstArgument();
                 result.push_back(tcc::ByteCode::IMUL);
                 break;
             }
-            case IRByteCode::op_return:
+            case IRByteCode::Return:
             {
                 PushConstArgument();
                 result.push_back(tcc::ByteCode::EXIT);
                 break;
             }
 
-                // case IRByteCode::op_div:
+                // case IRByteCode::Division:
                 // {
                 //     result.push_back(tcc::ByteCode::IDIV);
                 //     fmt::print("DIV,\n");

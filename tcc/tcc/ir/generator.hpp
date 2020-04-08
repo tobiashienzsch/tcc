@@ -120,8 +120,7 @@ private:
         auto CreateReturnOperation() -> void
         {
             auto const first = PopFromStack();
-            rootScope_.statements.push_back(
-                ThreeAddressCode {IRByteCode::op_return, "g.0", first, std::nullopt, false});
+            rootScope_.statements.push_back(ThreeAddressCode {IRByteCode::Return, "g.0", first, std::nullopt, false});
         }
 
         auto CreateBinaryOperation(IRByteCode op) -> void
@@ -143,13 +142,13 @@ private:
         auto CreateStoreOperation(std::string key) -> void
         {
             auto const first = PopFromStack();
-            rootScope_.statements.push_back(ThreeAddressCode {op_store, std::move(key), first, {}, false});
+            rootScope_.statements.push_back(ThreeAddressCode {IRByteCode::Store, std::move(key), first, {}, false});
         }
 
         auto CreateLoadOperation(std::string key) -> void
         {
             auto const tmpName = CreateTemporaryOnStack();
-            rootScope_.statements.push_back(ThreeAddressCode {op_load, tmpName, key, {}});
+            rootScope_.statements.push_back(ThreeAddressCode {IRByteCode::Load, tmpName, key, {}});
         }
 
         [[nodiscard]] auto CreateAssignment(std::string const& key) -> std::string

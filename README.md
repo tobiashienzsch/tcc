@@ -54,7 +54,7 @@ CONFIG=Debug make config-vs build test
 
 ```sh
 cd $BUILD_DIR
-python ../scripts/run-clang-tidy.py -header-filter=(tcc|tcvm|tsl) -fix -p . ..
+python ../scripts/run-clang-tidy.py -header-filter="(tcc|tcvm|tsl)" -quiet -fix -p . ..
 ```
 
 ## Project Structure

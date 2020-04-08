@@ -144,9 +144,9 @@ private:
             return tmp;
         }
 
-        [[nodiscard]] auto CreateFunction(std::string name) -> bool
+        [[nodiscard]] auto CreateFunction(std::string name, std::vector<std::string> args) -> bool
         {
-            package_.functions.push_back({std::move(name), {}, {}});
+            package_.functions.push_back({std::move(name), {}, std::move(args), {}});
             currentFunction_ = &package_.functions.back();
             return true;
         }

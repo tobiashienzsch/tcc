@@ -230,9 +230,16 @@ bool IRGenerator::operator()(tcc::ast::ReturnStatement const& x)
     builder_.CreateReturnOperation();
     return true;
 }
+
 bool IRGenerator::operator()(tcc::ast::Function const& func)
 {
-    if (!builder_.CreateFunction(func.function_name.name))
+    auto args = std::vector<std::string> {};
+    for (auto const& arg : func.args)
+    {
+        args.push_back(arg.name);
+    }
+
+    if (!builder_.CreateFunction(func.function_name.name, args))
     {
         errorHandler_(func.function_name.id, "Duplicate function: " + func.function_name.name);
         return false;

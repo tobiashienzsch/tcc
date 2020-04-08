@@ -5,7 +5,7 @@ int main()
     return x + y;
 }
 
-int foo()
+int foo(bar, baz)
 {
     int a = 1 + 4;
     int b = 2;

@@ -12,7 +12,7 @@
 
 namespace tcc
 {
-struct ThreeAddressCode
+struct IRStatement
 {
     using Argument         = std::variant<std::uint32_t, std::string>;
     using OptionalArgument = std::optional<Argument>;
@@ -24,9 +24,9 @@ struct ThreeAddressCode
     bool isTemporary {true};
 };
 
-auto operator<<(std::ostream& out, ThreeAddressCode const& data) -> std::ostream&;
+auto operator<<(std::ostream& out, IRStatement const& data) -> std::ostream&;
 
-using IRStatementList = std::vector<ThreeAddressCode>;
+using IRStatementList = std::vector<IRStatement>;
 
 struct IRFunction
 {

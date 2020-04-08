@@ -22,7 +22,7 @@ auto AssemblyGenerator::Build(tcc::IRFunction const& function) -> std::vector<in
         result.push_back(0);
     }
 
-    for (ThreeAddressCode const& statement : statements)
+    for (IRStatement const& statement : statements)
     {
         auto const PushConstArgument = [&]() -> void {
             auto const& first = statement.first;

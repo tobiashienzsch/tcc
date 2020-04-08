@@ -40,43 +40,42 @@ auto Optimizer::DeleteUnusedStatements(IRStatementList& statementList) -> bool
     return false;
 }
 
-auto Optimizer::IsUnusedStatement(ThreeAddressCode const& statement, IRStatementList const& statementList) -> bool
+auto Optimizer::IsUnusedStatement(IRStatement const& statement, IRStatementList const& statementList) -> bool
 {
     return statement.isTemporary
-           && !std::any_of(std::begin(statementList), std::end(statementList),
-                           [&statement](ThreeAddressCode const& item) {
-                               auto result = false;
+           && !std::any_of(std::begin(statementList), std::end(statementList), [&statement](IRStatement const& item) {
+                  auto result = false;
 
-                               std::visit(tcc::overloaded {
-                                              [](std::uint32_t /*unused*/) { ; },
-                                              [&statement, &result](std::string const& name) {
-                                                  if (name == statement.destination)
-                                                  {
-                                                      result = true;
-                                                  }
-                                              },
-                                          },
-                                          item.first);
+                  std::visit(tcc::overloaded {
+                                 [](std::uint32_t /*unused*/) { ; },
+                                 [&statement, &result](std::string const& name) {
+                                     if (name == statement.destination)
+                                     {
+                                         result = true;
+                                     }
+                                 },
+                             },
+                             item.first);
 
-                               if (item.second.has_value())
-                               {
-                                   std::visit(tcc::overloaded {
-                                                  [](std::uint32_t /*unused*/) { ; },
-                                                  [&statement, &result](std::string const& name) {
-                                                      if (name == statement.destination)
-                                                      {
-                                                          result = true;
-                                                      }
-                                                  },
-                                              },
-                                              item.second.value());
-                               }
+                  if (item.second.has_value())
+                  {
+                      std::visit(tcc::overloaded {
+                                     [](std::uint32_t /*unused*/) { ; },
+                                     [&statement, &result](std::string const& name) {
+                                         if (name == statement.destination)
+                                         {
+                                             result = true;
+                                         }
+                                     },
+                                 },
+                                 item.second.value());
+                  }
 
-                               return result;
-                           });
+                  return result;
+              });
 }
 
-auto Optimizer::ReplaceVariableIfConstant(ThreeAddressCode& statement, IRStatementList& statementList) -> bool
+auto Optimizer::ReplaceVariableIfConstant(IRStatement& statement, IRStatementList& statementList) -> bool
 {
     if (isConstantStoreExpression(statement))
     {
@@ -120,7 +119,7 @@ auto Optimizer::ReplaceVariableIfConstant(ThreeAddressCode& statement, IRStateme
 }
 
 // replace constant expression with store of result.
-auto Optimizer::ReplaceWithConstantStore(ThreeAddressCode& statement) -> bool
+auto Optimizer::ReplaceWithConstantStore(IRStatement& statement) -> bool
 {
     if (isConstantBinaryExpression(statement))
     {
@@ -145,7 +144,7 @@ auto Optimizer::ReplaceWithConstantStore(ThreeAddressCode& statement) -> bool
     return false;
 }
 
-auto Optimizer::isConstantArgument(ThreeAddressCode::Argument const& argument) -> bool
+auto Optimizer::isConstantArgument(IRStatement::Argument const& argument) -> bool
 {
     auto returnValue = bool {false};
     std::visit(tcc::overloaded {
@@ -157,7 +156,7 @@ auto Optimizer::isConstantArgument(ThreeAddressCode::Argument const& argument) -
     return returnValue;
 }
 
-auto Optimizer::isConstantArgument(ThreeAddressCode::OptionalArgument const& argument) -> bool
+auto Optimizer::isConstantArgument(IRStatement::OptionalArgument const& argument) -> bool
 {
     if (argument.has_value())
     {
@@ -167,12 +166,12 @@ auto Optimizer::isConstantArgument(ThreeAddressCode::OptionalArgument const& arg
     return false;
 }
 
-auto Optimizer::isConstantStoreExpression(ThreeAddressCode const& statement) -> bool
+auto Optimizer::isConstantStoreExpression(IRStatement const& statement) -> bool
 {
     return statement.type == IRByteCode::Store && isConstantArgument(statement.first);
 }
 
-auto Optimizer::isConstantBinaryExpression(ThreeAddressCode const& statement) -> bool
+auto Optimizer::isConstantBinaryExpression(IRStatement const& statement) -> bool
 {
     if (isBinaryOperation(statement.type))
     {

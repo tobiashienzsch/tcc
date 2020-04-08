@@ -4,7 +4,7 @@
 
 namespace tcc
 {
-auto operator<<(std::ostream& out, ThreeAddressCode const& data) -> std::ostream&
+auto operator<<(std::ostream& out, IRStatement const& data) -> std::ostream&
 {
     auto const formatArgument = [](auto const& argument) {
         auto result = std::string {};

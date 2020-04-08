@@ -65,7 +65,7 @@ private:
             fmt::print("\nprogram: {} IR instructions\n", rootScope_.statements.size());
             fmt::print("func main: args=[]\n");
             fmt::print("entry:\n");
-            for (ThreeAddressCode const& x : rootScope_.statements)
+            for (IRStatement const& x : rootScope_.statements)
             {
                 fmt::print("\t{}\n", x);
             }
@@ -120,7 +120,7 @@ private:
         auto CreateReturnOperation() -> void
         {
             auto const first = PopFromStack();
-            rootScope_.statements.push_back(ThreeAddressCode {IRByteCode::Return, "g.0", first, std::nullopt, false});
+            rootScope_.statements.push_back(IRStatement {IRByteCode::Return, "g.0", first, std::nullopt, false});
         }
 
         auto CreateBinaryOperation(IRByteCode op) -> void
@@ -129,26 +129,26 @@ private:
             auto const first   = PopFromStack();
             auto const tmpName = CreateTemporaryOnStack();
 
-            rootScope_.statements.push_back(ThreeAddressCode {op, tmpName, first, second});
+            rootScope_.statements.push_back(IRStatement {op, tmpName, first, second});
         }
 
         auto CreateUnaryOperation(IRByteCode op) -> void
         {
             auto const first   = PopFromStack();
             auto const tmpName = CreateTemporaryOnStack();
-            rootScope_.statements.push_back(ThreeAddressCode {op, tmpName, first, {}});
+            rootScope_.statements.push_back(IRStatement {op, tmpName, first, {}});
         }
 
         auto CreateStoreOperation(std::string key) -> void
         {
             auto const first = PopFromStack();
-            rootScope_.statements.push_back(ThreeAddressCode {IRByteCode::Store, std::move(key), first, {}, false});
+            rootScope_.statements.push_back(IRStatement {IRByteCode::Store, std::move(key), first, {}, false});
         }
 
         auto CreateLoadOperation(std::string key) -> void
         {
             auto const tmpName = CreateTemporaryOnStack();
-            rootScope_.statements.push_back(ThreeAddressCode {IRByteCode::Load, tmpName, key, {}});
+            rootScope_.statements.push_back(IRStatement {IRByteCode::Load, tmpName, key, {}});
         }
 
         [[nodiscard]] auto CreateAssignment(std::string const& key) -> std::string

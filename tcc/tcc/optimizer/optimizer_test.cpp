@@ -10,8 +10,8 @@
 using std::string;
 
 using tcc::IRByteCode;
+using tcc::IRStatement;
 using tcc::Optimizer;
-using tcc::ThreeAddressCode;
 
 TEST_CASE("tcc/optimizer: BinaryOperation", "[tcc][optimizer]")
 {
@@ -30,7 +30,7 @@ TEST_CASE("tcc/optimizer: BinaryOperation", "[tcc][optimizer]")
 
 TEST_CASE("tcc/optimizer: ConstantArgument", "[tcc][optimizer]")
 {
-    using Argument = ThreeAddressCode::Argument;
+    using Argument = IRStatement::Argument;
 
     auto [test_input, expected] = GENERATE(table<Argument, bool>({
         {Argument {string("x1")}, false},  //
@@ -46,7 +46,7 @@ TEST_CASE("tcc/optimizer: ConstantArgument", "[tcc][optimizer]")
 
 TEST_CASE("tcc/optimizer: ConstantArgumentOptional", "[tcc][optimizer]")
 {
-    using Argument = ThreeAddressCode::OptionalArgument;
+    using Argument = IRStatement::OptionalArgument;
 
     auto [test_input, expected] = GENERATE(table<Argument, bool>({
         {Argument {string("x1")}, false},  //
@@ -63,10 +63,10 @@ TEST_CASE("tcc/optimizer: ConstantArgumentOptional", "[tcc][optimizer]")
 
 TEST_CASE("tcc/optimizer: ConstantStoreExpression", "[tcc][optimizer]")
 {
-    auto [test_input, expected] = GENERATE(table<ThreeAddressCode, bool>({
-        {ThreeAddressCode {IRByteCode::Store, string("x1"), 1, std::nullopt}, true},              //
-        {ThreeAddressCode {IRByteCode::Multiplication, string("t78"), 123, 1}, false},            // not store
-        {ThreeAddressCode {IRByteCode::Store, string("t1"), string("t0"), std::nullopt}, false},  // not const
+    auto [test_input, expected] = GENERATE(table<IRStatement, bool>({
+        {IRStatement {IRByteCode::Store, string("x1"), 1, std::nullopt}, true},              //
+        {IRStatement {IRByteCode::Multiplication, string("t78"), 123, 1}, false},            // not store
+        {IRStatement {IRByteCode::Store, string("t1"), string("t0"), std::nullopt}, false},  // not const
     }));
 
     REQUIRE(Optimizer::isConstantStoreExpression(test_input) == expected);
@@ -74,9 +74,9 @@ TEST_CASE("tcc/optimizer: ConstantStoreExpression", "[tcc][optimizer]")
 
 TEST_CASE("tcc/optimizer: ConstantBinaryExpression", "[tcc][optimizer]")
 {
-    auto [test_input, expected] = GENERATE(table<ThreeAddressCode, bool>({
-        {ThreeAddressCode {IRByteCode::Store, string("t2"), string("t0"), std::nullopt}, false},  // not binary
-        {ThreeAddressCode {IRByteCode::Multiplication, string("t2"), 1, 451}, true},              //
+    auto [test_input, expected] = GENERATE(table<IRStatement, bool>({
+        {IRStatement {IRByteCode::Store, string("t2"), string("t0"), std::nullopt}, false},  // not binary
+        {IRStatement {IRByteCode::Multiplication, string("t2"), 1, 451}, true},              //
     }));
 
     REQUIRE(Optimizer::isConstantBinaryExpression(test_input) == expected);
@@ -85,8 +85,8 @@ TEST_CASE("tcc/optimizer: ConstantBinaryExpression", "[tcc][optimizer]")
 TEST_CASE("tcc/optimizer: UnusedStatement", "[tcc][optimizer]")
 {
     auto testData = tcc::IRStatementList {
-        ThreeAddressCode {IRByteCode::Store, string("x1"), 1, std::nullopt},            //
-        ThreeAddressCode {IRByteCode::Store, string("x2"), string("x1"), std::nullopt}  //
+        IRStatement {IRByteCode::Store, string("x1"), 1, std::nullopt},            //
+        IRStatement {IRByteCode::Store, string("x2"), string("x1"), std::nullopt}  //
     };
 
     REQUIRE(Optimizer::IsUnusedStatement(testData.at(0), testData) == false);
@@ -96,7 +96,7 @@ TEST_CASE("tcc/optimizer: UnusedStatement", "[tcc][optimizer]")
 TEST_CASE("tcc/optimizer: DeleteUnusedStatements", "[tcc][optimizer]")
 {
     auto testData = tcc::IRStatementList {
-        ThreeAddressCode {IRByteCode::Store, string("t0"), 1, std::nullopt}  //
+        IRStatement {IRByteCode::Store, string("t0"), 1, std::nullopt}  //
     };
 
     REQUIRE(testData.size() == std::size_t {1});
@@ -107,10 +107,10 @@ TEST_CASE("tcc/optimizer: DeleteUnusedStatements", "[tcc][optimizer]")
 TEST_CASE("tcc/optimizer: ReplaceVariableIfConstant", "[tcc][optimizer]")
 {
     auto testData = tcc::IRStatementList {
-        ThreeAddressCode {IRByteCode::Store, string("x1"), 143, std::nullopt},           //
-        ThreeAddressCode {IRByteCode::Store, string("x2"), string("x1"), std::nullopt},  //
-        ThreeAddressCode {IRByteCode::Store, string("t0"), string("x1"), std::nullopt},  //
-        ThreeAddressCode {IRByteCode::Addition, string("t0"), 42, string("x1")}          //
+        IRStatement {IRByteCode::Store, string("x1"), 143, std::nullopt},           //
+        IRStatement {IRByteCode::Store, string("x2"), string("x1"), std::nullopt},  //
+        IRStatement {IRByteCode::Store, string("t0"), string("x1"), std::nullopt},  //
+        IRStatement {IRByteCode::Addition, string("t0"), 42, string("x1")}          //
     };
 
     REQUIRE(Optimizer::ReplaceVariableIfConstant(testData.at(0), testData) == true);

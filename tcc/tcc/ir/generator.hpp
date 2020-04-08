@@ -66,7 +66,7 @@ private:
             for (ThreeAddressCode const& x : rootScope_.statements) fmt::print("\t{}\n", x);
         }
 
-        auto CurrentScope() -> StatementScope*
+        [[nodiscard]] auto CurrentScope() -> StatementScope*
         {
             if (!currentScope_)
             {
@@ -77,7 +77,7 @@ private:
             return currentScope_;
         }
 
-        auto HasVariable(std::string const& name) const -> bool
+        [[nodiscard]] auto HasVariable(std::string const& name) const -> bool
         {
             auto i = rootScope_.variables.find(name);
             if (i == rootScope_.variables.end()) return false;
@@ -86,7 +86,7 @@ private:
 
         auto PushToStack(int x) -> void { stack_.emplace_back(x); }
 
-        auto PopFromStack() -> std::variant<int, std::string>
+        [[nodiscard]] auto PopFromStack() -> std::variant<int, std::string>
         {
             auto const result = stack_.back();
             stack_.pop_back();
@@ -102,7 +102,7 @@ private:
                 fmt::print("Tried to add {} twice to variable map\n", name);
         }
 
-        auto GetLastVariable(std::string const& key) const -> std::string
+        [[nodiscard]] auto GetLastVariable(std::string const& key) const -> std::string
         {
             auto search = rootScope_.variables.find(key);
             auto newId  = search->second - 1;
@@ -143,21 +143,21 @@ private:
             rootScope_.statements.push_back(ThreeAddressCode {op_load, tmpName, key, {}});
         }
 
-        auto CreateAssignment(std::string const& key) -> std::string
+        [[nodiscard]] auto CreateAssignment(std::string const& key) -> std::string
         {
             auto search = rootScope_.variables.find(key);
             auto newId  = search->second++;
             return fmt::format("{}.{}", key, newId);
         }
 
-        auto CreateTemporaryOnStack() -> std::string
+        [[nodiscard]] auto CreateTemporaryOnStack() -> std::string
         {
             auto tmp = std::string("t.").append(std::to_string(tmpCounter_++));
             stack_.emplace_back(tmp);
             return tmp;
         }
 
-        auto GetStatementList() -> StatementList& { return rootScope_.statements; }
+        [[nodiscard]] auto GetStatementList() -> StatementList& { return rootScope_.statements; }
 
     private:
         int tmpCounter_ = 0;

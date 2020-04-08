@@ -110,7 +110,7 @@ public:
     /**
      * @brief Returns the current compiler flags. They could change after parsing argv.
      */
-    CompilerFlags const& GetCompilerFlags() const noexcept { return flags_; }
+    [[nodiscard]] CompilerFlags const& GetCompilerFlags() const noexcept { return flags_; }
 
 private:
     CompilerFlags flags_ {};

@@ -29,15 +29,17 @@ int main(int argc, char** argv)
     }
 
     auto irGenerator = tcc::IRGenerator {errorHandler};  // IR Generator
-    if (!irGenerator(parser.GetAst().body))
+    if (!irGenerator(parser.GetAst()))
     {
         fmt::print("Error while compiling!\n");
         return EXIT_FAILURE;
     }
 
+    auto& currentFunction = irGenerator.CurrentPackage().functions[0];
+
     if (flags.OptLevel > 0)
     {
-        auto optimizer = tcc::Optimizer(*irGenerator.CurrentScope());
+        auto optimizer = tcc::Optimizer(currentFunction);
         optimizer.Optimize();
     }
 
@@ -48,7 +50,7 @@ int main(int argc, char** argv)
 
     if (!flags.OutputName.empty())
     {
-        auto assembly      = tcc::AssemblyGenerator::Build(*irGenerator.CurrentScope());
+        auto assembly      = tcc::AssemblyGenerator::Build(currentFunction);
         auto binaryProgram = tcc::BinaryProgram {1, flags.OutputName, 0, assembly};
         if (!tcc::BinaryFormat::WriteToFile(flags.OutputName, binaryProgram))
         {

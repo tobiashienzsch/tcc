@@ -230,7 +230,21 @@ bool IRGenerator::operator()(tcc::ast::ReturnStatement const& x)
     builder_.CreateReturnOperation();
     return true;
 }
-bool IRGenerator::operator()(tcc::ast::Function const& /*unused*/) { return true; }
+bool IRGenerator::operator()(tcc::ast::Function const& func)
+{
+    if (!builder_.CreateFunction(func.function_name.name))
+    {
+        errorHandler_(func.function_name.id, "Duplicate function: " + func.function_name.name);
+        return false;
+    }
+
+    if (!(*this)(func.body))
+    {
+        return false;
+    }
+
+    return true;
+}
 bool IRGenerator::operator()(tcc::ast::FunctionList const& /*unused*/) { return true; }
 
 }  // namespace tcc

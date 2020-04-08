@@ -49,11 +49,11 @@ public:
     bool operator()(tcc::ast::IfStatement const& x);
     bool operator()(tcc::ast::WhileStatement const& x);
     bool operator()(tcc::ast::ReturnStatement const& x);
-    bool operator()(tcc::ast::Function const& x);
-    bool operator()(tcc::ast::FunctionList const& x);
+    bool operator()(tcc::ast::Function const& func);
+    bool operator()(tcc::ast::FunctionList const& funcs);
 
     auto PrintIR() -> void { builder_.PrintIR(); }
-    auto CurrentScope() -> IRFunction* { return builder_.CurrentScope(); }
+    auto CurrentPackage() -> IRPackage& { return builder_.CurrentPackage(); }
 
 private:
     struct Builder
@@ -62,30 +62,22 @@ private:
 
         auto PrintIR() -> void
         {
-            fmt::print("\nprogram: {} IR instructions\n", rootScope_.statements.size());
-            fmt::print("func main: args=[]\n");
+            fmt::print("\n{0}: functions={1}\n", package_.name, package_.functions.size());
+            fmt::print("func {0}: args=[] instructions={1}\n", currentFunction_->name,
+                       currentFunction_->statements.size());
             fmt::print("entry:\n");
-            for (IRStatement const& x : rootScope_.statements)
+            for (IRStatement const& x : currentFunction_->statements)
             {
                 fmt::print("\t{}\n", x);
             }
         }
 
-        [[nodiscard]] auto CurrentScope() -> IRFunction*
-        {
-            if (currentScope_ == nullptr)
-            {
-                fmt::print("Current scope is nullptr;\n EXIT\n");
-                std::exit(1);
-            }
-
-            return currentScope_;
-        }
+        [[nodiscard]] auto CurrentPackage() -> IRPackage& { return package_; }
 
         [[nodiscard]] auto HasVariable(std::string const& name) const -> bool
         {
-            auto i = rootScope_.variables.find(name);
-            return i != rootScope_.variables.end();
+            auto i = currentFunction_->variables.find(name);
+            return i != currentFunction_->variables.end();
         }
 
         auto PushToStack(std::uint32_t x) -> void { stack_.emplace_back(x); }
@@ -99,10 +91,10 @@ private:
 
         auto AddVariable(const std::string& name) -> void
         {
-            auto search = rootScope_.variables.find(name);
-            if (search == rootScope_.variables.end())
+            auto search = currentFunction_->variables.find(name);
+            if (search == currentFunction_->variables.end())
             {
-                rootScope_.variables.insert({name, 0});
+                currentFunction_->variables.insert({name, 0});
             }
             else
             {
@@ -112,7 +104,7 @@ private:
 
         [[nodiscard]] auto GetLastVariable(std::string const& key) const -> std::string
         {
-            auto search = rootScope_.variables.find(key);
+            auto search = currentFunction_->variables.find(key);
             auto newId  = search->second - 1;
             return fmt::format("{}.{}", key, newId);
         }
@@ -120,7 +112,7 @@ private:
         auto CreateReturnOperation() -> void
         {
             auto const first = PopFromStack();
-            rootScope_.statements.push_back(IRStatement {IRByteCode::Return, "g.0", first, std::nullopt, false});
+            currentFunction_->statements.push_back(IRStatement {IRByteCode::Return, "g.0", first, std::nullopt, false});
         }
 
         auto CreateBinaryOperation(IRByteCode op) -> void
@@ -129,31 +121,31 @@ private:
             auto const first   = PopFromStack();
             auto const tmpName = CreateTemporaryOnStack();
 
-            rootScope_.statements.push_back(IRStatement {op, tmpName, first, second});
+            currentFunction_->statements.push_back(IRStatement {op, tmpName, first, second});
         }
 
         auto CreateUnaryOperation(IRByteCode op) -> void
         {
             auto const first   = PopFromStack();
             auto const tmpName = CreateTemporaryOnStack();
-            rootScope_.statements.push_back(IRStatement {op, tmpName, first, {}});
+            currentFunction_->statements.push_back(IRStatement {op, tmpName, first, {}});
         }
 
         auto CreateStoreOperation(std::string key) -> void
         {
             auto const first = PopFromStack();
-            rootScope_.statements.push_back(IRStatement {IRByteCode::Store, std::move(key), first, {}, false});
+            currentFunction_->statements.push_back(IRStatement {IRByteCode::Store, std::move(key), first, {}, false});
         }
 
         auto CreateLoadOperation(std::string key) -> void
         {
             auto const tmpName = CreateTemporaryOnStack();
-            rootScope_.statements.push_back(IRStatement {IRByteCode::Load, tmpName, key, {}});
+            currentFunction_->statements.push_back(IRStatement {IRByteCode::Load, tmpName, key, {}});
         }
 
         [[nodiscard]] auto CreateAssignment(std::string const& key) -> std::string
         {
-            auto search = rootScope_.variables.find(key);
+            auto search = currentFunction_->variables.find(key);
             auto newId  = search->second++;
             return fmt::format("{}.{}", key, newId);
         }
@@ -165,13 +157,18 @@ private:
             return tmp;
         }
 
-        // [[nodiscard]] auto GetIRStatementList() -> IRStatementList& { return rootScope_.statements; }
+        [[nodiscard]] auto CreateFunction(std::string name) -> bool
+        {
+            package_.functions.push_back({std::move(name), {}, {}});
+            currentFunction_ = &package_.functions.back();
+            return true;
+        }
 
     private:
         int tmpCounter_ = 0;
         std::vector<std::variant<std::uint32_t, std::string>> stack_;
-        IRFunction rootScope_ {"main"};
-        IRFunction* currentScope_ = &rootScope_;
+        IRPackage package_ {"app"};
+        IRFunction* currentFunction_ = nullptr;
     };
 
 private:

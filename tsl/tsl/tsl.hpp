@@ -6,6 +6,7 @@
 #pragma once
 
 // tsl
+#include "tsl/assert.hpp"
 #include "tsl/binary_format.hpp"
 #include "tsl/byte_code.hpp"
 #include "tsl/testing.hpp"

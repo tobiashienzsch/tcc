@@ -1,14 +1,14 @@
 #include "tcc/ir/generator.hpp"
+#include "tsl/tsl.hpp"
 
 #include <boost/variant/apply_visitor.hpp>
-#include <cassert>
 
 namespace tcc
 {
 
 bool IRGenerator::operator()(tcc::ast::Nil)
 {
-    assert(false);
+    TCC_ASSERT(false, "");
     return false;
 }
 

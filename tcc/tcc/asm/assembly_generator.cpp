@@ -7,15 +7,15 @@
 
 namespace tcc
 {
-auto AssemblyGenerator::Build(tcc::StatementScope const& scope) -> std::vector<int64_t>
+auto AssemblyGenerator::Build(tcc::IRFunction const& function) -> std::vector<int64_t>
 {
     auto result = std::vector<int64_t> {};
 
-    auto const& statements = scope.statements;
-    // auto const numLocals = scope.variables.size();
+    auto const& statements = function.statements;
+    // auto const numLocals = function.variables.size();
 
     auto localVars = std::vector<std::string> {};
-    for (auto const& var : scope.variables)
+    for (auto const& var : function.variables)
     {
         localVars.push_back(var.first);
         result.push_back(tcc::ByteCode::ICONST);

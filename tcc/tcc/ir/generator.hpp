@@ -53,7 +53,7 @@ public:
     bool operator()(tcc::ast::FunctionList const& x);
 
     auto PrintIR() -> void { builder_.PrintIR(); }
-    auto CurrentScope() -> StatementScope* { return builder_.CurrentScope(); }
+    auto CurrentScope() -> IRFunction* { return builder_.CurrentScope(); }
 
 private:
     struct Builder
@@ -71,7 +71,7 @@ private:
             }
         }
 
-        [[nodiscard]] auto CurrentScope() -> StatementScope*
+        [[nodiscard]] auto CurrentScope() -> IRFunction*
         {
             if (currentScope_ == nullptr)
             {
@@ -170,8 +170,8 @@ private:
     private:
         int tmpCounter_ = 0;
         std::vector<std::variant<std::uint32_t, std::string>> stack_;
-        StatementScope rootScope_ {"main"};
-        StatementScope* currentScope_ = &rootScope_;
+        IRFunction rootScope_ {"main"};
+        IRFunction* currentScope_ = &rootScope_;
     };
 
 private:

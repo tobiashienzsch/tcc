@@ -1,17 +1,14 @@
 #pragma once
 
 #define TCC_ENABLE_ASSERTIONS 1
-#if defined(TCC_ENABLE_ASSERTIONS)
-#define TCC_ASSERT(x, msg)                                                                                             \
-    do                                                                                                                 \
+#ifdef TCC_ENABLE_ASSERTIONS
+#define TCC_ASSERT(x, ...)                                                                                             \
     {                                                                                                                  \
-        if (!x)                                                                                                        \
+        if (!(x))                                                                                                      \
         {                                                                                                              \
-            fmt::print("{}\n", msg);                                                                                   \
+            fmt::print("Assertion Failed: {0}:{1}: {2}", __FILE__, __LINE__, __VA_ARGS__);                             \
         }                                                                                                              \
-                                                                                                                       \
-    } while (false);
-
+    }
 #else
-#define TCC_ASSERT(x, msg) x
+#define TCC_ASSERT(x, ...)
 #endif

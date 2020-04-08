@@ -69,7 +69,7 @@ private:
 
         auto PushToStack(std::uint32_t x) -> void { stack_.emplace_back(x); }
 
-        [[nodiscard]] auto PopFromStack() -> std::variant<std::uint32_t, std::string>
+        [[nodiscard]] auto PopFromStack() -> IRStatement::Argument
         {
             auto const result = stack_.back();
             stack_.pop_back();
@@ -157,7 +157,7 @@ private:
 
     private:
         int tmpCounter_ = 0;
-        std::vector<std::variant<std::uint32_t, std::string>> stack_;
+        std::vector<IRStatement::Argument> stack_;
         IRPackage package_ {"program"};
         IRFunction* currentFunction_ = nullptr;
     };

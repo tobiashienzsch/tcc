@@ -8,7 +8,8 @@
 #include "tcvm/vm/vm.hpp"
 #include "tsl/tsl.hpp"
 
-namespace tcvm {
+namespace tcvm
+{
 
 auto CreateCompiledProgram() -> tcc::BinaryProgram;
 auto CreateAdditionProgram(int64_t arg) -> tcc::BinaryProgram;

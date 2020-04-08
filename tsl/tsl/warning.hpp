@@ -5,10 +5,13 @@
 
 #pragma once
 
-namespace tcc {
+namespace tcc
+{
 /**
  * @brief Handy function for avoiding unused variable warnings.
  */
-template <typename... Types>
-constexpr auto IgnoreUnused(Types&&... /*unused*/) noexcept -> void {}
+template<typename... Types>
+constexpr auto IgnoreUnused(Types&&... /*unused*/) noexcept -> void
+{
+}
 }  // namespace tcc

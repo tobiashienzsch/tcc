@@ -5,35 +5,38 @@
 #include "tcc/parser/expression.hpp"
 #include "tsl/tsl.hpp"
 
-namespace tcc {
-namespace parser {
-template <typename Iterator>
-Expression<Iterator>::Expression(ErrorHandler<Iterator>& errorHandler) : Expression::base_type(expr) {
-  qi::_1_type _1;
-  qi::_2_type _2;
-  qi::_3_type _3;
-  qi::_4_type _4;
+namespace tcc
+{
+namespace parser
+{
+template<typename Iterator>
+Expression<Iterator>::Expression(ErrorHandler<Iterator>& errorHandler) : Expression::base_type(expr)
+{
+    qi::_1_type _1;
+    qi::_2_type _2;
+    qi::_3_type _3;
+    qi::_4_type _4;
 
-  tcc::IgnoreUnused(_2);
+    tcc::IgnoreUnused(_2);
 
-  qi::char_type char_;
-  qi::uint_type uint_;
-  qi::_val_type _val;
-  qi::raw_type raw;
-  qi::lexeme_type lexeme;
-  qi::alpha_type alpha;
-  qi::alnum_type alnum;
-  qi::bool_type bool_;
+    qi::char_type char_;
+    qi::uint_type uint_;
+    qi::_val_type _val;
+    qi::raw_type raw;
+    qi::lexeme_type lexeme;
+    qi::alpha_type alpha;
+    qi::alnum_type alnum;
+    qi::bool_type bool_;
 
-  using boost::phoenix::function;
-  using qi::fail;
-  using qi::on_error;
-  using qi::on_success;
+    using boost::phoenix::function;
+    using qi::fail;
+    using qi::on_error;
+    using qi::on_success;
 
-  using ErrorHandlerFunction = function<tcc::ErrorHandler<Iterator>>;
-  using AnnotationFunction = function<tcc::Annotation<Iterator>>;
+    using ErrorHandlerFunction = function<tcc::ErrorHandler<Iterator>>;
+    using AnnotationFunction   = function<tcc::Annotation<Iterator>>;
 
-  // clang-format off
+    // clang-format off
     logical_or_op.add
         ("||", ast::OpToken::Or)
         ;

@@ -14,143 +14,161 @@
 #include "tcc/parser/ast.hpp"
 #include "tcc/parser/error_handler.hpp"
 
-namespace tcc {
+namespace tcc
+{
 
-class IRGenerator {
- public:
-  using result_type = bool;
+class IRGenerator
+{
+public:
+    using result_type = bool;
 
-  template <typename ErrorHandler>
-  IRGenerator(ErrorHandler& errorHandler) {
-    using namespace boost::phoenix::arg_names;
-    namespace phx = boost::phoenix;
-    using boost::phoenix::function;
+    template<typename ErrorHandler>
+    IRGenerator(ErrorHandler& errorHandler)
+    {
+        using namespace boost::phoenix::arg_names;
+        namespace phx = boost::phoenix;
+        using boost::phoenix::function;
 
-    errorHandler_ = function<ErrorHandler>(errorHandler)("Error! ", _2, phx::cref(errorHandler.iters)[_1]);
-  }
-
-  bool operator()(unsigned int x);
-  bool operator()(bool x);
-  bool operator()(tcc::ast::Nil);
-  bool operator()(tcc::ast::Identifier const& x);
-  bool operator()(tcc::ast::Operation const& x);
-  bool operator()(tcc::ast::Unary const& x);
-  bool operator()(tcc::ast::FunctionCall const& x);
-  bool operator()(tcc::ast::Expression const& x);
-  bool operator()(tcc::ast::Assignment const& x);
-  bool operator()(tcc::ast::VariableDeclaration const& x);
-  bool operator()(tcc::ast::StatementList const& x);
-  bool operator()(tcc::ast::Statement const& x);
-  bool operator()(tcc::ast::IfStatement const& x);
-  bool operator()(tcc::ast::WhileStatement const& x);
-  bool operator()(tcc::ast::ReturnStatement const& x);
-  bool operator()(tcc::ast::Function const& x);
-  bool operator()(tcc::ast::FunctionList const& x);
-
-  auto PrintIR() -> void { builder_.PrintIR(); }
-  auto CurrentScope() -> StatementScope* { return builder_.CurrentScope(); }
-
- private:
-  struct Builder {
-    Builder() = default;
-
-    auto PrintIR() -> void {
-      fmt::print("\nprogram: {} IR instructions\n", rootScope_.statements.size());
-      fmt::print("func main: args=[]\n");
-      fmt::print("entry:\n");
-      for (ThreeAddressCode const& x : rootScope_.statements) fmt::print("\t{}\n", x);
+        errorHandler_ = function<ErrorHandler>(errorHandler)("Error! ", _2, phx::cref(errorHandler.iters)[_1]);
     }
 
-    auto CurrentScope() -> StatementScope* {
-      if (!currentScope_) {
-        fmt::print("Current scope is nullptr;\n EXIT\n");
-        std::exit(1);
-      }
+    bool operator()(unsigned int x);
+    bool operator()(bool x);
+    bool operator()(tcc::ast::Nil);
+    bool operator()(tcc::ast::Identifier const& x);
+    bool operator()(tcc::ast::Operation const& x);
+    bool operator()(tcc::ast::Unary const& x);
+    bool operator()(tcc::ast::FunctionCall const& x);
+    bool operator()(tcc::ast::Expression const& x);
+    bool operator()(tcc::ast::Assignment const& x);
+    bool operator()(tcc::ast::VariableDeclaration const& x);
+    bool operator()(tcc::ast::StatementList const& x);
+    bool operator()(tcc::ast::Statement const& x);
+    bool operator()(tcc::ast::IfStatement const& x);
+    bool operator()(tcc::ast::WhileStatement const& x);
+    bool operator()(tcc::ast::ReturnStatement const& x);
+    bool operator()(tcc::ast::Function const& x);
+    bool operator()(tcc::ast::FunctionList const& x);
 
-      return currentScope_;
-    }
+    auto PrintIR() -> void { builder_.PrintIR(); }
+    auto CurrentScope() -> StatementScope* { return builder_.CurrentScope(); }
 
-    auto HasVariable(std::string const& name) const -> bool {
-      auto i = rootScope_.variables.find(name);
-      if (i == rootScope_.variables.end()) return false;
-      return true;
-    }
+private:
+    struct Builder
+    {
+        Builder() = default;
 
-    auto PushToStack(int x) -> void { stack_.emplace_back(x); }
+        auto PrintIR() -> void
+        {
+            fmt::print("\nprogram: {} IR instructions\n", rootScope_.statements.size());
+            fmt::print("func main: args=[]\n");
+            fmt::print("entry:\n");
+            for (ThreeAddressCode const& x : rootScope_.statements) fmt::print("\t{}\n", x);
+        }
 
-    auto PopFromStack() -> std::variant<int, std::string> {
-      auto const result = stack_.back();
-      stack_.pop_back();
-      return result;
-    }
+        auto CurrentScope() -> StatementScope*
+        {
+            if (!currentScope_)
+            {
+                fmt::print("Current scope is nullptr;\n EXIT\n");
+                std::exit(1);
+            }
 
-    auto AddVariable(std::string name) -> void {
-      auto search = rootScope_.variables.find(name);
-      if (search == rootScope_.variables.end())
-        rootScope_.variables.insert({name, 0});
-      else
-        fmt::print("Tried to add {} twice to variable map\n", name);
-    }
+            return currentScope_;
+        }
 
-    auto GetLastVariable(std::string const& key) const -> std::string {
-      auto search = rootScope_.variables.find(key);
-      auto newId = search->second - 1;
-      return fmt::format("{}.{}", key, newId);
-    }
+        auto HasVariable(std::string const& name) const -> bool
+        {
+            auto i = rootScope_.variables.find(name);
+            if (i == rootScope_.variables.end()) return false;
+            return true;
+        }
 
-    auto CreateReturnOperation() -> void {
-      auto const first = PopFromStack();
-      rootScope_.statements.push_back(ThreeAddressCode{byte_code::op_return, "g.0", first, std::nullopt, false});
-    }
+        auto PushToStack(int x) -> void { stack_.emplace_back(x); }
 
-    auto CreateBinaryOperation(byte_code op) -> void {
-      auto const second = PopFromStack();
-      auto const first = PopFromStack();
-      auto const tmpName = CreateTemporaryOnStack();
+        auto PopFromStack() -> std::variant<int, std::string>
+        {
+            auto const result = stack_.back();
+            stack_.pop_back();
+            return result;
+        }
 
-      rootScope_.statements.push_back(ThreeAddressCode{op, tmpName, first, second});
-    }
+        auto AddVariable(std::string name) -> void
+        {
+            auto search = rootScope_.variables.find(name);
+            if (search == rootScope_.variables.end())
+                rootScope_.variables.insert({name, 0});
+            else
+                fmt::print("Tried to add {} twice to variable map\n", name);
+        }
 
-    auto CreateUnaryOperation(byte_code op) -> void {
-      auto const first = PopFromStack();
-      auto const tmpName = CreateTemporaryOnStack();
-      rootScope_.statements.push_back(ThreeAddressCode{op, tmpName, first, {}});
-    }
+        auto GetLastVariable(std::string const& key) const -> std::string
+        {
+            auto search = rootScope_.variables.find(key);
+            auto newId  = search->second - 1;
+            return fmt::format("{}.{}", key, newId);
+        }
 
-    auto CreateStoreOperation(std::string key) -> void {
-      auto const first = PopFromStack();
-      rootScope_.statements.push_back(ThreeAddressCode{op_store, key, first, {}, false});
-    }
+        auto CreateReturnOperation() -> void
+        {
+            auto const first = PopFromStack();
+            rootScope_.statements.push_back(ThreeAddressCode {byte_code::op_return, "g.0", first, std::nullopt, false});
+        }
 
-    auto CreateLoadOperation(std::string key) -> void {
-      auto const tmpName = CreateTemporaryOnStack();
-      rootScope_.statements.push_back(ThreeAddressCode{op_load, tmpName, key, {}});
-    }
+        auto CreateBinaryOperation(byte_code op) -> void
+        {
+            auto const second  = PopFromStack();
+            auto const first   = PopFromStack();
+            auto const tmpName = CreateTemporaryOnStack();
 
-    auto CreateAssignment(std::string const& key) -> std::string {
-      auto search = rootScope_.variables.find(key);
-      auto newId = search->second++;
-      return fmt::format("{}.{}", key, newId);
-    }
+            rootScope_.statements.push_back(ThreeAddressCode {op, tmpName, first, second});
+        }
 
-    auto CreateTemporaryOnStack() -> std::string {
-      auto tmp = std::string("t.").append(std::to_string(tmpCounter_++));
-      stack_.emplace_back(tmp);
-      return tmp;
-    }
+        auto CreateUnaryOperation(byte_code op) -> void
+        {
+            auto const first   = PopFromStack();
+            auto const tmpName = CreateTemporaryOnStack();
+            rootScope_.statements.push_back(ThreeAddressCode {op, tmpName, first, {}});
+        }
 
-    auto GetStatementList() -> StatementList& { return rootScope_.statements; }
+        auto CreateStoreOperation(std::string key) -> void
+        {
+            auto const first = PopFromStack();
+            rootScope_.statements.push_back(ThreeAddressCode {op_store, key, first, {}, false});
+        }
 
-   private:
-    int tmpCounter_ = 0;
-    std::vector<std::variant<int, std::string>> stack_;
-    StatementScope rootScope_{"main"};
-    StatementScope* currentScope_ = &rootScope_;
-  };
+        auto CreateLoadOperation(std::string key) -> void
+        {
+            auto const tmpName = CreateTemporaryOnStack();
+            rootScope_.statements.push_back(ThreeAddressCode {op_load, tmpName, key, {}});
+        }
 
- private:
-  Builder builder_{};
-  boost::function<void(int tag, std::string const& what)> errorHandler_;
+        auto CreateAssignment(std::string const& key) -> std::string
+        {
+            auto search = rootScope_.variables.find(key);
+            auto newId  = search->second++;
+            return fmt::format("{}.{}", key, newId);
+        }
+
+        auto CreateTemporaryOnStack() -> std::string
+        {
+            auto tmp = std::string("t.").append(std::to_string(tmpCounter_++));
+            stack_.emplace_back(tmp);
+            return tmp;
+        }
+
+        auto GetStatementList() -> StatementList& { return rootScope_.statements; }
+
+    private:
+        int tmpCounter_ = 0;
+        std::vector<std::variant<int, std::string>> stack_;
+        StatementScope rootScope_ {"main"};
+        StatementScope* currentScope_ = &rootScope_;
+    };
+
+private:
+    Builder builder_ {};
+    boost::function<void(int tag, std::string const& what)> errorHandler_;
 };
 }  // namespace tcc
 

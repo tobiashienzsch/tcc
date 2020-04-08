@@ -9,22 +9,27 @@
 #include <list>
 #include <utility>
 
-namespace tcc {
-namespace ast {
+namespace tcc
+{
+namespace ast
+{
 
 /**
  * @brief Used to annotate the AST with the iterator position.
  * This id is used as a key to a map<int, Iterator>.
  * Not really part of the AST.
  */
-struct Tagged {
-  int id{};
+struct Tagged
+{
+    int id {};
 };
 
 /**
  * @brief Placeholder for nothing.
  */
-struct Nil {};
+struct Nil
+{
+};
 struct Unary;
 struct FunctionCall;
 struct Expression;
@@ -32,9 +37,10 @@ struct Expression;
 /**
  * @brief Identifier.
  */
-struct Identifier : Tagged {
-  Identifier(std::string n = "") : name(std::move(n)) {}
-  std::string name;
+struct Identifier : Tagged
+{
+    Identifier(std::string n = "") : name(std::move(n)) {}
+    std::string name;
 };
 
 /**
@@ -53,70 +59,77 @@ using Operand = boost::variant<              //
 /**
  * @brief Operation Token.
  */
-enum class OpToken {
-  Plus,
-  Minus,
-  Times,
-  Divide,
-  Positive,
-  Negative,
-  Not,
-  Equal,
-  NotEqual,
-  Less,
-  LessEqual,
-  Greater,
-  GreaterEqual,
-  And,
-  Or
+enum class OpToken
+{
+    Plus,
+    Minus,
+    Times,
+    Divide,
+    Positive,
+    Negative,
+    Not,
+    Equal,
+    NotEqual,
+    Less,
+    LessEqual,
+    Greater,
+    GreaterEqual,
+    And,
+    Or
 };
 
 /**
  * @brief Unary Expression.
  */
-struct Unary {
-  OpToken operator_;
-  Operand operand;
+struct Unary
+{
+    OpToken operator_;
+    Operand operand;
 };
 
 /**
  * @brief Operation.
  */
-struct Operation {
-  OpToken operator_;
-  Operand operand;
+struct Operation
+{
+    OpToken operator_;
+    Operand operand;
 };
 
 /**
  * @brief Function call.
  */
-struct FunctionCall {
-  Identifier function_name;
-  std::list<Expression> args;
+struct FunctionCall
+{
+    Identifier function_name;
+    std::list<Expression> args;
 };
 
 /**
  * @brief Expression.
  */
-struct Expression {
-  Operand first;
-  std::list<Operation> rest;
+struct Expression
+{
+    Operand first;
+    std::list<Operation> rest;
 };
 
 /**
  * @brief Assignment.
  */
-struct Assignment {
-  Identifier lhs;
-  Expression rhs;
+struct Assignment
+{
+    Identifier lhs;
+    Expression rhs;
 };
 
 /**
  * @brief Variable Declaration.
  */
-struct VariableDeclaration {
-  Identifier lhs;
-  boost::optional<Expression> rhs;
+struct VariableDeclaration
+{
+    Identifier lhs;
+    boost::optional<Expression> rhs;
 };
 
 struct IfStatement;
@@ -139,40 +152,46 @@ using Statement = boost::variant<               //
 /**
  * @brief Statement list.
  */
-struct StatementList : std::list<Statement> {};
+struct StatementList : std::list<Statement>
+{
+};
 
 /**
  * @brief If statement.
  */
-struct IfStatement {
-  Expression condition;
-  Statement then;
-  boost::optional<Statement> else_;
+struct IfStatement
+{
+    Expression condition;
+    Statement then;
+    boost::optional<Statement> else_;
 };
 
 /**
  * @brief While statement.
  */
-struct WhileStatement {
-  Expression condition;
-  Statement body;
+struct WhileStatement
+{
+    Expression condition;
+    Statement body;
 };
 
 /**
  * @brief Return statement.
  */
-struct ReturnStatement : Tagged {
-  boost::optional<Expression> expr;
+struct ReturnStatement : Tagged
+{
+    boost::optional<Expression> expr;
 };
 
 /**
  * @brief Function.
  */
-struct Function {
-  std::string return_type;
-  Identifier function_name;
-  std::list<Identifier> args;
-  StatementList body;
+struct Function
+{
+    std::string return_type;
+    Identifier function_name;
+    std::list<Identifier> args;
+    StatementList body;
 };
 
 /**
@@ -183,17 +202,19 @@ using FunctionList = std::list<Function>;
 /**
  * @brief Nil ostream operator.
  */
-inline std::ostream& operator<<(std::ostream& out, Nil) {
-  out << "Nil";
-  return out;
+inline std::ostream& operator<<(std::ostream& out, Nil)
+{
+    out << "Nil";
+    return out;
 }
 
 /**
  * @brief Identifier ostream operator.
  */
-inline std::ostream& operator<<(std::ostream& out, Identifier const& id) {
-  out << id.name;
-  return out;
+inline std::ostream& operator<<(std::ostream& out, Identifier const& id)
+{
+    out << id.name;
+    return out;
 }
 }  // namespace ast
 }  // namespace tcc

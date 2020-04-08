@@ -14,73 +14,77 @@
 
 using namespace tcc::parser::testing;
 
-TEST_CASE("tcc/parser: IdentifierValid", "[tcc][parser][qi]") {
-  auto testCase = GENERATE(as<std::string>{}, "test", "TEST", "foo8", "test_foo");
+TEST_CASE("tcc/parser: IdentifierValid", "[tcc][parser][qi]")
+{
+    auto testCase = GENERATE(as<std::string> {}, "test", "TEST", "foo8", "test_foo");
 
-  using IteratorType = std::string::const_iterator;
-  IteratorType iter = testCase.begin();
-  IteratorType end = testCase.end();
+    using IteratorType = std::string::const_iterator;
+    IteratorType iter  = testCase.begin();
+    IteratorType end   = testCase.end();
 
-  NullBuffer null_buffer;
-  std::ostream null_stream(&null_buffer);
-  auto errorHandler = tcc::ErrorHandler<IteratorType>(iter, end, null_stream);
+    NullBuffer null_buffer;
+    std::ostream null_stream(&null_buffer);
+    auto errorHandler = tcc::ErrorHandler<IteratorType>(iter, end, null_stream);
 
-  auto expression = tcc::parser::Expression<IteratorType>(errorHandler);
-  auto skipper = tcc::parser::Skipper<IteratorType>{};
-  auto ast = std::string{};
+    auto expression = tcc::parser::Expression<IteratorType>(errorHandler);
+    auto skipper    = tcc::parser::Skipper<IteratorType> {};
+    auto ast        = std::string {};
 
-  REQUIRE(phrase_parse(iter, end, expression.Identifier, skipper, ast) == true);
+    REQUIRE(phrase_parse(iter, end, expression.Identifier, skipper, ast) == true);
 }
 
-TEST_CASE("tcc/parser: IdentifierInvalid", "[tcc][parser][qi]") {
-  auto testCase = GENERATE(as<std::string>{}, "#y", "8foo", "@foo");
+TEST_CASE("tcc/parser: IdentifierInvalid", "[tcc][parser][qi]")
+{
+    auto testCase = GENERATE(as<std::string> {}, "#y", "8foo", "@foo");
 
-  using IteratorType = std::string::const_iterator;
-  IteratorType iter = testCase.begin();
-  IteratorType end = testCase.end();
+    using IteratorType = std::string::const_iterator;
+    IteratorType iter  = testCase.begin();
+    IteratorType end   = testCase.end();
 
-  NullBuffer null_buffer;
-  std::ostream null_stream(&null_buffer);
-  auto errorHandler = tcc::ErrorHandler<IteratorType>(iter, end, null_stream);
+    NullBuffer null_buffer;
+    std::ostream null_stream(&null_buffer);
+    auto errorHandler = tcc::ErrorHandler<IteratorType>(iter, end, null_stream);
 
-  auto expression = tcc::parser::Expression<IteratorType>(errorHandler);
-  auto skipper = tcc::parser::Skipper<IteratorType>{};
-  auto ast = std::string{};
+    auto expression = tcc::parser::Expression<IteratorType>(errorHandler);
+    auto skipper    = tcc::parser::Skipper<IteratorType> {};
+    auto ast        = std::string {};
 
-  REQUIRE(phrase_parse(iter, end, expression.Identifier, skipper, ast) == false);
+    REQUIRE(phrase_parse(iter, end, expression.Identifier, skipper, ast) == false);
 }
-TEST_CASE("tcc/parser: ExpressionValid", "[tcc][parser][qi]") {
-  auto testCase = GENERATE(as<std::string>{}, "1+2", "x*9+z;");
+TEST_CASE("tcc/parser: ExpressionValid", "[tcc][parser][qi]")
+{
+    auto testCase = GENERATE(as<std::string> {}, "1+2", "x*9+z;");
 
-  using IteratorType = std::string::const_iterator;
-  IteratorType iter = testCase.begin();
-  IteratorType end = testCase.end();
+    using IteratorType = std::string::const_iterator;
+    IteratorType iter  = testCase.begin();
+    IteratorType end   = testCase.end();
 
-  NullBuffer null_buffer;
-  std::ostream null_stream(&null_buffer);
-  auto errorHandler = tcc::ErrorHandler<IteratorType>(iter, end, null_stream);
+    NullBuffer null_buffer;
+    std::ostream null_stream(&null_buffer);
+    auto errorHandler = tcc::ErrorHandler<IteratorType>(iter, end, null_stream);
 
-  auto expression = tcc::parser::Expression<IteratorType>(errorHandler);
-  auto skipper = tcc::parser::Skipper<IteratorType>{};
-  auto ast = tcc::ast::Expression{};
+    auto expression = tcc::parser::Expression<IteratorType>(errorHandler);
+    auto skipper    = tcc::parser::Skipper<IteratorType> {};
+    auto ast        = tcc::ast::Expression {};
 
-  REQUIRE(phrase_parse(iter, end, expression, skipper, ast) == true);
+    REQUIRE(phrase_parse(iter, end, expression, skipper, ast) == true);
 }
 
-TEST_CASE("tcc/parser: ExpressionInvalid", "[tcc][parser][qi]") {
-  auto testCase = GENERATE(as<std::string>{}, "&", "y+");
+TEST_CASE("tcc/parser: ExpressionInvalid", "[tcc][parser][qi]")
+{
+    auto testCase = GENERATE(as<std::string> {}, "&", "y+");
 
-  using IteratorType = std::string::const_iterator;
-  IteratorType iter = testCase.begin();
-  IteratorType end = testCase.end();
+    using IteratorType = std::string::const_iterator;
+    IteratorType iter  = testCase.begin();
+    IteratorType end   = testCase.end();
 
-  NullBuffer null_buffer;
-  std::ostream null_stream(&null_buffer);
-  auto errorHandler = tcc::ErrorHandler<IteratorType>(iter, end, null_stream);
+    NullBuffer null_buffer;
+    std::ostream null_stream(&null_buffer);
+    auto errorHandler = tcc::ErrorHandler<IteratorType>(iter, end, null_stream);
 
-  auto expression = tcc::parser::Expression<IteratorType>(errorHandler);
-  auto skipper = tcc::parser::Skipper<IteratorType>{};
-  auto ast = tcc::ast::Expression{};
+    auto expression = tcc::parser::Expression<IteratorType>(errorHandler);
+    auto skipper    = tcc::parser::Skipper<IteratorType> {};
+    auto ast        = tcc::ast::Expression {};
 
-  REQUIRE(phrase_parse(iter, end, expression, skipper, ast) == false);
+    REQUIRE(phrase_parse(iter, end, expression, skipper, ast) == false);
 }

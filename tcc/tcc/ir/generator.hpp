@@ -1,7 +1,7 @@
 #if !defined(TCC_IR_GENERATOR_HPP)
 #define TCC_IR_GENERATOR_HPP
 
-#include "tcc/ir/three_address_code.hpp"
+#include "tcc/ir/statement.hpp"
 #include "tcc/parser/ast.hpp"
 #include "tcc/parser/error_handler.hpp"
 

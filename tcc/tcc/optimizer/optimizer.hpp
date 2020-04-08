@@ -2,7 +2,7 @@
 
 #include <algorithm>
 
-#include "tcc/ir/three_address_code.hpp"
+#include "tcc/ir/statement.hpp"
 #include "tsl/tsl.hpp"
 
 namespace tcc

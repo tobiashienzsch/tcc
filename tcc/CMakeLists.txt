@@ -13,8 +13,8 @@ set(tcc_lib_source
     tcc/ir/generator.cpp
     tcc/ir/generator.hpp
     tcc/ir/instruction_set.hpp    
-    tcc/ir/three_address_code.cpp
-    tcc/ir/three_address_code.hpp
+    tcc/ir/statement.cpp
+    tcc/ir/statement.hpp
 
     tcc/parser/annotation.hpp
     tcc/parser/ast.hpp

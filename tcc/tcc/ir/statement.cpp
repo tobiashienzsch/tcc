@@ -1,4 +1,4 @@
-#include "tcc/ir/three_address_code.hpp"
+#include "tcc/ir/statement.hpp"
 
 #include <sstream>
 

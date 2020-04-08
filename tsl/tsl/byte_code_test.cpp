@@ -33,10 +33,13 @@ TEST_CASE("tsl: ByteCode ostream", "[tsl]")
     };
 
     auto stream = std::stringstream {};
-    for (auto const& x : input) stream << x;
+    for (auto const& x : input)
+    {
+        stream << x;
+    }
     auto const str = stream.str();
 
-    REQUIRE(str.compare("ICONSTIADDISUBIMULILTIEQPRINTSTORELOADGSTOREGLOADBRBRTBR"
-                        "FPOPCALLRETEXITHALT")
-            == 0);
+    REQUIRE(str
+            == "ICONSTIADDISUBIMULILTIEQPRINTSTORELOADGSTOREGLOADBRBRTBR"
+               "FPOPCALLRETEXITHALT");
 }

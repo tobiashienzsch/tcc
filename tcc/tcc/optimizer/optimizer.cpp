@@ -5,7 +5,7 @@ namespace tcc
 
 auto Optimizer::Optimize() -> void
 {
-    for (auto x = 0u; x < 12; x++)
+    for (auto x = 0U; x < 12; x++)
     {
         tcc::IgnoreUnused(x);
 
@@ -28,7 +28,10 @@ auto Optimizer::DeleteUnusedStatements(StatementList& statementList) -> bool
                   return IsUnusedStatement(statement, statementList);
               });
 
-        if (elementToDelete == std::end(statementList)) return false;
+        if (elementToDelete == std::end(statementList))
+        {
+            return false;
+        }
 
         statementList.erase(elementToDelete);
     }
@@ -44,9 +47,12 @@ auto Optimizer::IsUnusedStatement(ThreeAddressCode const& statement, StatementLi
                                auto result = false;
 
                                std::visit(tcc::overloaded {
-                                              [](std::uint32_t) { ; },
+                                              [](std::uint32_t /*unused*/) { ; },
                                               [&statement, &result](std::string const& name) {
-                                                  if (name == statement.destination) result = true;
+                                                  if (name == statement.destination)
+                                                  {
+                                                      result = true;
+                                                  }
                                               },
                                           },
                                           item.first);
@@ -54,9 +60,12 @@ auto Optimizer::IsUnusedStatement(ThreeAddressCode const& statement, StatementLi
                                if (item.second.has_value())
                                {
                                    std::visit(tcc::overloaded {
-                                                  [](std::uint32_t) { ; },
+                                                  [](std::uint32_t /*unused*/) { ; },
                                                   [&statement, &result](std::string const& name) {
-                                                      if (name == statement.destination) result = true;
+                                                      if (name == statement.destination)
+                                                      {
+                                                          result = true;
+                                                      }
                                                   },
                                               },
                                               item.second.value());
@@ -76,7 +85,7 @@ auto Optimizer::ReplaceVariableIfConstant(ThreeAddressCode& statement, Statement
             {
                 // first
                 std::visit(tcc::overloaded {
-                               [](std::uint32_t) { ; },
+                               [](std::uint32_t /*unused*/) { ; },
                                [&statement, &otherStatement](std::string const& name) {
                                    if (name == statement.destination)
                                    {
@@ -90,7 +99,7 @@ auto Optimizer::ReplaceVariableIfConstant(ThreeAddressCode& statement, Statement
                 if (otherStatement.second.has_value())
                 {
                     std::visit(tcc::overloaded {
-                                   [](std::uint32_t) { ; },
+                                   [](std::uint32_t /*unused*/) { ; },
                                    [&statement, &otherStatement](std::string const& name) {
                                        if (name == statement.destination)
                                        {
@@ -139,8 +148,8 @@ auto Optimizer::isConstantArgument(ThreeAddressCode::Argument const& argument) -
 {
     auto returnValue = bool {false};
     std::visit(tcc::overloaded {
-                   [&returnValue](int) { returnValue = true; },
-                   [&returnValue](const std::string&) { returnValue = false; },
+                   [&returnValue](int /*unused*/) { returnValue = true; },
+                   [&returnValue](const std::string& /*unused*/) { returnValue = false; },
                },
                argument);
 
@@ -159,11 +168,7 @@ auto Optimizer::isConstantArgument(ThreeAddressCode::OptionalArgument const& arg
 
 auto Optimizer::isConstantStoreExpression(ThreeAddressCode const& statement) -> bool
 {
-    if (statement.type == IRByteCode::op_store && isConstantArgument(statement.first))
-    {
-        return true;
-    }
-    return false;
+    return statement.type == IRByteCode::op_store && isConstantArgument(statement.first);
 }
 
 auto Optimizer::isConstantBinaryExpression(ThreeAddressCode const& statement) -> bool
@@ -181,10 +186,22 @@ auto Optimizer::isConstantBinaryExpression(ThreeAddressCode const& statement) ->
 
 auto Optimizer::isBinaryOperation(IRByteCode op) noexcept -> bool
 {
-    if (op == IRByteCode::op_add) return true;
-    if (op == IRByteCode::op_sub) return true;
-    if (op == IRByteCode::op_mul) return true;
-    if (op == IRByteCode::op_div) return true;
+    if (op == IRByteCode::op_add)
+    {
+        return true;
+    }
+    if (op == IRByteCode::op_sub)
+    {
+        return true;
+    }
+    if (op == IRByteCode::op_mul)
+    {
+        return true;
+    }
+    if (op == IRByteCode::op_div)
+    {
+        return true;
+    }
     return false;
 }
 }  // namespace tcc

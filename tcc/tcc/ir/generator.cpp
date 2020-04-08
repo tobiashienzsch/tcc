@@ -6,7 +6,7 @@
 namespace tcc
 {
 
-bool IRGenerator::operator()(tcc::ast::Nil)
+bool IRGenerator::operator()(tcc::ast::Nil /*unused*/)
 {
     TCC_ASSERT(false, "");
     return false;
@@ -17,7 +17,7 @@ bool IRGenerator::operator()(unsigned int x)
     builder_.PushToStack(x);
     return true;
 }
-bool IRGenerator::operator()(bool) { return true; }
+bool IRGenerator::operator()(bool /*unused*/) { return true; }
 
 bool IRGenerator::operator()(tcc::ast::Identifier const& x)
 {
@@ -33,7 +33,10 @@ bool IRGenerator::operator()(tcc::ast::Identifier const& x)
 
 bool IRGenerator::operator()(tcc::ast::Operation const& x)
 {
-    if (!boost::apply_visitor(*this, x.operand)) return false;
+    if (!boost::apply_visitor(*this, x.operand))
+    {
+        return false;
+    }
     switch (x.operator_)
     {
         case tcc::ast::OpToken::Plus:
@@ -104,7 +107,10 @@ bool IRGenerator::operator()(tcc::ast::Operation const& x)
 }
 bool IRGenerator::operator()(tcc::ast::Unary const& x)
 {
-    if (!boost::apply_visitor(*this, x.operand)) return false;
+    if (!boost::apply_visitor(*this, x.operand))
+    {
+        return false;
+    }
     switch (x.operator_)
     {
         case tcc::ast::OpToken::Positive: break;
@@ -124,19 +130,28 @@ bool IRGenerator::operator()(tcc::ast::Unary const& x)
     }
     return true;
 }
-bool IRGenerator::operator()(tcc::ast::FunctionCall const&) { return true; }
+bool IRGenerator::operator()(tcc::ast::FunctionCall const& /*unused*/) { return true; }
 bool IRGenerator::operator()(tcc::ast::Expression const& x)
 {
-    if (!boost::apply_visitor(*this, x.first)) return false;
+    if (!boost::apply_visitor(*this, x.first))
+    {
+        return false;
+    }
     for (tcc::ast::Operation const& oper : x.rest)
     {
-        if (!(*this)(oper)) return false;
+        if (!(*this)(oper))
+        {
+            return false;
+        }
     }
     return true;
 }
 bool IRGenerator::operator()(tcc::ast::Assignment const& x)
 {
-    if (!(*this)(x.rhs)) return false;
+    if (!(*this)(x.rhs))
+    {
+        return false;
+    }
     if (!builder_.HasVariable(x.lhs.name))
     {
         errorHandler_(x.lhs.id, "Undeclared variable: " + x.lhs.name);
@@ -168,11 +183,14 @@ bool IRGenerator::operator()(tcc::ast::StatementList const& x)
 {
     for (auto const& s : x)
     {
-        if (!(*this)(s)) return false;
+        if (!(*this)(s))
+        {
+            return false;
+        }
     }
     return true;
 }
-bool IRGenerator::operator()(tcc::ast::IfStatement const&)
+bool IRGenerator::operator()(tcc::ast::IfStatement const& /*unused*/)
 {
     // if (!(*this)(x.condition)) return false;
     // program_.op(op_jump_if, 0);              // we shall fill this (0) in later
@@ -191,7 +209,7 @@ bool IRGenerator::operator()(tcc::ast::IfStatement const&)
 
     return true;
 }
-bool IRGenerator::operator()(tcc::ast::WhileStatement const&)
+bool IRGenerator::operator()(tcc::ast::WhileStatement const& /*unused*/)
 {
     // std::size_t loop = program_.size();  // mark our position
     // if (!(*this)(x.condition)) return false;
@@ -205,11 +223,14 @@ bool IRGenerator::operator()(tcc::ast::WhileStatement const&)
 }
 bool IRGenerator::operator()(tcc::ast::ReturnStatement const& x)
 {
-    if (!(*this)(*x.expr)) return false;
+    if (!(*this)(*x.expr))
+    {
+        return false;
+    }
     builder_.CreateReturnOperation();
     return true;
 }
-bool IRGenerator::operator()(tcc::ast::Function const&) { return true; }
-bool IRGenerator::operator()(tcc::ast::FunctionList const&) { return true; }
+bool IRGenerator::operator()(tcc::ast::Function const& /*unused*/) { return true; }
+bool IRGenerator::operator()(tcc::ast::FunctionList const& /*unused*/) { return true; }
 
 }  // namespace tcc

@@ -25,7 +25,7 @@ TEST_CASE("tsl: BinaryFormat WriteReadStream", "[tsl]")
         REQUIRE(program.version == 1);
         REQUIRE(program.name == std::string("test"));
         REQUIRE(program.entryPoint == 0);
-        REQUIRE(program.data == std::vector<int64_t> {});
+        REQUIRE(program.data.empty());
     }
 }
 

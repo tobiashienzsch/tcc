@@ -80,14 +80,20 @@ auto VirtualMachine::Cpu() -> int64_t
             case ByteCode::BRT:
             {
                 auto const addr = m_code[m_instructionPointer++];
-                if (m_stack[m_stackPointer--]) m_instructionPointer = addr;
+                if (m_stack[m_stackPointer--] != 0)
+                {
+                    m_instructionPointer = addr;
+                }
                 break;
             }
 
             case ByteCode::BRF:
             {
                 auto const addr = m_code[m_instructionPointer++];
-                if (!m_stack[m_stackPointer--]) m_instructionPointer = addr;
+                if (m_stack[m_stackPointer--] == 0)
+                {
+                    m_instructionPointer = addr;
+                }
                 break;
             }
 
@@ -190,7 +196,10 @@ void VirtualMachine::disassemble(int64_t const opcode)
     std::stringstream byteCodeStr {};
     byteCodeStr << ByteCode {opcode};
     fmt::print("{}", byteCodeStr.str().c_str());
-    if (instruction.numberOfOperands == 1) fmt::printf(" %ld", m_code.at(m_instructionPointer + 1));
+    if (instruction.numberOfOperands == 1)
+    {
+        fmt::printf(" %ld", m_code.at(m_instructionPointer + 1));
+    }
     if (instruction.numberOfOperands == 2)
     {
         auto const firstOperand  = m_code.at(m_instructionPointer + 1);
@@ -218,7 +227,10 @@ void VirtualMachine::printStack()
 void VirtualMachine::printGlobalMemory()
 {
     fmt::print("\t\t GLOBALS: [ ");
-    for (auto const& global : m_data) fmt::printf("%04ld ", global);
+    for (auto const& global : m_data)
+    {
+        fmt::printf("%04ld ", global);
+    }
     fmt::print("]");
 }
 

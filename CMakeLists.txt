@@ -60,9 +60,7 @@ include(tccThreads)
 # set(Boost_USE_MULTITHREADED ON)
 find_package(Boost 1.69 REQUIRED COMPONENTS date_time filesystem program_options regex serialization system)
 
-# fmt
 add_subdirectory(3rd_party/fmt EXCLUDE_FROM_ALL)
-set_target_properties(fmt PROPERTIES FOLDER 3rd_party)
 
 # catch2
 if(TCC_BUILD_TESTS)

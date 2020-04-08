@@ -22,7 +22,7 @@ target_include_directories(${PROJECT_NAME} PUBLIC
 target_link_libraries(${PROJECT_NAME} 
     PUBLIC 
         Boost::serialization
-        fmt
+        fmt::fmt-header-only
     PRIVATE
         tcc::CompilerOptions
         tcc::CompilerWarnings

@@ -22,7 +22,6 @@ target_link_libraries(tcvm_lib
         Boost::program_options 
         Boost::system
         Boost::filesystem
-        fmt
     PRIVATE 
         tcc::CompilerOptions
         tcc::CompilerWarnings  

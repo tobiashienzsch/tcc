@@ -53,7 +53,8 @@ CONFIG=Debug make config-vs build test
 ### clang-tidy
 
 ```sh
-python scripts/run-clang-tidy.py -header-filter=/tcc -fix -p build
+cd $BUILD_DIR
+python ../scripts/run-clang-tidy.py -header-filter=/tcc -fix -p . ..
 ```
 
 ## Project Structure

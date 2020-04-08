@@ -72,7 +72,7 @@ auto Optimizer::ReplaceVariableIfConstant(ThreeAddressCode& statement, Statement
     {
         for (auto& otherStatement : statementList)
         {
-            if (otherStatement.type != byte_code::op_load)
+            if (otherStatement.type != IRByteCode::op_load)
             {
                 // first
                 std::visit(tcc::overloaded {
@@ -119,15 +119,15 @@ auto Optimizer::ReplaceWithConstantStore(ThreeAddressCode& statement) -> bool
 
         switch (statement.type)
         {
-            case byte_code::op_add: statement.first = first + second; break;
-            case byte_code::op_sub: statement.first = first - second; break;
-            case byte_code::op_mul: statement.first = first * second; break;
-            case byte_code::op_div: statement.first = first / second; break;
+            case IRByteCode::op_add: statement.first = first + second; break;
+            case IRByteCode::op_sub: statement.first = first - second; break;
+            case IRByteCode::op_mul: statement.first = first * second; break;
+            case IRByteCode::op_div: statement.first = first / second; break;
             default: break;
         }
 
         statement.second = std::nullopt;
-        statement.type   = byte_code::op_store;
+        statement.type   = IRByteCode::op_store;
 
         return true;
     }
@@ -159,7 +159,7 @@ auto Optimizer::isConstantArgument(ThreeAddressCode::OptionalArgument const& arg
 
 auto Optimizer::isConstantStoreExpression(ThreeAddressCode const& statement) -> bool
 {
-    if (statement.type == byte_code::op_store && isConstantArgument(statement.first))
+    if (statement.type == IRByteCode::op_store && isConstantArgument(statement.first))
     {
         return true;
     }
@@ -179,12 +179,12 @@ auto Optimizer::isConstantBinaryExpression(ThreeAddressCode const& statement) ->
     return false;
 }
 
-auto Optimizer::isBinaryOperation(byte_code op) noexcept -> bool
+auto Optimizer::isBinaryOperation(IRByteCode op) noexcept -> bool
 {
-    if (op == byte_code::op_add) return true;
-    if (op == byte_code::op_sub) return true;
-    if (op == byte_code::op_mul) return true;
-    if (op == byte_code::op_div) return true;
+    if (op == IRByteCode::op_add) return true;
+    if (op == IRByteCode::op_sub) return true;
+    if (op == IRByteCode::op_mul) return true;
+    if (op == IRByteCode::op_div) return true;
     return false;
 }
 }  // namespace tcc

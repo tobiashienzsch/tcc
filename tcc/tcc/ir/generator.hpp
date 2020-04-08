@@ -112,10 +112,11 @@ private:
         auto CreateReturnOperation() -> void
         {
             auto const first = PopFromStack();
-            rootScope_.statements.push_back(ThreeAddressCode {byte_code::op_return, "g.0", first, std::nullopt, false});
+            rootScope_.statements.push_back(
+                ThreeAddressCode {IRByteCode::op_return, "g.0", first, std::nullopt, false});
         }
 
-        auto CreateBinaryOperation(byte_code op) -> void
+        auto CreateBinaryOperation(IRByteCode op) -> void
         {
             auto const second  = PopFromStack();
             auto const first   = PopFromStack();
@@ -124,7 +125,7 @@ private:
             rootScope_.statements.push_back(ThreeAddressCode {op, tmpName, first, second});
         }
 
-        auto CreateUnaryOperation(byte_code op) -> void
+        auto CreateUnaryOperation(IRByteCode op) -> void
         {
             auto const first   = PopFromStack();
             auto const tmpName = CreateTemporaryOnStack();

@@ -20,7 +20,7 @@ auto operator<<(std::ostream& out, ThreeAddressCode const& data) -> std::ostream
     auto const secondStr = data.second.has_value() ? formatArgument(data.second.value()) : "";
 
     auto opCodeStr = std::stringstream {};
-    opCodeStr << static_cast<tcc::byte_code>(data.type);
+    opCodeStr << static_cast<tcc::IRByteCode>(data.type);
 
     return out << fmt::format("{0}\t:=\t{1}\t{2}\t{3}", data.destination, opCodeStr.str(), firstStr, secondStr);
 }

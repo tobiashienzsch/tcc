@@ -17,7 +17,7 @@ struct ThreeAddressCode
     using Argument         = std::variant<int, std::string>;
     using OptionalArgument = std::optional<Argument>;
 
-    tcc::byte_code type;
+    tcc::IRByteCode type;
     std::string destination;
     Argument first;
     OptionalArgument second;

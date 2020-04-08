@@ -7,7 +7,7 @@
 
 namespace tcc
 {
-enum byte_code
+enum IRByteCode
 {
     op_neg,  //  negate the top stack entry
     op_add,  //  add top two stack entries
@@ -42,7 +42,7 @@ enum byte_code
     op_return    // return from function
 };
 
-inline std::ostream& operator<<(std::ostream& out, byte_code const data)
+inline std::ostream& operator<<(std::ostream& out, IRByteCode const data)
 {
     switch (data)
     {

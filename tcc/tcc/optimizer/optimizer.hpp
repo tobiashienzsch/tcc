@@ -25,7 +25,7 @@ public:
     static auto isConstantArgument(ThreeAddressCode::OptionalArgument const& argument) -> bool;
     static auto isConstantStoreExpression(ThreeAddressCode const& statement) -> bool;
     static auto isConstantBinaryExpression(ThreeAddressCode const& statement) -> bool;
-    static auto isBinaryOperation(byte_code op) noexcept -> bool;
+    static auto isBinaryOperation(IRByteCode op) noexcept -> bool;
 
 private:
     StatementScope& m_mainScope;

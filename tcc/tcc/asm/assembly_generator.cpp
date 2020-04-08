@@ -45,7 +45,7 @@ auto AssemblyGenerator::Build(tcc::StatementScope const& scope) -> std::vector<i
 
         switch (statement.type)
         {
-            case byte_code::op_store:
+            case IRByteCode::op_store:
             {
                 if (auto* value = std::get_if<int>(&statement.first); value != nullptr)
                 {
@@ -62,7 +62,7 @@ auto AssemblyGenerator::Build(tcc::StatementScope const& scope) -> std::vector<i
                 break;
             }
 
-            case byte_code::op_load:
+            case IRByteCode::op_load:
             {
                 auto const destIter  = std::find(std::begin(localVars), std::end(localVars),
                                                 std::string(1, std::get<std::string>(statement.first)[0]));
@@ -74,32 +74,32 @@ auto AssemblyGenerator::Build(tcc::StatementScope const& scope) -> std::vector<i
                 break;
             }
 
-            case byte_code::op_add:
+            case IRByteCode::op_add:
             {
                 PushConstArgument();
                 result.push_back(tcc::ByteCode::IADD);
                 break;
             }
-            case byte_code::op_sub:
+            case IRByteCode::op_sub:
             {
                 PushConstArgument();
                 result.push_back(tcc::ByteCode::ISUB);
                 break;
             }
-            case byte_code::op_mul:
+            case IRByteCode::op_mul:
             {
                 PushConstArgument();
                 result.push_back(tcc::ByteCode::IMUL);
                 break;
             }
-            case byte_code::op_return:
+            case IRByteCode::op_return:
             {
                 PushConstArgument();
                 result.push_back(tcc::ByteCode::EXIT);
                 break;
             }
 
-                // case byte_code::op_div:
+                // case IRByteCode::op_div:
                 // {
                 //     result.push_back(tcc::ByteCode::IDIV);
                 //     fmt::print("DIV,\n");

@@ -63,12 +63,13 @@ private:
         auto PrintIR() -> void
         {
             fmt::print("\n{0}: functions={1}\n", package_.name, package_.functions.size());
-            fmt::print("func {0}: args=[] instructions={1}\n", currentFunction_->name,
-                       currentFunction_->statements.size());
-            fmt::print("entry:\n");
-            for (IRStatement const& x : currentFunction_->statements)
+            for (auto const& func : package_.functions)
             {
-                fmt::print("\t{}\n", x);
+                fmt::print("func {0}: args=[] instructions={1}\nentry:\n", func.name, func.statements.size());
+                for (auto const& x : func.statements)
+                {
+                    fmt::print("\t{}\n", x);
+                }
             }
         }
 
@@ -167,7 +168,7 @@ private:
     private:
         int tmpCounter_ = 0;
         std::vector<std::variant<std::uint32_t, std::string>> stack_;
-        IRPackage package_ {"app"};
+        IRPackage package_ {"program"};
         IRFunction* currentFunction_ = nullptr;
     };
 

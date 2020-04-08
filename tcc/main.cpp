@@ -14,9 +14,9 @@ int main(int argc, char** argv)
         return exitCode;
     }
 
-    auto const flags = programOptions.GetCompilerFlags();
-    auto iter        = flags.Source.cbegin();
-    auto end         = flags.Source.cend();
+    auto const& flags = programOptions.GetCompilerFlags();
+    auto iter         = flags.Source.cbegin();
+    auto end          = flags.Source.cend();
 
     using IteratorType = std::string::const_iterator;
     auto errorHandler  = tcc::ErrorHandler<IteratorType> {iter, end, std::cerr};

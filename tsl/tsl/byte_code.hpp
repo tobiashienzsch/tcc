@@ -14,25 +14,27 @@ namespace tcc
 {
 enum ByteCode : int64_t
 {
-    IADD   = 1,
-    ISUB   = 2,
-    IMUL   = 3,
-    ILT    = 4,
-    IEQ    = 5,
-    BR     = 6,
-    BRT    = 7,
-    BRF    = 8,
-    ICONST = 9,
-    LOAD   = 10,
-    GLOAD  = 11,
-    STORE  = 12,
-    GSTORE = 13,
-    PRINT  = 14,
-    POP    = 15,
-    CALL   = 16,
-    RET    = 17,
-    EXIT   = 18,
-    HALT   = 19,
+    NOOP = 0,
+    IADD = 1,
+    ISUB,
+    IMUL,
+    ILT,
+    IEQ,
+    BR,
+    BRT,
+    BRF,
+    ICONST,
+    LOAD,
+    GLOAD,
+    STORE,
+    GSTORE,
+    PRINT,
+    POP,
+    CALL,
+    RET,
+    EXIT,
+    HALT,
+    NUM_OPCODES,
 };
 
 std::ostream& operator<<(std::ostream& out, ByteCode byteCode);
@@ -46,7 +48,7 @@ struct Instruction
 };
 
 constexpr auto Instructions = std::array {
-    Instruction {"invalid"},    //
+    Instruction {"noop"},       //
     Instruction {"iadd"},       //
     Instruction {"isub"},       //
     Instruction {"imul"},       //

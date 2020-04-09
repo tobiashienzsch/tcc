@@ -5,6 +5,8 @@
 
 #include "tsl/byte_code.hpp"
 
+#include "fmt/format.h"
+
 namespace tcc
 {
 
@@ -12,6 +14,7 @@ auto operator<<(std::ostream& out, ByteCode byteCode) -> std::ostream&
 {
     switch (byteCode)
     {
+        case ByteCode::NOOP: return out << "NOOP";
         case ByteCode::IADD: return out << "IADD";
         case ByteCode::ISUB: return out << "ISUB";
         case ByteCode::IMUL: return out << "IMUL";
@@ -31,6 +34,7 @@ auto operator<<(std::ostream& out, ByteCode byteCode) -> std::ostream&
         case ByteCode::RET: return out << "RET";
         case ByteCode::EXIT: return out << "EXIT";
         case ByteCode::HALT: return out << "HALT";
+        case ByteCode::NUM_OPCODES: return out << fmt::format("{}", static_cast<int64_t>(byteCode));
     }
     return out;
 }

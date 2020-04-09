@@ -41,11 +41,11 @@ auto operator<<(std::ostream& out, IRStatement const& data) -> std::ostream&
 auto operator<<(std::ostream& out, IRFunction const& data) -> std::ostream& { return out << data.name; }
 auto operator<<(std::ostream& out, IRPackage const& pkg) -> std::ostream&
 {
-    out << fmt::format("\n{0}: functions={1}\n", pkg.name, pkg.functions.size());
+    out << fmt::format("\n// {0}: functions={1}\n", pkg.name, pkg.functions.size());
     for (auto const& func : pkg.functions)
     {
-        out << fmt::format("func {0}: args={1} locals={2} instructions={3}\n{0}.entry:\n", func.name, func.args.size(),
-                           func.variables.size(), func.statements.size());
+        out << fmt::format("// func {0}: args={1} locals={2} instructions={3}\n{0}.entry:\n", func.name,
+                           func.args.size(), func.variables.size(), func.statements.size());
         for (auto const& x : func.statements)
         {
             out << fmt::format("\t{}\n", x);

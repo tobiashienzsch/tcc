@@ -181,7 +181,15 @@ auto VirtualMachine::Cpu() -> int64_t
                 break;
             }
 
-            case ByteCode::EXIT: return m_stack.at(m_stackPointer);
+            case ByteCode::EXIT:
+            {
+                auto const exitCode = m_stack.at(m_stackPointer);
+                if (m_shouldTrace)
+                {
+                    out_ << fmt::format("---\nexit code: {}\n", exitCode);
+                }
+                return exitCode;
+            }
             case ByteCode::HALT: return -1;
             default: TCC_ASSERT(false, "unknown instruction"); std::exit(EXIT_FAILURE);
         }

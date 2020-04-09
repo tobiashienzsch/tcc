@@ -21,6 +21,13 @@ auto AssemblyGenerator::Build(tcc::IRPackage const& package) -> std::vector<int6
         auto const& statements = function.statements;
         // auto const numLocals = function.variables.size();
 
+        // auto counter       = 0;
+        auto argVars = std::vector<std::string> {};
+        for (auto const& arg : function.args)
+        {
+            argVars.push_back(arg.first);
+        }
+
         auto localVars = std::vector<std::string> {};
         for (auto const& var : function.variables)
         {
@@ -71,13 +78,29 @@ auto AssemblyGenerator::Build(tcc::IRPackage const& package) -> std::vector<int6
 
                 case IRByteCode::Load:
                 {
-                    auto const destIter  = std::find(std::begin(localVars), std::end(localVars),
-                                                    std::string(1, std::get<std::string>(statement.first)[0]));
-                    auto const destIndex = static_cast<int>(destIter - std::begin(localVars));
+                    auto const inLocalVars = std::find(std::begin(localVars), std::end(localVars),
+                                                       std::string(1, std::get<std::string>(statement.first)[0]));
+                    if (inLocalVars != std::end(localVars))
+                    {
+                        auto const index = static_cast<int>(inLocalVars - std::begin(localVars));
+                        result.push_back(tcc::ByteCode::LOAD);
+                        result.push_back(index);
+                        break;
+                    }
 
-                    result.push_back(tcc::ByteCode::LOAD);
-                    result.push_back(destIndex);
+                    auto const inArgs = std::find(std::begin(argVars), std::end(argVars),
+                                                  std::string(1, std::get<std::string>(statement.first)[0]));
+                    if (inArgs != std::end(argVars))
+                    {
+                        // offset to function arguments on the stack is -3. Since we calculate the index with std::end,
+                        // which is one past the last element we subtract from -2.
+                        auto const index = -2 - static_cast<int>(std::end(argVars) - inArgs);
+                        result.push_back(tcc::ByteCode::LOAD);
+                        result.push_back(index);
+                        break;
+                    }
 
+                    TCC_ASSERT(false, "");
                     break;
                 }
 

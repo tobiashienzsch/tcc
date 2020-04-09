@@ -17,18 +17,16 @@ TEST_CASE("integration: CompileAndRunConstant", "[integration]")
 
     for (auto optLevel : {0, 1})
     {
-        auto options        = tcc::CompilerOptions {};
-        options.Source      = source;
-        options.OptLevel    = optLevel;
-        options.PrintAst    = false;
-        options.PrintIR     = false;
-        options.PrintSource = false;
-        auto compiler       = tcc::Compiler {options};
+        auto options     = tcc::CompilerOptions {};
+        options.Source   = source;
+        options.OptLevel = optLevel;
+
+        auto compiler = tcc::Compiler {options};
 
         REQUIRE(compiler.Run() == EXIT_SUCCESS);
 
         auto const stackSize    = 200;
-        auto const entryPoint   = 0;
+        auto const entryPoint   = compiler.GetEntryPoint();
         auto const globalMemory = 0;
         auto const assembly     = compiler.GetAssembly();
         auto stream             = std::stringstream {};
@@ -47,18 +45,16 @@ TEST_CASE("integration: CompileAndRunAddition", "[integration]")
 
     for (auto optLevel : {0, 1})
     {
-        auto options        = tcc::CompilerOptions {};
-        options.Source      = source;
-        options.OptLevel    = optLevel;
-        options.PrintAst    = false;
-        options.PrintIR     = false;
-        options.PrintSource = false;
-        auto compiler       = tcc::Compiler {options};
+        auto options     = tcc::CompilerOptions {};
+        options.Source   = source;
+        options.OptLevel = optLevel;
+
+        auto compiler = tcc::Compiler {options};
 
         REQUIRE(compiler.Run() == EXIT_SUCCESS);
 
         auto const stackSize    = 200;
-        auto const entryPoint   = 0;
+        auto const entryPoint   = compiler.GetEntryPoint();
         auto const globalMemory = 0;
         auto const assembly     = compiler.GetAssembly();
         auto stream             = std::stringstream {};
@@ -77,18 +73,16 @@ TEST_CASE("integration: CompileAndRunSubtraction", "[integration]")
 
     for (auto optLevel : {0, 1})
     {
-        auto options        = tcc::CompilerOptions {};
-        options.Source      = source;
-        options.OptLevel    = optLevel;
-        options.PrintAst    = false;
-        options.PrintIR     = false;
-        options.PrintSource = false;
-        auto compiler       = tcc::Compiler {options};
+        auto options     = tcc::CompilerOptions {};
+        options.Source   = source;
+        options.OptLevel = optLevel;
+
+        auto compiler = tcc::Compiler {options};
 
         REQUIRE(compiler.Run() == EXIT_SUCCESS);
 
         auto const stackSize    = 200;
-        auto const entryPoint   = 0;
+        auto const entryPoint   = compiler.GetEntryPoint();
         auto const globalMemory = 0;
         auto const assembly     = compiler.GetAssembly();
         auto stream             = std::stringstream {};
@@ -107,18 +101,16 @@ TEST_CASE("integration: CompileAndRunMultiplication", "[integration]")
 
     for (auto optLevel : {0, 1})
     {
-        auto options        = tcc::CompilerOptions {};
-        options.Source      = source;
-        options.OptLevel    = optLevel;
-        options.PrintAst    = false;
-        options.PrintIR     = false;
-        options.PrintSource = false;
-        auto compiler       = tcc::Compiler {options};
+        auto options     = tcc::CompilerOptions {};
+        options.Source   = source;
+        options.OptLevel = optLevel;
+
+        auto compiler = tcc::Compiler {options};
 
         REQUIRE(compiler.Run() == EXIT_SUCCESS);
 
         auto const stackSize    = 200;
-        auto const entryPoint   = 0;
+        auto const entryPoint   = compiler.GetEntryPoint();
         auto const globalMemory = 0;
         auto const assembly     = compiler.GetAssembly();
         auto stream             = std::stringstream {};
@@ -137,18 +129,16 @@ TEST_CASE("integration: CompileAndRunMixedExpression", "[integration]")
 
     for (auto optLevel : {0, 1})
     {
-        auto options        = tcc::CompilerOptions {};
-        options.Source      = source;
-        options.OptLevel    = optLevel;
-        options.PrintAst    = false;
-        options.PrintIR     = false;
-        options.PrintSource = false;
-        auto compiler       = tcc::Compiler {options};
+        auto options     = tcc::CompilerOptions {};
+        options.Source   = source;
+        options.OptLevel = optLevel;
+
+        auto compiler = tcc::Compiler {options};
 
         REQUIRE(compiler.Run() == EXIT_SUCCESS);
 
         auto const stackSize    = 200;
-        auto const entryPoint   = 0;
+        auto const entryPoint   = compiler.GetEntryPoint();
         auto const globalMemory = 0;
         auto const assembly     = compiler.GetAssembly();
         auto stream             = std::stringstream {};
@@ -170,23 +160,85 @@ TEST_CASE("integration: CompileAndRunLocalVars", "[integration]")
     )"};
     for (auto optLevel : {0, 1})
     {
-        auto options        = tcc::CompilerOptions {};
-        options.Source      = source;
-        options.OptLevel    = optLevel;
-        options.PrintAst    = false;
-        options.PrintIR     = false;
-        options.PrintSource = false;
-        auto compiler       = tcc::Compiler {options};
+        auto options     = tcc::CompilerOptions {};
+        options.Source   = source;
+        options.OptLevel = optLevel;
+
+        auto compiler = tcc::Compiler {options};
 
         REQUIRE(compiler.Run() == EXIT_SUCCESS);
 
         auto const stackSize    = 200;
-        auto const entryPoint   = 0;
+        auto const entryPoint   = compiler.GetEntryPoint();
         auto const globalMemory = 0;
         auto const assembly     = compiler.GetAssembly();
         auto stream             = std::stringstream {};
         auto vm                 = tcc::VirtualMachine(assembly, entryPoint, globalMemory, stackSize, true, stream);
         REQUIRE(vm.Cpu() == 60);
         REQUIRE_THAT(stream.str(), Catch::Contains("exit code: 60"));
+    }
+}
+
+TEST_CASE("integration: CompileAndRunFuncCallMinimal", "[integration]")
+{
+    auto source = std::string {R"(
+        int foo(a, b) { return a + b; }
+        int main()
+        {
+            int x = 1;
+            int y = 2;
+            return foo(x, y);
+        }
+    )"};
+    for (auto optLevel : {0, 1})
+    {
+        auto options     = tcc::CompilerOptions {};
+        options.Source   = source;
+        options.OptLevel = optLevel;
+
+        auto compiler = tcc::Compiler {options};
+
+        REQUIRE(compiler.Run() == EXIT_SUCCESS);
+
+        auto const stackSize    = 200;
+        auto const entryPoint   = compiler.GetEntryPoint();
+        auto const globalMemory = 0;
+        auto const assembly     = compiler.GetAssembly();
+        auto stream             = std::stringstream {};
+        auto vm                 = tcc::VirtualMachine(assembly, entryPoint, globalMemory, stackSize, true, stream);
+        REQUIRE(vm.Cpu() == 3);
+        REQUIRE_THAT(stream.str(), Catch::Contains("exit code: 3"));
+    }
+}
+
+TEST_CASE("integration: CompileAndRunFuncCallNested", "[integration]")
+{
+    auto source = std::string {R"(
+        int foo(a) { return a * 2; }
+        int main()
+        {
+            int x = 1 + 4;
+            int y = foo(foo(x * 2));
+            return x + y; 
+        }
+    )"};
+    for (auto optLevel : {0, 1})
+    {
+        auto options     = tcc::CompilerOptions {};
+        options.Source   = source;
+        options.OptLevel = optLevel;
+
+        auto compiler = tcc::Compiler {options};
+
+        REQUIRE(compiler.Run() == EXIT_SUCCESS);
+
+        auto const stackSize    = 200;
+        auto const entryPoint   = compiler.GetEntryPoint();
+        auto const globalMemory = 0;
+        auto const assembly     = compiler.GetAssembly();
+        auto stream             = std::stringstream {};
+        auto vm                 = tcc::VirtualMachine(assembly, entryPoint, globalMemory, stackSize, true, stream);
+        REQUIRE(vm.Cpu() == 45);
+        REQUIRE_THAT(stream.str(), Catch::Contains("exit code: 45"));
     }
 }

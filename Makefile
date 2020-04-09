@@ -35,11 +35,10 @@ test:
 .PHONY: sanitize
 sanitize:
 	cmake -S. -G$(CM_GENERATOR) -B$(BUILD_DIR_BASE)_sanitize \
-		-DCMAKE_BUILD_TYPE=$(CONFIG) \
 		-DTCC_BUILD_ASAN=ON \
 		-DTCC_BUILD_UBSAN=ON \
 		.
-	cmake --build $(BUILD_DIR_BASE)_sanitize --config $(CONFIG)
+	cmake --build $(BUILD_DIR_BASE)_sanitize 
 	cd $(BUILD_DIR_BASE)_sanitize && ctest -c
 
 .PHONY: coverage

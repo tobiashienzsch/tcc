@@ -61,27 +61,27 @@ public:
 
         if (options_.PrintAssembly)
         {
-            tcc::AssemblyGenerator::Print(assembly_);
+            tcc::AssemblyGenerator::Print(assembly_.first);
         }
 
-        // if (!options_.OutputName.empty())
-        // {
-        //     auto binaryProgram = tcc::BinaryProgram {1, options_.OutputName, 0, assembly_};
-        //     if (!tcc::BinaryFormat::WriteToFile(options_.OutputName, binaryProgram))
-        //     {
-        //         fmt::print("Error while writing binary!\n");
-        //         return EXIT_FAILURE;
-        //     }
-        // }
+        if (!options_.OutputName.empty())
+        {
+            auto binaryProgram = tcc::BinaryProgram {1, options_.OutputName, assembly_.second, assembly_.first};
+            if (!tcc::BinaryFormat::WriteToFile(options_.OutputName, binaryProgram))
+            {
+                fmt::print("Error while writing binary!\n");
+                return EXIT_FAILURE;
+            }
+        }
 
         return EXIT_SUCCESS;
     }
 
-    std::vector<int64_t> const& GetAssembly() const { return assembly_; }
+    std::vector<int64_t> const& GetAssembly() const { return assembly_.first; }
 
 private:
     CompilerOptions options_ {};
-    std::vector<int64_t> assembly_ {};
+    Assembly assembly_ {};
 };
 }  // namespace tcc
 

@@ -9,15 +9,22 @@
 
 namespace tcc
 {
-auto AssemblyGenerator::Build(tcc::IRPackage const& package) -> std::vector<int64_t>
+auto AssemblyGenerator::Build(tcc::IRPackage const& package) -> Assembly
 {
     auto result               = std::vector<int64_t> {};
+    auto entryPoint           = -1;
     auto functionPlaceholders = std::map<int, std::string> {};
     auto functionPositions    = std::map<std::string, int> {};
 
     for (auto const& function : package.functions)
     {
-        functionPositions.insert({function.name, result.size()});
+        auto funcPos = result.size();
+        if (function.name == "main")
+        {
+            entryPoint = funcPos;
+        }
+
+        functionPositions.insert({function.name, funcPos});
         auto const& statements = function.statements;
         // auto const numLocals = function.variables.size();
 
@@ -172,7 +179,9 @@ auto AssemblyGenerator::Build(tcc::IRPackage const& package) -> std::vector<int6
 
         result.at(pos) = search->second;
     }
-    return result;
+
+    TCC_ASSERT(entryPoint >= 0, "");
+    return {result, entryPoint};
 }
 
 auto AssemblyGenerator::Print(std::vector<int64_t> const& assembly) -> void

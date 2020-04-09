@@ -132,12 +132,14 @@ bool IRGenerator::operator()(tcc::ast::Unary const& x)
 }
 bool IRGenerator::operator()(tcc::ast::FunctionCall const& call)
 {
+    auto argTemps = std::vector<std::string> {};
     for (auto const& expr : call.args)
     {
         if (!(*this)(expr)) return false;
+        argTemps.push_back(builder_.GetLastTemporary());
     }
 
-    if (!builder_.CreateFunctionCall(call.function_name.name, call.args.size()))
+    if (!builder_.CreateFunctionCall(call.function_name.name, argTemps))
     {
         return false;
     }

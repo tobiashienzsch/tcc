@@ -157,12 +157,16 @@ private:
             return true;
         }
 
-        [[nodiscard]] auto CreateFunctionCall(std::string name, size_t numArgs) -> bool
+        [[nodiscard]] auto CreateFunctionCall(std::string name, std::vector<std::string> argTemps) -> bool
         {
-            auto args = std::vector<std::string> {};
             currentFunction_->statements.emplace_back(
-                IRStatement {IRByteCode::Call, CreateTemporaryOnStack(), std::move(name), args, {}});
+                IRStatement {IRByteCode::Call, CreateTemporaryOnStack(), std::move(name), argTemps, {}});
             return true;
+        }
+
+        [[nodiscard]] auto GetLastTemporary() const -> std::string
+        {
+            return currentFunction_->statements.back().destination;
         }
 
     private:

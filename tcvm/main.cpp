@@ -41,5 +41,6 @@ auto main(int argc, char** argv) -> int
     // auto const factorial = tcvm::CreateFactorialProgram(arg);
     // auto vm = tcc::VirtualMachine(factorial.data, factorial.entryPoint, 0, 1000, true);
 
-    return vm.Cpu();
+    vm.Cpu();
+    return EXIT_SUCCESS;
 }

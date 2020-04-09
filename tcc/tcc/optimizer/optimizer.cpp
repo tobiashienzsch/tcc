@@ -48,7 +48,7 @@ auto Optimizer::IsUnusedStatement(IRStatement const& statement, IRStatementList 
 
                   std::visit(tcc::overloaded {
                                  [](std::uint32_t /*unused*/) { ; },
-                                 [](std::vector<std::string> /*unused*/) { ; },
+                                 [](std::vector<std::string> const& /*unused*/) { ; },
                                  [&statement, &result](std::string const& name) {
                                      if (name == statement.destination)
                                      {
@@ -61,8 +61,16 @@ auto Optimizer::IsUnusedStatement(IRStatement const& statement, IRStatementList 
                   if (item.second.has_value())
                   {
                       std::visit(tcc::overloaded {
-                                     [](std::vector<std::string> /*unused*/) { ; },
                                      [](std::uint32_t /*unused*/) { ; },
+                                     [&statement, &result](std::vector<std::string> const& args) {
+                                         for (auto const& name : args)
+                                         {
+                                             if (name == statement.destination)
+                                             {
+                                                 result = true;
+                                             }
+                                         }
+                                     },
                                      [&statement, &result](std::string const& name) {
                                          if (name == statement.destination)
                                          {
@@ -87,7 +95,7 @@ auto Optimizer::ReplaceVariableIfConstant(IRStatement& statement, IRStatementLis
             {
                 // first
                 std::visit(tcc::overloaded {
-                               [](std::vector<std::string> /*unused*/) { ; },
+                               [](std::vector<std::string> const& /*unused*/) { ; },
                                [](std::uint32_t /*unused*/) { ; },
                                [&statement, &otherStatement](std::string const& name) {
                                    if (name == statement.destination)
@@ -102,7 +110,7 @@ auto Optimizer::ReplaceVariableIfConstant(IRStatement& statement, IRStatementLis
                 if (otherStatement.second.has_value())
                 {
                     std::visit(tcc::overloaded {
-                                   [](std::vector<std::string> /*unused*/) { ; },
+                                   [](std::vector<std::string> const& /*unused*/) { ; },
                                    [](std::uint32_t /*unused*/) { ; },
                                    [&statement, &otherStatement](std::string const& name) {
                                        if (name == statement.destination)
@@ -153,7 +161,7 @@ auto Optimizer::isConstantArgument(IRStatement::Argument const& argument) -> boo
     auto returnValue = bool {false};
     std::visit(tcc::overloaded {
                    [&returnValue](int /*unused*/) { returnValue = true; },
-                   [&returnValue](std::vector<std::string> /*unused*/) { returnValue = false; },
+                   [&returnValue](std::vector<std::string> const& /*unused*/) { returnValue = false; },
                    [&returnValue](const std::string& /*unused*/) { returnValue = false; },
                },
                argument);

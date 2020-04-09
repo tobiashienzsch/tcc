@@ -12,7 +12,7 @@ auto operator<<(std::ostream& out, IRStatement const& data) -> std::ostream&
                        [&result](int const arg) { result = fmt::format("{}", arg); },
                        [&result](std::string const& arg) { result = fmt::format("%{}", arg); },
                        [&result](std::vector<std::string> const& args) {
-                           result.append(fmt::format("["));
+                           result.append(fmt::format("[ "));
                            for (auto const& arg : args)
                            {
                                result.append(fmt::format("%{} ", arg));

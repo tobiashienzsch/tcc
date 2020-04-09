@@ -14,7 +14,8 @@ struct CompilerOptions
     int OptLevel           = 0;
     bool PrintSource       = false;
     bool PrintAst          = false;
-    bool PrintIR           = true;
+    bool PrintIR           = false;
+    bool PrintAssembly     = false;
 };
 
 }  // namespace tcc

@@ -45,6 +45,7 @@ public:
                 ("print-source", po::bool_switch(&flags_.PrintSource), "print source code")     //
                 ("print-ast", po::bool_switch(&flags_.PrintAst), "print parsed ast")            //
                 ("print-ir", po::bool_switch(&flags_.PrintIR), "print generated ir")            //
+                ("print-asm", po::bool_switch(&flags_.PrintAssembly), "print generated asm")    //
                 ;
 
             po::positional_options_description p;

@@ -9,6 +9,7 @@ namespace tcc
 class AssemblyGenerator
 {
 public:
-    static auto Build(IRFunction const& function) -> std::vector<int64_t>;
+    static auto Build(tcc::IRPackage const& package) -> std::vector<int64_t>;
+    static auto Print(std::vector<int64_t> const& assembly) -> void;
 };
 }  // namespace tcc

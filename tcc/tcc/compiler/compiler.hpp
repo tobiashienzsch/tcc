@@ -56,8 +56,14 @@ public:
             fmt::print("{}", irGenerator.CurrentPackage());
         }
 
-        auto const& currentFunction = irGenerator.CurrentPackage().functions[0];
-        assembly_                   = tcc::AssemblyGenerator::Build(currentFunction);
+        auto const& package = irGenerator.CurrentPackage();
+        assembly_           = tcc::AssemblyGenerator::Build(package);
+
+        if (options_.PrintAssembly)
+        {
+            tcc::AssemblyGenerator::Print(assembly_);
+        }
+
         // if (!options_.OutputName.empty())
         // {
         //     auto binaryProgram = tcc::BinaryProgram {1, options_.OutputName, 0, assembly_};

@@ -24,11 +24,16 @@ auto operator<<(std::ostream& out, IRStatement const& data) -> std::ostream&
         return result;
     };
 
-    auto const firstStr  = formatArgument(data.first);
+    auto firstStr        = formatArgument(data.first);
     auto const secondStr = data.second.has_value() ? formatArgument(data.second.value()) : "";
 
     auto opCodeStr = std::stringstream {};
     opCodeStr << static_cast<tcc::IRByteCode>(data.type);
+
+    if (data.type == IRByteCode::Call)
+    {
+        std::replace(std::begin(firstStr), std::end(firstStr), '%', '@');
+    }
 
     return out << fmt::format("{0}\t:=\t{1}\t{2}\t{3}", data.destination, opCodeStr.str(), firstStr, secondStr);
 }
@@ -39,12 +44,13 @@ auto operator<<(std::ostream& out, IRPackage const& pkg) -> std::ostream&
     out << fmt::format("\n{0}: functions={1}\n", pkg.name, pkg.functions.size());
     for (auto const& func : pkg.functions)
     {
-        out << fmt::format("\nfunc {0}: args={1} locals={2} instructions={3}\nentry:\n", func.name, func.args.size(),
+        out << fmt::format("func {0}: args={1} locals={2} instructions={3}\n{0}.entry:\n", func.name, func.args.size(),
                            func.variables.size(), func.statements.size());
         for (auto const& x : func.statements)
         {
             out << fmt::format("\t{}\n", x);
         }
+        out << fmt::format("\n");
     }
 
     return out;

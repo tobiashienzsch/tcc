@@ -9,7 +9,8 @@ namespace parser
 {
 template<typename Iterator>
 Statement<Iterator>::Statement(ErrorHandler<Iterator>& errorHandler)
-    : Statement::base_type(StatementList), expr(errorHandler)
+    : Statement::base_type(StatementList)
+    , expr(errorHandler)
 {
     qi::_1_type _1;
     qi::_2_type _2;

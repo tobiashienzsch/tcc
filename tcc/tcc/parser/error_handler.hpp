@@ -20,7 +20,9 @@ struct ErrorHandler
     };
 
     ErrorHandler(Iterator f, Iterator l, std::ostream& o)
-        : first(f), last(l), out(o)
+        : first(f)
+        , last(l)
+        , out(o)
     {
     }
 

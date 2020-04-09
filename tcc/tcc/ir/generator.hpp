@@ -148,21 +148,31 @@ private:
 
         auto CreateStoreOperation(std::string key) -> void
         {
-            currentFunction_->statements.emplace_back(IRStatement {
-                IRByteCode::Store, std::move(key), PopFromStack(), {}, false});
+            currentFunction_->statements.emplace_back(
+                IRStatement {IRByteCode::Store,
+                             std::move(key),
+                             PopFromStack(),
+                             {},
+                             false});
         }
 
         auto CreateLoadOperation(std::string key) -> void
         {
-            currentFunction_->statements.emplace_back(IRStatement {
-                IRByteCode::Load, CreateTemporaryOnStack(), key, {}});
+            currentFunction_->statements.emplace_back(
+                IRStatement {IRByteCode::Load,
+                             CreateTemporaryOnStack(),
+                             key,
+                             {}});
         }
 
         auto CreateArgStoreOperation(std::string key, std::string varName)
             -> void
         {
-            currentFunction_->statements.emplace_back(IRStatement {
-                IRByteCode::ArgStore, std::move(key), std::move(varName), {}});
+            currentFunction_->statements.emplace_back(
+                IRStatement {IRByteCode::ArgStore,
+                             std::move(key),
+                             std::move(varName),
+                             {}});
         }
 
         [[nodiscard]] auto CreateAssignment(std::string const& key)

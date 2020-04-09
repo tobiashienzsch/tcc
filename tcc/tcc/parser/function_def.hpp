@@ -9,7 +9,8 @@ namespace parser
 {
 template<typename Iterator>
 Function<Iterator>::Function(ErrorHandler<Iterator>& errorHandler)
-    : Function::base_type(start), body(errorHandler)
+    : Function::base_type(start)
+    , body(errorHandler)
 {
     qi::_1_type _1;
     qi::_2_type _2;

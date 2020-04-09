@@ -1,12 +1,15 @@
 ---
 Language: Cpp
 BasedOnStyle: WebKit
-AlignAfterOpenBracket: Align
+AlignAfterOpenBracket: "Align"
 AlignConsecutiveAssignments: "true"
 AlignConsecutiveDeclarations: "false"
 AlignEscapedNewlines: Right
 AlignOperands: "true"
 AlignTrailingComments: "true"
+AllowAllArgumentsOnNextLine: "false"
+AllowAllConstructorInitializersOnNextLine: "false"
+AllowAllParametersOfDeclarationOnNextLine: "false"
 AllowShortBlocksOnASingleLine: "false"
 AllowShortCaseLabelsOnASingleLine: "true"
 AllowShortFunctionsOnASingleLine: All

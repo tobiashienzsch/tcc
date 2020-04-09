@@ -31,7 +31,7 @@ script-anchors:
     - ctest
     - cd ..
     - ./build_coverage/tcc/tcc -o test.tcb examples/complex_function_call.tcc
-    - ./build_coverage/tcvm/tcvm
+    - ./build_coverage/tcvm/tcvm -f test.tcb
     - cd build_coverage
     - lcov -c -d . --base-directory . -o test_cov.info
     - lcov -a base_cov.info -a test_cov.info -o cov.info

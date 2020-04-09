@@ -23,7 +23,11 @@ auto main(int argc, char** argv) -> int
         fmt::print("{}\n", arg);
     }
 
-    auto const path = std::string("test.tcb");
+    auto path = std::string {};
+    if (cliArguments.count("file") != 0U)
+    {
+        path = cliArguments["file"].as<std::string>();
+    }
 
     // // write binary
     // {

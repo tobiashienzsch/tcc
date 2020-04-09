@@ -36,24 +36,18 @@ public:
     {
         try
         {
+            // clang-format off
             po::options_description desc("Tobante's Crappy Compiler");
-            desc.add_options()                           //
-                ("help,h", "produce this help message")  //
-                ("input,i", po::value<std::vector<std::string>>(),
-                 "input source file")  //
-                ("output,o", po::value<std::string>(&flags_.OutputName),
-                 "output binary file")  //
-                ("optimization,O", po::value<int>(&flags_.OptLevel),
-                 "optimization level 0-1")  //
-                ("print-source", po::bool_switch(&flags_.PrintSource),
-                 "print source code")  //
-                ("print-ast", po::bool_switch(&flags_.PrintAst),
-                 "print parsed ast")  //
-                ("print-ir", po::bool_switch(&flags_.PrintIR),
-                 "print generated ir")  //
-                ("print-asm", po::bool_switch(&flags_.PrintAssembly),
-                 "print generated asm")  //
-                ;
+            auto options = desc.add_options();
+            options("help,h", "produce this help message");
+            options("input,i",          po::value<std::vector<std::string>>(),      "input source file");
+            options("output,o",         po::value<std::string>(&flags_.OutputName), "output binary file");
+            options("optimization,O",   po::value<int>(&flags_.OptLevel),           "optimization level 0-1");
+            options("print-source",     po::bool_switch(&flags_.PrintSource),       "print source code");
+            options("print-ast",        po::bool_switch(&flags_.PrintAst),          "print parsed ast");
+            options("print-ir",         po::bool_switch(&flags_.PrintIR),           "print generated ir");
+            options("print-asm",        po::bool_switch(&flags_.PrintAssembly),     "print generated asm");
+            // clang-format on
 
             po::positional_options_description p;
             p.add("input", -1);

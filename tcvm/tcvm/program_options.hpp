@@ -23,13 +23,13 @@ struct ProgramOptions
     {
         try
         {
-            po::options_description desc(
-                "tcc: tobante's crappy virtual machine");
-            desc.add_options()                                            //
-                ("help,h", "produce this help message")                   //
-                ("input,i", po::value<std::int64_t>(), "input argument")  //
-                ("version,v", "print version string")                     //
-                ;
+            auto text = "tcc: tobante's crappy virtual machine";
+            po::options_description desc(text);
+            auto options = desc.add_options();
+            options("help,h", "produce this help message");
+            options("input,i", po::value<std::int64_t>(), "input argument");
+            options("file,f", po::value<std::string>(), "binary file path");
+            options("version,v", "print version string");
 
             po::store(po::parse_command_line(argc, argv, desc),
                       outputVariableMap);

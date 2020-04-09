@@ -23,8 +23,8 @@ public:
                             uint64_t main,              //
                             uint64_t dataSize,          //
                             uint64_t stackSize,         //
-                            bool shouldTrace = true     //
-    );
+                            bool shouldTrace  = true,   //
+                            std::ostream& out = std::cout);
 
     int64_t Cpu();
 
@@ -53,5 +53,6 @@ private:
 
 private:
     bool m_shouldTrace {true};
+    std::ostream& out_;
 };
 }  // namespace tcc

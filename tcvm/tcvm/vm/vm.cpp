@@ -9,12 +9,13 @@
 namespace tcc
 {
 VirtualMachine::VirtualMachine(std::vector<int64_t> code, uint64_t const main, uint64_t const dataSize,
-                               uint64_t const stackSize, bool shouldTrace)
+                               uint64_t const stackSize, bool shouldTrace, std::ostream& out)
     : m_instructionPointer(main)
     , m_code(std::move(code))
     , m_data(dataSize)
     , m_stack(stackSize)
     , m_shouldTrace(shouldTrace)
+    , out_(out)
 {
 }
 
@@ -145,7 +146,7 @@ auto VirtualMachine::Cpu() -> int64_t
             {
                 auto const val = m_stack.at(m_stackPointer);
                 m_stackPointer--;
-                fmt::print("{}\n", val);
+                out_ << fmt::format("{}\n", val);
                 break;
             }
 
@@ -194,46 +195,43 @@ void VirtualMachine::EnableTracing(bool const shouldTrace) { m_shouldTrace = sho
 void VirtualMachine::disassemble(int64_t const opcode)
 {
     auto const instruction = gsl::at(Instructions, opcode);
-    fmt::printf("%04ld: ", m_instructionPointer);
-    std::stringstream byteCodeStr {};
-    byteCodeStr << ByteCode {opcode};
-    fmt::print("{}", byteCodeStr.str().c_str());
+    out_ << fmt::format("{:04}: {}", m_instructionPointer, ByteCode {opcode});
     if (instruction.numberOfOperands == 1)
     {
-        fmt::printf(" %ld", m_code.at(m_instructionPointer + 1));
+        out_ << fmt::format(" {}", m_code.at(m_instructionPointer + 1));
     }
     if (instruction.numberOfOperands == 2)
     {
         auto const firstOperand  = m_code.at(m_instructionPointer + 1);
         auto const secondOperand = m_code.at(m_instructionPointer + 2);
-        fmt::printf(" %ld, %ld", firstOperand, secondOperand);
+        out_ << fmt::format(" {}, {}", firstOperand, secondOperand);
     }
 
     printGlobalMemory();
-    fmt::printf("\t STACK_PTR: %2ld", m_stackPointer);
+    out_ << fmt::format("\t STACK_PTR: {}", m_stackPointer);
     printStack();
-    fmt::print("\n");
+    out_ << fmt::format("\n");
 }
 void VirtualMachine::printStack()
 {
-    fmt::print("\t STACK: [ ");
+    out_ << fmt::format("\t STACK: [ ");
 
     for (auto i = 0; i <= m_stackPointer; i++)
     {
         auto const var = m_stack.at(i);
-        fmt::printf("%ld ", var);
+        out_ << fmt::format("{} ", var);
     }
-    fmt::print("]");
+    out_ << fmt::format("]");
 }
 
 void VirtualMachine::printGlobalMemory()
 {
-    fmt::print("\t\t GLOBALS: [ ");
+    out_ << fmt::format("\t\t GLOBALS: [ ");
     for (auto const& global : m_data)
     {
-        fmt::printf("%04ld ", global);
+        out_ << fmt::format("{:04} ", global);
     }
-    fmt::print("]");
+    out_ << fmt::format("]");
 }
 
 }  // namespace tcc

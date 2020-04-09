@@ -36,27 +36,14 @@ struct IRFunction
     IRStatementList statements           = {};
 };
 
+auto operator<<(std::ostream& out, IRFunction const& data) -> std::ostream&;
+
 struct IRPackage
 {
     std::string name                  = "";
     std::vector<IRFunction> functions = {};
 };
 
-inline auto operator<<(std::ostream& out, IRFunction const& data) -> std::ostream& { return out << data.name; }
-inline auto operator<<(std::ostream& out, IRPackage const& pkg) -> std::ostream&
-{
-    out << fmt::format("\n{0}: functions={1}\n", pkg.name, pkg.functions.size());
-    for (auto const& func : pkg.functions)
-    {
-        out << fmt::format("\nfunc {0}: args={1} locals={2} instructions={3}\nentry:\n", func.name, func.args.size(),
-                           func.variables.size(), func.statements.size());
-        for (auto const& x : func.statements)
-        {
-            out << fmt::format("\t{}\n", x);
-        }
-    }
-
-    return out;
-}
+auto operator<<(std::ostream& out, IRPackage const& pkg) -> std::ostream&;
 
 }  // namespace tcc

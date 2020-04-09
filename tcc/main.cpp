@@ -35,12 +35,13 @@ int main(int argc, char** argv)
         return EXIT_FAILURE;
     }
 
-    auto& currentFunction = irGenerator.CurrentPackage().functions[0];
-
     if (flags.OptLevel > 0)
     {
-        auto optimizer = tcc::Optimizer(currentFunction);
-        optimizer.Optimize();
+        for (auto& func : irGenerator.CurrentPackage().functions)
+        {
+            auto optimizer = tcc::Optimizer(func);
+            optimizer.Optimize();
+        }
     }
 
     if (flags.PrintSource)
@@ -53,16 +54,16 @@ int main(int argc, char** argv)
         fmt::print("{}", irGenerator.CurrentPackage());
     }
 
-    if (!flags.OutputName.empty())
-    {
-        auto assembly      = tcc::AssemblyGenerator::Build(currentFunction);
-        auto binaryProgram = tcc::BinaryProgram {1, flags.OutputName, 0, assembly};
-        if (!tcc::BinaryFormat::WriteToFile(flags.OutputName, binaryProgram))
-        {
-            fmt::print("Error while writing binary!\n");
-            return EXIT_FAILURE;
-        }
-    }
+    // if (!flags.OutputName.empty())
+    // {
+    //     auto assembly      = tcc::AssemblyGenerator::Build(currentFunction);
+    //     auto binaryProgram = tcc::BinaryProgram {1, flags.OutputName, 0, assembly};
+    //     if (!tcc::BinaryFormat::WriteToFile(flags.OutputName, binaryProgram))
+    //     {
+    //         fmt::print("Error while writing binary!\n");
+    //         return EXIT_FAILURE;
+    //     }
+    // }
 
     return EXIT_SUCCESS;
 }

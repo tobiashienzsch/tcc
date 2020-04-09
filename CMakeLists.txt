@@ -98,10 +98,11 @@ if(TCC_BUILD_TESTS)
     include(Catch)
 endif()
 
-# projects
+# sub projects
 add_subdirectory(tsl)
 add_subdirectory(tcc)
 add_subdirectory(tcvm)
+add_subdirectory(tests)
 
 
 # benchmarks

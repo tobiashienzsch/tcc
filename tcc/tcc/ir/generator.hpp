@@ -129,6 +129,12 @@ private:
                 IRStatement {IRByteCode::Load, CreateTemporaryOnStack(), key, {}});
         }
 
+        auto CreateArgStoreOperation(std::string key, std::string varName) -> void
+        {
+            currentFunction_->statements.emplace_back(
+                IRStatement {IRByteCode::ArgStore, std::move(key), std::move(varName), {}});
+        }
+
         [[nodiscard]] auto CreateAssignment(std::string const& key) -> std::string
         {
             auto search = currentFunction_->variables.find(key);
@@ -150,8 +156,7 @@ private:
             for (auto const& arg : currentFunction_->args)
             {
                 AddVariable(arg);
-                PushToStack(0);
-                CreateStoreOperation(CreateAssignment(arg));
+                CreateArgStoreOperation(CreateAssignment(arg), arg);
             }
 
             return true;

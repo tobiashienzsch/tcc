@@ -16,6 +16,7 @@ set(tcc_lib_source
     tcc/ir/generator.cpp
     tcc/ir/generator.hpp
     tcc/ir/instruction_set.hpp    
+    tcc/ir/instruction_set.cpp    
     tcc/ir/statement.cpp
     tcc/ir/statement.hpp
 

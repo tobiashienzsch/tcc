@@ -1,9 +1,9 @@
 
-int foo(a, b) { return a * 2; }
+int foo(a, b) { return a + b; }
 
 int main()
 {
-    int x = 1 + 4;
-    int y = foo(x, 1 + 2 * 3);
-    return x + y;
+    int x = 1;
+    int y = 2;
+    return foo(x, y);
 }

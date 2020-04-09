@@ -7,6 +7,9 @@ set(tcc_lib_source
 
     tcc/cmd/program_options.hpp
 
+    tcc/compiler/options.hpp
+    tcc/compiler/compiler.hpp
+
     tcc/optimizer/optimizer.cpp
     tcc/optimizer/optimizer.hpp
 

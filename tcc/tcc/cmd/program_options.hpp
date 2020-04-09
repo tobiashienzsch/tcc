@@ -7,6 +7,7 @@
 #include <string>
 #include <vector>
 
+#include "tcc/compiler/options.hpp"
 #include "tsl/tsl.hpp"
 
 namespace tcc
@@ -19,19 +20,6 @@ namespace po = boost::program_options;
 class ProgramOptions
 {
 public:
-    /**
-     * @brief Compiler flags.
-     */
-    struct CompilerFlags
-    {
-        std::string Source     = "";
-        std::string OutputName = "";
-        int OptLevel           = 0;
-        bool PrintSource       = false;
-        bool PrintAst          = false;
-        bool PrintIR           = true;
-    };
-
 public:
     /**
      * @brief Defaulted constructor.
@@ -110,10 +98,10 @@ public:
     /**
      * @brief Returns the current compiler flags. They could change after parsing argv.
      */
-    [[nodiscard]] CompilerFlags const& GetCompilerFlags() const noexcept { return flags_; }
+    [[nodiscard]] CompilerOptions const& GetCompilerOptions() const noexcept { return flags_; }
 
 private:
-    CompilerFlags flags_ {};
+    CompilerOptions flags_ {};
     po::variables_map vm_;
 };
 }  // namespace tcc

@@ -63,8 +63,17 @@ private:
 
         [[nodiscard]] auto HasVariable(std::string const& name) const -> bool
         {
-            auto i = currentFunction_->variables.find(name);
-            return i != currentFunction_->variables.end();
+            // local var
+            auto isLocal = currentFunction_->variables.find(name);
+            if (isLocal != currentFunction_->variables.end())
+            {
+                return true;
+            }
+
+            // function argument
+            auto const& args = currentFunction_->args;
+            return std::any_of(std::begin(args), std::end(args),
+                               [&name](auto const& arg) { return arg.first == name; });
         }
 
         auto PushToStack(std::uint32_t x) -> void { stack_.emplace_back(x); }
@@ -91,9 +100,24 @@ private:
 
         [[nodiscard]] auto GetLastVariable(std::string const& key) const -> std::string
         {
-            auto search = currentFunction_->variables.find(key);
-            auto newId  = search->second - 1;
-            return fmt::format("{}.{}", key, newId);
+            // local var
+            auto isLocal = currentFunction_->variables.find(key);
+            if (isLocal != std::end(currentFunction_->variables))
+            {
+                auto newId = isLocal->second - 1;
+                return fmt::format("{}.{}", key, newId);
+            }
+            // func arg
+            auto isArg = currentFunction_->args.find(key);
+            if (isArg != std::end(currentFunction_->args))
+            {
+                auto newId = isArg->second - 1;
+                return fmt::format("{}.{}", key, newId);
+            }
+
+            TCC_ASSERT(false, "Should never get here, identifier should"
+                              "either be a variable or an function argument");
+            return "";
         }
 
         auto CreateReturnOperation() -> void
@@ -137,9 +161,24 @@ private:
 
         [[nodiscard]] auto CreateAssignment(std::string const& key) -> std::string
         {
-            auto search = currentFunction_->variables.find(key);
-            auto newId  = search->second++;
-            return fmt::format("{}.{}", key, newId);
+            // local var
+            auto isLocal = currentFunction_->variables.find(key);
+            if (isLocal != std::end(currentFunction_->variables))
+            {
+                auto newId = isLocal->second++;
+                return fmt::format("{}.{}", key, newId);
+            }
+            // func arg
+            auto isArg = currentFunction_->args.find(key);
+            if (isArg != std::end(currentFunction_->args))
+            {
+                auto newId = isArg->second++;
+                return fmt::format("{}.{}", key, newId);
+            }
+
+            TCC_ASSERT(false, "Should never get here, identifier should"
+                              "either be a variable or an function argument");
+            return "";
         }
 
         [[nodiscard]] auto CreateTemporaryOnStack() -> std::string
@@ -149,14 +188,19 @@ private:
             return tmp;
         }
 
-        [[nodiscard]] auto CreateFunction(std::string name, std::vector<std::string> args) -> bool
+        [[nodiscard]] auto CreateFunction(std::string name, std::vector<std::string> argsV) -> bool
         {
+            auto args = std::map<std::string, int> {};
+            for (auto const arg : argsV)
+            {
+                args.insert({std::move(arg), 0});
+            }
+
             package_.functions.emplace_back(IRFunction {std::move(name), std::move(args), {}, {}});
             currentFunction_ = &package_.functions.back();
             for (auto const& arg : currentFunction_->args)
             {
-                AddVariable(arg);
-                CreateArgStoreOperation(CreateAssignment(arg), arg);
+                CreateArgStoreOperation(CreateAssignment(arg.first), arg.first);
             }
 
             return true;

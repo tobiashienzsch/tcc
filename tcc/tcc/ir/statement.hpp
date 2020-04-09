@@ -30,8 +30,8 @@ using IRStatementList = std::vector<IRStatement>;
 
 struct IRFunction
 {
-    std::string name = "";
-    std::vector<std::string> const args;
+    std::string name                     = "";
+    std::map<std::string, int> args      = {};
     std::map<std::string, int> variables = {};
     IRStatementList statements           = {};
 };

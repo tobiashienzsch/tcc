@@ -17,10 +17,13 @@ TEST_CASE("integration: CompileAndRunConstant", "[integration]")
 
     for (auto optLevel : {0, 1})
     {
-        auto options     = tcc::CompilerOptions {};
-        options.Source   = source;
-        options.OptLevel = optLevel;
-        auto compiler    = tcc::Compiler {options};
+        auto options        = tcc::CompilerOptions {};
+        options.Source      = source;
+        options.OptLevel    = optLevel;
+        options.PrintAst    = false;
+        options.PrintIR     = false;
+        options.PrintSource = false;
+        auto compiler       = tcc::Compiler {options};
 
         REQUIRE(compiler.Run() == EXIT_SUCCESS);
 
@@ -44,10 +47,13 @@ TEST_CASE("integration: CompileAndRunAddition", "[integration]")
 
     for (auto optLevel : {0, 1})
     {
-        auto options     = tcc::CompilerOptions {};
-        options.Source   = source;
-        options.OptLevel = optLevel;
-        auto compiler    = tcc::Compiler {options};
+        auto options        = tcc::CompilerOptions {};
+        options.Source      = source;
+        options.OptLevel    = optLevel;
+        options.PrintAst    = false;
+        options.PrintIR     = false;
+        options.PrintSource = false;
+        auto compiler       = tcc::Compiler {options};
 
         REQUIRE(compiler.Run() == EXIT_SUCCESS);
 
@@ -71,10 +77,13 @@ TEST_CASE("integration: CompileAndRunSubtraction", "[integration]")
 
     for (auto optLevel : {0, 1})
     {
-        auto options     = tcc::CompilerOptions {};
-        options.Source   = source;
-        options.OptLevel = optLevel;
-        auto compiler    = tcc::Compiler {options};
+        auto options        = tcc::CompilerOptions {};
+        options.Source      = source;
+        options.OptLevel    = optLevel;
+        options.PrintAst    = false;
+        options.PrintIR     = false;
+        options.PrintSource = false;
+        auto compiler       = tcc::Compiler {options};
 
         REQUIRE(compiler.Run() == EXIT_SUCCESS);
 
@@ -98,10 +107,13 @@ TEST_CASE("integration: CompileAndRunMultiplication", "[integration]")
 
     for (auto optLevel : {0, 1})
     {
-        auto options     = tcc::CompilerOptions {};
-        options.Source   = source;
-        options.OptLevel = optLevel;
-        auto compiler    = tcc::Compiler {options};
+        auto options        = tcc::CompilerOptions {};
+        options.Source      = source;
+        options.OptLevel    = optLevel;
+        options.PrintAst    = false;
+        options.PrintIR     = false;
+        options.PrintSource = false;
+        auto compiler       = tcc::Compiler {options};
 
         REQUIRE(compiler.Run() == EXIT_SUCCESS);
 
@@ -125,10 +137,13 @@ TEST_CASE("integration: CompileAndRunMixedExpression", "[integration]")
 
     for (auto optLevel : {0, 1})
     {
-        auto options     = tcc::CompilerOptions {};
-        options.Source   = source;
-        options.OptLevel = optLevel;
-        auto compiler    = tcc::Compiler {options};
+        auto options        = tcc::CompilerOptions {};
+        options.Source      = source;
+        options.OptLevel    = optLevel;
+        options.PrintAst    = false;
+        options.PrintIR     = false;
+        options.PrintSource = false;
+        auto compiler       = tcc::Compiler {options};
 
         REQUIRE(compiler.Run() == EXIT_SUCCESS);
 
@@ -155,10 +170,13 @@ TEST_CASE("integration: CompileAndRunLocalVars", "[integration]")
     )"};
     for (auto optLevel : {0, 1})
     {
-        auto options     = tcc::CompilerOptions {};
-        options.Source   = source;
-        options.OptLevel = optLevel;
-        auto compiler    = tcc::Compiler {options};
+        auto options        = tcc::CompilerOptions {};
+        options.Source      = source;
+        options.OptLevel    = optLevel;
+        options.PrintAst    = false;
+        options.PrintIR     = false;
+        options.PrintSource = false;
+        auto compiler       = tcc::Compiler {options};
 
         REQUIRE(compiler.Run() == EXIT_SUCCESS);
 

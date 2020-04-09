@@ -41,8 +41,14 @@ std::ostream& operator<<(std::ostream& out, ByteCode byteCode);
 
 struct Instruction
 {
-    constexpr explicit Instruction(std::string_view n) : name(n), numberOfOperands(0) { }
-    constexpr explicit Instruction(std::string_view n, int8_t numOperands) : name(n), numberOfOperands(numOperands) { }
+    constexpr explicit Instruction(std::string_view n)
+        : name(n), numberOfOperands(0)
+    {
+    }
+    constexpr explicit Instruction(std::string_view n, int8_t numOperands)
+        : name(n), numberOfOperands(numOperands)
+    {
+    }
     std::string_view name = {};
     int8_t numberOfOperands;
 };

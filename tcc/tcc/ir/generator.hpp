@@ -31,7 +31,8 @@ public:
         namespace phx = boost::phoenix;
         using boost::phoenix::function;
 
-        errorHandler_ = function<ErrorHandler>(errorHandler)("Error! ", _2, phx::cref(errorHandler.GetIterators())[_1]);
+        errorHandler_ = function<ErrorHandler>(errorHandler)(
+            "Error! ", _2, phx::cref(errorHandler.GetIterators())[_1]);
     }
 
     bool operator()(unsigned int x);
@@ -72,8 +73,9 @@ private:
 
             // function argument
             auto const& args = currentFunction_->args;
-            return std::any_of(std::begin(args), std::end(args),
-                               [&name](auto const& arg) { return arg.first == name; });
+            return std::any_of(
+                std::begin(args), std::end(args),
+                [&name](auto const& arg) { return arg.first == name; });
         }
 
         auto PushToStack(std::uint32_t x) -> void { stack_.emplace_back(x); }
@@ -98,7 +100,8 @@ private:
             }
         }
 
-        [[nodiscard]] auto GetLastVariable(std::string const& key) const -> std::string
+        [[nodiscard]] auto GetLastVariable(std::string const& key) const
+            -> std::string
         {
             // local var
             auto isLocal = currentFunction_->variables.find(key);
@@ -123,8 +126,8 @@ private:
         auto CreateReturnOperation() -> void
         {
             auto const first = PopFromStack();
-            currentFunction_->statements.emplace_back(
-                IRStatement {IRByteCode::Return, "ret", first, std::nullopt, false});
+            currentFunction_->statements.emplace_back(IRStatement {
+                IRByteCode::Return, "ret", first, std::nullopt, false});
         }
 
         auto CreateBinaryOperation(IRByteCode op) -> void
@@ -133,33 +136,37 @@ private:
             auto const first   = PopFromStack();
             auto const tmpName = CreateTemporaryOnStack();
 
-            currentFunction_->statements.emplace_back(IRStatement {op, tmpName, first, second});
+            currentFunction_->statements.emplace_back(
+                IRStatement {op, tmpName, first, second});
         }
 
         auto CreateUnaryOperation(IRByteCode op) -> void
         {
-            currentFunction_->statements.emplace_back(IRStatement {op, CreateTemporaryOnStack(), PopFromStack(), {}});
+            currentFunction_->statements.emplace_back(
+                IRStatement {op, CreateTemporaryOnStack(), PopFromStack(), {}});
         }
 
         auto CreateStoreOperation(std::string key) -> void
         {
-            currentFunction_->statements.emplace_back(
-                IRStatement {IRByteCode::Store, std::move(key), PopFromStack(), {}, false});
+            currentFunction_->statements.emplace_back(IRStatement {
+                IRByteCode::Store, std::move(key), PopFromStack(), {}, false});
         }
 
         auto CreateLoadOperation(std::string key) -> void
         {
-            currentFunction_->statements.emplace_back(
-                IRStatement {IRByteCode::Load, CreateTemporaryOnStack(), key, {}});
+            currentFunction_->statements.emplace_back(IRStatement {
+                IRByteCode::Load, CreateTemporaryOnStack(), key, {}});
         }
 
-        auto CreateArgStoreOperation(std::string key, std::string varName) -> void
+        auto CreateArgStoreOperation(std::string key, std::string varName)
+            -> void
         {
-            currentFunction_->statements.emplace_back(
-                IRStatement {IRByteCode::ArgStore, std::move(key), std::move(varName), {}});
+            currentFunction_->statements.emplace_back(IRStatement {
+                IRByteCode::ArgStore, std::move(key), std::move(varName), {}});
         }
 
-        [[nodiscard]] auto CreateAssignment(std::string const& key) -> std::string
+        [[nodiscard]] auto CreateAssignment(std::string const& key)
+            -> std::string
         {
             // local var
             auto isLocal = currentFunction_->variables.find(key);
@@ -188,7 +195,9 @@ private:
             return tmp;
         }
 
-        [[nodiscard]] auto CreateFunction(std::string name, std::vector<std::string> argsV) -> bool
+        [[nodiscard]] auto CreateFunction(std::string name,
+                                          std::vector<std::string> argsV)
+            -> bool
         {
             auto args = std::map<std::string, int> {};
             for (auto const arg : argsV)
@@ -196,7 +205,8 @@ private:
                 args.insert({std::move(arg), 0});
             }
 
-            package_.functions.emplace_back(IRFunction {std::move(name), std::move(args), {}, {}});
+            package_.functions.emplace_back(
+                IRFunction {std::move(name), std::move(args), {}, {}});
             currentFunction_ = &package_.functions.back();
             for (auto const& arg : currentFunction_->args)
             {
@@ -206,10 +216,16 @@ private:
             return true;
         }
 
-        [[nodiscard]] auto CreateFunctionCall(std::string name, std::vector<std::string> argTemps) -> bool
+        [[nodiscard]] auto CreateFunctionCall(std::string name,
+                                              std::vector<std::string> argTemps)
+            -> bool
         {
             currentFunction_->statements.emplace_back(
-                IRStatement {IRByteCode::Call, CreateTemporaryOnStack(), std::move(name), argTemps, {}});
+                IRStatement {IRByteCode::Call,
+                             CreateTemporaryOnStack(),
+                             std::move(name),
+                             argTemps,
+                             {}});
             return true;
         }
 

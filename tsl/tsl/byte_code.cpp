@@ -34,7 +34,8 @@ auto operator<<(std::ostream& out, ByteCode byteCode) -> std::ostream&
         case ByteCode::RET: return out << "RET";
         case ByteCode::EXIT: return out << "EXIT";
         case ByteCode::HALT: return out << "HALT";
-        case ByteCode::NUM_OPCODES: return out << fmt::format("{}", static_cast<int64_t>(byteCode));
+        case ByteCode::NUM_OPCODES:
+            return out << fmt::format("{}", static_cast<int64_t>(byteCode));
     }
     return out;
 }

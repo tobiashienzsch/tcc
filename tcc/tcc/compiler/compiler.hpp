@@ -21,7 +21,8 @@ public:
         auto end  = options_.Source.cend();
 
         using IteratorType = std::string::const_iterator;
-        auto errorHandler  = tcc::ErrorHandler<IteratorType> {iter, end, std::cerr};
+        auto errorHandler
+            = tcc::ErrorHandler<IteratorType> {iter, end, std::cerr};
 
         auto parser = tcc::Parser {errorHandler};
         if (!parser.ParseSource(iter, end))
@@ -66,8 +67,10 @@ public:
 
         if (!options_.OutputName.empty())
         {
-            auto binaryProgram = tcc::BinaryProgram {1, options_.OutputName, assembly_.second, assembly_.first};
-            if (!tcc::BinaryFormat::WriteToFile(options_.OutputName, binaryProgram))
+            auto binaryProgram = tcc::BinaryProgram {
+                1, options_.OutputName, assembly_.second, assembly_.first};
+            if (!tcc::BinaryFormat::WriteToFile(options_.OutputName,
+                                                binaryProgram))
             {
                 fmt::print("Error while writing binary!\n");
                 return EXIT_FAILURE;

@@ -10,7 +10,8 @@
 namespace tcc
 {
 
-auto BinaryFormat::WriteToFile(std::string const& path, BinaryProgram const& program) -> bool
+auto BinaryFormat::WriteToFile(std::string const& path,
+                               BinaryProgram const& program) -> bool
 {
     // open
     auto file = std::ofstream(path, std::ios::out | std::ios::binary);
@@ -33,7 +34,8 @@ auto BinaryFormat::WriteToFile(std::string const& path, BinaryProgram const& pro
     return true;
 }
 
-auto BinaryFormat::ReadFromFile(std::string const& path, BinaryProgram& program) -> bool
+auto BinaryFormat::ReadFromFile(std::string const& path, BinaryProgram& program)
+    -> bool
 {
     auto file = std::ifstream(path, std::ios::out | std::ios::binary);
     if (!file)

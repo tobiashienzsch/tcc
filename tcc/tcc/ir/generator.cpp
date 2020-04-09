@@ -193,7 +193,10 @@ bool IRGenerator::operator()(tcc::ast::VariableDeclaration const& x)
     }
     return r;
 }
-bool IRGenerator::operator()(tcc::ast::Statement const& x) { return boost::apply_visitor(*this, x); }
+bool IRGenerator::operator()(tcc::ast::Statement const& x)
+{
+    return boost::apply_visitor(*this, x);
+}
 bool IRGenerator::operator()(tcc::ast::StatementList const& x)
 {
     for (auto const& s : x)
@@ -208,18 +211,20 @@ bool IRGenerator::operator()(tcc::ast::StatementList const& x)
 bool IRGenerator::operator()(tcc::ast::IfStatement const& /*unused*/)
 {
     // if (!(*this)(x.condition)) return false;
-    // program_.op(IRByteCode::JumpIf, 0);              // we shall fill this (0) in later
-    // std::size_t skip = program_.size() - 1;  // mark its position
-    // if (!(*this)(x.then)) return false;
-    // program_[skip] = int(program_.size() - skip);  // now we know where to jump to (after the if branch)
+    // program_.op(IRByteCode::JumpIf, 0);              // we shall fill this
+    // (0) in later std::size_t skip = program_.size() - 1;  // mark its
+    // position if (!(*this)(x.then)) return false; program_[skip] =
+    // int(program_.size() - skip);  // now we know where to jump to (after the
+    // if branch)
 
     // if (x.else_)  // We got an alse
     // {
     //   program_[skip] += 2;                     // adjust for the "else" jump
-    //   program_.op(IRByteCode::Jump, 0);                 // we shall fill this (0) in later
-    //   std::size_t exit = program_.size() - 1;  // mark its position
-    //   if (!(*this)(*x.else_)) return false;
-    //   program_[exit] = int(program_.size() - exit);  // now we know where to jump to (after the else branch)
+    //   program_.op(IRByteCode::Jump, 0);                 // we shall fill this
+    //   (0) in later std::size_t exit = program_.size() - 1;  // mark its
+    //   position if (!(*this)(*x.else_)) return false; program_[exit] =
+    //   int(program_.size() - exit);  // now we know where to jump to (after
+    //   the else branch)
     // }
 
     return true;
@@ -228,12 +233,13 @@ bool IRGenerator::operator()(tcc::ast::WhileStatement const& /*unused*/)
 {
     // std::size_t loop = program_.size();  // mark our position
     // if (!(*this)(x.condition)) return false;
-    // program_.op(IRByteCode::JumpIf, 0);              // we shall fill this (0) in later
-    // std::size_t exit = program_.size() - 1;  // mark its position
-    // if (!(*this)(x.body)) return false;
+    // program_.op(IRByteCode::JumpIf, 0);              // we shall fill this
+    // (0) in later std::size_t exit = program_.size() - 1;  // mark its
+    // position if (!(*this)(x.body)) return false;
     // program_.op(IRByteCode::Jump,
     //             int(loop - 1) - int(program_.size()));  // loop back
-    // program_[exit] = int(program_.size() - exit);       // now we know where to jump to (to exit the loop)
+    // program_[exit] = int(program_.size() - exit);       // now we know where
+    // to jump to (to exit the loop)
     return true;
 }
 bool IRGenerator::operator()(tcc::ast::ReturnStatement const& x)
@@ -256,7 +262,8 @@ bool IRGenerator::operator()(tcc::ast::Function const& func)
 
     if (!builder_.CreateFunction(func.function_name.name, args))
     {
-        errorHandler_(func.function_name.id, "Duplicate function: " + func.function_name.name);
+        errorHandler_(func.function_name.id,
+                      "Duplicate function: " + func.function_name.name);
         return false;
     }
 

@@ -10,11 +10,16 @@ auto Optimizer::Optimize() -> void
     {
         tcc::IgnoreUnused(x);
 
-        std::for_each(std::begin(m_mainScope.statements), std::end(m_mainScope.statements),
-                      [](auto& statement) { ReplaceWithConstantStore(statement); });
+        std::for_each(std::begin(m_mainScope.statements),
+                      std::end(m_mainScope.statements), [](auto& statement) {
+                          ReplaceWithConstantStore(statement);
+                      });
 
-        std::for_each(std::begin(m_mainScope.statements), std::end(m_mainScope.statements),
-                      [&](auto& statement) { ReplaceVariableIfConstant(statement, m_mainScope.statements); });
+        std::for_each(std::begin(m_mainScope.statements),
+                      std::end(m_mainScope.statements), [&](auto& statement) {
+                          ReplaceVariableIfConstant(statement,
+                                                    m_mainScope.statements);
+                      });
     }
 
     DeleteUnusedStatements(m_mainScope.statements);
@@ -24,10 +29,11 @@ auto Optimizer::DeleteUnusedStatements(IRStatementList& statementList) -> bool
 {
     while (true)
     {
-        auto const elementToDelete
-            = std::find_if(std::begin(statementList), std::end(statementList), [&statementList](auto const& statement) {
-                  return IsUnusedStatement(statement, statementList);
-              });
+        auto const elementToDelete = std::find_if(
+            std::begin(statementList), std::end(statementList),
+            [&statementList](auto const& statement) {
+                return IsUnusedStatement(statement, statementList);
+            });
 
         if (elementToDelete == std::end(statementList))
         {
@@ -40,52 +46,60 @@ auto Optimizer::DeleteUnusedStatements(IRStatementList& statementList) -> bool
     return false;
 }
 
-auto Optimizer::IsUnusedStatement(IRStatement const& statement, IRStatementList const& statementList) -> bool
+auto Optimizer::IsUnusedStatement(IRStatement const& statement,
+                                  IRStatementList const& statementList) -> bool
 {
     return statement.isTemporary
-           && !std::any_of(std::begin(statementList), std::end(statementList), [&statement](IRStatement const& item) {
-                  auto result = false;
+           && !std::any_of(
+               std::begin(statementList), std::end(statementList),
+               [&statement](IRStatement const& item) {
+                   auto result = false;
 
-                  std::visit(tcc::overloaded {
-                                 [](std::uint32_t /*unused*/) { ; },
-                                 [](std::vector<std::string> const& /*unused*/) { ; },
-                                 [&statement, &result](std::string const& name) {
-                                     if (name == statement.destination)
-                                     {
-                                         result = true;
-                                     }
-                                 },
-                             },
-                             item.first);
+                   std::visit(
+                       tcc::overloaded {
+                           [](std::uint32_t /*unused*/) { ; },
+                           [](std::vector<std::string> const& /*unused*/) { ; },
+                           [&statement, &result](std::string const& name) {
+                               if (name == statement.destination)
+                               {
+                                   result = true;
+                               }
+                           },
+                       },
+                       item.first);
 
-                  if (item.second.has_value())
-                  {
-                      std::visit(tcc::overloaded {
-                                     [](std::uint32_t /*unused*/) { ; },
-                                     [&statement, &result](std::vector<std::string> const& args) {
-                                         for (auto const& name : args)
-                                         {
-                                             if (name == statement.destination)
-                                             {
-                                                 result = true;
-                                             }
-                                         }
-                                     },
-                                     [&statement, &result](std::string const& name) {
-                                         if (name == statement.destination)
-                                         {
-                                             result = true;
-                                         }
-                                     },
-                                 },
-                                 item.second.value());
-                  }
+                   if (item.second.has_value())
+                   {
+                       std::visit(
+                           tcc::overloaded {
+                               [](std::uint32_t /*unused*/) { ; },
+                               [&statement,
+                                &result](std::vector<std::string> const& args) {
+                                   for (auto const& name : args)
+                                   {
+                                       if (name == statement.destination)
+                                       {
+                                           result = true;
+                                       }
+                                   }
+                               },
+                               [&statement, &result](std::string const& name) {
+                                   if (name == statement.destination)
+                                   {
+                                       result = true;
+                                   }
+                               },
+                           },
+                           item.second.value());
+                   }
 
-                  return result;
-              });
+                   return result;
+               });
 }
 
-auto Optimizer::ReplaceVariableIfConstant(IRStatement& statement, IRStatementList& statementList) -> bool
+auto Optimizer::ReplaceVariableIfConstant(IRStatement& statement,
+                                          IRStatementList& statementList)
+    -> bool
 {
     if (isConstantStoreExpression(statement))
     {
@@ -94,32 +108,40 @@ auto Optimizer::ReplaceVariableIfConstant(IRStatement& statement, IRStatementLis
             if (otherStatement.type != IRByteCode::Load)
             {
                 // first
-                std::visit(tcc::overloaded {
-                               [](std::vector<std::string> const& /*unused*/) { ; },
-                               [](std::uint32_t /*unused*/) { ; },
-                               [&statement, &otherStatement](std::string const& name) {
-                                   if (name == statement.destination)
-                                   {
-                                       otherStatement.first = std::get<std::uint32_t>(statement.first);
-                                   };
-                               },
-                           },
-                           otherStatement.first);
+                std::visit(
+                    tcc::overloaded {
+                        [](std::vector<std::string> const& /*unused*/) { ; },
+                        [](std::uint32_t /*unused*/) { ; },
+                        [&statement, &otherStatement](std::string const& name) {
+                            if (name == statement.destination)
+                            {
+                                otherStatement.first
+                                    = std::get<std::uint32_t>(statement.first);
+                            };
+                        },
+                    },
+                    otherStatement.first);
 
                 // second
                 if (otherStatement.second.has_value())
                 {
-                    std::visit(tcc::overloaded {
-                                   [](std::vector<std::string> const& /*unused*/) { ; },
-                                   [](std::uint32_t /*unused*/) { ; },
-                                   [&statement, &otherStatement](std::string const& name) {
-                                       if (name == statement.destination)
-                                       {
-                                           otherStatement.second = std::get<std::uint32_t>(statement.first);
-                                       };
-                                   },
-                               },
-                               otherStatement.second.value());
+                    std::visit(
+                        tcc::overloaded {
+                            [](std::vector<std::string> const& /*unused*/) {
+                                ;
+                            },
+                            [](std::uint32_t /*unused*/) { ; },
+                            [&statement,
+                             &otherStatement](std::string const& name) {
+                                if (name == statement.destination)
+                                {
+                                    otherStatement.second
+                                        = std::get<std::uint32_t>(
+                                            statement.first);
+                                };
+                            },
+                        },
+                        otherStatement.second.value());
                 }
             }
         }
@@ -141,8 +163,12 @@ auto Optimizer::ReplaceWithConstantStore(IRStatement& statement) -> bool
         switch (statement.type)
         {
             case IRByteCode::Addition: statement.first = first + second; break;
-            case IRByteCode::Subtraction: statement.first = first - second; break;
-            case IRByteCode::Multiplication: statement.first = first * second; break;
+            case IRByteCode::Subtraction:
+                statement.first = first - second;
+                break;
+            case IRByteCode::Multiplication:
+                statement.first = first * second;
+                break;
             case IRByteCode::Division: statement.first = first / second; break;
             default: break;
         }
@@ -156,20 +182,26 @@ auto Optimizer::ReplaceWithConstantStore(IRStatement& statement) -> bool
     return false;
 }
 
-auto Optimizer::isConstantArgument(IRStatement::Argument const& argument) -> bool
+auto Optimizer::isConstantArgument(IRStatement::Argument const& argument)
+    -> bool
 {
     auto returnValue = bool {false};
     std::visit(tcc::overloaded {
                    [&returnValue](int /*unused*/) { returnValue = true; },
-                   [&returnValue](std::vector<std::string> const& /*unused*/) { returnValue = false; },
-                   [&returnValue](const std::string& /*unused*/) { returnValue = false; },
+                   [&returnValue](std::vector<std::string> const& /*unused*/) {
+                       returnValue = false;
+                   },
+                   [&returnValue](const std::string& /*unused*/) {
+                       returnValue = false;
+                   },
                },
                argument);
 
     return returnValue;
 }
 
-auto Optimizer::isConstantArgument(IRStatement::OptionalArgument const& argument) -> bool
+auto Optimizer::isConstantArgument(
+    IRStatement::OptionalArgument const& argument) -> bool
 {
     if (argument.has_value())
     {
@@ -181,14 +213,16 @@ auto Optimizer::isConstantArgument(IRStatement::OptionalArgument const& argument
 
 auto Optimizer::isConstantStoreExpression(IRStatement const& statement) -> bool
 {
-    return statement.type == IRByteCode::Store && isConstantArgument(statement.first);
+    return statement.type == IRByteCode::Store
+           && isConstantArgument(statement.first);
 }
 
 auto Optimizer::isConstantBinaryExpression(IRStatement const& statement) -> bool
 {
     if (isBinaryOperation(statement.type))
     {
-        if (isConstantArgument(statement.first) && isConstantArgument(statement.second))
+        if (isConstantArgument(statement.first)
+            && isConstantArgument(statement.second))
         {
             return true;
         }

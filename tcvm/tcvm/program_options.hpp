@@ -18,18 +18,21 @@ namespace tcvm
 
 struct ProgramOptions
 {
-    static auto Parse(int argc, char** argv, po::variables_map& outputVariableMap) -> bool
+    static auto Parse(int argc, char** argv,
+                      po::variables_map& outputVariableMap) -> bool
     {
         try
         {
-            po::options_description desc("tcc: tobante's crappy virtual machine");
+            po::options_description desc(
+                "tcc: tobante's crappy virtual machine");
             desc.add_options()                                            //
                 ("help,h", "produce this help message")                   //
                 ("input,i", po::value<std::int64_t>(), "input argument")  //
                 ("version,v", "print version string")                     //
                 ;
 
-            po::store(po::parse_command_line(argc, argv, desc), outputVariableMap);
+            po::store(po::parse_command_line(argc, argv, desc),
+                      outputVariableMap);
             po::notify(outputVariableMap);
 
             if (outputVariableMap.count("help") != 0)

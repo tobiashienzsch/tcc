@@ -35,11 +35,13 @@ auto main(int argc, char** argv) -> int
     auto program = tcc::BinaryProgram {};
     tcc::BinaryFormat::ReadFromFile(path, program);
     auto const stackSize = 200;
-    auto vm              = tcc::VirtualMachine(program.data, program.entryPoint, 0, stackSize, true);
+    auto vm = tcc::VirtualMachine(program.data, program.entryPoint, 0,
+                                  stackSize, true);
 
     // factorial
     // auto const factorial = tcvm::CreateFactorialProgram(arg);
-    // auto vm = tcc::VirtualMachine(factorial.data, factorial.entryPoint, 0, 1000, true);
+    // auto vm = tcc::VirtualMachine(factorial.data, factorial.entryPoint, 0,
+    // 1000, true);
 
     vm.Cpu();
     return EXIT_SUCCESS;

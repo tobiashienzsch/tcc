@@ -5,8 +5,9 @@
 
 int main(int argc, char** argv)
 {
-    auto programOptions               = tcc::ProgramOptions {};
-    auto const [shouldExit, exitCode] = programOptions.ParseArguments(argc, argv);
+    auto programOptions = tcc::ProgramOptions {};
+    auto const [shouldExit, exitCode]
+        = programOptions.ParseArguments(argc, argv);
     if (shouldExit)
     {
         return exitCode;

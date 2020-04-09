@@ -1,18 +1,22 @@
 #include "tcc/asm/assembly_generator.hpp"
 
-#include <algorithm>
-#include <variant>
-
 #include "tsl/tsl.hpp"
+
+#include <algorithm>
+#include <map>
+#include <variant>
 
 namespace tcc
 {
 auto AssemblyGenerator::Build(tcc::IRPackage const& package) -> std::vector<int64_t>
 {
-    auto result = std::vector<int64_t> {};
+    auto result               = std::vector<int64_t> {};
+    auto functionPlaceholders = std::map<int, std::string> {};
+    auto functionPositions    = std::map<std::string, int> {};
 
     for (auto const& function : package.functions)
     {
+        functionPositions.insert({function.name, result.size()});
         auto const& statements = function.statements;
         // auto const numLocals = function.variables.size();
 
@@ -98,7 +102,9 @@ auto AssemblyGenerator::Build(tcc::IRPackage const& package) -> std::vector<int6
                 case IRByteCode::Call:
                 {
                     result.push_back(tcc::ByteCode::CALL);
-                    result.push_back(666);  // func addr
+                    auto funcToCall = std::get<std::string>(statement.first);
+                    functionPlaceholders.insert({result.size(), funcToCall});
+                    result.push_back(9999);  // func addr
                     TCC_ASSERT(statement.second.has_value(), "Function call should have an arg list");
                     auto const numArgs = std::get<std::vector<std::string>>(statement.second.value()).size();
                     result.push_back(numArgs);  // func addr
@@ -127,6 +133,20 @@ auto AssemblyGenerator::Build(tcc::IRPackage const& package) -> std::vector<int6
                 default: break;
             }
         }
+    }
+
+    for (auto const& placeholder : functionPlaceholders)
+    {
+        auto const pos        = placeholder.first;
+        auto const funcToCall = placeholder.second;
+
+        auto search = functionPositions.find(funcToCall);
+        if (search == functionPositions.end())
+        {
+            TCC_ASSERT(false, "Function not found");
+        }
+
+        result.at(pos) = search->second;
     }
     return result;
 }

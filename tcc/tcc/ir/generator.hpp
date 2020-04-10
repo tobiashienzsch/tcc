@@ -36,21 +36,37 @@ public:
     }
 
     bool operator()(unsigned int x);
+
     bool operator()(bool x);
+
     bool operator()(tcc::ast::Nil x);
+
     bool operator()(tcc::ast::Identifier const& x);
+
     bool operator()(tcc::ast::Operation const& x);
+
     bool operator()(tcc::ast::Unary const& x);
+
     bool operator()(tcc::ast::FunctionCall const& call);
+
     bool operator()(tcc::ast::Expression const& x);
+
     bool operator()(tcc::ast::Assignment const& x);
+
     bool operator()(tcc::ast::VariableDeclaration const& x);
+
     bool operator()(tcc::ast::StatementList const& x);
+
     bool operator()(tcc::ast::Statement const& x);
+
     bool operator()(tcc::ast::IfStatement const& x);
+
     bool operator()(tcc::ast::WhileStatement const& x);
+
     bool operator()(tcc::ast::ReturnStatement const& x);
+
     bool operator()(tcc::ast::Function const& func);
+
     bool operator()(tcc::ast::FunctionList const& funcList);
 
     auto CurrentPackage() -> IRPackage& { return builder_.CurrentPackage(); }
@@ -127,7 +143,7 @@ private:
         {
             auto const first = PopFromStack();
             currentFunction_->statements.emplace_back(IRStatement {
-                IRByteCode::Return, "ret", first, std::nullopt, false});
+                IRByteCode::Return, "", first, std::nullopt, false});
         }
 
         auto CreateBinaryOperation(IRByteCode op) -> void
@@ -237,6 +253,10 @@ private:
                              argTemps,
                              {}});
             return true;
+        }
+
+        void CreateIfStatement() {
+            currentFunction_->statements.push_back(IRStatement{IRByteCode::JumpIf, "",GetLastTemporary(),{}, false});
         }
 
         [[nodiscard]] auto GetLastTemporary() const -> std::string

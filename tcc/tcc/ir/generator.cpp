@@ -206,9 +206,10 @@ bool IRGenerator::operator()(tcc::ast::StatementList const& x)
     }
     return true;
 }
-bool IRGenerator::operator()(tcc::ast::IfStatement const& /*unused*/)
+bool IRGenerator::operator()(tcc::ast::IfStatement const& x)
 {
-    // if (!(*this)(x.condition)) return false;
+    if (!(*this)(x.condition)) return false;
+    builder_.CreateIfStatement();
     // program_.op(IRByteCode::JumpIf, 0);              // we shall fill this
     // (0) in later std::size_t skip = program_.size() - 1;  // mark its
     // position if (!(*this)(x.then)) return false; program_[skip] =

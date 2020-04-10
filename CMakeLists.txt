@@ -53,7 +53,7 @@ endif()
 option(TCC_CLANG_TIDY       "Build with clang-tidy enabled"     OFF)
 option(TCC_BUILD_TESTS      "Build the unit tests with Catch2"  ON)
 option(TCC_BUILD_PLAYGROUND "Build playground project"          ON)
-option(TCC_BUILD_BENCHMARK  "Build benchmark tests"             OFF)
+option(TCC_BUILD_BENCHMARK  "Build benchmark tests"             ON)
 option(TCC_BUILD_COVERAGE   "Build with code coverage"          OFF)
 
 # cmake modules
@@ -113,7 +113,9 @@ add_subdirectory(tests)
 
 # benchmarks
 if(TCC_BUILD_BENCHMARK)
-    set(ALLOW_DOWNLOADING_GOOGLETEST FALSE)
+    set(ALLOW_DOWNLOADING_GOOGLETEST FALSE CACHE BOOL "")
+    set(BENCHMARK_ENABLE_GTEST_TESTS OFF CACHE BOOL "")
+    set(BENCHMARK_ENABLE_TESTING OFF CACHE BOOL "")
     add_subdirectory(3rd_party/google-benchmark EXCLUDE_FROM_ALL) 
     set_target_properties(benchmark PROPERTIES FOLDER 3rd_party)
     add_subdirectory(benchmark)

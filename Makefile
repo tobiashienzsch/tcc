@@ -11,18 +11,11 @@ win: config-vs build test
 
 .PHONY: config
 config:
-	cmake -B$(BUILD_DIR) -S. -G"$(CM_GENERATOR)"    \
-    -DCMAKE_BUILD_TYPE:STRING=$(CONFIG)             \
-	-DTCC_BUILD_BENCHMARK=ON						\
-    -DBENCHMARK_ENABLE_GTEST_TESTS=OFF              \
-    -DBENCHMARK_ENABLE_TESTING=OFF      			
+	cmake -B$(BUILD_DIR) -S. -G"$(CM_GENERATOR)" -DCMAKE_BUILD_TYPE:STRING=$(CONFIG)             		
 
 .PHONY: config-vs
 config-vs:
-	cmake -B$(BUILD_DIR) -S. -G "Visual Studio 16 2019" 		\
-	-DTCC_BUILD_BENCHMARK=ON									\
-	-DBENCHMARK_ENABLE_GTEST_TESTS=OFF              			\
-    -DBENCHMARK_ENABLE_TESTING=OFF      						
+	cmake -B$(BUILD_DIR) -S. -G "Visual Studio 16 2019"      						
 
 .PHONY: build
 build:

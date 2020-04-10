@@ -65,10 +65,11 @@ $PROJECT_ROOT
   benchmark     # benchmarks using google bm
   cmake         # cmake modules
   docs          # documentation
+  examples      # files for testing
+  playground    # scratchpad
   tcc           # compiler
+  tcsl          # shared code
   tcvm          # virtual machine
-  test_data     # files for testing
-  tcsl           # shared code
 ```
 
 ## Resources

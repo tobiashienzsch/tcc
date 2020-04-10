@@ -88,9 +88,9 @@ if(TCC_BUILD_TESTS)
     )
     source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} FILES ${tcc_test_source})
 
-    add_executable(tcc_tests ${tcc_test_source})
+    add_executable(tests-tcc ${tcc_test_source})
 
-    target_link_libraries(tcc_tests
+    target_link_libraries(tests-tcc
         PRIVATE
             tcc::tcc
             tcc::CompilerOptions
@@ -103,5 +103,5 @@ if(TCC_BUILD_TESTS)
 
     include(CTest)
     include(Catch)
-    catch_discover_tests(tcc_tests)
+    catch_discover_tests(tests-tcc)
 endif()

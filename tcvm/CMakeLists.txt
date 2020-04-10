@@ -52,9 +52,9 @@ if(TCC_BUILD_TESTS)
     )
     source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} FILES ${tcvm_test_source})
 
-    add_executable(tcvm-tests ${tcvm_test_source})
+    add_executable(tests-tcvm ${tcvm_test_source})
 
-    target_link_libraries(tcvm-tests
+    target_link_libraries(tests-tcvm
         PRIVATE
             tcc::tcvm
             tcc::CompilerOptions
@@ -66,5 +66,5 @@ if(TCC_BUILD_TESTS)
 
     include(CTest)
     include(Catch)
-    catch_discover_tests(tcvm-tests)
+    catch_discover_tests(tests-tcvm)
 endif()

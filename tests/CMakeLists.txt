@@ -1,4 +1,4 @@
-project(integration-tests)
+project(tests-integration)
 # test
 if(TCC_BUILD_TESTS)
     set (tcc_test_source

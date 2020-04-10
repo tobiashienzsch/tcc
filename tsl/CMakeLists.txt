@@ -39,9 +39,9 @@ if(TCC_BUILD_TESTS)
     )
     source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} FILES ${tsl_test_source})
 
-    add_executable(tsl-tests ${tsl_test_source})
+    add_executable(tests-tsl ${tsl_test_source})
 
-    target_link_libraries(tsl-tests
+    target_link_libraries(tests-tsl
     PRIVATE
         tcc::tsl
         tcc::CompilerOptions
@@ -54,5 +54,5 @@ if(TCC_BUILD_TESTS)
 
     include(CTest)
     include(Catch)
-    catch_discover_tests(tsl-tests)
+    catch_discover_tests(tests-tsl)
 endif()

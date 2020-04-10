@@ -6,7 +6,10 @@ namespace
 {
 constexpr auto factorial(int64_t val) -> int64_t
 {
-    if (val <= 1) return 1;
+    if (val <= 1)
+    {
+        return 1;
+    }
     return val * factorial(val - 1);
 }
 
@@ -19,7 +22,7 @@ auto createFactorialAssembly(int64_t argument)
 {
     using tcc::ByteCode;
 
-    return std::vector<int64_t>{
+    return std::vector<int64_t> {
         // .def fact: args=1, locals=0
         // if n < 2 return 1
         ByteCode::LOAD, -3,   // 0
@@ -62,7 +65,7 @@ static void BM_StackMachineFactorial(benchmark::State& state)
 {
     auto const entryPoint = 22;
     auto const factorial  = createFactorialAssembly(state.range(0));
-    auto vm               = tcc::VirtualMachine(factorial, entryPoint, 0, 200, false);
+    auto vm = tcc::VirtualMachine(factorial, entryPoint, 0, 200, false);
 
     for (auto _ : state)
     {

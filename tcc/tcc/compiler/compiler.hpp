@@ -80,8 +80,11 @@ public:
         return EXIT_SUCCESS;
     }
 
-    std::vector<int64_t> const& GetAssembly() const { return assembly_.first; }
-    int64_t GetEntryPoint() const { return assembly_.second; }
+    [[nodiscard]] std::vector<int64_t> const& GetAssembly() const
+    {
+        return assembly_.first;
+    }
+    [[nodiscard]] int64_t GetEntryPoint() const { return assembly_.second; }
 
 private:
     CompilerOptions options_ {};

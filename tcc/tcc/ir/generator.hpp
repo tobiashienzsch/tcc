@@ -41,7 +41,7 @@ public:
     bool operator()(tcc::ast::Identifier const& x);
     bool operator()(tcc::ast::Operation const& x);
     bool operator()(tcc::ast::Unary const& x);
-    bool operator()(tcc::ast::FunctionCall const& x);
+    bool operator()(tcc::ast::FunctionCall const& call);
     bool operator()(tcc::ast::Expression const& x);
     bool operator()(tcc::ast::Assignment const& x);
     bool operator()(tcc::ast::VariableDeclaration const& x);
@@ -51,7 +51,7 @@ public:
     bool operator()(tcc::ast::WhileStatement const& x);
     bool operator()(tcc::ast::ReturnStatement const& x);
     bool operator()(tcc::ast::Function const& func);
-    bool operator()(tcc::ast::FunctionList const& funcs);
+    bool operator()(tcc::ast::FunctionList const& funcList);
 
     auto CurrentPackage() -> IRPackage& { return builder_.CurrentPackage(); }
 
@@ -206,13 +206,13 @@ private:
         }
 
         [[nodiscard]] auto CreateFunction(std::string name,
-                                          std::vector<std::string> argsV)
+                                          const std::vector<std::string>& argsV)
             -> bool
         {
             auto args = std::map<std::string, int> {};
-            for (auto const arg : argsV)
+            for (auto const& arg : argsV)
             {
-                args.insert({std::move(arg), 0});
+                args.insert({arg, 0});
             }
 
             package_.functions.emplace_back(

@@ -1,19 +1,19 @@
-project(tsl)
+project(tcsl)
 
-set(tsl_source
-    tsl/tsl.hpp
-    tsl/binary_format.hpp
-    tsl/binary_format.cpp
-    tsl/byte_code.hpp
-    tsl/byte_code.cpp
-    tsl/testing.hpp
-    tsl/variant.hpp
-    tsl/warning.hpp
+set(tcsl_source
+    tcsl/tcsl.hpp
+    tcsl/binary_format.hpp
+    tcsl/binary_format.cpp
+    tcsl/byte_code.hpp
+    tcsl/byte_code.cpp
+    tcsl/testing.hpp
+    tcsl/variant.hpp
+    tcsl/warning.hpp
 )    
-source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} FILES ${tsl_source})
+source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} FILES ${tcsl_source})
 
-add_library(${PROJECT_NAME} ${tsl_source})
-add_library(tcc::tsl ALIAS ${PROJECT_NAME})
+add_library(${PROJECT_NAME} ${tcsl_source})
+add_library(tcc::tcsl ALIAS ${PROJECT_NAME})
 set_target_properties(${PROJECT_NAME} PROPERTIES CXX_CLANG_TIDY "${DO_CLANG_TIDY}")
 
 target_include_directories(${PROJECT_NAME} PUBLIC 
@@ -32,18 +32,18 @@ target_link_libraries(${PROJECT_NAME}
 
 # Test
 if(TCC_BUILD_TESTS)
-    set (tsl_test_source
+    set (tcsl_test_source
         main_test.cpp
-        tsl/binary_format_test.cpp
-        tsl/byte_code_test.cpp
+        tcsl/binary_format_test.cpp
+        tcsl/byte_code_test.cpp
     )
-    source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} FILES ${tsl_test_source})
+    source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} FILES ${tcsl_test_source})
 
-    add_executable(tests-tsl ${tsl_test_source})
+    add_executable(tests-tcsl ${tcsl_test_source})
 
-    target_link_libraries(tests-tsl
+    target_link_libraries(tests-tcsl
     PRIVATE
-        tcc::tsl
+        tcc::tcsl
         tcc::CompilerOptions
         tcc::CompilerWarnings
         tcc::CodeCoverage
@@ -54,5 +54,5 @@ if(TCC_BUILD_TESTS)
 
     include(CTest)
     include(Catch)
-    catch_discover_tests(tests-tsl)
+    catch_discover_tests(tests-tcsl)
 endif()

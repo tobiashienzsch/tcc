@@ -2,13 +2,13 @@
  * @file byte_code_test.cpp
  * @copyright Copyright 2019-2020 Tobias Hienzsch. MIT license.
  */
-#include "tsl/byte_code.hpp"
+#include "tcsl/byte_code.hpp"
 
 #include <sstream>
 
 #include "catch2/catch.hpp"
 
-TEST_CASE("tsl: ByteCode ostream", "[tsl]")
+TEST_CASE("tcsl: ByteCode ostream", "[tcsl]")
 {
     auto const input = {
         tcc::ByteCode::ICONST,  //

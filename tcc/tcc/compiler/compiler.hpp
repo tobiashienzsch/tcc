@@ -6,7 +6,7 @@
 #include "tcc/ir/generator.hpp"
 #include "tcc/optimizer/optimizer.hpp"
 #include "tcc/parser/parser.hpp"
-#include "tsl/tsl.hpp"
+#include "tcsl/tcsl.hpp"
 
 namespace tcc
 {

@@ -5,8 +5,8 @@
 #include "tcvm/vm/vm.hpp"
 
 #include "catch2/catch.hpp"
+#include "tcsl/tcsl.hpp"
 #include "tcvm/examples.hpp"
-#include "tsl/tsl.hpp"
 
 using tcc::ByteCode;
 using tcc::TestCase;

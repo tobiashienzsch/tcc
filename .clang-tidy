@@ -1,5 +1,5 @@
 ---
 Checks:          '*,-fuchsia-*,-google-*,-hicpp-*,-zircon-*,-abseil-*,-llvm-*,-cppcoreguidelines-avoid-magic-numbers,-cppcoreguidelines-macro-usage,-modernize-use-trailing-return-type,-misc-non-private-member-variables-in-classes'
 WarningsAsErrors: '-*'
-HeaderFilterRegex: '(tcc|tcvm|tsl)'
+HeaderFilterRegex: '(tcc|tcvm|tcsl)'
 ...

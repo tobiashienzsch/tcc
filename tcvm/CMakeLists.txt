@@ -18,7 +18,7 @@ set_target_properties(tcvm_lib PROPERTIES CXX_CLANG_TIDY "${DO_CLANG_TIDY}")
 target_include_directories(tcvm_lib PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
 target_link_libraries(tcvm_lib  
     PUBLIC
-        tcc::tsl 
+        tcc::tcsl 
         Boost::boost 
         Boost::program_options 
         Boost::system

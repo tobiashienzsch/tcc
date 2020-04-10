@@ -3,9 +3,9 @@
  * @copyright Copyright 2019-2020 Tobias Hienzsch. MIT license.
  */
 
+#include "tcsl/tcsl.hpp"
 #include "tcvm/examples.hpp"
 #include "tcvm/program_options.hpp"
-#include "tsl/tsl.hpp"
 
 auto main(int argc, char** argv) -> int
 {

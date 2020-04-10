@@ -4,8 +4,8 @@
  */
 
 #include "tcc/compiler/compiler.hpp"
+#include "tcsl/tcsl.hpp"
 #include "tcvm/vm/vm.hpp"
-#include "tsl/tsl.hpp"
 
 #include "catch2/catch.hpp"
 

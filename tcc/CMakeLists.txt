@@ -46,7 +46,7 @@ target_include_directories(tcc_lib PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
 target_include_directories(tcc_lib PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/tcc)
 target_link_libraries(tcc_lib 
     PUBLIC 
-        tcc::tsl
+        tcc::tcsl
         
         Boost::boost 
         Boost::program_options 

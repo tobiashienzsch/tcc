@@ -67,7 +67,7 @@ clean:
 format:
 	find tcc -iname '*.hpp' -o -iname '*.cpp' | xargs clang-format -i
 	find tcvm -iname '*.hpp' -o -iname '*.cpp' | xargs clang-format -i
-	find tsl -iname '*.hpp' -o -iname '*.cpp' | xargs clang-format -i
+	find tcsl -iname '*.hpp' -o -iname '*.cpp' | xargs clang-format -i
 	
 .PHONY: stats
 stats:

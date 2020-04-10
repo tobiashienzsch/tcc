@@ -30,8 +30,8 @@ script-anchors:
     - lcov -c -i -d . --base-directory . -o base_cov.info
     - ctest
     - cd ..
-    - ./build_coverage/tcc/tcc -o test.tcb examples/complex_function_call.tcc
-    - ./build_coverage/tcvm/tcvm -f test.tcb
+    - ./build_coverage/bin/tcc -o test.tcb examples/complex_function_call.tcc
+    - ./build_coverage/bin/tcvm -f test.tcb
     - cd build_coverage
     - lcov -c -d . --base-directory . -o test_cov.info
     - lcov -a base_cov.info -a test_cov.info -o cov.info

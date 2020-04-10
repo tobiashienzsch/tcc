@@ -12,7 +12,7 @@ namespace tcc
 auto AssemblyGenerator::Build(tcc::IRPackage const& package) -> Assembly
 {
     auto result               = std::vector<int64_t> {};
-    auto entryPoint           = -1;
+    auto mainPosition         = -1;
     auto functionPlaceholders = std::map<int, std::string> {};
     auto functionPositions    = std::map<std::string, int> {};
 
@@ -21,7 +21,7 @@ auto AssemblyGenerator::Build(tcc::IRPackage const& package) -> Assembly
         auto funcPos = result.size();
         if (function.name == "main")
         {
-            entryPoint = funcPos;
+            mainPosition = funcPos;
         }
 
         functionPositions.insert({function.name, funcPos});
@@ -84,7 +84,7 @@ auto AssemblyGenerator::Build(tcc::IRPackage const& package) -> Assembly
                         = static_cast<int>(iter - std::begin(locals));
 
                     result.push_back(tcc::ByteCode::STORE);
-                    result.push_back(index);
+                    result.push_back(index + 1);
 
                     break;
                 }
@@ -100,7 +100,7 @@ auto AssemblyGenerator::Build(tcc::IRPackage const& package) -> Assembly
                         auto const index = static_cast<int>(
                             inLocalVars - std::begin(locals));
                         result.push_back(tcc::ByteCode::LOAD);
-                        result.push_back(index);
+                        result.push_back(index + 1);
                         break;
                     }
 
@@ -161,11 +161,6 @@ auto AssemblyGenerator::Build(tcc::IRPackage const& package) -> Assembly
                 case IRByteCode::Return:
                 {
                     PushConstArgument();
-                    if (function.name == "main")
-                    {
-                        result.push_back(tcc::ByteCode::EXIT);
-                        break;
-                    }
                     result.push_back(tcc::ByteCode::RET);
                     break;
                 }
@@ -196,7 +191,14 @@ auto AssemblyGenerator::Build(tcc::IRPackage const& package) -> Assembly
         result.at(pos) = search->second;
     }
 
-    TCC_ASSERT(entryPoint >= 0, "");
+    // Append __init function. This calls main.
+    TCC_ASSERT(mainPosition >= 0, "");
+    auto const entryPoint = result.size();
+    result.push_back(ByteCode::CALL);
+    result.push_back(mainPosition);
+    result.push_back(0);
+    result.push_back(ByteCode::EXIT);
+
     return {result, entryPoint};
 }
 

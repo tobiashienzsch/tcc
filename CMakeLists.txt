@@ -50,7 +50,7 @@ if(CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME)
 endif()
 
 # project options
-option(TCC_CLANG_TIDY       "Build with clang-tidy enabled"     ON)
+option(TCC_CLANG_TIDY       "Build with clang-tidy enabled"     OFF)
 option(TCC_BUILD_TESTS      "Build the unit tests with Catch2"  ON)
 option(TCC_BUILD_PLAYGROUND "Build playground project"          ON)
 option(TCC_BUILD_BENCHMARK  "Build benchmark tests"             OFF)

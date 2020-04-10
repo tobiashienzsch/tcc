@@ -35,10 +35,10 @@ auto AssemblyGenerator::Build(tcc::IRPackage const& package) -> Assembly
             argVars.push_back(arg.first);
         }
 
-        auto localVars = std::vector<std::string> {};
+        auto locals = std::vector<std::string> {};
         for (auto const& var : function.variables)
         {
-            localVars.push_back(var.first);
+            locals.push_back(var.first);
             result.push_back(tcc::ByteCode::ICONST);
             result.push_back(0);
         }
@@ -77,14 +77,14 @@ auto AssemblyGenerator::Build(tcc::IRPackage const& package) -> Assembly
                         result.push_back(tcc::ByteCode::ICONST);
                         result.push_back(*value);
                     }
-                    auto const destIter
-                        = std::find(std::begin(localVars), std::end(localVars),
+                    auto const iter
+                        = std::find(std::begin(locals), std::end(locals),
                                     std::string(1, statement.destination[0]));
-                    auto const destIndex
-                        = static_cast<int>(destIter - std::begin(localVars));
+                    auto const index
+                        = static_cast<int>(iter - std::begin(locals));
 
                     result.push_back(tcc::ByteCode::STORE);
-                    result.push_back(destIndex);
+                    result.push_back(index);
 
                     break;
                 }
@@ -92,13 +92,13 @@ auto AssemblyGenerator::Build(tcc::IRPackage const& package) -> Assembly
                 case IRByteCode::Load:
                 {
                     auto const inLocalVars = std::find(
-                        std::begin(localVars), std::end(localVars),
+                        std::begin(locals), std::end(locals),
                         std::string(1,
                                     std::get<std::string>(statement.first)[0]));
-                    if (inLocalVars != std::end(localVars))
+                    if (inLocalVars != std::end(locals))
                     {
                         auto const index = static_cast<int>(
-                            inLocalVars - std::begin(localVars));
+                            inLocalVars - std::begin(locals));
                         result.push_back(tcc::ByteCode::LOAD);
                         result.push_back(index);
                         break;

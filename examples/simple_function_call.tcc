@@ -1,5 +1,5 @@
 
-int foo(a, b) { return a + b; }
+int foo(a, b) { return a + 2; }
 
 int main()
 {

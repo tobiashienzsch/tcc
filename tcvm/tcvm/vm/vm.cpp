@@ -25,8 +25,15 @@ auto VirtualMachine::Cpu() -> int64_t
 {
     while (static_cast<size_t>(m_instructionPointer) < m_code.size())
     {
-        auto const opcode
-            = m_code.at(m_instructionPointer);  // fetch instructions
+
+        // checks
+        TCC_ASSERT(
+            (m_code.size() > static_cast<std::size_t>(m_instructionPointer))
+                && (m_instructionPointer >= 0),
+            "instruction pointer out of range at: {}", m_instructionPointer);
+
+        // fetch instructions
+        auto const opcode = m_code.at(m_instructionPointer);
         if (m_shouldTrace)
         {
             disassemble(opcode);
@@ -237,6 +244,7 @@ void VirtualMachine::disassemble(int64_t const opcode)
     }
 
     printGlobalMemory();
+    out_ << fmt::format("\t FRAME_PTR: {}", m_framePointer);
     out_ << fmt::format("\t STACK_PTR: {}", m_stackPointer);
     printStack();
     out_ << fmt::format("\n");

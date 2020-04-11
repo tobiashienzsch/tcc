@@ -29,12 +29,18 @@ auto operator<<(std::ostream& out, IRStatement const& data) -> std::ostream&;
 
 using IRStatementList = std::vector<IRStatement>;
 
+struct IRBasicBlock
+{
+    std::string name           = "";
+    IRStatementList statements = {};
+};
+
 struct IRFunction
 {
     std::string name                     = "";
     std::map<std::string, int> args      = {};
     std::map<std::string, int> variables = {};
-    IRStatementList statements           = {};
+    std::vector<IRBasicBlock> blocks     = {};
 };
 
 auto operator<<(std::ostream& out, IRFunction const& data) -> std::ostream&;

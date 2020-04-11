@@ -11,7 +11,7 @@ namespace tcc
 class Optimizer
 {
 public:
-    Optimizer(IRFunction& scope) : m_mainScope(scope) { }
+    Optimizer(IRFunction& scope) : function_(scope) { }
 
     auto Optimize() -> void;
 
@@ -34,6 +34,6 @@ public:
     static auto isBinaryOperation(IRByteCode op) noexcept -> bool;
 
 private:
-    IRFunction& m_mainScope;
+    IRFunction& function_;
 };
 }  // namespace tcc

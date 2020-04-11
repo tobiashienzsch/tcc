@@ -10,19 +10,23 @@ auto Optimizer::Optimize() -> void
     {
         tcc::IgnoreUnused(x);
 
-        std::for_each(std::begin(m_mainScope.statements),
-                      std::end(m_mainScope.statements), [](auto& statement) {
-                          ReplaceWithConstantStore(statement);
-                      });
+        for (auto& block : function_.blocks)
+        {
+            std::for_each(
+                std::begin(block.statements), std::end(block.statements),
+                [](auto& statement) { ReplaceWithConstantStore(statement); });
 
-        std::for_each(std::begin(m_mainScope.statements),
-                      std::end(m_mainScope.statements), [&](auto& statement) {
-                          ReplaceVariableIfConstant(statement,
-                                                    m_mainScope.statements);
-                      });
+            std::for_each(std::begin(block.statements),
+                          std::end(block.statements), [&](auto& statement) {
+                              ReplaceVariableIfConstant(statement,
+                                                        block.statements);
+                          });
+        }
     }
-
-    DeleteUnusedStatements(m_mainScope.statements);
+    for (auto& block : function_.blocks)
+    {
+        DeleteUnusedStatements(block.statements);
+    }
 }
 
 auto Optimizer::DeleteUnusedStatements(IRStatementList& statementList) -> bool

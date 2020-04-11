@@ -208,6 +208,8 @@ bool IRGenerator::operator()(tcc::ast::StatementList const& x)
 }
 bool IRGenerator::operator()(tcc::ast::IfStatement const& x)
 {
+    builder_.StartIfStatement();
+    builder_.StartIfStatementCondition();
     if (!(*this)(x.condition)) return false;
     builder_.CreateIfStatement();
     // program_.op(IRByteCode::JumpIf, 0);              // we shall fill this

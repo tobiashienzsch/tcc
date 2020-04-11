@@ -142,7 +142,7 @@ private:
         auto CreateReturnOperation() -> void
         {
             auto const first = PopFromStack();
-            currentFunction_->statements.emplace_back(IRStatement {
+            currentBlock_->statements.emplace_back(IRStatement {
                 IRByteCode::Return, "", first, std::nullopt, false});
         }
 
@@ -152,19 +152,19 @@ private:
             auto const first   = PopFromStack();
             auto const tmpName = CreateTemporaryOnStack();
 
-            currentFunction_->statements.emplace_back(
+            currentBlock_->statements.emplace_back(
                 IRStatement {op, tmpName, first, second});
         }
 
         auto CreateUnaryOperation(IRByteCode op) -> void
         {
-            currentFunction_->statements.emplace_back(
+            currentBlock_->statements.emplace_back(
                 IRStatement {op, CreateTemporaryOnStack(), PopFromStack(), {}});
         }
 
         auto CreateStoreOperation(std::string key) -> void
         {
-            currentFunction_->statements.emplace_back(
+            currentBlock_->statements.emplace_back(
                 IRStatement {IRByteCode::Store,
                              std::move(key),
                              PopFromStack(),
@@ -174,7 +174,7 @@ private:
 
         auto CreateLoadOperation(std::string key) -> void
         {
-            currentFunction_->statements.emplace_back(
+            currentBlock_->statements.emplace_back(
                 IRStatement {IRByteCode::Load,
                              CreateTemporaryOnStack(),
                              key,
@@ -184,7 +184,7 @@ private:
         auto CreateArgStoreOperation(std::string key, std::string varName)
             -> void
         {
-            currentFunction_->statements.emplace_back(
+            currentBlock_->statements.emplace_back(
                 IRStatement {IRByteCode::ArgStore,
                              std::move(key),
                              std::move(varName),
@@ -234,6 +234,8 @@ private:
             package_.functions.emplace_back(
                 IRFunction {std::move(name), std::move(args), {}, {}});
             currentFunction_ = &package_.functions.back();
+            currentFunction_->blocks.push_back({"entry"});
+            currentBlock_ = &currentFunction_->blocks.back();
             for (auto const& arg : currentFunction_->args)
             {
                 CreateArgStoreOperation(CreateAssignment(arg.first), arg.first);
@@ -246,7 +248,7 @@ private:
                                               std::vector<std::string> argTemps)
             -> bool
         {
-            currentFunction_->statements.emplace_back(
+            currentBlock_->statements.emplace_back(
                 IRStatement {IRByteCode::Call,
                              CreateTemporaryOnStack(),
                              std::move(name),
@@ -255,13 +257,36 @@ private:
             return true;
         }
 
-        void CreateIfStatement() {
-            currentFunction_->statements.push_back(IRStatement{IRByteCode::JumpIf, "",GetLastTemporary(),{}, false});
+        void CreateIfStatement()
+        {
+            currentBlock_->statements.push_back(IRStatement {IRByteCode::JumpIf,
+                                                             "",
+                                                             GetLastTemporary(),
+                                                             {},
+                                                             false});
+        }
+
+        void StartIfStatement()
+        {
+            currentFunction_->blocks.push_back({"if.entry"});
+            currentBlock_ = &currentFunction_->blocks.back();
+        }
+
+        void StartIfStatementCondition()
+        {
+            currentFunction_->blocks.push_back({"if.cond"});
+            currentBlock_ = &currentFunction_->blocks.back();
+        }
+
+        void StartIfStatementThen()
+        {
+            currentFunction_->blocks.push_back({"if.then"});
+            currentBlock_ = &currentFunction_->blocks.back();
         }
 
         [[nodiscard]] auto GetLastTemporary() const -> std::string
         {
-            return currentFunction_->statements.back().destination;
+            return currentBlock_->statements.back().destination;
         }
 
     private:
@@ -269,6 +294,7 @@ private:
         std::vector<IRStatement::Argument> stack_;
         IRPackage package_ {"program"};
         IRFunction* currentFunction_ = nullptr;
+        IRBasicBlock* currentBlock_  = nullptr;
     };
 
 private:

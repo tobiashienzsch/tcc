@@ -47,6 +47,7 @@ auto operator<<(std::ostream& out, IRFunction const& data) -> std::ostream&
 {
     return out << data.name;
 }
+
 auto operator<<(std::ostream& out, IRPackage const& pkg) -> std::ostream&
 {
     out << fmt::format("\n// {0}: functions={1}\n", pkg.name,
@@ -54,14 +55,18 @@ auto operator<<(std::ostream& out, IRPackage const& pkg) -> std::ostream&
     for (auto const& func : pkg.functions)
     {
         out << fmt::format(
-            "// func {0}: args={1} locals={2} instructions={3}\n{0}.entry:\n",
-            func.name, func.args.size(), func.variables.size(),
-            func.statements.size());
-        for (auto const& x : func.statements)
+            "// func {0}: args={1} locals={2} instructions={3}\n", func.name,
+            func.args.size(), func.variables.size(), func.blocks.size());
+
+        for (auto const& block : func.blocks)
         {
-            out << fmt::format("\t{}\n", x);
+            out << fmt::format("{0}.{1}:\n", func.name, block.name);
+            for (auto const& x : block.statements)
+            {
+                out << fmt::format("\t{}\n", x);
+            }
+            out << fmt::format("\n");
         }
-        out << fmt::format("\n");
     }
 
     return out;

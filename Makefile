@@ -11,15 +11,15 @@ win: config-vs build test
 
 .PHONY: config
 config:
-	cmake -B$(BUILD_DIR) -S. -G"$(CM_GENERATOR)" -DCMAKE_BUILD_TYPE:STRING=$(CONFIG)             		
+	cmake -B$(BUILD_DIR) -S. -G"$(CM_GENERATOR)" -DCMAKE_BUILD_TYPE:STRING=$(CONFIG)
 
 .PHONY: config-vs
 config-vs:
-	cmake -B$(BUILD_DIR) -S. -G "Visual Studio 16 2019"      						
+	cmake -B$(BUILD_DIR) -S. -G "Visual Studio 16 2019" -- -m
 
 .PHONY: build
 build:
-	cmake --build $(BUILD_DIR) --config $(CONFIG)
+	cmake --build $(BUILD_DIR) --config $(CONFIG) -- -j8
 
 .PHONY: test
 test:
@@ -31,7 +31,7 @@ sanitize:
 		-DTCC_BUILD_ASAN=ON \
 		-DTCC_BUILD_UBSAN=ON \
 		.
-	cmake --build $(BUILD_DIR_BASE)_sanitize 
+	cmake --build $(BUILD_DIR_BASE)_sanitize
 	cd $(BUILD_DIR_BASE)_sanitize && ctest -c
 
 .PHONY: coverage
@@ -61,8 +61,8 @@ format:
 	find tcc -iname '*.hpp' -o -iname '*.cpp' | xargs clang-format -i
 	find tcvm -iname '*.hpp' -o -iname '*.cpp' | xargs clang-format -i
 	find tcsl -iname '*.hpp' -o -iname '*.cpp' | xargs clang-format -i
-	
+
 .PHONY: stats
 stats:
 	cloc --exclude-dir=3rd_party,build,build_coverage,build_sanitize,build_Debug,build_Release,.vscode .
-	
+

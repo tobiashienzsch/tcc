@@ -234,8 +234,7 @@ private:
             package_.functions.emplace_back(
                 IRFunction {std::move(name), std::move(args), {}, {}});
             currentFunction_ = &package_.functions.back();
-            currentFunction_->blocks.push_back({"entry"});
-            currentBlock_ = &currentFunction_->blocks.back();
+            StartBasicBlock("entry");
             for (auto const& arg : currentFunction_->args)
             {
                 CreateArgStoreOperation(CreateAssignment(arg.first), arg.first);
@@ -257,7 +256,7 @@ private:
             return true;
         }
 
-        void CreateIfStatement()
+        void CreateIfStatementCondition()
         {
             currentBlock_->statements.push_back(IRStatement {IRByteCode::JumpIf,
                                                              "",
@@ -266,21 +265,10 @@ private:
                                                              false});
         }
 
-        void StartIfStatement()
+        void StartBasicBlock(std::string suffix = "")
         {
-            currentFunction_->blocks.push_back({"if.entry"});
-            currentBlock_ = &currentFunction_->blocks.back();
-        }
-
-        void StartIfStatementCondition()
-        {
-            currentFunction_->blocks.push_back({"if.cond"});
-            currentBlock_ = &currentFunction_->blocks.back();
-        }
-
-        void StartIfStatementThen()
-        {
-            currentFunction_->blocks.push_back({"if.then"});
+            auto const name = fmt::format("{}.{}", blockCounter_++, suffix);
+            currentFunction_->blocks.push_back({name});
             currentBlock_ = &currentFunction_->blocks.back();
         }
 
@@ -290,7 +278,8 @@ private:
         }
 
     private:
-        int tmpCounter_ = 0;
+        int tmpCounter_   = 0;
+        int blockCounter_ = 0;
         std::vector<IRStatement::Argument> stack_;
         IRPackage package_ {"program"};
         IRFunction* currentFunction_ = nullptr;

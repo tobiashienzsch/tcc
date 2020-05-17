@@ -208,13 +208,17 @@ bool IRGenerator::operator()(tcc::ast::StatementList const& x)
 }
 bool IRGenerator::operator()(tcc::ast::IfStatement const& x)
 {
-    builder_.StartIfStatement();
-    builder_.StartIfStatementCondition();
+    builder_.StartBasicBlock("if.begin");
+    builder_.StartBasicBlock("if.cond");
     if (!(*this)(x.condition)) return false;
-    builder_.CreateIfStatement();
+    builder_.CreateIfStatementCondition();
+    builder_.StartBasicBlock("if.then");
+    if (!(*this)(x.then)) return false;
+    builder_.StartBasicBlock();
+
     // program_.op(IRByteCode::JumpIf, 0);              // we shall fill this
     // (0) in later std::size_t skip = program_.size() - 1;  // mark its
-    // position if (!(*this)(x.then)) return false; program_[skip] =
+    // position  program_[skip] =
     // int(program_.size() - skip);  // now we know where to jump to (after the
     // if branch)
 

@@ -33,12 +33,12 @@ TEST_CASE("tcc/optimizer: ConstantArgument", "[tcc][optimizer]")
     using Argument = IRStatement::Argument;
 
     auto [test_input, expected] = GENERATE(table<Argument, bool>({
-        {Argument {string("x1")}, false},  //
-        {Argument {string("t1")}, false},  //
-        {Argument {1}, true},              //
-        {Argument {42}, true},             //
-        {Argument {143}, true},            //
-        {Argument {1111111}, true},        //
+        {Argument {string("x1")}, false},       //
+        {Argument {string("t1")}, false},       //
+        {Argument {uint32_t {1}}, true},        //
+        {Argument {uint32_t {42}}, true},       //
+        {Argument {uint32_t {143}}, true},      //
+        {Argument {uint32_t {1111111}}, true},  //
     }));
 
     REQUIRE(Optimizer::isConstantArgument(test_input) == expected);
@@ -49,13 +49,13 @@ TEST_CASE("tcc/optimizer: ConstantArgumentOptional", "[tcc][optimizer]")
     using Argument = IRStatement::OptionalArgument;
 
     auto [test_input, expected] = GENERATE(table<Argument, bool>({
-        {Argument {string("x1")}, false},  //
-        {Argument {string("t1")}, false},  //
-        {Argument {std::nullopt}, false},  //
-        {Argument {1}, true},              //
-        {Argument {42}, true},             //
-        {Argument {143}, true},            //
-        {Argument {1111111}, true},        //
+        {Argument {string("x1")}, false},       //
+        {Argument {string("t1")}, false},       //
+        {Argument {std::nullopt}, false},       //
+        {Argument {uint32_t {1}}, true},        //
+        {Argument {uint32_t {42}}, true},       //
+        {Argument {uint32_t {143}}, true},      //
+        {Argument {uint32_t {1111111}}, true},  //
     }));
 
     REQUIRE(Optimizer::isConstantArgument(test_input) == expected);
@@ -64,9 +64,11 @@ TEST_CASE("tcc/optimizer: ConstantArgumentOptional", "[tcc][optimizer]")
 TEST_CASE("tcc/optimizer: ConstantStoreExpression", "[tcc][optimizer]")
 {
     auto [test_input, expected] = GENERATE(table<IRStatement, bool>({
-        {IRStatement {IRByteCode::Store, string("x1"), 1, std::nullopt},
+        {IRStatement {IRByteCode::Store, string("x1"), uint32_t {1},
+                      std::nullopt},
          true},  //
-        {IRStatement {IRByteCode::Multiplication, string("t78"), 123, 1},
+        {IRStatement {IRByteCode::Multiplication, string("t78"), uint32_t {123},
+                      uint32_t {1}},
          false},  // not store
         {IRStatement {IRByteCode::Store, string("t1"), string("t0"),
                       std::nullopt},
@@ -82,7 +84,8 @@ TEST_CASE("tcc/optimizer: ConstantBinaryExpression", "[tcc][optimizer]")
         {IRStatement {IRByteCode::Store, string("t2"), string("t0"),
                       std::nullopt},
          false},  // not binary
-        {IRStatement {IRByteCode::Multiplication, string("t2"), 1, 451},
+        {IRStatement {IRByteCode::Multiplication, string("t2"), uint32_t {1},
+                      uint32_t {451}},
          true},  //
     }));
 
@@ -92,7 +95,8 @@ TEST_CASE("tcc/optimizer: ConstantBinaryExpression", "[tcc][optimizer]")
 TEST_CASE("tcc/optimizer: UnusedStatement", "[tcc][optimizer]")
 {
     auto testData = tcc::IRStatementList {
-        IRStatement {IRByteCode::Store, string("x1"), 1, std::nullopt},  //
+        IRStatement {IRByteCode::Store, string("x1"), uint32_t {1},
+                     std::nullopt},  //
         IRStatement {IRByteCode::Store, string("x2"), string("x1"),
                      std::nullopt}  //
     };
@@ -104,7 +108,8 @@ TEST_CASE("tcc/optimizer: UnusedStatement", "[tcc][optimizer]")
 TEST_CASE("tcc/optimizer: DeleteUnusedStatements", "[tcc][optimizer]")
 {
     auto testData = tcc::IRStatementList {
-        IRStatement {IRByteCode::Store, string("t0"), 1, std::nullopt}  //
+        IRStatement {IRByteCode::Store, string("t0"), uint32_t {1},
+                     std::nullopt}  //
     };
 
     REQUIRE(testData.size() == std::size_t {1});
@@ -114,14 +119,15 @@ TEST_CASE("tcc/optimizer: DeleteUnusedStatements", "[tcc][optimizer]")
 
 TEST_CASE("tcc/optimizer: ReplaceVariableIfConstant", "[tcc][optimizer]")
 {
-    auto testData = tcc::IRStatementList {
-        IRStatement {IRByteCode::Store, string("x1"), 143, std::nullopt},  //
-        IRStatement {IRByteCode::Store, string("x2"), string("x1"),
-                     std::nullopt},  //
-        IRStatement {IRByteCode::Store, string("t0"), string("x1"),
-                     std::nullopt},                                         //
-        IRStatement {IRByteCode::Addition, string("t0"), 42, string("x1")}  //
-    };
+    auto testData
+        = tcc::IRStatementList {IRStatement {IRByteCode::Store, string("x1"),
+                                             uint32_t {143}, std::nullopt},
+                                IRStatement {IRByteCode::Store, string("x2"),
+                                             string("x1"), std::nullopt},
+                                IRStatement {IRByteCode::Store, string("t0"),
+                                             string("x1"), std::nullopt},
+                                IRStatement {IRByteCode::Addition, string("t0"),
+                                             uint32_t {42}, string("x1")}};
 
     REQUIRE(Optimizer::ReplaceVariableIfConstant(testData.at(0), testData)
             == true);

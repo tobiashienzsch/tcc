@@ -98,7 +98,7 @@ private:
 
         [[nodiscard]] auto PopFromStack() -> IRStatement::Argument
         {
-            auto const result = stack_.back();
+            auto result = stack_.back();
             stack_.pop_back();
             return result;
         }
@@ -216,8 +216,8 @@ private:
 
         [[nodiscard]] auto CreateTemporaryOnStack() -> std::string
         {
-            auto const tmp = fmt::format("t.{}", tmpCounter_++);
-            stack_.emplace_back(tmp);
+            auto tmp = fmt::format("t.{}", tmpCounter_++);
+            stack_.push_back(tmp);
             return tmp;
         }
 

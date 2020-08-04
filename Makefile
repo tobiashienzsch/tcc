@@ -50,9 +50,9 @@ coverage:
 
 .PHONY: tidy
 tidy:
-	cd $(BUILD_DIR) && ../scripts/run-clang-tidy.py ../tcc -p . -fix -header-filter="tcsl/.*"
-	cd $(BUILD_DIR) && ../scripts/run-clang-tidy.py ../tcsl -p . -fix -header-filter="tcsl/.*"
-	cd $(BUILD_DIR) && ../scripts/run-clang-tidy.py ../tcvm -p . -fix -header-filter="tcsl/.*"
+	cd $(BUILD_DIR) && ../scripts/run-clang-tidy.py ../tcc -p . -fix -header-filter="tcc/.*"
+	cd $(BUILD_DIR) && ../scripts/run-clang-tidy.py ../tcsl -p . -fix -header-filter="tcc/.*"
+	cd $(BUILD_DIR) && ../scripts/run-clang-tidy.py ../tcvm -p . -fix -header-filter="tcc/.*"
 
 .PHONY: report
 report:

@@ -8,7 +8,7 @@ platform: x64
 
 environment:
   BOOST_ROOT: C:/Libraries/boost_1_73_0
-  BOOST_LIBRARYDIR_WIN64: C:/Libraries/boost_1_73_0/lib64-msvc-14.1
+  BOOST_LIBRARYDIR_WIN64: C:/Libraries/boost_1_73_0/lib64-msvc-14.2
 
 clone_folder: C:/projects/tcc
 
@@ -28,7 +28,7 @@ build_script:
   - cd C:/projects/tcc
   - mkdir build
   - cd build
-  - cmake -G "Visual Studio 16 2019"
+  - cmake -G "Visual Studio 16 2019" -A x64
     -DTCC_BUILD_BENCHMARK=OFF
     -DTCC_BUILD_PLAYGROUND=OFF
     -DBOOST_ROOT="%BOOST_ROOT%"

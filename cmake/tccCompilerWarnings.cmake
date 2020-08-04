@@ -11,7 +11,7 @@ else()
         -Wall
         -Wextra
         -Wpedantic
-        -Wshadow
+        # -Wshadow # fmt has a lot of shadow problems
         # -Wsign-conversion
         # -Wdouble-promotion
         # -Wconversion
@@ -35,7 +35,7 @@ else()
     compiler_warnings
     INTERFACE
     $<$<CXX_COMPILER_ID:Clang>:
-        -Wshadow-all
+        # -Wshadow-all # fmt has a lot of shadow problems
     >
   )
 endif()

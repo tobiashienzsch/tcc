@@ -48,6 +48,12 @@ coverage:
 	cd $(BUILD_DIR_BASE)_coverage && lcov --remove cov.info "*v1*" -o cov.info
 	cd $(BUILD_DIR_BASE)_coverage && lcov --remove cov.info "*Xcode.app*" -o cov.info
 
+.PHONY: tidy
+tidy:
+	cd $(BUILD_DIR) && ../scripts/run-clang-tidy.py ../tcc -p . -fix -header-filter="tcsl/.*"
+	cd $(BUILD_DIR) && ../scripts/run-clang-tidy.py ../tcsl -p . -fix -header-filter="tcsl/.*"
+	cd $(BUILD_DIR) && ../scripts/run-clang-tidy.py ../tcvm -p . -fix -header-filter="tcsl/.*"
+
 .PHONY: report
 report:
 	cd $(BUILD_DIR_BASE)_coverage && genhtml cov.info --output-directory lcov

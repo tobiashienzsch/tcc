@@ -16,8 +16,15 @@ script-anchors:
 
   - &script-linux-release
     - cd $TRAVIS_BUILD_DIR
-    - mkdir build_release && cd build_release
-    - cmake -GNinja -DCMAKE_BUILD_TYPE:STRING=Release -DTCC_BUILD_PLAYGROUND=OFF -DTCC_BUILD_BENCHMARK=OFF -DTCC_BUILD_ASAN=ON -DTCC_BUILD_UBSAN=ON ..
+    - mkdir build && cd build
+    - cmake -GNinja -DCMAKE_BUILD_TYPE:STRING=Release -DTCC_BUILD_PLAYGROUND=OFF -DTCC_BUILD_BENCHMARK=OFF ..
+    - cmake --build .
+    - ctest
+
+  - &script-linux-sanitizers
+    - cd $TRAVIS_BUILD_DIR
+    - mkdir build_Debug && cd build_Debug
+    - cmake -GNinja -DCMAKE_BUILD_TYPE:STRING=Debug -DTCC_BUILD_PLAYGROUND=OFF -DTCC_BUILD_BENCHMARK=OFF -DTCC_BUILD_ASAN=ON -DTCC_BUILD_UBSAN=ON ..
     - cmake --build .
     - ctest
 
@@ -60,6 +67,22 @@ matrix:
         apt:
           sources:
             - sourceline: "ppa:mhier/libboost-latest"
+            - ubuntu-toolchain-r-test
+          packages:
+            - g++-10
+            - ninja-build
+            - libboost1.73-dev
+            - lcov
+      env:
+        - MATRIX_EVAL="CC=gcc-10 CXX=g++-10"
+      script: *script-linux-release
+
+    - os: linux
+      dist: bionic
+      addons:
+        apt:
+          sources:
+            - sourceline: "ppa:mhier/libboost-latest"
             - sourceline: "ppa:ubuntu-toolchain-r/test"
             - sourceline: "deb https://apt.llvm.org/bionic/ llvm-toolchain-bionic-10 main"
               key_url: "https://apt.llvm.org/llvm-snapshot.gpg.key"
@@ -70,23 +93,23 @@ matrix:
             - lcov
       env:
         - MATRIX_EVAL="CC=clang-10 && CXX=clang++-10"
-      script: *script-linux-release
+      script: *script-linux-sanitizers
 
-    - os: linux
-      dist: bionic
-      addons:
-        apt:
-          sources:
-            - sourceline: "ppa:mhier/libboost-latest"
-            - ubuntu-toolchain-r-test
-          packages:
-            - g++-9
-            - ninja-build
-            - libboost1.70-dev
-            - lcov
-      env:
-        - MATRIX_EVAL="CC=gcc-9 CXX=g++-9"
-      script: *script-linux-coverage
+    # - os: linux
+    #   dist: bionic
+    #   addons:
+    #     apt:
+    #       sources:
+    #         - sourceline: "ppa:mhier/libboost-latest"
+    #         - ubuntu-toolchain-r-test
+    #       packages:
+    #         - g++-9
+    #         - ninja-build
+    #         - libboost1.70-dev
+    #         - lcov
+    #   env:
+    #     - MATRIX_EVAL="CC=gcc-9 CXX=g++-9"
+    #   script: *script-linux-coverage
 
 before_install:
   - eval "${MATRIX_EVAL}"

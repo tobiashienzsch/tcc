@@ -3,12 +3,12 @@ branches:
   only:
     - master
 
-image: Visual Studio 2017
+image: Visual Studio 2019
 platform: x64
 
 environment:
-  BOOST_ROOT: C:/Libraries/boost_1_69_0
-  BOOST_LIBRARYDIR_WIN64: C:/Libraries/boost_1_69_0/lib64-msvc-14.1
+  BOOST_ROOT: C:/Libraries/boost_1_73_0
+  BOOST_LIBRARYDIR_WIN64: C:/Libraries/boost_1_73_0/lib64-msvc-14.1
 
 clone_folder: C:/projects/tcc
 
@@ -23,15 +23,17 @@ build:
   parallel: true
 
 build_script:
+  - dir C:/Libraries/boost_1_73_0
+  - dir C:/Libraries/boost_1_73_0/
   - cd C:/projects/tcc
   - mkdir build
   - cd build
-  - cmake -G "Visual Studio 15 2017 Win64"
+  - cmake -G "Visual Studio 16 2019"
     -DTCC_BUILD_BENCHMARK=OFF
     -DTCC_BUILD_PLAYGROUND=OFF
     -DBOOST_ROOT="%BOOST_ROOT%"
     -DBOOST_LIBRARYDIR="%BOOST_LIBRARYDIR_WIN64%"
     -DBoost_USE_STATIC_LIBS="ON"
     ..
-  - cmake --build . --config Release
+  - cmake --build . --config Release -- -m
   - ctest

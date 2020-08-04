@@ -79,7 +79,6 @@ private:
         void operator()(ast::Identifier& x) const { x.id = id; }
     };
 
-private:
     std::vector<Iterator>& iters;
 };
 }  // namespace tcc

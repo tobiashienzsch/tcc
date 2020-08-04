@@ -23,7 +23,7 @@ struct ProgramOptions
     {
         try
         {
-            auto text = "tcc: tobante's crappy virtual machine";
+            auto const* text = "tcc: tobante's crappy virtual machine";
             po::options_description desc(text);
             auto options = desc.add_options();
             options("help,h", "produce this help message");

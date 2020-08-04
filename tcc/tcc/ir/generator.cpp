@@ -210,10 +210,16 @@ bool IRGenerator::operator()(tcc::ast::IfStatement const& x)
 {
     builder_.StartBasicBlock("if.begin");
     builder_.StartBasicBlock("if.cond");
-    if (!(*this)(x.condition)) return false;
+    if (!(*this)(x.condition))
+    {
+        return false;
+    }
     builder_.CreateIfStatementCondition();
     builder_.StartBasicBlock("if.then");
-    if (!(*this)(x.then)) return false;
+    if (!(*this)(x.then))
+    {
+        return false;
+    }
     builder_.StartBasicBlock();
 
     // program_.op(IRByteCode::JumpIf, 0);              // we shall fill this

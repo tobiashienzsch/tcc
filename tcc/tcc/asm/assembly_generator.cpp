@@ -49,7 +49,7 @@ auto AssemblyGenerator::Build(tcc::IRPackage const& package) -> Assembly
             {
                 auto const PushConstArgument = [&]() -> void {
                     auto const& first = statement.first;
-                    if (auto* value = std::get_if<std::uint32_t>(&first);
+                    if (auto const* value = std::get_if<std::uint32_t>(&first);
                         value != nullptr)
                     {
                         result.push_back(tcc::ByteCode::ICONST);
@@ -59,7 +59,8 @@ auto AssemblyGenerator::Build(tcc::IRPackage const& package) -> Assembly
                     if (statement.second.has_value())
                     {
                         auto const& second = statement.second.value();
-                        if (auto* value = std::get_if<std::uint32_t>(&second);
+                        if (auto const* value
+                            = std::get_if<std::uint32_t>(&second);
                             value != nullptr)
                         {
                             result.push_back(tcc::ByteCode::ICONST);
@@ -72,7 +73,7 @@ auto AssemblyGenerator::Build(tcc::IRPackage const& package) -> Assembly
                 {
                     case IRByteCode::Store:
                     {
-                        if (auto* value
+                        if (auto const* value
                             = std::get_if<std::uint32_t>(&statement.first);
                             value != nullptr)
                         {

@@ -16,3 +16,8 @@ cmake-build-*
 # TCVM BINARIES
 *.tcb
 test.xml
+
+# PYTHON
+venv
+.venv
+.env

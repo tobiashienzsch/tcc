@@ -265,7 +265,7 @@ private:
                                                              false});
         }
 
-        void StartBasicBlock(std::string suffix = "")
+        void StartBasicBlock(const std::string& suffix = "")
         {
             auto const name = fmt::format("{}.{}", blockCounter_++, suffix);
             currentFunction_->blocks.push_back({name});
@@ -286,7 +286,6 @@ private:
         IRBasicBlock* currentBlock_  = nullptr;
     };
 
-private:
     Builder builder_ {};
     boost::function<void(int tag, std::string const& what)> errorHandler_;
 };

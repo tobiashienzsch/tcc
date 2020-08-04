@@ -30,7 +30,7 @@ struct ErrorHandler
     void operator()(Message const& message, What const& what,
                     Iterator err_pos) const
     {
-        int line;
+        int line            = 0;
         Iterator line_start = get_pos(err_pos, line);
         if (err_pos != last)
         {

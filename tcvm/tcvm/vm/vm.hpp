@@ -42,7 +42,6 @@ private:
     void printStack();
     void printGlobalMemory();
 
-private:
     int64_t m_stackPointer {-1};
     int64_t m_instructionPointer;
     int64_t m_framePointer {0};
@@ -51,7 +50,6 @@ private:
     std::vector<int64_t> m_data;
     std::vector<int64_t> m_stack;
 
-private:
     bool m_shouldTrace {true};
     std::ostream& out_;
 };

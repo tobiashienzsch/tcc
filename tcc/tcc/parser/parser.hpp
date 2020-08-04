@@ -11,12 +11,11 @@ class Parser
 public:
     using AstType = tcc::ast::FunctionList;
 
-public:
     Parser(tcc::ErrorHandler<IteratorType>& err) : errorHandler_(err) { }
 
     bool ParseSource(IteratorType& iter, IteratorType& end)
     {
-        bool success = phrase_parse(iter, end, +grammar_, skipper_, ast_);
+        bool const success = phrase_parse(iter, end, +grammar_, skipper_, ast_);
         return !static_cast<bool>(!success || iter != end);
     }
 

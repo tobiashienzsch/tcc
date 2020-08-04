@@ -20,7 +20,6 @@ namespace po = boost::program_options;
 class ProgramOptions
 {
 public:
-public:
     /**
      * @brief Defaulted constructor.
      */

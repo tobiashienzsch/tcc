@@ -7,18 +7,39 @@
 #include <set>
 #include <variant>
 
+class FunctionPosition
+{
+public:
+    constexpr explicit FunctionPosition(std::size_t pos) : pos_ {pos} { }
+    constexpr auto Value() const noexcept { return pos_; }
+
+private:
+    std::size_t pos_;
+};
+namespace std
+{
+template<>
+struct less<FunctionPosition>
+{
+    bool operator()(const FunctionPosition& lhs, const FunctionPosition& rhs) const
+    {
+        return lhs.Value() < rhs.Value();
+    }
+};
+}  // namespace std
+
 namespace tcc
 {
 auto AssemblyGenerator::Build(tcc::IRPackage const& package) -> Assembly
 {
     auto result               = std::vector<int64_t> {};
-    auto mainPosition         = -1;
-    auto functionPlaceholders = std::map<int, std::string> {};
-    auto functionPositions    = std::map<std::string, int> {};
+    auto mainPosition         = std::optional<FunctionPosition> {std::nullopt};
+    auto functionPlaceholders = std::map<FunctionPosition, std::string> {};
+    auto functionPositions    = std::map<std::string, FunctionPosition> {};
 
     for (auto const& function : package.functions)
     {
-        auto funcPos = result.size();
+        auto funcPos = FunctionPosition {result.size()};
         if (function.name == "main")
         {
             mainPosition = funcPos;
@@ -140,7 +161,7 @@ auto AssemblyGenerator::Build(tcc::IRPackage const& package) -> Assembly
                     {
                         result.push_back(tcc::ByteCode::CALL);
                         auto funcToCall = std::get<std::string>(statement.first);
-                        functionPlaceholders.insert({result.size(), funcToCall});
+                        functionPlaceholders.insert({FunctionPosition {result.size()}, funcToCall});
                         result.push_back(9999);  // func addr
                         TCC_ASSERT(statement.second.has_value(),
                                    "Function call should have an arg list");
@@ -181,14 +202,14 @@ auto AssemblyGenerator::Build(tcc::IRPackage const& package) -> Assembly
             TCC_ASSERT(false, "Function not found");
         }
 
-        result.at(pos) = search->second;
+        result.at(pos.Value()) = search->second.Value();
     }
 
     // Append __init function. This calls main.
-    TCC_ASSERT(mainPosition >= 0, "");
+    TCC_ASSERT(mainPosition.has_value(), "");
     auto const entryPoint = result.size();
     result.push_back(ByteCode::CALL);
-    result.push_back(mainPosition);
+    result.push_back(mainPosition.value().Value());
     result.push_back(0);
     result.push_back(ByteCode::EXIT);
 

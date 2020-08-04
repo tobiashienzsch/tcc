@@ -9,8 +9,7 @@
 namespace tcc
 {
 VirtualMachine::VirtualMachine(std::vector<int64_t> code, uint64_t const main,
-                               uint64_t const dataSize,
-                               uint64_t const stackSize, bool shouldTrace,
+                               uint64_t const dataSize, uint64_t const stackSize, bool shouldTrace,
                                std::ostream& out)
     : m_instructionPointer(main)
     , m_code(std::move(code))
@@ -27,10 +26,9 @@ auto VirtualMachine::Cpu() -> int64_t
     {
 
         // checks
-        TCC_ASSERT(
-            (m_code.size() > static_cast<std::size_t>(m_instructionPointer))
-                && (m_instructionPointer >= 0),
-            "instruction pointer out of range at: {}", m_instructionPointer);
+        TCC_ASSERT((m_code.size() > static_cast<std::size_t>(m_instructionPointer))
+                       && (m_instructionPointer >= 0),
+                   "instruction pointer out of range at: {}", m_instructionPointer);
 
         // fetch instructions
         auto const opcode = m_code.at(m_instructionPointer);
@@ -45,41 +43,41 @@ auto VirtualMachine::Cpu() -> int64_t
         {
             case ByteCode::IADD:
             {
-                auto const b = m_stack[m_stackPointer--];  // 2nd operand
-                auto const a = m_stack[m_stackPointer--];  // 1st operand
-                m_stack[++m_stackPointer] = a + b;         // push result
+                auto const b              = m_stack[m_stackPointer--];  // 2nd operand
+                auto const a              = m_stack[m_stackPointer--];  // 1st operand
+                m_stack[++m_stackPointer] = a + b;                      // push result
                 break;
             }
 
             case ByteCode::ISUB:
             {
-                auto const b = m_stack[m_stackPointer--];  // 2nd operand
-                auto const a = m_stack[m_stackPointer--];  // 1st operand
-                m_stack[++m_stackPointer] = a - b;         // push result
+                auto const b              = m_stack[m_stackPointer--];  // 2nd operand
+                auto const a              = m_stack[m_stackPointer--];  // 1st operand
+                m_stack[++m_stackPointer] = a - b;                      // push result
                 break;
             }
 
             case ByteCode::IMUL:
             {
-                auto const b = m_stack[m_stackPointer--];  // 2nd operand
-                auto const a = m_stack[m_stackPointer--];  // 1st operand
-                m_stack[++m_stackPointer] = a * b;         // push result
+                auto const b              = m_stack[m_stackPointer--];  // 2nd operand
+                auto const a              = m_stack[m_stackPointer--];  // 1st operand
+                m_stack[++m_stackPointer] = a * b;                      // push result
                 break;
             }
 
             case ByteCode::ILT:
             {
-                auto const b = m_stack[m_stackPointer--];   // 2nd operand
-                auto const a = m_stack[m_stackPointer--];   // 1st operand
-                m_stack[++m_stackPointer] = a < b ? 1 : 0;  // push result
+                auto const b              = m_stack[m_stackPointer--];  // 2nd operand
+                auto const a              = m_stack[m_stackPointer--];  // 1st operand
+                m_stack[++m_stackPointer] = a < b ? 1 : 0;              // push result
                 break;
             }
 
             case ByteCode::IEQ:
             {
-                auto const b = m_stack[m_stackPointer--];    // 2nd operand
-                auto const a = m_stack[m_stackPointer--];    // 1st operand
-                m_stack[++m_stackPointer] = a == b ? 1 : 0;  // push result
+                auto const b              = m_stack[m_stackPointer--];  // 2nd operand
+                auto const a              = m_stack[m_stackPointer--];  // 1st operand
+                m_stack[++m_stackPointer] = a == b ? 1 : 0;             // push result
                 break;
             }
 
@@ -111,8 +109,7 @@ auto VirtualMachine::Cpu() -> int64_t
 
             case ByteCode::ICONST:
             {
-                auto const val = m_code.at(
-                    m_instructionPointer);  // read operand from code
+                auto const val = m_code.at(m_instructionPointer);  // read operand from code
                 m_instructionPointer++;
                 m_stackPointer++;
                 m_stack[m_stackPointer] = val;  // push to stack
@@ -138,7 +135,7 @@ auto VirtualMachine::Cpu() -> int64_t
 
             case ByteCode::STORE:
             {
-                auto const offset = m_code[m_instructionPointer++];
+                auto const offset                = m_code[m_instructionPointer++];
                 m_stack[m_framePointer + offset] = m_stack[m_stackPointer--];
                 break;
             }
@@ -170,37 +167,26 @@ auto VirtualMachine::Cpu() -> int64_t
             case ByteCode::CALL:
             {
                 // expects all args on stack
-                auto const addr
-                    = m_code[m_instructionPointer++];  // addr of function
-                auto const numArgs
-                    = m_code[m_instructionPointer++];  // how many args got
-                                                       // pushed
-                m_stack[++m_stackPointer] = numArgs;   // save num args
-                m_stack[++m_stackPointer]
-                    = m_framePointer;  // save frame pointer
-                m_stack[++m_stackPointer]
-                    = m_instructionPointer;  // save instruction pointer
-                m_framePointer
-                    = m_stackPointer;  // fp points to return addr on stack
-                m_instructionPointer = addr;  // jump to function
+                auto const addr    = m_code[m_instructionPointer++];  // addr of function
+                auto const numArgs = m_code[m_instructionPointer++];  // how many args got
+                                                                      // pushed
+                m_stack[++m_stackPointer] = numArgs;                  // save num args
+                m_stack[++m_stackPointer] = m_framePointer;           // save frame pointer
+                m_stack[++m_stackPointer] = m_instructionPointer;     // save instruction pointer
+                m_framePointer            = m_stackPointer;  // fp points to return addr on stack
+                m_instructionPointer      = addr;            // jump to function
                 break;
             }
 
             case ByteCode::RET:
             {
-                auto const returnVal
-                    = m_stack.at(m_stackPointer--);  // pop return value
-                m_stackPointer
-                    = m_framePointer;  // jump over locals to frame pointer
-                m_instructionPointer
-                    = m_stack.at(m_stackPointer--);  // pop return addr
-                m_framePointer
-                    = m_stack.at(m_stackPointer--);  // restore frame pointer
-                auto const numArgs = m_stack.at(
-                    m_stackPointer--);      // how many args to throw away
-                m_stackPointer -= numArgs;  // pop args
-                m_stack.at(++m_stackPointer)
-                    = returnVal;  // leave result on stack
+                auto const returnVal = m_stack.at(m_stackPointer--);  // pop return value
+                m_stackPointer       = m_framePointer;  // jump over locals to frame pointer
+                m_instructionPointer = m_stack.at(m_stackPointer--);  // pop return addr
+                m_framePointer       = m_stack.at(m_stackPointer--);  // restore frame pointer
+                auto const numArgs   = m_stack.at(m_stackPointer--);  // how many args to throw away
+                m_stackPointer -= numArgs;                            // pop args
+                m_stack.at(++m_stackPointer) = returnVal;             // leave result on stack
                 break;
             }
 
@@ -214,19 +200,14 @@ auto VirtualMachine::Cpu() -> int64_t
                 return exitCode;
             }
             case ByteCode::HALT: return -1;
-            default:
-                TCC_ASSERT(false, "unknown instruction");
-                std::exit(EXIT_FAILURE);
+            default: TCC_ASSERT(false, "unknown instruction"); std::exit(EXIT_FAILURE);
         }
     }
 
     return -1;
 }
 
-void VirtualMachine::EnableTracing(bool const shouldTrace)
-{
-    m_shouldTrace = shouldTrace;
-}
+void VirtualMachine::EnableTracing(bool const shouldTrace) { m_shouldTrace = shouldTrace; }
 
 void VirtualMachine::disassemble(int64_t const opcode)
 {

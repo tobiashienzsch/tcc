@@ -191,10 +191,7 @@ bool IRGenerator::operator()(tcc::ast::VariableDeclaration const& x)
     }
     return r;
 }
-bool IRGenerator::operator()(tcc::ast::Statement const& x)
-{
-    return boost::apply_visitor(*this, x);
-}
+bool IRGenerator::operator()(tcc::ast::Statement const& x) { return boost::apply_visitor(*this, x); }
 bool IRGenerator::operator()(tcc::ast::StatementList const& x)
 {
     for (auto const& s : x)
@@ -273,8 +270,7 @@ bool IRGenerator::operator()(tcc::ast::Function const& func)
 
     if (!builder_.CreateFunction(func.function_name.name, args))
     {
-        errorHandler_(func.function_name.id,
-                      "Duplicate function: " + func.function_name.name);
+        errorHandler_(func.function_name.id, "Duplicate function: " + func.function_name.name);
         return false;
     }
 

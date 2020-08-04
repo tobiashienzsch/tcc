@@ -14,8 +14,7 @@ namespace tcc
 {
 struct IRStatement
 {
-    using Argument
-        = std::variant<std::uint32_t, std::string, std::vector<std::string>>;
+    using Argument         = std::variant<std::uint32_t, std::string, std::vector<std::string>>;
     using OptionalArgument = std::optional<Argument>;
 
     tcc::IRByteCode type;

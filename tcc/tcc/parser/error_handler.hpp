@@ -19,23 +19,17 @@ struct ErrorHandler
         using type = void;
     };
 
-    ErrorHandler(Iterator f, Iterator l, std::ostream& o)
-        : first(f)
-        , last(l)
-        , out(o)
-    {
-    }
+    ErrorHandler(Iterator f, Iterator l, std::ostream& o) : first(f), last(l), out(o) { }
 
     template<typename Message, typename What>
-    void operator()(Message const& message, What const& what,
-                    Iterator err_pos) const
+    void operator()(Message const& message, What const& what, Iterator err_pos) const
     {
         int line            = 0;
         Iterator line_start = get_pos(err_pos, line);
         if (err_pos != last)
         {
-            auto msg = fmt::format("{0}{1} line {2}:\n{3}\n", message, what,
-                                   line, get_line(line_start));
+            auto msg
+                = fmt::format("{0}{1} line {2}:\n{3}\n", message, what, line, get_line(line_start));
             for (; line_start != err_pos; ++line_start)
             {
                 msg.append(" ");
@@ -46,8 +40,7 @@ struct ErrorHandler
         else
         {
             auto const msg
-                = fmt::format("Unexpected end of file. {0}{1} line {2}:\n",
-                              message, what, line);
+                = fmt::format("Unexpected end of file. {0}{1} line {2}:\n", message, what, line);
             out << msg;
         }
     }

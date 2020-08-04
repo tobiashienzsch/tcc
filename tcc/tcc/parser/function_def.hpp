@@ -39,20 +39,18 @@ Function<Iterator>::Function(ErrorHandler<Iterator>& errorHandler)
     Identifier    = name;
     argument_list = -(Identifier % ',');
 
-    start = lexeme[(string("void") | string("int"))
-                   >> !(alnum | '_')]  // make sure we have whole words
-            > Identifier > '(' > argument_list > ')' > '{' > body > '}';
+    start
+        = lexeme[(string("void") | string("int")) >> !(alnum | '_')]  // make sure we have whole words
+          > Identifier > '(' > argument_list > ')' > '{' > body > '}';
 
     // Debugging and error handling and reporting support.
     BOOST_SPIRIT_DEBUG_NODES((Identifier)(argument_list)(start));
 
     // Error handling: on error in start, call error handler.
-    on_error<fail>(
-        start, ErrorHandlerFunction(errorHandler)("Error! Expecting ", _4, _3));
+    on_error<fail>(start, ErrorHandlerFunction(errorHandler)("Error! Expecting ", _4, _3));
 
     // Annotation: on success in start, call annotation.
-    on_success(Identifier,
-               AnnotateFunction(errorHandler.GetIterators())(_val, _1));
+    on_success(Identifier, AnnotateFunction(errorHandler.GetIterators())(_val, _1));
 }
 }  // namespace parser
 }  // namespace tcc

@@ -16,8 +16,7 @@ using namespace tcc::parser::testing;
 
 TEST_CASE("tcc/parser: IdentifierValid", "[tcc][parser][qi]")
 {
-    auto testCase
-        = GENERATE(as<std::string> {}, "test", "TEST", "foo8", "test_foo");
+    auto testCase = GENERATE(as<std::string> {}, "test", "TEST", "foo8", "test_foo");
 
     using IteratorType = std::string::const_iterator;
     IteratorType iter  = testCase.begin();
@@ -31,8 +30,7 @@ TEST_CASE("tcc/parser: IdentifierValid", "[tcc][parser][qi]")
     auto skipper    = tcc::parser::Skipper<IteratorType> {};
     auto ast        = std::string {};
 
-    REQUIRE(phrase_parse(iter, end, expression.Identifier, skipper, ast)
-            == true);
+    REQUIRE(phrase_parse(iter, end, expression.Identifier, skipper, ast) == true);
 }
 
 TEST_CASE("tcc/parser: IdentifierInvalid", "[tcc][parser][qi]")
@@ -51,8 +49,7 @@ TEST_CASE("tcc/parser: IdentifierInvalid", "[tcc][parser][qi]")
     auto skipper    = tcc::parser::Skipper<IteratorType> {};
     auto ast        = std::string {};
 
-    REQUIRE(phrase_parse(iter, end, expression.Identifier, skipper, ast)
-            == false);
+    REQUIRE(phrase_parse(iter, end, expression.Identifier, skipper, ast) == false);
 }
 TEST_CASE("tcc/parser: ExpressionValid", "[tcc][parser][qi]")
 {

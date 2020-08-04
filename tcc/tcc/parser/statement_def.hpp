@@ -100,21 +100,16 @@ Statement<Iterator>::Statement(ErrorHandler<Iterator>& errorHandler)
     // clang-format on
 
     // Debugging and error handling and reporting support.
-    BOOST_SPIRIT_DEBUG_NODES(
-        (StatementList)(Identifier)(VariableDeclaration)(Assignment));
+    BOOST_SPIRIT_DEBUG_NODES((StatementList)(Identifier)(VariableDeclaration)(Assignment));
 
     // Error handling: on error in StatementList, call error handler.
-    on_error<fail>(StatementList, ErrorHandlerFunction(errorHandler)(
-                                      "Error! Expecting ", _4, _3));
+    on_error<fail>(StatementList, ErrorHandlerFunction(errorHandler)("Error! Expecting ", _4, _3));
 
     // Annotation: on success in VariableDeclaration,
     // Assignment and ReturnStatement, call annotation.
-    on_success(VariableDeclaration,
-               AnnotateFunction(errorHandler.GetIterators())(_val, _1));
-    on_success(Assignment,
-               AnnotateFunction(errorHandler.GetIterators())(_val, _1));
-    on_success(ReturnStatement,
-               AnnotateFunction(errorHandler.GetIterators())(_val, _1));
+    on_success(VariableDeclaration, AnnotateFunction(errorHandler.GetIterators())(_val, _1));
+    on_success(Assignment, AnnotateFunction(errorHandler.GetIterators())(_val, _1));
+    on_success(ReturnStatement, AnnotateFunction(errorHandler.GetIterators())(_val, _1));
 }
 }  // namespace parser
 }  // namespace tcc

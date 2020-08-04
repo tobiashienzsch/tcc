@@ -53,8 +53,7 @@ TEST_CASE("tcc/parser: StatementInvalid", "[tcc][parser][qi]")
 
 TEST_CASE("tcc/parser: ReturnStatementValid", "[tcc][parser][qi]")
 {
-    auto testCase
-        = GENERATE(as<std::string> {}, "return;", "return x;", "return 1+2;");
+    auto testCase = GENERATE(as<std::string> {}, "return;", "return x;", "return 1+2;");
 
     using IteratorType = std::string::const_iterator;
     IteratorType iter  = testCase.begin();
@@ -68,6 +67,5 @@ TEST_CASE("tcc/parser: ReturnStatementValid", "[tcc][parser][qi]")
     auto skipper   = tcc::parser::Skipper<IteratorType> {};
     auto ast       = tcc::ast::ReturnStatement {};
 
-    REQUIRE(phrase_parse(iter, end, statement.ReturnStatement, skipper, ast)
-            == true);
+    REQUIRE(phrase_parse(iter, end, statement.ReturnStatement, skipper, ast) == true);
 }

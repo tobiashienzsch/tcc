@@ -16,8 +16,8 @@ using namespace tcc::parser::testing;
 
 TEST_CASE("tcc/parser: FunctionValid", "[tcc][parser][qi]")
 {
-    auto testCase = GENERATE(as<std::string> {}, "void foo(){ int foo = 5; }",
-                             "int foo(){return 1;}");
+    auto testCase
+        = GENERATE(as<std::string> {}, "void foo(){ int foo = 5; }", "int foo(){return 1;}");
 
     using IteratorType = std::string::const_iterator;
     IteratorType iter  = testCase.begin();
@@ -36,8 +36,7 @@ TEST_CASE("tcc/parser: FunctionValid", "[tcc][parser][qi]")
 
 TEST_CASE("tcc/parser: FunctionInvalid", "[tcc][parser][qi]")
 {
-    auto testCase
-        = GENERATE(as<std::string> {}, "int int(){}", "void void(){}");
+    auto testCase = GENERATE(as<std::string> {}, "int int(){}", "void void(){}");
 
     using IteratorType = std::string::const_iterator;
     IteratorType iter  = testCase.begin();

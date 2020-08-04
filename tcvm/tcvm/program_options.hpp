@@ -18,8 +18,7 @@ namespace tcvm
 
 struct ProgramOptions
 {
-    static auto Parse(int argc, char** argv,
-                      po::variables_map& outputVariableMap) -> bool
+    static auto Parse(int argc, char** argv, po::variables_map& outputVariableMap) -> bool
     {
         try
         {
@@ -31,8 +30,7 @@ struct ProgramOptions
             options("file,f", po::value<std::string>(), "binary file path");
             options("version,v", "print version string");
 
-            po::store(po::parse_command_line(argc, argv, desc),
-                      outputVariableMap);
+            po::store(po::parse_command_line(argc, argv, desc), outputVariableMap);
             po::notify(outputVariableMap);
 
             if (outputVariableMap.count("help") != 0)

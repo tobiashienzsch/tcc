@@ -51,11 +51,7 @@ public:
             po::positional_options_description p;
             p.add("input", -1);
 
-            po::store(po::command_line_parser(argc, argv)
-                          .options(desc)
-                          .positional(p)
-                          .run(),
-                      vm_);
+            po::store(po::command_line_parser(argc, argv).options(desc).positional(p).run(), vm_);
             po::notify(vm_);
 
             if (vm_.count("help") != 0U)
@@ -76,15 +72,13 @@ public:
                 std::ifstream in(paths[0], std::ios_base::in);
                 if (!in)
                 {
-                    fmt::print("Error: Could not open input file: {}\n",
-                               paths[0]);
+                    fmt::print("Error: Could not open input file: {}\n", paths[0]);
                     return {true, EXIT_FAILURE};
                 }
 
                 in.unsetf(std::ios::skipws);  // No white space skipping!
                 flags_.Source = "";
-                std::copy(std::istream_iterator<char>(in),
-                          std::istream_iterator<char>(),
+                std::copy(std::istream_iterator<char>(in), std::istream_iterator<char>(),
                           std::back_inserter(flags_.Source));
             }
         }
@@ -106,10 +100,7 @@ public:
      * @brief Returns the current compiler flags. They could change after
      * parsing argv.
      */
-    [[nodiscard]] CompilerOptions const& GetCompilerOptions() const noexcept
-    {
-        return flags_;
-    }
+    [[nodiscard]] CompilerOptions const& GetCompilerOptions() const noexcept { return flags_; }
 
 private:
     CompilerOptions flags_ {};

@@ -4,7 +4,6 @@
 
 #include <algorithm>
 #include <map>
-#include <memory_resource>
 #include <set>
 #include <variant>
 
@@ -12,12 +11,10 @@ namespace tcc
 {
 auto AssemblyGenerator::Build(tcc::IRPackage const& package) -> Assembly
 {
-    auto result       = std::vector<int64_t> {};
-    auto mainPosition = -1;
-    auto buffer       = std::array<std::byte, 1024> {};
-    auto pool         = std::pmr::monotonic_buffer_resource {std::data(buffer), std::size(buffer)};
-    auto functionPlaceholders = std::pmr::map<int, std::string> {&pool};
-    auto functionPositions    = std::pmr::map<std::string, int> {&pool};
+    auto result               = std::vector<int64_t> {};
+    auto mainPosition         = -1;
+    auto functionPlaceholders = std::map<int, std::string> {};
+    auto functionPositions    = std::map<std::string, int> {};
 
     for (auto const& function : package.functions)
     {
@@ -31,13 +28,13 @@ auto AssemblyGenerator::Build(tcc::IRPackage const& package) -> Assembly
         // auto const numLocals = function.variables.size();
 
         // auto counter       = 0;
-        auto argVars = std::pmr::vector<std::string> {&pool};
+        auto argVars = std::vector<std::string> {};
         for (auto const& arg : function.args)
         {
             argVars.push_back(arg.first);
         }
 
-        auto locals = std::pmr::vector<std::string> {&pool};
+        auto locals = std::vector<std::string> {};
         for (auto const& var : function.variables)
         {
             locals.push_back(var.first);
@@ -200,10 +197,8 @@ auto AssemblyGenerator::Build(tcc::IRPackage const& package) -> Assembly
 
 auto AssemblyGenerator::Print(std::vector<int64_t> const& assembly) -> void
 {
-    auto buffer = std::array<std::byte, 1024> {};
-    auto pool   = std::pmr::monotonic_buffer_resource {std::data(buffer), std::size(buffer)};
-    auto ops    = std::pmr::set<tcc::ByteCode> {&pool};
-    auto out    = std::pmr::string {&pool};
+    auto ops = std::set<tcc::ByteCode> {};
+    auto out = std::string {};
 
     for (auto i = 0UL; i < assembly.size();)
     {

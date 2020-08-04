@@ -13,42 +13,34 @@ public:
     constexpr explicit FunctionPosition(std::size_t pos) : pos_ {pos} { }
     constexpr auto Value() const noexcept { return pos_; }
 
-private:
-    std::size_t pos_;
-};
-namespace std
-{
-template<>
-struct less<FunctionPosition>
-{
-    bool operator()(const FunctionPosition& lhs, const FunctionPosition& rhs) const
+    friend auto operator<(FunctionPosition const& lhs, FunctionPosition const& rhs)
     {
         return lhs.Value() < rhs.Value();
     }
+
+private:
+    std::size_t pos_;
 };
-}  // namespace std
 
 namespace tcc
 {
 auto AssemblyGenerator::Build(tcc::IRPackage const& package) -> Assembly
 {
-    auto result               = std::vector<int64_t> {};
+    auto assembly             = std::vector<int64_t> {};
     auto mainPosition         = std::optional<FunctionPosition> {std::nullopt};
     auto functionPlaceholders = std::map<FunctionPosition, std::string> {};
     auto functionPositions    = std::map<std::string, FunctionPosition> {};
 
     for (auto const& function : package.functions)
     {
-        auto funcPos = FunctionPosition {result.size()};
+        auto funcPos = FunctionPosition {assembly.size()};
         if (function.name == "main")
         {
             mainPosition = funcPos;
         }
 
         functionPositions.insert({function.name, funcPos});
-        // auto const numLocals = function.variables.size();
 
-        // auto counter       = 0;
         auto argVars = std::vector<std::string> {};
         for (auto const& arg : function.args)
         {
@@ -59,8 +51,8 @@ auto AssemblyGenerator::Build(tcc::IRPackage const& package) -> Assembly
         for (auto const& var : function.variables)
         {
             locals.push_back(var.first);
-            result.push_back(tcc::ByteCode::ICONST);
-            result.push_back(0);
+            assembly.push_back(tcc::ByteCode::ICONST);
+            assembly.push_back(0);
         }
 
         for (auto const& block : function.blocks)
@@ -72,8 +64,8 @@ auto AssemblyGenerator::Build(tcc::IRPackage const& package) -> Assembly
                     auto const& first = statement.first;
                     if (auto const* value = std::get_if<std::uint32_t>(&first); value != nullptr)
                     {
-                        result.push_back(tcc::ByteCode::ICONST);
-                        result.push_back(*value);
+                        assembly.push_back(tcc::ByteCode::ICONST);
+                        assembly.push_back(*value);
                     }
 
                     if (statement.second.has_value())
@@ -81,8 +73,8 @@ auto AssemblyGenerator::Build(tcc::IRPackage const& package) -> Assembly
                         auto const& second = statement.second.value();
                         if (auto const* value = std::get_if<std::uint32_t>(&second); value != nullptr)
                         {
-                            result.push_back(tcc::ByteCode::ICONST);
-                            result.push_back(*value);
+                            assembly.push_back(tcc::ByteCode::ICONST);
+                            assembly.push_back(*value);
                         }
                     }
                 };
@@ -94,15 +86,15 @@ auto AssemblyGenerator::Build(tcc::IRPackage const& package) -> Assembly
                         if (auto const* value = std::get_if<std::uint32_t>(&statement.first);
                             value != nullptr)
                         {
-                            result.push_back(tcc::ByteCode::ICONST);
-                            result.push_back(*value);
+                            assembly.push_back(tcc::ByteCode::ICONST);
+                            assembly.push_back(*value);
                         }
                         auto const iter  = std::find(std::begin(locals), std::end(locals),
                                                     std::string(1, statement.destination[0]));
                         auto const index = static_cast<int>(iter - std::begin(locals));
 
-                        result.push_back(tcc::ByteCode::STORE);
-                        result.push_back(index + 1);
+                        assembly.push_back(tcc::ByteCode::STORE);
+                        assembly.push_back(index + 1);
 
                         break;
                     }
@@ -115,8 +107,8 @@ auto AssemblyGenerator::Build(tcc::IRPackage const& package) -> Assembly
                         if (inLocalVars != std::end(locals))
                         {
                             auto const index = static_cast<int>(inLocalVars - std::begin(locals));
-                            result.push_back(tcc::ByteCode::LOAD);
-                            result.push_back(index + 1);
+                            assembly.push_back(tcc::ByteCode::LOAD);
+                            assembly.push_back(index + 1);
                             break;
                         }
 
@@ -129,8 +121,8 @@ auto AssemblyGenerator::Build(tcc::IRPackage const& package) -> Assembly
                             // Since we calculate the index with std::end, which
                             // is one past the last element we subtract from -2.
                             auto const index = -2 - static_cast<int>(std::end(argVars) - inArgs);
-                            result.push_back(tcc::ByteCode::LOAD);
-                            result.push_back(index);
+                            assembly.push_back(tcc::ByteCode::LOAD);
+                            assembly.push_back(index);
                             break;
                         }
 
@@ -141,46 +133,46 @@ auto AssemblyGenerator::Build(tcc::IRPackage const& package) -> Assembly
                     case IRByteCode::Addition:
                     {
                         PushConstArgument();
-                        result.push_back(tcc::ByteCode::IADD);
+                        assembly.push_back(tcc::ByteCode::IADD);
                         break;
                     }
                     case IRByteCode::Subtraction:
                     {
                         PushConstArgument();
-                        result.push_back(tcc::ByteCode::ISUB);
+                        assembly.push_back(tcc::ByteCode::ISUB);
                         break;
                     }
                     case IRByteCode::Multiplication:
                     {
                         PushConstArgument();
-                        result.push_back(tcc::ByteCode::IMUL);
+                        assembly.push_back(tcc::ByteCode::IMUL);
                         break;
                     }
 
                     case IRByteCode::Call:
                     {
-                        result.push_back(tcc::ByteCode::CALL);
+                        assembly.push_back(tcc::ByteCode::CALL);
                         auto funcToCall = std::get<std::string>(statement.first);
-                        functionPlaceholders.insert({FunctionPosition {result.size()}, funcToCall});
-                        result.push_back(9999);  // func addr
+                        functionPlaceholders.insert({FunctionPosition {assembly.size()}, funcToCall});
+                        assembly.push_back(9999);  // func addr
                         TCC_ASSERT(statement.second.has_value(),
                                    "Function call should have an arg list");
                         auto const numArgs
                             = std::get<std::vector<std::string>>(statement.second.value()).size();
-                        result.push_back(numArgs);  // func addr
+                        assembly.push_back(numArgs);  // func addr
                         break;
                     }
 
                     case IRByteCode::Return:
                     {
                         PushConstArgument();
-                        result.push_back(tcc::ByteCode::RET);
+                        assembly.push_back(tcc::ByteCode::RET);
                         break;
                     }
 
                         // case IRByteCode::Division:
                         // {
-                        //     result.push_back(tcc::ByteCode::IDIV);
+                        //     assembly.push_back(tcc::ByteCode::IDIV);
                         //     fmt::print("DIV,\n");
                         //     break;
                         // }
@@ -202,18 +194,18 @@ auto AssemblyGenerator::Build(tcc::IRPackage const& package) -> Assembly
             TCC_ASSERT(false, "Function not found");
         }
 
-        result.at(pos.Value()) = search->second.Value();
+        assembly.at(pos.Value()) = search->second.Value();
     }
 
     // Append __init function. This calls main.
     TCC_ASSERT(mainPosition.has_value(), "");
-    auto const entryPoint = result.size();
-    result.push_back(ByteCode::CALL);
-    result.push_back(mainPosition.value().Value());
-    result.push_back(0);
-    result.push_back(ByteCode::EXIT);
+    auto const entryPoint = assembly.size();
+    assembly.push_back(ByteCode::CALL);
+    assembly.push_back(mainPosition.value().Value());
+    assembly.push_back(0);
+    assembly.push_back(ByteCode::EXIT);
 
-    return {result, entryPoint};
+    return Assembly {assembly, entryPoint};
 }
 
 auto AssemblyGenerator::Print(std::vector<int64_t> const& assembly) -> void

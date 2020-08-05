@@ -53,12 +53,12 @@ script-anchors:
 matrix:
   include:
     - os: osx
-      osx_image: xcode11.2
+      osx_image: xcode12
       addons:
         homebrew:
           casks:
             - cmake
-            - boost@1.71
+            - boost@1.72
       script: *script-macOS
 
     - os: linux

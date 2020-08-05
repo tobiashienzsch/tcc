@@ -12,7 +12,7 @@ set(CMAKE_POLICY_DEFAULT_CMP0069 NEW)
 # Only do these if this is the main project, and not if it is included through add_subdirectory
 if(CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME)
     # Let's ensure -std=c++xx instead of -std=g++xx
-    set(CMAKE_CXX_STANDARD 17 CACHE STRING "C++ standard to conform to")
+    set(CMAKE_CXX_STANDARD 20 CACHE STRING "C++ standard to conform to")
     set(CMAKE_CXX_STANDARD_REQUIRED YES)
     set(CMAKE_CXX_EXTENSIONS NO)
     set(CMAKE_EXPORT_COMPILE_COMMANDS ON)

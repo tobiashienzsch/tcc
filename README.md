@@ -22,7 +22,7 @@ Current implementation is a stack only based virtual machine.
 
 ### Dependencies
 
-- C++17
+- C++20
 - CMake 3.12
 - Boost 1.69
   - Filesystem

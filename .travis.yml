@@ -30,24 +30,7 @@ script-anchors:
 
   - &script-linux-coverage
     - cd $TRAVIS_BUILD_DIR
-    - mkdir -p build_coverage
-    - cd build_coverage
-    - cmake  -GNinja  -DTCC_BUILD_COVERAGE=ON ..
-    - cmake --build .
-    - lcov -c -i -d . --base-directory . -o base_cov.info
-    - ctest
-    - cd ..
-    - ./build_coverage/bin/tcc -o test.tcb examples/complex_function_call.tcc
-    - ./build_coverage/bin/tcvm -f test.tcb
-    - cd build_coverage
-    - lcov -c -d . --base-directory . -o test_cov.info
-    - lcov -a base_cov.info -a test_cov.info -o cov.info
-    - lcov --remove cov.info "*boost/*" -o cov.info
-    - lcov --remove cov.info "*3rd_party/*" -o cov.info
-    - lcov --remove cov.info "*c++*" -o cov.info
-    - lcov --remove cov.info "*v1*" -o cov.info
-    - lcov --remove cov.info "*Xcode.app*" -o cov.info
-    - cd ..
+    - make coverage
     - bash <(curl -s https://codecov.io/bash) -f build_coverage/cov.info
 
 matrix:
@@ -88,28 +71,30 @@ matrix:
               key_url: "https://apt.llvm.org/llvm-snapshot.gpg.key"
           packages:
             - ninja-build
-            - libboost1.70-dev
+            - libboost1.73-dev
             - clang++-10
             - lcov
       env:
         - MATRIX_EVAL="CC=clang-10 && CXX=clang++-10"
       script: *script-linux-sanitizers
 
-    # - os: linux
-    #   dist: bionic
-    #   addons:
-    #     apt:
-    #       sources:
-    #         - sourceline: "ppa:mhier/libboost-latest"
-    #         - ubuntu-toolchain-r-test
-    #       packages:
-    #         - g++-9
-    #         - ninja-build
-    #         - libboost1.70-dev
-    #         - lcov
-    #   env:
-    #     - MATRIX_EVAL="CC=gcc-9 CXX=g++-9"
-    #   script: *script-linux-coverage
+    - os: linux
+      dist: bionic
+      addons:
+        apt:
+          sources:
+            - sourceline: "ppa:mhier/libboost-latest"
+            - sourceline: "ppa:ubuntu-toolchain-r/test"
+            - sourceline: "deb https://apt.llvm.org/bionic/ llvm-toolchain-bionic-10 main"
+              key_url: "https://apt.llvm.org/llvm-snapshot.gpg.key"
+          packages:
+            - ninja-build
+            - libboost1.73-dev
+            - clang++-10
+            - lcov
+      env:
+        - MATRIX_EVAL="CC=clang-10 && CXX=clang++-10"
+      script: *script-linux-coverage
 
 before_install:
   - eval "${MATRIX_EVAL}"

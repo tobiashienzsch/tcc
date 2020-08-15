@@ -1,5 +1,6 @@
 default: config build test
 
+export PATH := $(shell pwd)/scripts:$(PATH)
 CONFIG ?= Release
 BUILD_DIR_BASE = build
 BUILD_DIR = $(BUILD_DIR_BASE)_$(CONFIG)
@@ -34,25 +35,31 @@ sanitize:
 	cmake --build $(BUILD_DIR_BASE)_sanitize
 	cd $(BUILD_DIR_BASE)_sanitize && ctest -c
 
+ifneq (,$(findstring clang,$(CXX)))
+    LCOV = lcov --gcov-tool llvm-gcov.sh
+else
+    LCOV = lcov
+endif
+COVERAGE_DIR=$(BUILD_DIR_BASE)_coverage
 .PHONY: coverage
 coverage:
-	cmake -S. -G$(CM_GENERATOR) $(CMAKE_FLAGS) -B $(BUILD_DIR_BASE)_coverage -DTCC_BUILD_COVERAGE=ON
-	cd $(BUILD_DIR_BASE)_coverage && cmake --build .
-	cd $(BUILD_DIR_BASE)_coverage && lcov -c -i -d . --base-directory . -o base_cov.info
-	cd $(BUILD_DIR_BASE)_coverage && ctest
-	cd $(BUILD_DIR_BASE)_coverage && lcov -c -d . --base-directory . -o test_cov.info
-	cd $(BUILD_DIR_BASE)_coverage && lcov -a base_cov.info -a test_cov.info -o cov.info
-	cd $(BUILD_DIR_BASE)_coverage && lcov --remove cov.info "*boost/*" -o cov.info
-	cd $(BUILD_DIR_BASE)_coverage && lcov --remove cov.info "*3rd_party/*" -o cov.info
-	cd $(BUILD_DIR_BASE)_coverage && lcov --remove cov.info "*c++*" -o cov.info
-	cd $(BUILD_DIR_BASE)_coverage && lcov --remove cov.info "*v1*" -o cov.info
-	cd $(BUILD_DIR_BASE)_coverage && lcov --remove cov.info "*Xcode.app*" -o cov.info
+	cmake -S. -G$(CM_GENERATOR) $(CMAKE_FLAGS) -B $(COVERAGE_DIR) -DTCC_BUILD_COVERAGE=ON
+	cd $(COVERAGE_DIR) && cmake --build .
+	cd $(COVERAGE_DIR) && $(LCOV) -c -i -d . --base-directory . -o base_cov.info
+	cd $(COVERAGE_DIR) && ctest
+	cd $(COVERAGE_DIR) && $(LCOV) -c -d . --base-directory . -o test_cov.info
+	cd $(COVERAGE_DIR) && $(LCOV) -a base_cov.info -a test_cov.info -o cov.info
+	cd $(COVERAGE_DIR) && $(LCOV) --remove cov.info "*boost/*" -o cov.info
+	cd $(COVERAGE_DIR) && $(LCOV) --remove cov.info "*3rd_party/*" -o cov.info
+	cd $(COVERAGE_DIR) && $(LCOV) --remove cov.info "*c++*" -o cov.info
+	cd $(COVERAGE_DIR) && $(LCOV) --remove cov.info "*v1*" -o cov.info
+	cd $(COVERAGE_DIR) && $(LCOV) --remove cov.info "*Xcode.app*" -o cov.info
 
 .PHONY: tidy
 tidy:
-	cd $(BUILD_DIR) && ../scripts/run-clang-tidy.py ../tcc -p . -fix -header-filter="tcc/.*"
-	cd $(BUILD_DIR) && ../scripts/run-clang-tidy.py ../tcsl -p . -fix -header-filter="tcc/.*"
-	cd $(BUILD_DIR) && ../scripts/run-clang-tidy.py ../tcvm -p . -fix -header-filter="tcc/.*"
+	cd $(BUILD_DIR) && run-clang-tidy.py ../tcc -p . -fix -header-filter="tcc/.*"
+	cd $(BUILD_DIR) && run-clang-tidy.py ../tcsl -p . -fix -header-filter="tcc/.*"
+	cd $(BUILD_DIR) && run-clang-tidy.py ../tcvm -p . -fix -header-filter="tcc/.*"
 
 .PHONY: report
 report:
@@ -70,5 +77,5 @@ format:
 
 .PHONY: stats
 stats:
-	cloc --exclude-dir=3rd_party,build,build_coverage,build_sanitize,build_Debug,build_Release,.vscode .
+	cloc --exclude-dir=3rd_party,build,build_coverage,build_sanitize,build_Debug,build_Release,.vscode,venv .
 

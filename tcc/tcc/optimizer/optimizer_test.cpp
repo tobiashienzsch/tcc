@@ -15,33 +15,33 @@ using tcc::Optimizer;
 
 TEST_CASE("tcc/optimizer: BinaryOperation", "[tcc][optimizer]")
 {
-    auto [test_input, expected] = GENERATE(table<IRByteCode, bool>({
-        {IRByteCode::Call, false},           //
-        {IRByteCode::Store, false},          //
-        {IRByteCode::Jump, false},           //
-        {IRByteCode::Addition, true},        //
-        {IRByteCode::Subtraction, true},     //
-        {IRByteCode::Multiplication, true},  //
-        {IRByteCode::Division, true},        //
+    auto [testInput, expected] = GENERATE(table<IRByteCode, bool>({
+        {IRByteCode::Call, false},
+        {IRByteCode::Store, false},
+        {IRByteCode::Jump, false},
+        {IRByteCode::Addition, true},
+        {IRByteCode::Subtraction, true},
+        {IRByteCode::Multiplication, true},
+        {IRByteCode::Division, true},
     }));
 
-    REQUIRE(Optimizer::isBinaryOperation(test_input) == expected);
+    REQUIRE(Optimizer::isBinaryOperation(testInput) == expected);
 }
 
 TEST_CASE("tcc/optimizer: ConstantArgument", "[tcc][optimizer]")
 {
     using Argument = IRStatement::Argument;
 
-    auto [test_input, expected] = GENERATE(table<Argument, bool>({
-        {Argument {"x1"s}, false},              //
-        {Argument {"t1"s}, false},              //
-        {Argument {1U}, true},                  //
-        {Argument {42u}, true},                 //
-        {Argument {143u}, true},                //
-        {Argument {uint32_t {1111111}}, true},  //
+    auto [testInput, expected] = GENERATE(table<Argument, bool>({
+        {Argument {"x1"s}, false},
+        {Argument {"t1"s}, false},
+        {Argument {1U}, true},
+        {Argument {42u}, true},
+        {Argument {143u}, true},
+        {Argument {uint32_t {1111111}}, true},
     }));
 
-    REQUIRE(Optimizer::isConstantArgument(test_input) == expected);
+    REQUIRE(Optimizer::isConstantArgument(testInput) == expected);
 }
 
 TEST_CASE("tcc/optimizer: ConstantArgumentOptional", "[tcc][optimizer]")
@@ -50,60 +50,108 @@ TEST_CASE("tcc/optimizer: ConstantArgumentOptional", "[tcc][optimizer]")
 
     SECTION("false")
     {
-        auto [test_input] = GENERATE(table<Argument>({
+        auto [testCase] = GENERATE(table<Argument>({
             {Argument {"x1"s}},
             {Argument {"t1"s}},
             {Argument {std::nullopt}},
         }));
 
-        REQUIRE(Optimizer::isConstantArgument(test_input) == false);
+        REQUIRE(Optimizer::isConstantArgument(testCase) == false);
     }
 
     SECTION("true")
     {
-        auto [test_input] = GENERATE(table<Argument>({
+        auto [testCase] = GENERATE(table<Argument>({
             {Argument {1U}},
             {Argument {42u}},
             {Argument {143u}},
             {Argument {uint32_t {1111111}}},
         }));
 
-        REQUIRE(Optimizer::isConstantArgument(test_input) == true);
+        REQUIRE(Optimizer::isConstantArgument(testCase) == true);
     }
 }
 
 TEST_CASE("tcc/optimizer: ConstantStoreExpression", "[tcc][optimizer]")
 {
-    auto [test_input, expected] = GENERATE(table<IRStatement, bool>({
-        {IRStatement {IRByteCode::Store, "x1"s, 1U, std::nullopt}, true},      //
-        {IRStatement {IRByteCode::Multiplication, "t78"s, 123U, 1U}, false},   // not store
-        {IRStatement {IRByteCode::Store, "t1"s, "t0"s, std::nullopt}, false},  // not const
-    }));
+    SECTION("false")
+    {
+        auto [testCase] = GENERATE(table<IRStatement>({
+            {
+                IRStatement {
+                    .type        = IRByteCode::Multiplication,
+                    .destination = "t78"s,
+                    .first       = 123U,
+                    .second      = 1U,
+                },
+            },
+            {
+                IRStatement {
+                    .type        = IRByteCode::Store,
+                    .destination = "t1"s,
+                    .first       = "t0"s,
+                    .second      = std::nullopt,
+                },
+            },
+        }));
 
-    REQUIRE(Optimizer::isConstantStoreExpression(test_input) == expected);
+        REQUIRE(Optimizer::isConstantStoreExpression(testCase) == false);
+    }
+
+    SECTION("true")
+    {
+        auto [testCase] = GENERATE(table<IRStatement>({
+            {
+                IRStatement {
+                    .type        = IRByteCode::Store,
+                    .destination = "x1"s,
+                    .first       = 1U,
+                    .second      = std::nullopt,
+                },
+            },
+        }));
+
+        REQUIRE(Optimizer::isConstantStoreExpression(testCase) == true);
+    }
 }
 
 TEST_CASE("tcc/optimizer: ConstantBinaryExpression", "[tcc][optimizer]")
 {
-    auto [test_input, expected] = GENERATE(table<IRStatement, bool>({
-        {IRStatement {IRByteCode::Store, "t2"s, "t0"s, std::nullopt}, false},  // not binary
-        {IRStatement {IRByteCode::Multiplication, "t2"s, 1U, 451U}, true},     //
+    auto [testInput, expected] = GENERATE(table<IRStatement, bool>({
+        {IRStatement {
+             .type        = IRByteCode::Store,
+             .destination = "t2"s,
+             .first       = "t0"s,
+             .second      = std::nullopt,
+         },
+         false},
+        {IRStatement {
+             .type        = IRByteCode::Multiplication,
+             .destination = "t2"s,
+             .first       = 1U,
+             .second      = 451U,
+         },
+         true},
     }));
 
-    REQUIRE(Optimizer::isConstantBinaryExpression(test_input) == expected);
+    REQUIRE(Optimizer::isConstantBinaryExpression(testInput) == expected);
 }
 
 TEST_CASE("tcc/optimizer: UnusedStatement", "[tcc][optimizer]")
 {
     auto testData = tcc::IRStatementList {
-        IRStatement {.type        = IRByteCode::Store,
-                     .destination = "x1"s,
-                     .first       = 1U,
-                     .second      = std::nullopt},
-        IRStatement {.type        = IRByteCode::Store,
-                     .destination = "x2"s,
-                     .first       = "x1"s,
-                     .second      = std::nullopt},
+        IRStatement {
+            .type        = IRByteCode::Store,
+            .destination = "x1"s,
+            .first       = 1U,
+            .second      = std::nullopt,
+        },
+        IRStatement {
+            .type        = IRByteCode::Store,
+            .destination = "x2"s,
+            .first       = "x1"s,
+            .second      = std::nullopt,
+        },
     };
 
     REQUIRE(Optimizer::IsUnusedStatement(testData.at(0), testData) == false);
@@ -113,7 +161,12 @@ TEST_CASE("tcc/optimizer: UnusedStatement", "[tcc][optimizer]")
 TEST_CASE("tcc/optimizer: DeleteUnusedStatements", "[tcc][optimizer]")
 {
     auto testData = tcc::IRStatementList {
-        IRStatement {IRByteCode::Store, "t0"s, 1U, std::nullopt}  //
+        IRStatement {
+            .type        = IRByteCode::Store,
+            .destination = "t0"s,
+            .first       = 1U,
+            .second      = std::nullopt,
+        },
     };
 
     REQUIRE(testData.size() == std::size_t {1});
@@ -123,10 +176,32 @@ TEST_CASE("tcc/optimizer: DeleteUnusedStatements", "[tcc][optimizer]")
 
 TEST_CASE("tcc/optimizer: ReplaceVariableIfConstant", "[tcc][optimizer]")
 {
-    auto testData = tcc::IRStatementList {IRStatement {IRByteCode::Store, "x1"s, 143U, std::nullopt},
-                                          IRStatement {IRByteCode::Store, "x2"s, "x1"s, std::nullopt},
-                                          IRStatement {IRByteCode::Store, "t0"s, "x1"s, std::nullopt},
-                                          IRStatement {IRByteCode::Addition, "t0"s, 42U, "x1"s}};
+    auto testData = tcc::IRStatementList {
+        IRStatement {
+            .type        = IRByteCode::Store,
+            .destination = "x1"s,
+            .first       = 143U,
+            .second      = std::nullopt,
+        },
+        IRStatement {
+            .type        = IRByteCode::Store,
+            .destination = "x2"s,
+            .first       = "x1"s,
+            .second      = std::nullopt,
+        },
+        IRStatement {
+            .type        = IRByteCode::Store,
+            .destination = "t0"s,
+            .first       = "x1"s,
+            .second      = std::nullopt,
+        },
+        IRStatement {
+            .type        = IRByteCode::Addition,
+            .destination = "t0"s,
+            .first       = 42U,
+            .second      = "x1"s,
+        },
+    };
 
     REQUIRE(Optimizer::ReplaceVariableIfConstant(testData.at(0), testData) == true);
     REQUIRE(std::get<std::uint32_t>(testData[1].first) == 143);

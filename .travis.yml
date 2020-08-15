@@ -7,11 +7,10 @@ language: cpp
 script-anchors:
   - &script-macOS
     - cd $TRAVIS_BUILD_DIR
-    - mkdir build
-    - cd build
     - cmake --version
-    - cmake .. -GNinja -DTCC_BUILD_PLAYGROUND=OFF -DTCC_BUILD_BENCHMARK=OFF -DCMAKE_BUILD_TYPE:STRING=Release
-    - cmake --build .
+    - cmake -H. -Bbuild -GXcode -DTCC_BUILD_PLAYGROUND=OFF -DTCC_BUILD_BENCHMARK=OFF -DCMAKE_BUILD_TYPE:STRING=Release
+    - cmake --build build
+    - cd build
     - ctest
 
   - &script-linux-release

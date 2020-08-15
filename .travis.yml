@@ -30,6 +30,7 @@ script-anchors:
 
   - &script-linux-coverage
     - cd $TRAVIS_BUILD_DIR
+    - mkdir build_coverage
     - make coverage
     - bash <(curl -s https://codecov.io/bash) -f build_coverage/cov.info
 

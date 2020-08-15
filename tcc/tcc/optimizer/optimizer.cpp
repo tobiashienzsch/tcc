@@ -185,12 +185,7 @@ auto Optimizer::isConstantArgument(IRStatement::Argument const& argument) -> boo
 
 auto Optimizer::isConstantArgument(IRStatement::OptionalArgument const& argument) -> bool
 {
-    if (argument.has_value())
-    {
-        return isConstantArgument(argument.value());
-    }
-
-    return false;
+    return argument.has_value() ? isConstantArgument(argument.value()) : false;
 }
 
 auto Optimizer::isConstantStoreExpression(IRStatement const& statement) -> bool
@@ -200,15 +195,8 @@ auto Optimizer::isConstantStoreExpression(IRStatement const& statement) -> bool
 
 auto Optimizer::isConstantBinaryExpression(IRStatement const& statement) -> bool
 {
-    if (isBinaryOperation(statement.type))
-    {
-        if (isConstantArgument(statement.first) && isConstantArgument(statement.second))
-        {
-            return true;
-        }
-    }
-
-    return false;
+    return isBinaryOperation(statement.type) && isConstantArgument(statement.first)
+           && isConstantArgument(statement.second);
 }
 
 auto Optimizer::isBinaryOperation(IRByteCode op) noexcept -> bool

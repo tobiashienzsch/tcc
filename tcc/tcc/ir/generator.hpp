@@ -78,182 +78,43 @@ private:
 
         [[nodiscard]] auto CurrentPackage() -> IRPackage& { return package_; }
 
-        [[nodiscard]] auto HasVariable(std::string const& name) const -> bool
-        {
-            // local var
-            auto isLocal = currentFunction_->variables.find(name);
-            if (isLocal != currentFunction_->variables.end())
-            {
-                return true;
-            }
+        [[nodiscard]] auto HasVariable(std::string const& name) const -> bool;
 
-            // function argument
-            auto const& args = currentFunction_->args;
-            return std::any_of(std::begin(args), std::end(args),
-                               [&name](auto const& arg) { return arg.first == name; });
-        }
+        auto PushToStack(std::uint32_t x) -> void;
 
-        auto PushToStack(std::uint32_t x) -> void { stack_.emplace_back(x); }
+        [[nodiscard]] auto PopFromStack() -> IRStatement::Argument;
 
-        [[nodiscard]] auto PopFromStack() -> IRStatement::Argument
-        {
-            auto result = stack_.back();
-            stack_.pop_back();
-            return result;
-        }
+        auto AddVariable(const std::string& name) -> void;
 
-        auto AddVariable(const std::string& name) -> void
-        {
-            auto search = currentFunction_->variables.find(name);
-            if (search == currentFunction_->variables.end())
-            {
-                currentFunction_->variables.insert({name, 0});
-            }
-            else
-            {
-                fmt::print("Tried to add {} twice to variable map\n", name);
-            }
-        }
+        [[nodiscard]] auto GetLastVariable(std::string const& key) const -> std::string;
 
-        [[nodiscard]] auto GetLastVariable(std::string const& key) const -> std::string
-        {
-            // local var
-            auto isLocal = currentFunction_->variables.find(key);
-            if (isLocal != std::end(currentFunction_->variables))
-            {
-                auto newId = isLocal->second - 1;
-                return fmt::format("{}.{}", key, newId);
-            }
-            // func arg
-            auto isArg = currentFunction_->args.find(key);
-            if (isArg != std::end(currentFunction_->args))
-            {
-                auto newId = isArg->second - 1;
-                return fmt::format("{}.{}", key, newId);
-            }
+        auto CreateReturnOperation() -> void;
 
-            TCC_ASSERT(false, "Should never get here, identifier should"
-                              "either be a variable or an function argument");
-            return "";
-        }
+        auto CreateBinaryOperation(IRByteCode op) -> void;
 
-        auto CreateReturnOperation() -> void
-        {
-            auto const first = PopFromStack();
-            currentBlock_->statements.emplace_back(
-                IRStatement {IRByteCode::Return, "", first, std::nullopt, false});
-        }
+        auto CreateUnaryOperation(IRByteCode op) -> void;
 
-        auto CreateBinaryOperation(IRByteCode op) -> void
-        {
-            auto const second  = PopFromStack();
-            auto const first   = PopFromStack();
-            auto const tmpName = CreateTemporaryOnStack();
+        auto CreateStoreOperation(std::string key) -> void;
 
-            currentBlock_->statements.emplace_back(IRStatement {op, tmpName, first, second});
-        }
+        auto CreateLoadOperation(std::string key) -> void;
 
-        auto CreateUnaryOperation(IRByteCode op) -> void
-        {
-            currentBlock_->statements.emplace_back(
-                IRStatement {op, CreateTemporaryOnStack(), PopFromStack(), {}});
-        }
+        auto CreateArgStoreOperation(std::string key, std::string varName) -> void;
 
-        auto CreateStoreOperation(std::string key) -> void
-        {
-            currentBlock_->statements.emplace_back(
-                IRStatement {IRByteCode::Store, std::move(key), PopFromStack(), {}, false});
-        }
+        [[nodiscard]] auto CreateAssignment(std::string const& key) -> std::string;
 
-        auto CreateLoadOperation(std::string key) -> void
-        {
-            currentBlock_->statements.emplace_back(
-                IRStatement {IRByteCode::Load, CreateTemporaryOnStack(), key, {}});
-        }
-
-        auto CreateArgStoreOperation(std::string key, std::string varName) -> void
-        {
-            currentBlock_->statements.emplace_back(
-                IRStatement {IRByteCode::ArgStore, std::move(key), std::move(varName), {}});
-        }
-
-        [[nodiscard]] auto CreateAssignment(std::string const& key) -> std::string
-        {
-            // local var
-            auto isLocal = currentFunction_->variables.find(key);
-            if (isLocal != std::end(currentFunction_->variables))
-            {
-                auto newId = isLocal->second++;
-                return fmt::format("{}.{}", key, newId);
-            }
-            // func arg
-            auto isArg = currentFunction_->args.find(key);
-            if (isArg != std::end(currentFunction_->args))
-            {
-                auto newId = isArg->second++;
-                return fmt::format("{}.{}", key, newId);
-            }
-
-            TCC_ASSERT(false, "Should never get here, identifier should"
-                              "either be a variable or an function argument");
-            return "";
-        }
-
-        [[nodiscard]] auto CreateTemporaryOnStack() -> std::string
-        {
-            auto tmp = fmt::format("t.{}", tmpCounter_++);
-            stack_.push_back(tmp);
-            return tmp;
-        }
+        [[nodiscard]] auto CreateTemporaryOnStack() -> std::string;
 
         [[nodiscard]] auto CreateFunction(std::string name, const std::vector<std::string>& argsV)
-            -> bool
-        {
-            auto args = std::map<std::string, int> {};
-            for (auto const& arg : argsV)
-            {
-                args.insert({arg, 0});
-            }
-
-            package_.functions.emplace_back(IRFunction {std::move(name), std::move(args), {}, {}});
-            currentFunction_ = &package_.functions.back();
-            StartBasicBlock("entry");
-            for (auto const& arg : currentFunction_->args)
-            {
-                CreateArgStoreOperation(CreateAssignment(arg.first), arg.first);
-            }
-
-            return true;
-        }
+            -> bool;
 
         [[nodiscard]] auto CreateFunctionCall(std::string name, std::vector<std::string> argTemps)
-            -> bool
-        {
-            currentBlock_->statements.emplace_back(IRStatement {IRByteCode::Call,
-                                                                CreateTemporaryOnStack(),
-                                                                std::move(name),
-                                                                argTemps,
-                                                                {}});
-            return true;
-        }
+            -> bool;
 
-        void CreateIfStatementCondition()
-        {
-            currentBlock_->statements.push_back(
-                IRStatement {IRByteCode::JumpIf, "", GetLastTemporary(), {}, false});
-        }
+        auto CreateIfStatementCondition() -> void;
 
-        void StartBasicBlock(const std::string& suffix = "")
-        {
-            auto const name = fmt::format("{}.{}", blockCounter_++, suffix);
-            currentFunction_->blocks.push_back({name});
-            currentBlock_ = &currentFunction_->blocks.back();
-        }
+        auto StartBasicBlock(const std::string& suffix = "") -> void;
 
-        [[nodiscard]] auto GetLastTemporary() const -> std::string
-        {
-            return currentBlock_->statements.back().destination;
-        }
+        [[nodiscard]] auto GetLastTemporary() const -> std::string;
 
     private:
         int tmpCounter_   = 0;

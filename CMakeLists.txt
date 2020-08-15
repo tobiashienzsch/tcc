@@ -17,14 +17,12 @@ if(CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME)
     set(CMAKE_CXX_EXTENSIONS NO)
     set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
     set(BUILD_SHARED_LIBS OFF)
-    
-    # Let's nicely support folders in IDE's
     set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 
     include(CheckCXXCompilerFlag)
-    check_cxx_compiler_flag("-march=native" COMPILER_SUPPORTS_MARCH_NATIVE)
-    if(COMPILER_SUPPORTS_MARCH_NATIVE)
-        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -march=native")
+    check_cxx_compiler_flag("-mavx" COMPILER_SUPPORTS_MAVX)
+    if(COMPILER_SUPPORTS_MAVX)
+        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -mavx")
     endif()
 
     include(CheckIPOSupported)
@@ -52,7 +50,7 @@ endif()
 # project options
 option(TCC_CLANG_TIDY       "Build with clang-tidy enabled"     OFF)
 option(TCC_BUILD_TESTS      "Build the unit tests with Catch2"  ON)
-option(TCC_BUILD_PLAYGROUND "Build playground project"          ON)
+option(TCC_BUILD_PLAYGROUND "Build playground project"          OFF)
 option(TCC_BUILD_BENCHMARK  "Build benchmark tests"             OFF)
 option(TCC_BUILD_COVERAGE   "Build with code coverage"          OFF)
 

@@ -30,19 +30,8 @@ script-anchors:
 
   - &script-linux-coverage
     - cd $TRAVIS_BUILD_DIR
-    - export PATH=./scripts:$PATH
-    - cmake -H. -GNinja -Bbuild -DTCC_BUILD_COVERAGE=ON
-    - cd build && cmake --build .
-    - cd build && lcov --gcov-tool llvm-gcov.sh -c -i -d . --base-directory . -o base_cov.info
-    - cd build && ctest
-    - cd build && lcov --gcov-tool llvm-gcov.sh -c -d . --base-directory . -o test_cov.info
-    - cd build && lcov --gcov-tool llvm-gcov.sh -a base_cov.info -a test_cov.info -o cov.info
-    - cd build && lcov --gcov-tool llvm-gcov.sh --remove cov.info "*boost/*" -o cov.info
-    - cd build && lcov --gcov-tool llvm-gcov.sh --remove cov.info "*3rd_party/*" -o cov.info
-    - cd build && lcov --gcov-tool llvm-gcov.sh --remove cov.info "*c++*" -o cov.info
-    - cd build && lcov --gcov-tool llvm-gcov.sh --remove cov.info "*v1*" -o cov.info
-    - cd build && lcov --gcov-tool llvm-gcov.sh --remove cov.info "*Xcode.app*" -o cov.info
-    - bash <(curl -s https://codecov.io/bash) -f build/cov.info
+    - make coverage
+    - bash <(curl -s https://codecov.io/bash) -f build_coverage/cov.info
 
 matrix:
   include:

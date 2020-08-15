@@ -10,7 +10,7 @@ script-anchors:
     - mkdir build
     - cd build
     - cmake --version
-    - cmake .. -GXcode -DTCC_BUILD_PLAYGROUND=OFF -DTCC_BUILD_BENCHMARK=OFF -DCMAKE_BUILD_TYPE:STRING=Release
+    - cmake .. -GNinja -DTCC_BUILD_PLAYGROUND=OFF -DTCC_BUILD_BENCHMARK=OFF -DCMAKE_BUILD_TYPE:STRING=Release
     - cmake --build .
     - ctest
 
@@ -42,6 +42,7 @@ matrix:
           casks:
             - cmake
             - boost@1.72
+            - ninja
       script: *script-macOS
 
     - os: linux

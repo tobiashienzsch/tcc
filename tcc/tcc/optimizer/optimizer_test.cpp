@@ -48,17 +48,28 @@ TEST_CASE("tcc/optimizer: ConstantArgumentOptional", "[tcc][optimizer]")
 {
     using Argument = IRStatement::OptionalArgument;
 
-    auto [test_input, expected] = GENERATE(table<Argument, bool>({
-        {Argument {"x1"s}, false},              //
-        {Argument {"t1"s}, false},              //
-        {Argument {std::nullopt}, false},       //
-        {Argument {1U}, true},                  //
-        {Argument {42u}, true},                 //
-        {Argument {143u}, true},                //
-        {Argument {uint32_t {1111111}}, true},  //
-    }));
+    SECTION("false")
+    {
+        auto [test_input] = GENERATE(table<Argument>({
+            {Argument {"x1"s}},
+            {Argument {"t1"s}},
+            {Argument {std::nullopt}},
+        }));
 
-    REQUIRE(Optimizer::isConstantArgument(test_input) == expected);
+        REQUIRE(Optimizer::isConstantArgument(test_input) == false);
+    }
+
+    SECTION("true")
+    {
+        auto [test_input] = GENERATE(table<Argument>({
+            {Argument {1U}},
+            {Argument {42u}},
+            {Argument {143u}},
+            {Argument {uint32_t {1111111}}},
+        }));
+
+        REQUIRE(Optimizer::isConstantArgument(test_input) == true);
+    }
 }
 
 TEST_CASE("tcc/optimizer: ConstantStoreExpression", "[tcc][optimizer]")

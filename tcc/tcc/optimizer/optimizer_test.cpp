@@ -85,8 +85,14 @@ TEST_CASE("tcc/optimizer: ConstantBinaryExpression", "[tcc][optimizer]")
 TEST_CASE("tcc/optimizer: UnusedStatement", "[tcc][optimizer]")
 {
     auto testData = tcc::IRStatementList {
-        IRStatement {IRByteCode::Store, "x1"s, 1U, std::nullopt},    //
-        IRStatement {IRByteCode::Store, "x2"s, "x1"s, std::nullopt}  //
+        IRStatement {.type        = IRByteCode::Store,
+                     .destination = "x1"s,
+                     .first       = 1U,
+                     .second      = std::nullopt},
+        IRStatement {.type        = IRByteCode::Store,
+                     .destination = "x2"s,
+                     .first       = "x1"s,
+                     .second      = std::nullopt},
     };
 
     REQUIRE(Optimizer::IsUnusedStatement(testData.at(0), testData) == false);

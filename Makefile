@@ -43,7 +43,7 @@ endif
 COVERAGE_DIR=$(BUILD_DIR_BASE)_coverage
 .PHONY: coverage
 coverage:
-	cmake -S. -G$(CM_GENERATOR) $(CMAKE_FLAGS) -B $(COVERAGE_DIR) -DTCC_BUILD_COVERAGE=ON
+	cmake -H. -G$(CM_GENERATOR) -B$(COVERAGE_DIR) -DTCC_BUILD_COVERAGE=ON
 	cd $(COVERAGE_DIR) && cmake --build .
 	cd $(COVERAGE_DIR) && $(LCOV) -c -i -d . --base-directory . -o base_cov.info
 	cd $(COVERAGE_DIR) && ctest

@@ -106,10 +106,10 @@ TEST_CASE("tcc/optimizer: DeleteUnusedStatements", "[tcc][optimizer]")
 
 TEST_CASE("tcc/optimizer: ReplaceVariableIfConstant", "[tcc][optimizer]")
 {
-    auto testData = tcc::IRStatementList {IRStatement {IRByteCode::Store, "x1"s, 143u, std::nullopt},
+    auto testData = tcc::IRStatementList {IRStatement {IRByteCode::Store, "x1"s, 143U, std::nullopt},
                                           IRStatement {IRByteCode::Store, "x2"s, "x1"s, std::nullopt},
                                           IRStatement {IRByteCode::Store, "t0"s, "x1"s, std::nullopt},
-                                          IRStatement {IRByteCode::Addition, "t0"s, 42u, "x1"s}};
+                                          IRStatement {IRByteCode::Addition, "t0"s, 42U, "x1"s}};
 
     REQUIRE(Optimizer::ReplaceVariableIfConstant(testData.at(0), testData) == true);
     REQUIRE(std::get<std::uint32_t>(testData[1].first) == 143);

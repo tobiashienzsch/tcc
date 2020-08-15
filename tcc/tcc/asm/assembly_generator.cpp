@@ -11,7 +11,7 @@ class FunctionPosition
 {
 public:
     constexpr explicit FunctionPosition(std::size_t pos) : pos_ {pos} { }
-    constexpr auto Value() const noexcept { return pos_; }
+    [[nodiscard]] constexpr auto Value() const noexcept { return pos_; }
 
     friend auto operator<(FunctionPosition const& lhs, FunctionPosition const& rhs)
     {

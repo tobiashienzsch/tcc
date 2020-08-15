@@ -413,7 +413,7 @@ auto IRGenerator::Builder::CreateAssignment(std::string const& key) -> std::stri
 auto IRGenerator::Builder::CreateTemporaryOnStack() -> std::string
 {
     auto tmp = fmt::format("t.{}", tmpCounter_++);
-    stack_.push_back(tmp);
+    stack_.emplace_back(tmp);
     return tmp;
 }
 

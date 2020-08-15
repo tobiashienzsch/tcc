@@ -44,8 +44,8 @@ COVERAGE_DIR=$(BUILD_DIR_BASE)_coverage
 .PHONY: coverage
 coverage:
 	mkdir -p $(COVERAGE_DIR)
-	cd $(COVERAGE_DIR) && cmake -G$(CM_GENERATOR) -B$(COVERAGE_DIR) -DTCC_BUILD_COVERAGE=ON ..
-	cd $(COVERAGE_DIR) && cmake --build .
+	cd $(COVERAGE_DIR) && cmake -G$(CM_GENERATOR) -DTCC_BUILD_COVERAGE=ON ..
+	cmake --build $(COVERAGE_DIR)
 	cd $(COVERAGE_DIR) && $(LCOV) -c -i -d . --base-directory . -o base_cov.info
 	cd $(COVERAGE_DIR) && ctest
 	cd $(COVERAGE_DIR) && $(LCOV) -c -d . --base-directory . -o test_cov.info

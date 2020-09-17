@@ -57,21 +57,20 @@ matrix:
       script: *script-linux-release
 
     - os: linux
-      dist: bionic
+      dist: focal
       addons:
         apt:
           sources:
             - sourceline: "ppa:mhier/libboost-latest"
             - sourceline: "ppa:ubuntu-toolchain-r/test"
-            - sourceline: "deb https://apt.llvm.org/bionic/ llvm-toolchain-bionic-10 main"
+            - sourceline: "deb https://apt.llvm.org/focal/ llvm-toolchain-focal-11 main"
               key_url: "https://apt.llvm.org/llvm-snapshot.gpg.key"
           packages:
             - ninja-build
             - libboost1.73-dev
-            - clang++-10
-            - lcov
+            - clang++-11
       env:
-        - MATRIX_EVAL="CC=clang-10 && CXX=clang++-10"
+        - MATRIX_EVAL="CC=clang-11 && CXX=clang++-11"
       script: *script-linux-sanitizers
 
     - os: linux

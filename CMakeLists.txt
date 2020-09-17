@@ -93,7 +93,7 @@ configure_file(.clang-tidy .clang-tidy COPYONLY)
 
 # set(Boost_USE_STATIC_LIBS ON)
 # set(Boost_USE_MULTITHREADED ON)
-find_package(Boost 1.69 REQUIRED COMPONENTS date_time filesystem program_options regex serialization system)
+find_package(Boost 1.71 REQUIRED COMPONENTS date_time filesystem program_options regex serialization system)
 
 add_subdirectory(3rd_party/fmt EXCLUDE_FROM_ALL)
 

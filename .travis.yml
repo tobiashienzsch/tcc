@@ -45,19 +45,15 @@ matrix:
       script: *script-macOS
 
     - os: linux
-      dist: bionic
+      dist: focal
       addons:
         apt:
           sources:
             - sourceline: "ppa:mhier/libboost-latest"
             - ubuntu-toolchain-r-test
           packages:
-            - g++-10
             - ninja-build
             - libboost1.73-dev
-            - lcov
-      env:
-        - MATRIX_EVAL="CC=gcc-10 CXX=g++-10"
       script: *script-linux-release
 
     - os: linux

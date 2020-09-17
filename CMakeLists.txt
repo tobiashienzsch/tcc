@@ -9,6 +9,14 @@ project(TobanteCrappyCompilerCollection
 cmake_policy(SET CMP0069 NEW) 
 set(CMAKE_POLICY_DEFAULT_CMP0069 NEW)
 
+# project options
+option(TCC_BUILD_TESTS      "Build the unit tests with Catch2"  ON)
+option(TCC_BUILD_WERROR     "Build with warnings as errors"     OFF)
+option(TCC_BUILD_COVERAGE   "Build with code coverage"          OFF)
+option(TCC_BUILD_LTO        "Build with lto enabled"            OFF)
+option(TCC_BUILD_PLAYGROUND "Build playground project"          OFF)
+option(TCC_BUILD_BENCHMARK  "Build benchmark tests"             OFF)
+
 # Only do these if this is the main project, and not if it is included through add_subdirectory
 if(CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME)
     # Let's ensure -std=c++xx instead of -std=g++xx
@@ -25,12 +33,14 @@ if(CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME)
         set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -mavx")
     endif()
 
-    include(CheckIPOSupported)
-    check_ipo_supported(RESULT TCC_BUILD_LTO)
     if(TCC_BUILD_LTO)
-        message(STATUS "tcc: LTO is enabled.")
-        set(CMAKE_INTERPROCEDURAL_OPTIMIZATION TRUE)
-    endif()
+      include(CheckIPOSupported)
+      check_ipo_supported(RESULT COMPILER_SUPPORTS_LTO)
+      if(COMPILER_SUPPORTS_LTO)
+          message(STATUS "tcc: LTO is enabled.")
+          set(CMAKE_INTERPROCEDURAL_OPTIMIZATION TRUE)
+      endif()
+    endif(TCC_BUILD_LTO)
 
     # Docs only available if this is the main app
     find_package(Doxygen)
@@ -47,13 +57,6 @@ if(CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME)
 
 endif()
 
-# project options
-option(TCC_BUILD_TESTS      "Build the unit tests with Catch2"  ON)
-option(TCC_BUILD_WERROR     "Build with warnings as errors"     OFF)
-option(TCC_BUILD_COVERAGE   "Build with code coverage"          OFF)
-option(TCC_CLANG_TIDY       "Build with clang-tidy enabled"     OFF)
-option(TCC_BUILD_PLAYGROUND "Build playground project"          OFF)
-option(TCC_BUILD_BENCHMARK  "Build benchmark tests"             OFF)
 
 # cmake modules
 list (APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")

@@ -48,11 +48,12 @@ if(CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME)
 endif()
 
 # project options
-option(TCC_CLANG_TIDY       "Build with clang-tidy enabled"     OFF)
 option(TCC_BUILD_TESTS      "Build the unit tests with Catch2"  ON)
+option(TCC_BUILD_WERROR     "Build with warnings as errors"     OFF)
+option(TCC_BUILD_COVERAGE   "Build with code coverage"          OFF)
+option(TCC_CLANG_TIDY       "Build with clang-tidy enabled"     OFF)
 option(TCC_BUILD_PLAYGROUND "Build playground project"          OFF)
 option(TCC_BUILD_BENCHMARK  "Build benchmark tests"             OFF)
-option(TCC_BUILD_COVERAGE   "Build with code coverage"          OFF)
 
 # cmake modules
 list (APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")

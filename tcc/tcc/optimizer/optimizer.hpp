@@ -11,7 +11,7 @@ namespace tcc
 class Optimizer
 {
 public:
-    Optimizer(IRFunction& scope) : function_(scope) { }
+    explicit Optimizer(IRFunction& scope) : function_(scope) { }
 
     auto Optimize() -> void;
 

@@ -16,7 +16,7 @@ script-anchors:
   - &script-linux-release
     - cd $TRAVIS_BUILD_DIR
     - mkdir build && cd build
-    - cmake -GNinja -DCMAKE_BUILD_TYPE:STRING=Release -DTCC_BUILD_PLAYGROUND=OFF -DTCC_BUILD_BENCHMARK=OFF ..
+    - cmake -GNinja -DCMAKE_BUILD_TYPE:STRING=Release -DTCC_BUILD_WERROR=ON ..
     - cmake --build .
     - ctest
 

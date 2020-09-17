@@ -19,21 +19,21 @@ else()
         -Wextra
         -Wpedantic
         -Wshadow
-        # -Wsign-conversion
+        -Wconversion
+        -Wno-sign-conversion
         # -Wdouble-promotion
-        # -Wconversion
   )
   # GCC 
   target_compile_options(
     compiler_warnings
     INTERFACE
     $<$<CXX_COMPILER_ID:GNU>:
-        -Wmisleading-indentation
-        -Wlogical-op
         -Wduplicated-branches
         -Wduplicated-cond
-        -Wno-parentheses
+        -Wlogical-op
+        -Wnull-dereference
         -Wno-sequence-point
+        -Wno-parentheses
     >
   )
 
@@ -43,6 +43,9 @@ else()
     INTERFACE
     $<$<CXX_COMPILER_ID:Clang>:
         -Wshadow-all
+        -Wlogical-op-parentheses
+        -Wmisleading-indentation
+        -Wloop-analysis
     >
   )
 endif()

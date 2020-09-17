@@ -20,8 +20,8 @@ else()
         -Wpedantic
         -Wshadow
         -Wconversion
+        -Wdouble-promotion
         -Wno-sign-conversion
-        # -Wdouble-promotion
   )
   # GCC 
   target_compile_options(

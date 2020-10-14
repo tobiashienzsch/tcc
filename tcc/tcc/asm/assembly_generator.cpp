@@ -41,13 +41,13 @@ auto AssemblyGenerator::Build(tcc::IRPackage const& package) -> Assembly
 
         functionPositions.insert({function.name, funcPos});
 
-        auto argVars = std::vector<std::string> {};
+        auto argVars = IRArgumentList {};
         for (auto const& arg : function.args)
         {
             argVars.push_back(arg.first);
         }
 
-        auto locals = std::vector<std::string> {};
+        auto locals = IRArgumentList {};
         for (auto const& var : function.variables)
         {
             locals.push_back(var.first);
@@ -158,7 +158,7 @@ auto AssemblyGenerator::Build(tcc::IRPackage const& package) -> Assembly
                         TCC_ASSERT(statement.second.has_value(),
                                    "Function call should have an arg list");
                         auto const numArgs
-                            = std::get<std::vector<std::string>>(statement.second.value()).size();
+                            = std::get<IRArgumentList>(statement.second.value()).size();
                         assembly.push_back(numArgs);  // func addr
                         break;
                     }

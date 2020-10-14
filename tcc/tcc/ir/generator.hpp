@@ -104,11 +104,9 @@ private:
 
         [[nodiscard]] auto CreateTemporaryOnStack() -> std::string;
 
-        [[nodiscard]] auto CreateFunction(std::string name, const std::vector<std::string>& argsV)
-            -> bool;
+        [[nodiscard]] auto CreateFunction(std::string name, const IRArgumentList& argsV) -> bool;
 
-        [[nodiscard]] auto CreateFunctionCall(std::string name, std::vector<std::string> argTemps)
-            -> bool;
+        [[nodiscard]] auto CreateFunctionCall(std::string name, IRArgumentList argTemps) -> bool;
 
         auto CreateIfStatementCondition() -> void;
 

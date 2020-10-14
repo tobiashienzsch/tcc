@@ -1,7 +1,7 @@
 # EDITORS
-.atom/*
-.idea/*
-.vs/*
+.atom
+.idea
+.vs
 .vscode/*
 
 #PROJECT

@@ -21,19 +21,15 @@
 // clang-format on
 
 #define TCC_TOKEN_TYPE(x) x,
-enum class SyntaxTokenType
-{
-    TCC_TOKENS
-};
+enum class SyntaxTokenType { TCC_TOKENS };
 #undef TCC_TOKEN_TYPE
 
-std::ostream& operator<<(std::ostream& out, SyntaxTokenType type);
+std::ostream &operator<<(std::ostream &out, SyntaxTokenType type);
 
-struct SyntaxToken
-{
-    SyntaxTokenType Type;
-    std::size_t Position;
-    std::string Text;
+struct SyntaxToken {
+  SyntaxTokenType Type;
+  std::size_t Position;
+  std::string Text;
 };
 
-#endif  // TCC_PLAYGROUND_TOKEN_HPP
+#endif // TCC_PLAYGROUND_TOKEN_HPP

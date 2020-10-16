@@ -9,23 +9,21 @@
 #include <ostream>
 #include <vector>
 
-class ParseContext
-{
+class ParseContext {
 public:
-    auto AddError(std::string msg) -> void
-    {
-        errors_.push_back(fmt::format("ERROR: {}", std::move(msg)));
-    }
+  auto AddError(std::string msg) -> void {
+    errors_.push_back(fmt::format("ERROR: {}", std::move(msg)));
+  }
 
-    auto PrintErrors(std::ostream& out) const -> void
-    {
-        std::copy(errors_.begin(), errors_.end(), std::ostream_iterator<std::string>(out, "\n"));
-    }
+  auto PrintErrors(std::ostream &out) const -> void {
+    std::copy(errors_.begin(), errors_.end(),
+              std::ostream_iterator<std::string>(out, "\n"));
+  }
 
-    [[nodiscard]] auto HasErrors() const noexcept { return !errors_.empty(); }
+  [[nodiscard]] auto HasErrors() const noexcept { return !errors_.empty(); }
 
 private:
-    std::vector<std::string> errors_ {};
+  std::vector<std::string> errors_{};
 };
 
-#endif  // TCC_PLAYGROUND_PARSE_CONTEXT_HPP
+#endif // TCC_PLAYGROUND_PARSE_CONTEXT_HPP

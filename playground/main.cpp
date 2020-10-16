@@ -4,13 +4,12 @@
 #include <cstdlib>
 #include <iostream>
 
-int main()
-{
-    auto parser     = Parser {" + 143"};
-    auto expression = parser.Parse();
+int main() {
+  auto parser = Parser{" + 143"};
+  auto expression = parser.Parse();
 
-    parser.PrintDiagnostics(std::cout);
-    ASTUtils::PrettyPrint(std::cout, *expression);
+  parser.PrintDiagnostics(std::cout);
+  ASTUtils::PrettyPrint(std::cout, *expression);
 
-    return EXIT_SUCCESS;
+  return EXIT_SUCCESS;
 }

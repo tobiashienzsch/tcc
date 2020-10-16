@@ -24,8 +24,8 @@ public:
   }
 
   [[nodiscard]] auto Parse() -> std::unique_ptr<ASTNode> {
-    auto exp = parseTerm();
-    auto eof = match(SyntaxTokenType::EndOfFile);
+    auto exp = parseExpression();
+    auto eof = matchToken(SyntaxTokenType::EndOfFile);
     return exp;
   }
 
@@ -74,16 +74,16 @@ private:
     if (current().Type == SyntaxTokenType::OpenBrace) {
       auto left = nextToken();
       auto expression = parseExpression();
-      auto right = match(SyntaxTokenType::CloseBrace);
+      auto right = matchToken(SyntaxTokenType::CloseBrace);
       return std::make_unique<ASTBracedExpr>(left, std::move(expression),
                                              right);
     }
 
-    auto numberToken = match(SyntaxTokenType::LiteralInteger);
-    return std::make_unique<ASTConstantExpr>(numberToken);
+    auto numberToken = matchToken(SyntaxTokenType::LiteralInteger);
+    return std::make_unique<ASTConstant>(numberToken);
   }
 
-  [[nodiscard]] auto match(SyntaxTokenType type) noexcept -> SyntaxToken {
+  [[nodiscard]] auto matchToken(SyntaxTokenType type) noexcept -> SyntaxToken {
     if (current().Type == type) {
       return nextToken();
     }

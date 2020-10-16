@@ -13,8 +13,8 @@
 #include <vector>
 
 enum class ASTNodeType {
-  Operand,
-  ConstantExpression,
+  Operator,
+  Constant,
   BinaryExpression,
   BracedExpression,
 };
@@ -31,17 +31,17 @@ public:
   GetSourceLocation() const = 0;
 };
 
-class ASTOperand final : public ASTNode {
+class ASTOperator final : public ASTNode {
 public:
-  ASTOperand(SyntaxToken token) : token_{std::move(token)} {}
-  ASTOperand(ASTOperand const &) = delete;
-  ASTOperand &operator=(ASTOperand const &) = delete;
-  ASTOperand(ASTOperand &&) noexcept = default;
-  ASTOperand &operator=(ASTOperand &&) noexcept = default;
-  ~ASTOperand() override = default;
+  ASTOperator(SyntaxToken token) : token_{std::move(token)} {}
+  ASTOperator(ASTOperator const &) = delete;
+  ASTOperator &operator=(ASTOperator const &) = delete;
+  ASTOperator(ASTOperator &&) noexcept = default;
+  ASTOperator &operator=(ASTOperator &&) noexcept = default;
+  ~ASTOperator() override = default;
 
   [[nodiscard]] auto GetType() const -> ASTNodeType override {
-    return ASTNodeType::Operand;
+    return ASTNodeType::Operator;
   }
 
   [[nodiscard]] auto GetChildren() const -> std::vector<ASTNode *> override {
@@ -60,17 +60,17 @@ private:
   SyntaxToken token_;
 };
 
-class ASTConstantExpr final : public ASTNode {
+class ASTConstant final : public ASTNode {
 public:
-  ASTConstantExpr(SyntaxToken token) : token_{std::move(token)} {}
-  ASTConstantExpr(ASTConstantExpr const &) = delete;
-  ASTConstantExpr &operator=(ASTConstantExpr const &) = delete;
-  ASTConstantExpr(ASTConstantExpr &&) noexcept = default;
-  ASTConstantExpr &operator=(ASTConstantExpr &&) noexcept = default;
-  ~ASTConstantExpr() override = default;
+  ASTConstant(SyntaxToken token) : token_{std::move(token)} {}
+  ASTConstant(ASTConstant const &) = delete;
+  ASTConstant &operator=(ASTConstant const &) = delete;
+  ASTConstant(ASTConstant &&) noexcept = default;
+  ASTConstant &operator=(ASTConstant &&) noexcept = default;
+  ~ASTConstant() override = default;
 
   [[nodiscard]] auto GetType() const -> ASTNodeType override {
-    return ASTNodeType::ConstantExpression;
+    return ASTNodeType::Constant;
   }
 
   [[nodiscard]] auto GetChildren() const -> std::vector<ASTNode *> override {
@@ -94,8 +94,8 @@ public:
   ASTBinaryExpr(std::unique_ptr<ASTNode> lhs, SyntaxToken op,
                 std::unique_ptr<ASTNode> rhs)
       : lhs_{std::move(lhs)},
-        operand_{std::make_unique<ASTOperand>(std::move(op))}, rhs_{std::move(
-                                                                   rhs)} {}
+        operator_{std::make_unique<ASTOperator>(std::move(op))}, rhs_{std::move(
+                                                                     rhs)} {}
   ASTBinaryExpr(ASTBinaryExpr const &) = delete;
   ASTBinaryExpr &operator=(ASTBinaryExpr const &) = delete;
   ASTBinaryExpr(ASTBinaryExpr &&) noexcept = default;
@@ -108,7 +108,7 @@ public:
   }
 
   [[nodiscard]] auto GetChildren() const -> std::vector<ASTNode *> override {
-    auto res = std::vector<ASTNode *>{lhs_.get(), operand_.get(), rhs_.get()};
+    auto res = std::vector<ASTNode *>{lhs_.get(), operator_.get(), rhs_.get()};
     return res;
   }
 
@@ -121,7 +121,7 @@ public:
 
 private:
   std::unique_ptr<ASTNode> lhs_;
-  std::unique_ptr<ASTOperand> operand_;
+  std::unique_ptr<ASTOperator> operator_;
   std::unique_ptr<ASTNode> rhs_;
 };
 
@@ -166,9 +166,8 @@ public:
     auto const marker = isLast ? std::string("└── ") : std::string("├── ");
 
     auto location = node.GetSourceLocation();
-    out << fmt::format("{0}{1}<{2}[{3}, {4}) >\n", indent, marker, node.GetType(),
-                       location.first, location.second);
-
+    out << fmt::format("{0}{1}<{2}[{3}, {4}) >\n", indent, marker,
+                       node.GetType(), location.first, location.second);
 
     indent += isLast ? std::string("    ") : std::string("│   ");
 

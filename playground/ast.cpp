@@ -2,12 +2,12 @@
 
 auto operator<<(std::ostream &out, ASTNodeType const type) -> std::ostream & {
   switch (type) {
-  case ASTNodeType::Operand: {
-    out << "Operand";
+  case ASTNodeType::Operator: {
+    out << "Operator";
     break;
   }
-  case ASTNodeType::ConstantExpression: {
-    out << "ConstantExpr";
+  case ASTNodeType::Constant: {
+    out << "Constant";
     break;
   }
   case ASTNodeType::BinaryExpression: {

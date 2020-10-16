@@ -3,6 +3,9 @@
 
 #include "token.hpp"
 
+#include <fmt/format.h>
+#include <fmt/ostream.h>
+
 #include <memory>
 #include <ostream>
 #include <string>
@@ -162,29 +165,19 @@ public:
                           std::string indent = "", bool isLast = true) -> void {
     auto const marker = isLast ? std::string("└── ") : std::string("├── ");
 
-    out << indent;
-    out << marker;
-    out << '<' << node.GetType() << "[" << node.GetSourceLocation().first
-        << ", " << node.GetSourceLocation().second << ") ";
+    auto location = node.GetSourceLocation();
+    out << fmt::format("{0}{1}<{2}[{3}, {4}) >\n", indent, marker, node.GetType(),
+                       location.first, location.second);
 
-    auto const *constant = dynamic_cast<ASTConstantExpr const *>(&node);
-    if (constant != nullptr) {
-      out << constant->Token().Text;
-    }
-
-    auto const *operand = dynamic_cast<ASTOperand const *>(&node);
-    if (operand != nullptr) {
-      out << operand->Token().Type;
-    }
-
-    out << '>' << '\n';
 
     indent += isLast ? std::string("    ") : std::string("│   ");
-    auto const children = node.GetChildren();
-    if (not children.empty()) {
-      std::for_each(
-          children.begin(), children.end() - 1,
-          [&](auto const &child) { PrettyPrint(out, *child, indent, false); });
+
+    if (auto const children = node.GetChildren(); not children.empty()) {
+      std::for_each(children.begin(), children.end() - 1,
+                    [&](auto const *const child) {
+                      PrettyPrint(out, *child, indent, false);
+                    });
+
       PrettyPrint(out, *children.back(), indent, true);
     }
   }

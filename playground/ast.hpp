@@ -26,6 +26,7 @@ public:
   virtual ~ASTNode() = default;
 
   [[nodiscard]] virtual ASTNodeType GetType() const = 0;
+  [[nodiscard]] virtual std::string GetSource() const = 0;
   [[nodiscard]] virtual std::vector<ASTNode *> GetChildren() const = 0;
   [[nodiscard]] virtual std::pair<std::size_t, std::size_t>
   GetSourceLocation() const = 0;
@@ -46,6 +47,10 @@ public:
 
   [[nodiscard]] auto GetChildren() const -> std::vector<ASTNode *> override {
     return {};
+  }
+
+  [[nodiscard]] auto GetSource() const -> std::string override {
+    return token_.Text;
   }
 
   [[nodiscard]] auto GetSourceLocation() const
@@ -76,7 +81,9 @@ public:
   [[nodiscard]] auto GetChildren() const -> std::vector<ASTNode *> override {
     return {};
   }
-
+  [[nodiscard]] auto GetSource() const -> std::string override {
+    return token_.Text;
+  }
   [[nodiscard]] auto GetSourceLocation() const
       -> std::pair<std::size_t, std::size_t> override {
     return std::make_pair(token_.Position,
@@ -110,6 +117,11 @@ public:
   [[nodiscard]] auto GetChildren() const -> std::vector<ASTNode *> override {
     auto res = std::vector<ASTNode *>{lhs_.get(), operator_.get(), rhs_.get()};
     return res;
+  }
+
+  [[nodiscard]] auto GetSource() const -> std::string override {
+    return fmt::format("{} {} {}", lhs_->GetSource(), operator_->GetSource(),
+                       rhs_->GetSource());
   }
 
   [[nodiscard]] auto GetSourceLocation() const
@@ -146,6 +158,10 @@ public:
     return std::vector<ASTNode *>{expression_.get()};
   }
 
+  [[nodiscard]] auto GetSource() const -> std::string override {
+    return fmt::format("({})", expression_->GetSource());
+  }
+
   [[nodiscard]] auto GetSourceLocation() const
       -> std::pair<std::size_t, std::size_t> override {
     auto const start = open_.Position;
@@ -166,8 +182,9 @@ public:
     auto const marker = isLast ? std::string("└── ") : std::string("├── ");
 
     auto location = node.GetSourceLocation();
-    out << fmt::format("{0}{1}<{2}[{3}, {4}) >\n", indent, marker,
-                       node.GetType(), location.first, location.second);
+    out << fmt::format("{0}{1}<{2}[{3}, {4}) \"{5}\">\n", indent, marker,
+                       node.GetType(), location.first, location.second,
+                       node.GetSource());
 
     indent += isLast ? std::string("    ") : std::string("│   ");
 

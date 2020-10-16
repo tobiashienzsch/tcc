@@ -5,7 +5,7 @@
 #include <iostream>
 
 auto main(int /*argc*/, char ** /*argv*/) -> int {
-  auto parser = Parser{"(((123+(456-123))+(123+123+1234)))"};
+  auto parser = Parser{"((1+2)*3)+143+(42/(2+1))"};
   auto expression = parser.Parse();
 
   parser.PrintDiagnostics(std::cout);

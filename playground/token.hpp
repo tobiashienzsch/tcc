@@ -32,4 +32,23 @@ struct SyntaxToken {
   std::string Text;
 };
 
+[[nodiscard]] inline constexpr auto
+GetBinaryOperatorPrecedence(SyntaxTokenType type) noexcept -> int {
+  switch (type) {
+  case SyntaxTokenType::Star:
+  case SyntaxTokenType::Slash: {
+    return 2;
+  }
+
+  case SyntaxTokenType::Plus:
+  case SyntaxTokenType::Minus: {
+    return 1;
+  }
+
+  default: {
+    return 0;
+  }
+  }
+}
+
 #endif // TCC_PLAYGROUND_TOKEN_HPP

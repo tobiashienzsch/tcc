@@ -39,34 +39,23 @@ public:
   }
 
 private:
-  [[nodiscard]] auto parseExpression() -> std::unique_ptr<ASTNode> {
-    return parseTerm();
-  }
+  [[nodiscard]] auto parseExpression(int parentPrecedence = 0)
+      -> std::unique_ptr<ASTNode> {
+    auto left = parsePrimaryExpression();
 
-  [[nodiscard]] auto parseTerm() -> std::unique_ptr<ASTNode> {
-    auto lhs = parseFactor();
+    while (true) {
+      auto const precedence = GetBinaryOperatorPrecedence(current().Type);
+      if (precedence == 0 || precedence <= parentPrecedence) {
+        break;
+      }
 
-    while (current().Type == SyntaxTokenType::Plus ||
-           current().Type == SyntaxTokenType::Minus) {
-      auto op = nextToken();
-      auto rhs = parseFactor();
-      lhs = std::make_unique<ASTBinaryExpr>(std::move(lhs), op, std::move(rhs));
+      auto opToken = nextToken();
+      auto right = parseExpression(precedence);
+      left = std::make_unique<ASTBinaryExpr>(std::move(left), opToken,
+                                             std::move(right));
     }
 
-    return lhs;
-  }
-
-  [[nodiscard]] auto parseFactor() -> std::unique_ptr<ASTNode> {
-    auto lhs = parsePrimaryExpression();
-
-    while (current().Type == SyntaxTokenType::Star ||
-           current().Type == SyntaxTokenType::Slash) {
-      auto op = nextToken();
-      auto rhs = parsePrimaryExpression();
-      lhs = std::make_unique<ASTBinaryExpr>(std::move(lhs), op, std::move(rhs));
-    }
-
-    return lhs;
+    return left;
   }
 
   [[nodiscard]] auto parsePrimaryExpression() -> std::unique_ptr<ASTNode> {

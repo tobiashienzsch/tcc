@@ -13,13 +13,14 @@ public:
   Parser(std::string text) {
     auto lexer = Lexer{context_, std::move(text)};
     auto token = lexer.NextToken();
-    for (; token.Type != SyntaxTokenType::EndOfFile;
-         token = lexer.NextToken()) {
+    while (token.Type != SyntaxTokenType::EndOfFile) {
       if (token.Type != SyntaxTokenType::Whitespace &&
           token.Type != SyntaxTokenType::BadToken) {
         tokens_.push_back(token);
       }
+      token = lexer.NextToken();
     }
+    tokens_.push_back(token);
   }
 
   [[nodiscard]] auto Parse() -> std::unique_ptr<ASTNode> {
@@ -30,6 +31,11 @@ public:
 
   auto PrintDiagnostics(std::ostream &out) const -> void {
     context_.PrintErrors(out);
+  }
+
+  [[nodiscard]] auto GetTokens() const noexcept
+      -> std::vector<SyntaxToken> const & {
+    return tokens_;
   }
 
 private:
@@ -96,8 +102,10 @@ private:
 
   [[nodiscard]] auto peek(size_t offset) const noexcept -> SyntaxToken {
     auto const index = position_ + offset;
-    auto const maxIndex = std::max<size_t>(tokens_.size() - 1, 0);
-    return tokens_.at(std::min(index, maxIndex));
+    if (index >= tokens_.size()) {
+      return tokens_.back();
+    }
+    return tokens_.at(index);
   }
 
   [[nodiscard]] auto current() const noexcept -> SyntaxToken { return peek(0); }

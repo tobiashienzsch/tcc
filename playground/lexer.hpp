@@ -28,7 +28,7 @@ public:
     if (std::isspace(current()) != 0) {
       auto const start = position_;
       while (std::isspace(current()) != 0) {
-        next();
+        advance();
       }
 
       auto const length = position_ - start;
@@ -43,7 +43,7 @@ public:
     if (std::isdigit(current()) != 0) {
       auto const start = position_;
       while (std::isdigit(current()) == 1) {
-        next();
+        advance();
       }
 
       auto const length = position_ - start;
@@ -88,11 +88,11 @@ public:
   }
 
 private:
-  auto current() const noexcept -> char {
+  [[nodiscard]] auto current() const noexcept -> char {
     return position_ >= text_.size() ? '\0' : text_[position_];
   }
 
-  auto next() -> std::size_t { return ++position_; }
+  auto advance() noexcept -> std::size_t { return ++position_; }
 
   ParseContext &context_;
   std::string text_;

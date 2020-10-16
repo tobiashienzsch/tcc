@@ -28,9 +28,15 @@ public:
     return exp;
   }
 
-  auto PrintDiagnostics(std::ostream &out) { context_.PrintErrors(out); }
+  auto PrintDiagnostics(std::ostream &out) const -> void {
+    context_.PrintErrors(out);
+  }
 
 private:
+  [[nodiscard]] auto parseExpression() -> std::unique_ptr<ASTNode> {
+    return parseTerm();
+  }
+
   [[nodiscard]] auto parseTerm() -> std::unique_ptr<ASTNode> {
     auto lhs = parseFactor();
 
@@ -58,6 +64,15 @@ private:
   }
 
   [[nodiscard]] auto parsePrimaryExpression() -> std::unique_ptr<ASTNode> {
+
+    if (current().Type == SyntaxTokenType::OpenBrace) {
+      auto left = nextToken();
+      auto expression = parseExpression();
+      auto right = match(SyntaxTokenType::CloseBrace);
+      return std::make_unique<ASTBracedExpr>(left, std::move(expression),
+                                             right);
+    }
+
     auto numberToken = match(SyntaxTokenType::LiteralInteger);
     return std::make_unique<ASTConstantExpr>(numberToken);
   }

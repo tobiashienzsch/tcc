@@ -96,6 +96,7 @@ configure_file(.clang-tidy .clang-tidy COPYONLY)
 find_package(Boost 1.71 REQUIRED COMPONENTS date_time filesystem program_options regex serialization system)
 
 add_subdirectory(3rd_party/fmt EXCLUDE_FROM_ALL)
+add_subdirectory(3rd_party/gsl EXCLUDE_FROM_ALL)
 
 # catch2
 if(TCC_BUILD_TESTS)

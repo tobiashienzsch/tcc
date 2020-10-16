@@ -4,8 +4,8 @@
 #include <cstdlib>
 #include <iostream>
 
-int main() {
-  auto parser = Parser{" + 143"};
+auto main(int /*argc*/, char ** /*argv*/) -> int {
+  auto parser = Parser{"(42 - 143) + (123-456)"};
   auto expression = parser.Parse();
 
   parser.PrintDiagnostics(std::cout);

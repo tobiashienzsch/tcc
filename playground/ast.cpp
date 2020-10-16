@@ -1,6 +1,6 @@
 #include "ast.hpp"
 
-std::ostream &operator<<(std::ostream &out, ASTNodeType const type) {
+auto operator<<(std::ostream &out, ASTNodeType const type) -> std::ostream & {
   switch (type) {
   case ASTNodeType::Operand: {
     out << "Operand";
@@ -12,6 +12,10 @@ std::ostream &operator<<(std::ostream &out, ASTNodeType const type) {
   }
   case ASTNodeType::BinaryExpression: {
     out << "BinaryExpr";
+    break;
+  }
+  case ASTNodeType::BracedExpression: {
+    out << "BracedExpr";
     break;
   }
   }

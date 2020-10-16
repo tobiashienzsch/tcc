@@ -20,7 +20,9 @@ public:
               std::ostream_iterator<std::string>(out, "\n"));
   }
 
-  [[nodiscard]] auto HasErrors() const noexcept { return !errors_.empty(); }
+  [[nodiscard]] auto HasErrors() const noexcept -> bool {
+    return !errors_.empty();
+  }
 
 private:
   std::vector<std::string> errors_{};

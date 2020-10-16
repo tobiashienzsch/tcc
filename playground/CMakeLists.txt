@@ -14,6 +14,7 @@ target_sources(playground_lib PUBLIC
 target_link_libraries(playground_lib
         PUBLIC
         fmt
+        GSL
         Boost::headers
         tcc::CompilerOptions
         tcc::CompilerWarnings

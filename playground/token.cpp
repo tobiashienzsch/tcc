@@ -1,6 +1,7 @@
 #include "token.hpp"
 
-std::ostream &operator<<(std::ostream &out, SyntaxTokenType const type) {
+auto operator<<(std::ostream &out, SyntaxTokenType const type)
+    -> std::ostream & {
   switch (type) {
 #define TCC_TOKEN_TYPE(x)                                                      \
   case SyntaxTokenType::x: {                                                   \

@@ -24,7 +24,7 @@
 enum class SyntaxTokenType { TCC_TOKENS };
 #undef TCC_TOKEN_TYPE
 
-std::ostream &operator<<(std::ostream &out, SyntaxTokenType type);
+auto operator<<(std::ostream &out, SyntaxTokenType type) -> std::ostream &;
 
 struct SyntaxToken {
   SyntaxTokenType Type;

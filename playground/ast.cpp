@@ -14,6 +14,10 @@ auto operator<<(std::ostream &out, ASTNodeType const type) -> std::ostream & {
     out << "BinaryExpr";
     break;
   }
+  case ASTNodeType::UnaryExpression: {
+    out << "UnaryExpr";
+    break;
+  }
   case ASTNodeType::BracedExpression: {
     out << "BracedExpr";
     break;

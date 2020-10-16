@@ -51,4 +51,18 @@ GetBinaryOperatorPrecedence(SyntaxTokenType type) noexcept -> int {
   }
 }
 
+[[nodiscard]] inline constexpr auto
+GetUnaryOperatorPrecedence(SyntaxTokenType type) noexcept -> int {
+  switch (type) {
+  case SyntaxTokenType::Plus:
+  case SyntaxTokenType::Minus: {
+    return 1;
+  }
+
+  default: {
+    return 0;
+  }
+  }
+}
+
 #endif // TCC_PLAYGROUND_TOKEN_HPP

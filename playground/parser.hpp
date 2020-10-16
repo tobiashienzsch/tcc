@@ -41,7 +41,15 @@ public:
 private:
   [[nodiscard]] auto parseExpression(int parentPrecedence = 0)
       -> std::unique_ptr<ASTNode> {
-    auto left = parsePrimaryExpression();
+    auto left = std::unique_ptr<ASTNode>();
+    auto unaryPrecedence = GetUnaryOperatorPrecedence(current().Type);
+    if (unaryPrecedence != 0 && unaryPrecedence >= parentPrecedence) {
+      auto opToken = nextToken();
+      auto operand = parseExpression(unaryPrecedence);
+      left = std::make_unique<ASTUnaryExpr>(opToken, std::move(operand));
+    } else {
+      left = parsePrimaryExpression();
+    }
 
     while (true) {
       auto const precedence = GetBinaryOperatorPrecedence(current().Type);

@@ -16,6 +16,7 @@ enum class ASTNodeType {
   Operator,
   Constant,
   BinaryExpression,
+  UnaryExpression,
   BracedExpression,
 };
 
@@ -135,6 +136,43 @@ private:
   std::unique_ptr<ASTNode> lhs_;
   std::unique_ptr<ASTOperator> operator_;
   std::unique_ptr<ASTNode> rhs_;
+};
+
+class ASTUnaryExpr final : public ASTNode {
+public:
+  ASTUnaryExpr(SyntaxToken op, std::unique_ptr<ASTNode> operand)
+      : operator_{std::make_unique<ASTOperator>(std::move(op))},
+        operand_{std::move(operand)} {}
+  ASTUnaryExpr(ASTUnaryExpr const &) = delete;
+  ASTUnaryExpr &operator=(ASTUnaryExpr const &) = delete;
+  ASTUnaryExpr(ASTUnaryExpr &&) noexcept = default;
+  ASTUnaryExpr &operator=(ASTUnaryExpr &&) noexcept = default;
+
+  ~ASTUnaryExpr() override = default;
+
+  [[nodiscard]] auto GetType() const -> ASTNodeType override {
+    return ASTNodeType::UnaryExpression;
+  }
+
+  [[nodiscard]] auto GetChildren() const -> std::vector<ASTNode *> override {
+    auto res = std::vector<ASTNode *>{operator_.get(), operand_.get()};
+    return res;
+  }
+
+  [[nodiscard]] auto GetSource() const -> std::string override {
+    return fmt::format("{} {}", operator_->GetSource(), operand_->GetSource());
+  }
+
+  [[nodiscard]] auto GetSourceLocation() const
+      -> std::pair<std::size_t, std::size_t> override {
+    auto const start = operator_->GetSourceLocation().first;
+    auto const end = operand_->GetSourceLocation().second;
+    return std::make_pair(start, end);
+  }
+
+private:
+  std::unique_ptr<ASTOperator> operator_;
+  std::unique_ptr<ASTNode> operand_;
 };
 
 class ASTBracedExpr final : public ASTNode {

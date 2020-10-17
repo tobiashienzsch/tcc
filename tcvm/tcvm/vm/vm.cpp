@@ -31,7 +31,7 @@ auto VirtualMachine::Cpu() -> int64_t
                    "instruction pointer out of range at: {}", m_instructionPointer);
 
         // fetch instructions
-        auto const opcode = m_code.at(m_instructionPointer);
+        auto const opcode = m_code[m_instructionPointer];
         if (m_shouldTrace)
         {
             disassemble(opcode);
@@ -109,7 +109,7 @@ auto VirtualMachine::Cpu() -> int64_t
 
             case ByteCode::ICONST:
             {
-                auto const val = m_code.at(m_instructionPointer);  // read operand from code
+                auto const val = m_code[m_instructionPointer];  // read operand from code
                 m_instructionPointer++;
                 m_stackPointer++;
                 m_stack[m_stackPointer] = val;  // push to stack
@@ -125,11 +125,11 @@ auto VirtualMachine::Cpu() -> int64_t
 
             case ByteCode::GLOAD:
             {
-                auto const addr = m_code.at(m_instructionPointer);
+                auto const addr = m_code[m_instructionPointer];
                 m_instructionPointer++;
-                auto const val = m_data.at(addr);
+                auto const val = m_data[addr];
                 m_stackPointer++;
-                m_stack.at(m_stackPointer) = val;
+                m_stack[m_stackPointer] = val;
                 break;
             }
 
@@ -142,17 +142,17 @@ auto VirtualMachine::Cpu() -> int64_t
 
             case ByteCode::GSTORE:
             {
-                auto const val = m_stack.at(m_stackPointer);
+                auto const val = m_stack[m_stackPointer];
                 m_stackPointer--;
-                auto const addr = m_code.at(m_instructionPointer);
+                auto const addr = m_code[m_instructionPointer];
                 m_instructionPointer++;
-                m_data.at(addr) = val;
+                m_data[addr] = val;
                 break;
             }
 
             case ByteCode::PRINT:
             {
-                auto const val = m_stack.at(m_stackPointer);
+                auto const val = m_stack[m_stackPointer];
                 m_stackPointer--;
                 out_ << fmt::format("{}\n", val);
                 break;
@@ -180,19 +180,19 @@ auto VirtualMachine::Cpu() -> int64_t
 
             case ByteCode::RET:
             {
-                auto const returnVal = m_stack.at(m_stackPointer--);  // pop return value
+                auto const returnVal = m_stack[m_stackPointer--];  // pop return value
                 m_stackPointer       = m_framePointer;  // jump over locals to frame pointer
-                m_instructionPointer = m_stack.at(m_stackPointer--);  // pop return addr
-                m_framePointer       = m_stack.at(m_stackPointer--);  // restore frame pointer
-                auto const numArgs   = m_stack.at(m_stackPointer--);  // how many args to throw away
-                m_stackPointer -= numArgs;                            // pop args
-                m_stack.at(++m_stackPointer) = returnVal;             // leave result on stack
+                m_instructionPointer = m_stack[m_stackPointer--];  // pop return addr
+                m_framePointer       = m_stack[m_stackPointer--];  // restore frame pointer
+                auto const numArgs   = m_stack[m_stackPointer--];  // how many args to throw away
+                m_stackPointer -= numArgs;                         // pop args
+                m_stack[++m_stackPointer] = returnVal;             // leave result on stack
                 break;
             }
 
             case ByteCode::EXIT:
             {
-                auto const exitCode = m_stack.at(m_stackPointer);
+                auto const exitCode = m_stack[m_stackPointer];
                 if (m_shouldTrace)
                 {
                     out_ << fmt::format("---\nexit code: {}\n", exitCode);

@@ -252,7 +252,7 @@ bool IRGenerator::operator()(tcc::ast::WhileStatement const& /*unused*/)
 }
 bool IRGenerator::operator()(tcc::ast::ReturnStatement const& x)
 {
-    if (!(*this)(*x.expr))
+    if (!(*this)(*x.Expr))
     {
         return false;
     }

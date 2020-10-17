@@ -38,7 +38,7 @@ struct Expression : qi::grammar<Iterator, ast::Expression(), Skipper<Iterator>>
 
     qi::rule<Iterator, ast::FunctionCall(), Skipper<Iterator>> FunctionCall;
 
-    qi::rule<Iterator, std::list<ast::Expression>(), Skipper<Iterator>> argument_list;
+    qi::rule<Iterator, std::vector<ast::Expression>(), Skipper<Iterator>> argument_list;
 
     qi::rule<Iterator, std::string(), Skipper<Iterator>> Identifier;
 

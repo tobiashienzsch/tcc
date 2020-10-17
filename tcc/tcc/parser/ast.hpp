@@ -6,8 +6,9 @@
 #include <boost/fusion/include/io.hpp>
 #include <boost/optional.hpp>
 #include <boost/variant/recursive_variant.hpp>
-#include <list>
+
 #include <utility>
+#include <vector>
 
 namespace tcc
 {
@@ -106,7 +107,7 @@ struct Operation
 struct FunctionCall
 {
     Identifier FuncName;
-    std::list<Expression> Args;
+    std::vector<Expression> Args;
 };
 
 /**
@@ -115,7 +116,7 @@ struct FunctionCall
 struct Expression
 {
     Operand First;
-    std::list<Operation> Rest;
+    std::vector<Operation> Rest;
 };
 
 /**
@@ -156,7 +157,7 @@ using Statement = boost::variant<               //
 /**
  * @brief Statement list.
  */
-struct StatementList : std::list<Statement>
+struct StatementList : std::vector<Statement>
 {
 };
 
@@ -184,7 +185,7 @@ struct WhileStatement
  */
 struct ReturnStatement : Tagged
 {
-    boost::optional<Expression> expr;
+    boost::optional<Expression> Expr;
 };
 
 /**
@@ -194,14 +195,14 @@ struct Function
 {
     std::string ReturnType;
     Identifier FuncName;
-    std::list<Identifier> Args;
+    std::vector<Identifier> Args;
     StatementList Body;
 };
 
 /**
  * @brief Function list.
  */
-using FunctionList = std::list<Function>;
+using FunctionList = std::vector<Function>;
 
 /**
  * @brief Nil ostream operator.
@@ -235,16 +236,16 @@ BOOST_FUSION_ADAPT_STRUCT(         //
     (tcc::ast::Operand, Operand_)  //
 )
 
-BOOST_FUSION_ADAPT_STRUCT(                   //
-    tcc::ast::FunctionCall,                  //
-    (tcc::ast::Identifier, FuncName)         //
-    (std::list<tcc::ast::Expression>, Args)  //
+BOOST_FUSION_ADAPT_STRUCT(                     //
+    tcc::ast::FunctionCall,                    //
+    (tcc::ast::Identifier, FuncName)           //
+    (std::vector<tcc::ast::Expression>, Args)  //
 )
 
-BOOST_FUSION_ADAPT_STRUCT(                  //
-    tcc::ast::Expression,                   //
-    (tcc::ast::Operand, First)              //
-    (std::list<tcc::ast::Operation>, Rest)  //
+BOOST_FUSION_ADAPT_STRUCT(                    //
+    tcc::ast::Expression,                     //
+    (tcc::ast::Operand, First)                //
+    (std::vector<tcc::ast::Operation>, Rest)  //
 )
 
 BOOST_FUSION_ADAPT_STRUCT(                          //
@@ -274,15 +275,15 @@ BOOST_FUSION_ADAPT_STRUCT(             //
 
 BOOST_FUSION_ADAPT_STRUCT(                         //
     tcc::ast::ReturnStatement,                     //
-    (boost::optional<tcc::ast::Expression>, expr)  //
+    (boost::optional<tcc::ast::Expression>, Expr)  //
 )
 
-BOOST_FUSION_ADAPT_STRUCT(                   //
-    tcc::ast::Function,                      //
-    (std::string, ReturnType)                //
-    (tcc::ast::Identifier, FuncName)         //
-    (std::list<tcc::ast::Identifier>, Args)  //
-    (tcc::ast::StatementList, Body)          //
+BOOST_FUSION_ADAPT_STRUCT(                     //
+    tcc::ast::Function,                        //
+    (std::string, ReturnType)                  //
+    (tcc::ast::Identifier, FuncName)           //
+    (std::vector<tcc::ast::Identifier>, Args)  //
+    (tcc::ast::StatementList, Body)            //
 )
 
 #endif

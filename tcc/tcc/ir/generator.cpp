@@ -21,12 +21,12 @@ bool IRGenerator::operator()(bool /*unused*/) { return true; }
 
 bool IRGenerator::operator()(tcc::ast::Identifier const& x)
 {
-    if (!builder_.HasVariable(x.name))
+    if (!builder_.HasVariable(x.Name))
     {
-        errorHandler_(x.id, "Undeclared variable: " + x.name);
+        errorHandler_(x.ID, "Undeclared variable: " + x.Name);
         return false;
     }
-    auto const last = builder_.GetLastVariable(x.name);
+    auto const last = builder_.GetLastVariable(x.Name);
     builder_.CreateLoadOperation(last);
     return true;
 }
@@ -142,7 +142,7 @@ bool IRGenerator::operator()(tcc::ast::FunctionCall const& call)
         argTemps.push_back(builder_.GetLastTemporary());
     }
 
-    return builder_.CreateFunctionCall(call.function_name.name, argTemps);
+    return builder_.CreateFunctionCall(call.FuncName.Name, argTemps);
 }
 bool IRGenerator::operator()(tcc::ast::Expression const& x)
 {
@@ -165,28 +165,28 @@ bool IRGenerator::operator()(tcc::ast::Assignment const& x)
     {
         return false;
     }
-    if (!builder_.HasVariable(x.lhs.name))
+    if (!builder_.HasVariable(x.lhs.Name))
     {
-        errorHandler_(x.lhs.id, "Undeclared variable: " + x.lhs.name);
+        errorHandler_(x.lhs.ID, "Undeclared variable: " + x.lhs.Name);
         return false;
     }
-    auto const newKey = builder_.CreateAssignment(x.lhs.name);
+    auto const newKey = builder_.CreateAssignment(x.lhs.Name);
     builder_.CreateStoreOperation(newKey);
     return true;
 }
 
 bool IRGenerator::operator()(tcc::ast::VariableDeclaration const& x)
 {
-    if (builder_.HasVariable(x.lhs.name))
+    if (builder_.HasVariable(x.lhs.Name))
     {
-        errorHandler_(x.lhs.id, "Duplicate variable: " + x.lhs.name);
+        errorHandler_(x.lhs.ID, "Duplicate variable: " + x.lhs.Name);
         return false;
     }
     bool r = (*this)(*x.rhs);
     if (r)  // don't add the variable if the RHS fails
     {
-        builder_.AddVariable(x.lhs.name);
-        auto const newKey = builder_.CreateAssignment(x.lhs.name);
+        builder_.AddVariable(x.lhs.Name);
+        auto const newKey = builder_.CreateAssignment(x.lhs.Name);
         builder_.CreateStoreOperation(newKey);
     }
     return r;
@@ -265,12 +265,12 @@ bool IRGenerator::operator()(tcc::ast::Function const& func)
     auto args = IRArgumentList {};
     for (auto const& arg : func.args)
     {
-        args.push_back(arg.name);
+        args.push_back(arg.Name);
     }
 
-    if (!builder_.CreateFunction(func.function_name.name, args))
+    if (!builder_.CreateFunction(func.FuncName.Name, args))
     {
-        errorHandler_(func.function_name.id, "Duplicate function: " + func.function_name.name);
+        errorHandler_(func.FuncName.ID, "Duplicate function: " + func.FuncName.Name);
         return false;
     }
 

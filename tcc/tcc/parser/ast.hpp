@@ -21,7 +21,7 @@ namespace ast
  */
 struct Tagged
 {
-    int id {};
+    int ID {};
 };
 
 /**
@@ -42,8 +42,8 @@ struct Expression;
  */
 struct Identifier : Tagged
 {
-    Identifier(std::string n = "") : name(std::move(n)) { }
-    std::string name;
+    Identifier(std::string n = "") : Name(std::move(n)) { }
+    std::string Name;
 };
 
 /**
@@ -105,7 +105,7 @@ struct Operation
  */
 struct FunctionCall
 {
-    Identifier function_name;
+    Identifier FuncName;
     std::list<Expression> args;
 };
 
@@ -193,7 +193,7 @@ struct ReturnStatement : Tagged
 struct Function
 {
     std::string return_type;
-    Identifier function_name;
+    Identifier FuncName;
     std::list<Identifier> args;
     StatementList body;
 };
@@ -217,7 +217,7 @@ inline std::ostream& operator<<(std::ostream& out, Nil /*unused*/)
  */
 inline std::ostream& operator<<(std::ostream& out, Identifier const& id)
 {
-    out << id.name;
+    out << id.Name;
     return out;
 }
 }  // namespace ast
@@ -237,7 +237,7 @@ BOOST_FUSION_ADAPT_STRUCT(          //
 
 BOOST_FUSION_ADAPT_STRUCT(                   //
     tcc::ast::FunctionCall,                  //
-    (tcc::ast::Identifier, function_name)    //
+    (tcc::ast::Identifier, FuncName)         //
     (std::list<tcc::ast::Expression>, args)  //
 )
 
@@ -280,7 +280,7 @@ BOOST_FUSION_ADAPT_STRUCT(                         //
 BOOST_FUSION_ADAPT_STRUCT(                   //
     tcc::ast::Function,                      //
     (std::string, return_type)               //
-    (tcc::ast::Identifier, function_name)    //
+    (tcc::ast::Identifier, FuncName)         //
     (std::list<tcc::ast::Identifier>, args)  //
     (tcc::ast::StatementList, body)          //
 )

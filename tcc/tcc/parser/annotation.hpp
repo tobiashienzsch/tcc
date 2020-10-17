@@ -39,28 +39,28 @@ public:
     {
         auto const id = static_cast<int>(iters.size());
         iters.push_back(pos);
-        ast.lhs.id = id;
+        ast.lhs.ID = id;
     }
 
     void operator()(ast::Assignment& ast, Iterator pos) const
     {
         auto const id = static_cast<int>(iters.size());
         iters.push_back(pos);
-        ast.lhs.id = id;
+        ast.lhs.ID = id;
     }
 
     void operator()(ast::ReturnStatement& ast, Iterator pos) const
     {
         auto const id = static_cast<int>(iters.size());
         iters.push_back(pos);
-        ast.id = id;
+        ast.ID = id;
     }
 
     void operator()(ast::Identifier& ast, Iterator pos) const
     {
         auto const id = static_cast<int>(iters.size());
         iters.push_back(pos);
-        ast.id = id;
+        ast.ID = id;
     }
 
 private:
@@ -75,8 +75,8 @@ private:
         void operator()(T& /*unused*/) const
         {
         }
-        void operator()(ast::FunctionCall& x) const { x.function_name.id = id; }
-        void operator()(ast::Identifier& x) const { x.id = id; }
+        void operator()(ast::FunctionCall& x) const { x.FuncName.ID = id; }
+        void operator()(ast::Identifier& x) const { x.ID = id; }
     };
 
     std::vector<Iterator>& iters;

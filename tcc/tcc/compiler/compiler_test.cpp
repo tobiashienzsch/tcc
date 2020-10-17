@@ -94,5 +94,6 @@ TEST_CASE("tcc/compiler: Run", "[compiler]")
 
         CHECK(returnCode == EXIT_FAILURE);
         CHECK_THAT(cliOutput, Contains("Error while compiling"));
+        CHECK_THAT(cliOutput, Contains("Undeclared variable: a line 1:"));
     }
 }

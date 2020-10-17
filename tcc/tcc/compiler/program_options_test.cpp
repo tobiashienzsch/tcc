@@ -85,14 +85,15 @@ TEST_CASE("tcc/compiler: ProgramOptions", "[tcc][compiler]")
 
     SECTION("temp source file")
     {
-        auto tempPath = fs::temp_directory_path() / fs::unique_path();
-        auto tempFile = std::ofstream(tempPath.c_str());
+        auto tempPath    = fs::temp_directory_path() / fs::unique_path();
+        auto tempPathStr = tempPath.string();
+        auto tempFile    = std::ofstream(tempPathStr.c_str());
         tempFile.close();
 
         auto arguments = std::vector<char const*>();
         arguments.push_back("binary");
         arguments.push_back("-O1");
-        arguments.push_back((char const*)tempPath.c_str());
+        arguments.push_back(tempPathStr.c_str());
         auto const argc  = static_cast<int>(arguments.size());
         auto const* argv = arguments.data();
 

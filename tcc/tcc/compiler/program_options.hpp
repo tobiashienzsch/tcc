@@ -23,7 +23,7 @@ public:
     /**
      * @brief Defaulted constructor.
      */
-    ProgramOptions() = default;
+    ProgramOptions(std::ostream& out = std::cout) : out_ {out} { }
 
     /**
      * @brief Parses commandline arguments via argc & argv.
@@ -56,7 +56,7 @@ public:
 
             if (vm_.count("help") != 0U)
             {
-                fmt::print("{}\n", desc);
+                fmt::print(out_, "{}\n", desc);
                 return {true, EXIT_SUCCESS};
             }
 
@@ -65,14 +65,14 @@ public:
                 auto const paths = vm_["input"].as<std::vector<std::string>>();
                 if (paths.size() > 1)
                 {
-                    fmt::print("Only one source file allowed currently.\n");
+                    fmt::print(out_, "Only one source file allowed currently.\n");
                     return {true, EXIT_FAILURE};
                 }
 
                 std::ifstream in(paths[0], std::ios_base::in);
                 if (!in)
                 {
-                    fmt::print("Error: Could not open input file: {}\n", paths[0]);
+                    fmt::print(out_, "Could not open input file: {}\n", paths[0]);
                     return {true, EXIT_FAILURE};
                 }
 
@@ -84,12 +84,12 @@ public:
         }
         catch (std::exception& e)
         {
-            fmt::print("error: {}\n", e.what());
+            fmt::print(out_, "error: {}\n", e.what());
             return {true, EXIT_FAILURE};
         }
         catch (...)
         {
-            fmt::print("Exception of unknown type!\n");
+            fmt::print(out_, "Exception of unknown type!\n");
             return {true, EXIT_FAILURE};
         }
 
@@ -105,6 +105,7 @@ public:
 private:
     CompilerOptions flags_ {};
     po::variables_map vm_;
+    std::ostream& out_;
 };
 }  // namespace tcc
 #endif

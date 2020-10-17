@@ -84,7 +84,7 @@ if(TCC_BUILD_TESTS)
 
         tcc/asm/asm_utils_test.cpp
 
-        tcc/compiler/compiler_test.cpp
+        tcc/compiler/program_options_test.cpp
 
         tcc/optimizer/optimizer_test.cpp
 

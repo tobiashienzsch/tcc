@@ -33,11 +33,11 @@ bool IRGenerator::operator()(tcc::ast::Identifier const& x)
 
 bool IRGenerator::operator()(tcc::ast::Operation const& x)
 {
-    if (!boost::apply_visitor(*this, x.operand))
+    if (!boost::apply_visitor(*this, x.Operand_))
     {
         return false;
     }
-    switch (x.operator_)
+    switch (x.Operator)
     {
         case tcc::ast::OpToken::Plus:
         {
@@ -107,11 +107,11 @@ bool IRGenerator::operator()(tcc::ast::Operation const& x)
 }
 bool IRGenerator::operator()(tcc::ast::Unary const& x)
 {
-    if (!boost::apply_visitor(*this, x.operand))
+    if (!boost::apply_visitor(*this, x.Operand_))
     {
         return false;
     }
-    switch (x.operator_)
+    switch (x.Operator)
     {
         case tcc::ast::OpToken::Positive: break;
 
@@ -146,11 +146,11 @@ bool IRGenerator::operator()(tcc::ast::FunctionCall const& call)
 }
 bool IRGenerator::operator()(tcc::ast::Expression const& x)
 {
-    if (!boost::apply_visitor(*this, x.first))
+    if (!boost::apply_visitor(*this, x.First))
     {
         return false;
     }
-    for (tcc::ast::Operation const& oper : x.rest)
+    for (tcc::ast::Operation const& oper : x.Rest)
     {
         if (!(*this)(oper))
         {
@@ -161,32 +161,32 @@ bool IRGenerator::operator()(tcc::ast::Expression const& x)
 }
 bool IRGenerator::operator()(tcc::ast::Assignment const& x)
 {
-    if (!(*this)(x.rhs))
+    if (!(*this)(x.Right))
     {
         return false;
     }
-    if (!builder_.HasVariable(x.lhs.Name))
+    if (!builder_.HasVariable(x.Left.Name))
     {
-        errorHandler_(x.lhs.ID, "Undeclared variable: " + x.lhs.Name);
+        errorHandler_(x.Left.ID, "Undeclared variable: " + x.Left.Name);
         return false;
     }
-    auto const newKey = builder_.CreateAssignment(x.lhs.Name);
+    auto const newKey = builder_.CreateAssignment(x.Left.Name);
     builder_.CreateStoreOperation(newKey);
     return true;
 }
 
 bool IRGenerator::operator()(tcc::ast::VariableDeclaration const& x)
 {
-    if (builder_.HasVariable(x.lhs.Name))
+    if (builder_.HasVariable(x.Left.Name))
     {
-        errorHandler_(x.lhs.ID, "Duplicate variable: " + x.lhs.Name);
+        errorHandler_(x.Left.ID, "Duplicate variable: " + x.Left.Name);
         return false;
     }
-    bool r = (*this)(*x.rhs);
+    bool r = (*this)(*x.Right);
     if (r)  // don't add the variable if the RHS fails
     {
-        builder_.AddVariable(x.lhs.Name);
-        auto const newKey = builder_.CreateAssignment(x.lhs.Name);
+        builder_.AddVariable(x.Left.Name);
+        auto const newKey = builder_.CreateAssignment(x.Left.Name);
         builder_.CreateStoreOperation(newKey);
     }
     return r;
@@ -207,13 +207,13 @@ bool IRGenerator::operator()(tcc::ast::IfStatement const& x)
 {
     builder_.StartBasicBlock("if.begin");
     builder_.StartBasicBlock("if.cond");
-    if (!(*this)(x.condition))
+    if (!(*this)(x.Condition))
     {
         return false;
     }
     builder_.CreateIfStatementCondition();
     builder_.StartBasicBlock("if.then");
-    if (!(*this)(x.then))
+    if (!(*this)(x.Then))
     {
         return false;
     }
@@ -225,12 +225,12 @@ bool IRGenerator::operator()(tcc::ast::IfStatement const& x)
     // int(program_.size() - skip);  // now we know where to jump to (after the
     // if branch)
 
-    // if (x.else_)  // We got an alse
+    // if (x.Else)  // We got an alse
     // {
     //   program_[skip] += 2;                     // adjust for the "else" jump
     //   program_.op(IRByteCode::Jump, 0);                 // we shall fill this
     //   (0) in later std::size_t exit = program_.size() - 1;  // mark its
-    //   position if (!(*this)(*x.else_)) return false; program_[exit] =
+    //   position if (!(*this)(*x.Else)) return false; program_[exit] =
     //   int(program_.size() - exit);  // now we know where to jump to (after
     //   the else branch)
     // }
@@ -240,10 +240,10 @@ bool IRGenerator::operator()(tcc::ast::IfStatement const& x)
 bool IRGenerator::operator()(tcc::ast::WhileStatement const& /*unused*/)
 {
     // std::size_t loop = program_.size();  // mark our position
-    // if (!(*this)(x.condition)) return false;
+    // if (!(*this)(x.Condition)) return false;
     // program_.op(IRByteCode::JumpIf, 0);              // we shall fill this
     // (0) in later std::size_t exit = program_.size() - 1;  // mark its
-    // position if (!(*this)(x.body)) return false;
+    // position if (!(*this)(x.Body)) return false;
     // program_.op(IRByteCode::Jump,
     //             int(loop - 1) - int(program_.size()));  // loop back
     // program_[exit] = int(program_.size() - exit);       // now we know where
@@ -274,7 +274,7 @@ bool IRGenerator::operator()(tcc::ast::Function const& func)
         return false;
     }
 
-    return (*this)(func.body);
+    return (*this)(func.Body);
 }
 
 bool IRGenerator::operator()(tcc::ast::FunctionList const& funcList)

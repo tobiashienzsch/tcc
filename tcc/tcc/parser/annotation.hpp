@@ -39,14 +39,14 @@ public:
     {
         auto const id = static_cast<int>(iters.size());
         iters.push_back(pos);
-        ast.lhs.ID = id;
+        ast.Left.ID = id;
     }
 
     void operator()(ast::Assignment& ast, Iterator pos) const
     {
         auto const id = static_cast<int>(iters.size());
         iters.push_back(pos);
-        ast.lhs.ID = id;
+        ast.Left.ID = id;
     }
 
     void operator()(ast::ReturnStatement& ast, Iterator pos) const

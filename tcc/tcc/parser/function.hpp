@@ -13,7 +13,7 @@ struct Function : qi::grammar<Iterator, ast::Function(), Skipper<Iterator>>
 {
     Function(ErrorHandler<Iterator>& errorHandler);
 
-    Statement<Iterator> body;
+    Statement<Iterator> Body;
     qi::rule<Iterator, std::string(), Skipper<Iterator>> name;
     qi::rule<Iterator, ast::Identifier(), Skipper<Iterator>> Identifier;
     qi::rule<Iterator, std::list<ast::Identifier>(), Skipper<Iterator>> argument_list;

@@ -87,8 +87,8 @@ enum class OpToken
  */
 struct Unary
 {
-    OpToken operator_ {OpToken::Invalid};
-    Operand operand;
+    OpToken Operator {OpToken::Invalid};
+    Operand Operand_;
 };
 
 /**
@@ -96,8 +96,8 @@ struct Unary
  */
 struct Operation
 {
-    OpToken operator_ {OpToken::Invalid};
-    Operand operand;
+    OpToken Operator {OpToken::Invalid};
+    Operand Operand_;
 };
 
 /**
@@ -114,8 +114,8 @@ struct FunctionCall
  */
 struct Expression
 {
-    Operand first;
-    std::list<Operation> rest;
+    Operand First;
+    std::list<Operation> Rest;
 };
 
 /**
@@ -123,8 +123,8 @@ struct Expression
  */
 struct Assignment
 {
-    Identifier lhs;
-    Expression rhs;
+    Identifier Left;
+    Expression Right;
 };
 
 /**
@@ -132,8 +132,8 @@ struct Assignment
  */
 struct VariableDeclaration
 {
-    Identifier lhs;
-    boost::optional<Expression> rhs;
+    Identifier Left;
+    boost::optional<Expression> Right;
 };
 
 struct IfStatement;
@@ -165,9 +165,9 @@ struct StatementList : std::list<Statement>
  */
 struct IfStatement
 {
-    Expression condition;
-    Statement then;
-    boost::optional<Statement> else_;
+    Expression Condition;
+    Statement Then;
+    boost::optional<Statement> Else;
 };
 
 /**
@@ -175,8 +175,8 @@ struct IfStatement
  */
 struct WhileStatement
 {
-    Expression condition;
-    Statement body;
+    Expression Condition;
+    Statement Body;
 };
 
 /**
@@ -195,7 +195,7 @@ struct Function
     std::string ReturnType;
     Identifier FuncName;
     std::list<Identifier> Args;
-    StatementList body;
+    StatementList Body;
 };
 
 /**
@@ -223,16 +223,16 @@ inline std::ostream& operator<<(std::ostream& out, Identifier const& id)
 }  // namespace ast
 }  // namespace tcc
 
-BOOST_FUSION_ADAPT_STRUCT(          //
-    tcc::ast::Unary,                //
-    (tcc::ast::OpToken, operator_)  //
-    (tcc::ast::Operand, operand)    //
+BOOST_FUSION_ADAPT_STRUCT(         //
+    tcc::ast::Unary,               //
+    (tcc::ast::OpToken, Operator)  //
+    (tcc::ast::Operand, Operand_)  //
 )
 
-BOOST_FUSION_ADAPT_STRUCT(          //
-    tcc::ast::Operation,            //
-    (tcc::ast::OpToken, operator_)  //
-    (tcc::ast::Operand, operand)    //
+BOOST_FUSION_ADAPT_STRUCT(         //
+    tcc::ast::Operation,           //
+    (tcc::ast::OpToken, Operator)  //
+    (tcc::ast::Operand, Operand_)  //
 )
 
 BOOST_FUSION_ADAPT_STRUCT(                   //
@@ -243,33 +243,33 @@ BOOST_FUSION_ADAPT_STRUCT(                   //
 
 BOOST_FUSION_ADAPT_STRUCT(                  //
     tcc::ast::Expression,                   //
-    (tcc::ast::Operand, first)              //
-    (std::list<tcc::ast::Operation>, rest)  //
+    (tcc::ast::Operand, First)              //
+    (std::list<tcc::ast::Operation>, Rest)  //
+)
+
+BOOST_FUSION_ADAPT_STRUCT(                          //
+    tcc::ast::VariableDeclaration,                  //
+    (tcc::ast::Identifier, Left)                    //
+    (boost::optional<tcc::ast::Expression>, Right)  //
+)
+
+BOOST_FUSION_ADAPT_STRUCT(         //
+    tcc::ast::Assignment,          //
+    (tcc::ast::Identifier, Left)   //
+    (tcc::ast::Expression, Right)  //
 )
 
 BOOST_FUSION_ADAPT_STRUCT(                        //
-    tcc::ast::VariableDeclaration,                //
-    (tcc::ast::Identifier, lhs)                   //
-    (boost::optional<tcc::ast::Expression>, rhs)  //
-)
-
-BOOST_FUSION_ADAPT_STRUCT(       //
-    tcc::ast::Assignment,        //
-    (tcc::ast::Identifier, lhs)  //
-    (tcc::ast::Expression, rhs)  //
-)
-
-BOOST_FUSION_ADAPT_STRUCT(                         //
-    tcc::ast::IfStatement,                         //
-    (tcc::ast::Expression, condition)              //
-    (tcc::ast::Statement, then)                    //
-    (boost::optional<tcc::ast::Statement>, else_)  //
+    tcc::ast::IfStatement,                        //
+    (tcc::ast::Expression, Condition)             //
+    (tcc::ast::Statement, Then)                   //
+    (boost::optional<tcc::ast::Statement>, Else)  //
 )
 
 BOOST_FUSION_ADAPT_STRUCT(             //
     tcc::ast::WhileStatement,          //
-    (tcc::ast::Expression, condition)  //
-    (tcc::ast::Statement, body)        //
+    (tcc::ast::Expression, Condition)  //
+    (tcc::ast::Statement, Body)        //
 )
 
 BOOST_FUSION_ADAPT_STRUCT(                         //
@@ -282,7 +282,7 @@ BOOST_FUSION_ADAPT_STRUCT(                   //
     (std::string, ReturnType)                //
     (tcc::ast::Identifier, FuncName)         //
     (std::list<tcc::ast::Identifier>, Args)  //
-    (tcc::ast::StatementList, body)          //
+    (tcc::ast::StatementList, Body)          //
 )
 
 #endif

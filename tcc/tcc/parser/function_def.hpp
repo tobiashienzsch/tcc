@@ -10,7 +10,7 @@ namespace parser
 template<typename Iterator>
 Function<Iterator>::Function(ErrorHandler<Iterator>& errorHandler)
     : Function::base_type(start)
-    , body(errorHandler)
+    , Body(errorHandler)
 {
     qi::_1_type _1;
     qi::_2_type _2;
@@ -34,14 +34,14 @@ Function<Iterator>::Function(ErrorHandler<Iterator>& errorHandler)
     using ErrorHandlerFunction = function<tcc::ErrorHandler<Iterator>>;
     using AnnotateFunction     = function<tcc::Annotation<Iterator>>;
 
-    name = !body.expr.keywords >> raw[lexeme[(alpha | '_') >> *(alnum | '_')]];
+    name = !Body.expr.keywords >> raw[lexeme[(alpha | '_') >> *(alnum | '_')]];
 
     Identifier    = name;
     argument_list = -(Identifier % ',');
 
     start
         = lexeme[(string("void") | string("int")) >> !(alnum | '_')]  // make sure we have whole words
-          > Identifier > '(' > argument_list > ')' > '{' > body > '}';
+          > Identifier > '(' > argument_list > ')' > '{' > Body > '}';
 
     // Debugging and error handling and reporting support.
     BOOST_SPIRIT_DEBUG_NODES((Identifier)(argument_list)(start));

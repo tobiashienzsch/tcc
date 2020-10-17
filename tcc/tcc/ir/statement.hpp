@@ -43,11 +43,11 @@ struct IRStatement
     using Argument         = std::variant<IRConstant, IRRegister, IRArgumentList>;
     using OptionalArgument = std::optional<Argument>;
 
-    tcc::IRByteCode type;
-    bool isTemporary {true};
-    IRRegister destination;
-    Argument first;
-    OptionalArgument second;
+    tcc::IRByteCode Type;
+    bool IsTemporary {true};
+    IRRegister Destination;
+    Argument First;
+    OptionalArgument Second;
 };
 
 auto operator<<(std::ostream& out, IRStatement const& data) -> std::ostream&;
@@ -56,24 +56,24 @@ using IRStatementList = std::vector<IRStatement>;
 
 struct IRBasicBlock
 {
-    IRIdentifier name          = "";
-    IRStatementList statements = {};
+    IRIdentifier Name          = "";
+    IRStatementList Statements = {};
 };
 
 struct IRFunction
 {
-    IRIdentifier name                    = "";
-    std::map<std::string, int> args      = {};
-    std::map<std::string, int> variables = {};
-    std::vector<IRBasicBlock> blocks     = {};
+    IRIdentifier Name                    = "";
+    std::map<std::string, int> Args      = {};
+    std::map<std::string, int> Variables = {};
+    std::vector<IRBasicBlock> Blocks     = {};
 };
 
 auto operator<<(std::ostream& out, IRFunction const& data) -> std::ostream&;
 
 struct IRPackage
 {
-    IRIdentifier name                 = "";
-    std::vector<IRFunction> functions = {};
+    IRIdentifier Name                 = "";
+    std::vector<IRFunction> Functions = {};
 };
 
 auto operator<<(std::ostream& out, IRPackage const& pkg) -> std::ostream&;

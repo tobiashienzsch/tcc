@@ -133,7 +133,7 @@ bool IRGenerator::operator()(tcc::ast::Unary const& x)
 bool IRGenerator::operator()(tcc::ast::FunctionCall const& call)
 {
     auto argTemps = IRArgumentList {};
-    for (auto const& expr : call.args)
+    for (auto const& expr : call.Args)
     {
         if (!(*this)(expr))
         {
@@ -263,7 +263,7 @@ bool IRGenerator::operator()(tcc::ast::ReturnStatement const& x)
 bool IRGenerator::operator()(tcc::ast::Function const& func)
 {
     auto args = IRArgumentList {};
-    for (auto const& arg : func.args)
+    for (auto const& arg : func.Args)
     {
         args.push_back(arg.Name);
     }
@@ -293,14 +293,14 @@ bool IRGenerator::operator()(tcc::ast::FunctionList const& funcList)
 auto IRGenerator::Builder::HasVariable(std::string const& name) const -> bool
 {
     // local var
-    auto isLocal = currentFunction_->variables.find(name);
-    if (isLocal != currentFunction_->variables.end())
+    auto isLocal = currentFunction_->Variables.find(name);
+    if (isLocal != currentFunction_->Variables.end())
     {
         return true;
     }
 
     // function argument
-    auto const& args = currentFunction_->args;
+    auto const& args = currentFunction_->Args;
     return std::any_of(std::begin(args), std::end(args),
                        [&name](auto const& arg) { return arg.first == name; });
 }
@@ -316,10 +316,10 @@ auto IRGenerator::Builder::PopFromStack() -> IRStatement::Argument
 
 auto IRGenerator::Builder::AddVariable(const std::string& name) -> void
 {
-    auto search = currentFunction_->variables.find(name);
-    if (search == currentFunction_->variables.end())
+    auto search = currentFunction_->Variables.find(name);
+    if (search == currentFunction_->Variables.end())
     {
-        currentFunction_->variables.insert({name, 0});
+        currentFunction_->Variables.insert({name, 0});
     }
     else
     {
@@ -329,14 +329,14 @@ auto IRGenerator::Builder::AddVariable(const std::string& name) -> void
 
 auto IRGenerator::Builder::GetLastVariable(std::string const& key) const -> std::string
 {
-    if (auto local = currentFunction_->variables.find(key);
-        local != std::end(currentFunction_->variables))
+    if (auto local = currentFunction_->Variables.find(key);
+        local != std::end(currentFunction_->Variables))
     {
         auto newId = local->second - 1;
         return fmt::format("{}.{}", key, newId);
     }
 
-    if (auto arg = currentFunction_->args.find(key); arg != std::end(currentFunction_->args))
+    if (auto arg = currentFunction_->Args.find(key); arg != std::end(currentFunction_->Args))
     {
         auto newId = arg->second - 1;
         return fmt::format("{}.{}", key, newId);
@@ -350,12 +350,12 @@ auto IRGenerator::Builder::GetLastVariable(std::string const& key) const -> std:
 auto IRGenerator::Builder::CreateReturnOperation() -> void
 {
     auto const first = PopFromStack();
-    currentBlock_->statements.push_back(IRStatement {
-        .type        = IRByteCode::Return,
-        .isTemporary = false,
-        .destination = "",
-        .first       = first,
-        .second      = std::nullopt,
+    currentBlock_->Statements.push_back(IRStatement {
+        .Type        = IRByteCode::Return,
+        .IsTemporary = false,
+        .Destination = "",
+        .First       = first,
+        .Second      = std::nullopt,
     });
 }
 
@@ -365,71 +365,71 @@ auto IRGenerator::Builder::CreateBinaryOperation(IRByteCode op) -> void
     auto first   = PopFromStack();
     auto tmpName = CreateTemporaryOnStack();
 
-    currentBlock_->statements.push_back(IRStatement {
-        .type        = op,
-        .isTemporary = true,
-        .destination = std::move(tmpName),
-        .first       = std::move(first),
-        .second      = std::move(second),
+    currentBlock_->Statements.push_back(IRStatement {
+        .Type        = op,
+        .IsTemporary = true,
+        .Destination = std::move(tmpName),
+        .First       = std::move(first),
+        .Second      = std::move(second),
     });
 }
 
 auto IRGenerator::Builder::CreateUnaryOperation(IRByteCode op) -> void
 {
-    currentBlock_->statements.push_back(IRStatement {
-        .type        = op,
-        .isTemporary = true,
-        .destination = CreateTemporaryOnStack(),
-        .first       = PopFromStack(),
-        .second      = {},
+    currentBlock_->Statements.push_back(IRStatement {
+        .Type        = op,
+        .IsTemporary = true,
+        .Destination = CreateTemporaryOnStack(),
+        .First       = PopFromStack(),
+        .Second      = {},
     });
 }
 
 auto IRGenerator::Builder::CreateStoreOperation(std::string key) -> void
 {
-    currentBlock_->statements.push_back(IRStatement {
-        .type        = IRByteCode::Store,
-        .isTemporary = false,
-        .destination = std::move(key),
-        .first       = PopFromStack(),
-        .second      = {},
+    currentBlock_->Statements.push_back(IRStatement {
+        .Type        = IRByteCode::Store,
+        .IsTemporary = false,
+        .Destination = std::move(key),
+        .First       = PopFromStack(),
+        .Second      = {},
     });
 }
 
 auto IRGenerator::Builder::CreateLoadOperation(std::string key) -> void
 {
-    currentBlock_->statements.push_back(IRStatement {
-        .type        = IRByteCode::Load,
-        .isTemporary = true,
-        .destination = CreateTemporaryOnStack(),
-        .first       = key,
-        .second      = {},
+    currentBlock_->Statements.push_back(IRStatement {
+        .Type        = IRByteCode::Load,
+        .IsTemporary = true,
+        .Destination = CreateTemporaryOnStack(),
+        .First       = key,
+        .Second      = {},
     });
 }
 
 auto IRGenerator::Builder::CreateArgStoreOperation(std::string key, std::string varName) -> void
 {
-    currentBlock_->statements.push_back(IRStatement {
-        .type        = IRByteCode::ArgStore,
-        .isTemporary = true,
-        .destination = std::move(key),
-        .first       = std::move(varName),
-        .second      = {},
+    currentBlock_->Statements.push_back(IRStatement {
+        .Type        = IRByteCode::ArgStore,
+        .IsTemporary = true,
+        .Destination = std::move(key),
+        .First       = std::move(varName),
+        .Second      = {},
     });
 }
 
 auto IRGenerator::Builder::CreateAssignment(std::string const& key) -> std::string
 {
     // local var
-    auto isLocal = currentFunction_->variables.find(key);
-    if (isLocal != std::end(currentFunction_->variables))
+    auto isLocal = currentFunction_->Variables.find(key);
+    if (isLocal != std::end(currentFunction_->Variables))
     {
         auto newId = isLocal->second++;
         return fmt::format("{}.{}", key, newId);
     }
     // func arg
-    auto isArg = currentFunction_->args.find(key);
-    if (isArg != std::end(currentFunction_->args))
+    auto isArg = currentFunction_->Args.find(key);
+    if (isArg != std::end(currentFunction_->Args))
     {
         auto newId = isArg->second++;
         return fmt::format("{}.{}", key, newId);
@@ -455,10 +455,10 @@ auto IRGenerator::Builder::CreateFunction(std::string name, const IRArgumentList
         args.insert({arg, 0});
     }
 
-    package_.functions.emplace_back(IRFunction {std::move(name), std::move(args), {}, {}});
-    currentFunction_ = &package_.functions.back();
+    package_.Functions.emplace_back(IRFunction {std::move(name), std::move(args), {}, {}});
+    currentFunction_ = &package_.Functions.back();
     StartBasicBlock("entry");
-    for (auto const& arg : currentFunction_->args)
+    for (auto const& arg : currentFunction_->Args)
     {
         CreateArgStoreOperation(CreateAssignment(arg.first), arg.first);
     }
@@ -468,37 +468,37 @@ auto IRGenerator::Builder::CreateFunction(std::string name, const IRArgumentList
 
 auto IRGenerator::Builder::CreateFunctionCall(std::string name, IRArgumentList argTemps) -> bool
 {
-    currentBlock_->statements.push_back(IRStatement {
-        .type        = IRByteCode::Call,
-        .isTemporary = {},
-        .destination = CreateTemporaryOnStack(),
-        .first       = std::move(name),
-        .second      = argTemps,
+    currentBlock_->Statements.push_back(IRStatement {
+        .Type        = IRByteCode::Call,
+        .IsTemporary = {},
+        .Destination = CreateTemporaryOnStack(),
+        .First       = std::move(name),
+        .Second      = argTemps,
     });
     return true;
 }
 
 void IRGenerator::Builder::CreateIfStatementCondition()
 {
-    currentBlock_->statements.push_back(IRStatement {
-        .type        = IRByteCode::JumpIf,
-        .isTemporary = false,
-        .destination = "",
-        .first       = GetLastTemporary(),
-        .second      = {},
+    currentBlock_->Statements.push_back(IRStatement {
+        .Type        = IRByteCode::JumpIf,
+        .IsTemporary = false,
+        .Destination = "",
+        .First       = GetLastTemporary(),
+        .Second      = {},
     });
 }
 
 void IRGenerator::Builder::StartBasicBlock(const std::string& suffix)
 {
     auto const name = fmt::format("{}.{}", blockCounter_++, suffix);
-    currentFunction_->blocks.push_back({name});
-    currentBlock_ = &currentFunction_->blocks.back();
+    currentFunction_->Blocks.push_back({name});
+    currentBlock_ = &currentFunction_->Blocks.back();
 }
 
 [[nodiscard]] auto IRGenerator::Builder::GetLastTemporary() const -> std::string
 {
-    return currentBlock_->statements.back().destination;
+    return currentBlock_->Statements.back().Destination;
 }
 
 }  // namespace tcc

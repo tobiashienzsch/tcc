@@ -24,38 +24,38 @@ auto operator<<(std::ostream& out, IRStatement const& data) -> std::ostream&
         return result;
     };
 
-    auto firstStr        = formatArgument(data.first);
-    auto const secondStr = data.second.has_value() ? formatArgument(data.second.value()) : "";
+    auto firstStr        = formatArgument(data.First);
+    auto const secondStr = data.Second.has_value() ? formatArgument(data.Second.value()) : "";
 
     auto opCodeStr = std::stringstream {};
-    opCodeStr << static_cast<tcc::IRByteCode>(data.type);
+    opCodeStr << static_cast<tcc::IRByteCode>(data.Type);
 
-    if (data.type == IRByteCode::Call)
+    if (data.Type == IRByteCode::Call)
     {
         std::replace(std::begin(firstStr), std::end(firstStr), '%', '@');
     }
 
-    return out << fmt::format("{0}\t:=\t{1}\t{2}\t{3}", data.destination, opCodeStr.str(), firstStr,
+    return out << fmt::format("{0}\t:=\t{1}\t{2}\t{3}", data.Destination, opCodeStr.str(), firstStr,
                               secondStr);
 }
 
 auto operator<<(std::ostream& out, IRFunction const& data) -> std::ostream&
 {
-    return out << data.name;
+    return out << data.Name;
 }
 
 auto operator<<(std::ostream& out, IRPackage const& pkg) -> std::ostream&
 {
-    out << fmt::format("\n; {0}: functions={1}\n", pkg.name, pkg.functions.size());
-    for (auto const& func : pkg.functions)
+    out << fmt::format("\n; {0}: functions={1}\n", pkg.Name, pkg.Functions.size());
+    for (auto const& func : pkg.Functions)
     {
-        out << fmt::format("; func {0}: args={1} locals={2} instructions={3}\n", func.name,
-                           func.args.size(), func.variables.size(), func.blocks.size());
+        out << fmt::format("; func {0}: args={1} locals={2} instructions={3}\n", func.Name,
+                           func.Args.size(), func.Variables.size(), func.Blocks.size());
 
-        for (auto const& block : func.blocks)
+        for (auto const& block : func.Blocks)
         {
-            out << fmt::format("; {0}.{1}:\n", func.name[0], block.name);
-            for (auto const& x : block.statements)
+            out << fmt::format("; {0}.{1}:\n", func.Name[0], block.Name);
+            for (auto const& x : block.Statements)
             {
                 out << fmt::format("\t{}\n", x);
             }

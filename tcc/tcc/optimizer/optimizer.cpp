@@ -10,19 +10,19 @@ auto Optimizer::Optimize() -> void
     {
         tcc::IgnoreUnused(x);
 
-        for (auto& block : function_.blocks)
+        for (auto& block : function_.Blocks)
         {
-            std::for_each(std::begin(block.statements), std::end(block.statements),
+            std::for_each(std::begin(block.Statements), std::end(block.Statements),
                           [](auto& statement) { ReplaceWithConstantStore(statement); });
 
             std::for_each(
-                std::begin(block.statements), std::end(block.statements),
-                [&](auto& statement) { ReplaceVariableIfConstant(statement, block.statements); });
+                std::begin(block.Statements), std::end(block.Statements),
+                [&](auto& statement) { ReplaceVariableIfConstant(statement, block.Statements); });
         }
     }
-    for (auto& block : function_.blocks)
+    for (auto& block : function_.Blocks)
     {
-        DeleteUnusedStatements(block.statements);
+        DeleteUnusedStatements(block.Statements);
     }
 }
 
@@ -50,7 +50,7 @@ auto Optimizer::DeleteUnusedStatements(IRStatementList& statementList) -> bool
 auto Optimizer::IsUnusedStatement(IRStatement const& statement, IRStatementList const& statementList)
     -> bool
 {
-    return statement.isTemporary
+    return statement.IsTemporary
            && !std::any_of(std::begin(statementList), std::end(statementList),
                            [&statement](IRStatement const& item) {
                                auto result = false;
@@ -59,35 +59,35 @@ auto Optimizer::IsUnusedStatement(IRStatement const& statement, IRStatementList 
                                               [](std::uint32_t /*unused*/) { ; },
                                               [](IRArgumentList const& /*unused*/) { ; },
                                               [&statement, &result](std::string const& name) {
-                                                  if (name == statement.destination)
+                                                  if (name == statement.Destination)
                                                   {
                                                       result = true;
                                                   }
                                               },
                                           },
-                                          item.first);
+                                          item.First);
 
-                               if (item.second.has_value())
+                               if (item.Second.has_value())
                                {
                                    std::visit(tcc::overloaded {
                                                   [](std::uint32_t /*unused*/) { ; },
                                                   [&statement, &result](IRArgumentList const& args) {
                                                       for (auto const& name : args)
                                                       {
-                                                          if (name == statement.destination)
+                                                          if (name == statement.Destination)
                                                           {
                                                               result = true;
                                                           }
                                                       }
                                                   },
                                                   [&statement, &result](std::string const& name) {
-                                                      if (name == statement.destination)
+                                                      if (name == statement.Destination)
                                                       {
                                                           result = true;
                                                       }
                                                   },
                                               },
-                                              item.second.value());
+                                              item.Second.value());
                                }
 
                                return result;
@@ -101,37 +101,37 @@ auto Optimizer::ReplaceVariableIfConstant(IRStatement& statement, IRStatementLis
     {
         for (auto& otherStatement : statementList)
         {
-            if (otherStatement.type != IRByteCode::Load)
+            if (otherStatement.Type != IRByteCode::Load)
             {
                 // first
                 std::visit(tcc::overloaded {
                                [](IRArgumentList const& /*unused*/) { ; },
                                [](std::uint32_t /*unused*/) { ; },
                                [&statement, &otherStatement](std::string const& name) {
-                                   if (name == statement.destination)
+                                   if (name == statement.Destination)
                                    {
-                                       otherStatement.first
-                                           = std::get<std::uint32_t>(statement.first);
+                                       otherStatement.First
+                                           = std::get<std::uint32_t>(statement.First);
                                    };
                                },
                            },
-                           otherStatement.first);
+                           otherStatement.First);
 
                 // second
-                if (otherStatement.second.has_value())
+                if (otherStatement.Second.has_value())
                 {
                     std::visit(tcc::overloaded {
                                    [](IRArgumentList const& /*unused*/) { ; },
                                    [](std::uint32_t /*unused*/) { ; },
                                    [&statement, &otherStatement](std::string const& name) {
-                                       if (name == statement.destination)
+                                       if (name == statement.Destination)
                                        {
-                                           otherStatement.second
-                                               = std::get<std::uint32_t>(statement.first);
+                                           otherStatement.Second
+                                               = std::get<std::uint32_t>(statement.First);
                                        };
                                    },
                                },
-                               otherStatement.second.value());
+                               otherStatement.Second.value());
                 }
             }
         }
@@ -147,20 +147,20 @@ auto Optimizer::ReplaceWithConstantStore(IRStatement& statement) -> bool
 {
     if (isConstantBinaryExpression(statement))
     {
-        auto const first  = std::get<std::uint32_t>(statement.first);
-        auto const second = std::get<std::uint32_t>(statement.second.value());
+        auto const first  = std::get<std::uint32_t>(statement.First);
+        auto const second = std::get<std::uint32_t>(statement.Second.value());
 
-        switch (statement.type)
+        switch (statement.Type)
         {
-            case IRByteCode::Addition: statement.first = first + second; break;
-            case IRByteCode::Subtraction: statement.first = first - second; break;
-            case IRByteCode::Multiplication: statement.first = first * second; break;
-            case IRByteCode::Division: statement.first = first / second; break;
+            case IRByteCode::Addition: statement.First = first + second; break;
+            case IRByteCode::Subtraction: statement.First = first - second; break;
+            case IRByteCode::Multiplication: statement.First = first * second; break;
+            case IRByteCode::Division: statement.First = first / second; break;
             default: break;
         }
 
-        statement.second = std::nullopt;
-        statement.type   = IRByteCode::Store;
+        statement.Second = std::nullopt;
+        statement.Type   = IRByteCode::Store;
 
         return true;
     }
@@ -188,13 +188,13 @@ auto Optimizer::isConstantArgument(IRStatement::OptionalArgument const& argument
 
 auto Optimizer::isConstantStoreExpression(IRStatement const& statement) -> bool
 {
-    return statement.type == IRByteCode::Store && isConstantArgument(statement.first);
+    return statement.Type == IRByteCode::Store && isConstantArgument(statement.First);
 }
 
 auto Optimizer::isConstantBinaryExpression(IRStatement const& statement) -> bool
 {
-    return isBinaryOperation(statement.type) && isConstantArgument(statement.first)
-           && isConstantArgument(statement.second);
+    return isBinaryOperation(statement.Type) && isConstantArgument(statement.First)
+           && isConstantArgument(statement.Second);
 }
 
 auto Optimizer::isBinaryOperation(IRByteCode op) noexcept -> bool

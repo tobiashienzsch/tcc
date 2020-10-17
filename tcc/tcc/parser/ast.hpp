@@ -106,7 +106,7 @@ struct Operation
 struct FunctionCall
 {
     Identifier FuncName;
-    std::list<Expression> args;
+    std::list<Expression> Args;
 };
 
 /**
@@ -192,9 +192,9 @@ struct ReturnStatement : Tagged
  */
 struct Function
 {
-    std::string return_type;
+    std::string ReturnType;
     Identifier FuncName;
-    std::list<Identifier> args;
+    std::list<Identifier> Args;
     StatementList body;
 };
 
@@ -238,7 +238,7 @@ BOOST_FUSION_ADAPT_STRUCT(          //
 BOOST_FUSION_ADAPT_STRUCT(                   //
     tcc::ast::FunctionCall,                  //
     (tcc::ast::Identifier, FuncName)         //
-    (std::list<tcc::ast::Expression>, args)  //
+    (std::list<tcc::ast::Expression>, Args)  //
 )
 
 BOOST_FUSION_ADAPT_STRUCT(                  //
@@ -279,9 +279,9 @@ BOOST_FUSION_ADAPT_STRUCT(                         //
 
 BOOST_FUSION_ADAPT_STRUCT(                   //
     tcc::ast::Function,                      //
-    (std::string, return_type)               //
+    (std::string, ReturnType)                //
     (tcc::ast::Identifier, FuncName)         //
-    (std::list<tcc::ast::Identifier>, args)  //
+    (std::list<tcc::ast::Identifier>, Args)  //
     (tcc::ast::StatementList, body)          //
 )
 

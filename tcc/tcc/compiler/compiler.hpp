@@ -39,7 +39,7 @@ public:
 
         if (options_.OptLevel > 0)
         {
-            for (auto& func : irGenerator.CurrentPackage().functions)
+            for (auto& func : irGenerator.CurrentPackage().Functions)
             {
                 auto optimizer = tcc::Optimizer(func);
                 optimizer.Optimize();

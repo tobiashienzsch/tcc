@@ -31,46 +31,46 @@ auto AssemblyGenerator::Build(tcc::IRPackage const& package) -> Assembly
     auto functionPlaceholders = std::map<FunctionPosition, std::string> {};
     auto functionPositions    = std::map<std::string, FunctionPosition> {};
 
-    for (auto const& function : package.functions)
+    for (auto const& function : package.Functions)
     {
         auto funcPos = FunctionPosition {assembly.size()};
-        if (function.name == "main")
+        if (function.Name == "main")
         {
             mainPosition = funcPos;
         }
 
-        functionPositions.insert({function.name, funcPos});
+        functionPositions.insert({function.Name, funcPos});
 
         auto argVars = IRArgumentList {};
-        for (auto const& arg : function.args)
+        for (auto const& arg : function.Args)
         {
             argVars.push_back(arg.first);
         }
 
         auto locals = IRArgumentList {};
-        for (auto const& var : function.variables)
+        for (auto const& var : function.Variables)
         {
             locals.push_back(var.first);
             assembly.push_back(tcc::ByteCode::ICONST);
             assembly.push_back(0);
         }
 
-        for (auto const& block : function.blocks)
+        for (auto const& block : function.Blocks)
         {
-            auto const& statements = block.statements;
+            auto const& statements = block.Statements;
             for (IRStatement const& statement : statements)
             {
                 auto const PushConstArgument = [&]() -> void {
-                    auto const& first = statement.first;
+                    auto const& first = statement.First;
                     if (auto const* value = std::get_if<std::uint32_t>(&first); value != nullptr)
                     {
                         assembly.push_back(tcc::ByteCode::ICONST);
                         assembly.push_back(*value);
                     }
 
-                    if (statement.second.has_value())
+                    if (statement.Second.has_value())
                     {
-                        auto const& second = statement.second.value();
+                        auto const& second = statement.Second.value();
                         if (auto const* value = std::get_if<std::uint32_t>(&second); value != nullptr)
                         {
                             assembly.push_back(tcc::ByteCode::ICONST);
@@ -79,18 +79,18 @@ auto AssemblyGenerator::Build(tcc::IRPackage const& package) -> Assembly
                     }
                 };
 
-                switch (statement.type)
+                switch (statement.Type)
                 {
                     case IRByteCode::Store:
                     {
-                        if (auto const* value = std::get_if<std::uint32_t>(&statement.first);
+                        if (auto const* value = std::get_if<std::uint32_t>(&statement.First);
                             value != nullptr)
                         {
                             assembly.push_back(tcc::ByteCode::ICONST);
                             assembly.push_back(*value);
                         }
                         auto const iter  = std::find(std::begin(locals), std::end(locals),
-                                                    std::string(1, statement.destination[0]));
+                                                    std::string(1, statement.Destination[0]));
                         auto const index = static_cast<int>(iter - std::begin(locals));
 
                         assembly.push_back(tcc::ByteCode::STORE);
@@ -103,7 +103,7 @@ auto AssemblyGenerator::Build(tcc::IRPackage const& package) -> Assembly
                     {
                         auto const inLocalVars
                             = std::find(std::begin(locals), std::end(locals),
-                                        std::string(1, std::get<std::string>(statement.first)[0]));
+                                        std::string(1, std::get<std::string>(statement.First)[0]));
                         if (inLocalVars != std::end(locals))
                         {
                             auto const index = static_cast<int>(inLocalVars - std::begin(locals));
@@ -114,7 +114,7 @@ auto AssemblyGenerator::Build(tcc::IRPackage const& package) -> Assembly
 
                         auto const inArgs
                             = std::find(std::begin(argVars), std::end(argVars),
-                                        std::string(1, std::get<std::string>(statement.first)[0]));
+                                        std::string(1, std::get<std::string>(statement.First)[0]));
                         if (inArgs != std::end(argVars))
                         {
                             // offset to function arguments on the stack is -3.
@@ -152,13 +152,13 @@ auto AssemblyGenerator::Build(tcc::IRPackage const& package) -> Assembly
                     case IRByteCode::Call:
                     {
                         assembly.push_back(tcc::ByteCode::CALL);
-                        auto funcToCall = std::get<std::string>(statement.first);
+                        auto funcToCall = std::get<std::string>(statement.First);
                         functionPlaceholders.insert({FunctionPosition {assembly.size()}, funcToCall});
                         assembly.push_back(9999);  // func addr
-                        TCC_ASSERT(statement.second.has_value(),
+                        TCC_ASSERT(statement.Second.has_value(),
                                    "Function call should have an arg list");
                         auto const numArgs
-                            = std::get<IRArgumentList>(statement.second.value()).size();
+                            = std::get<IRArgumentList>(statement.Second.value()).size();
                         assembly.push_back(numArgs);  // func addr
                         break;
                     }

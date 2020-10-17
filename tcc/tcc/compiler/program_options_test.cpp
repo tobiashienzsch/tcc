@@ -89,7 +89,7 @@ TEST_CASE("tcc/compiler: ProgramOptions", "[tcc][compiler]")
         auto tempFile = std::ofstream(tempPath.c_str());
         tempFile.close();
 
-        auto arguments   = std::vector<char const*> {"binary", "-O1", tempPath.c_str()};
+        auto arguments   = std::vector<char const*>({"binary", "-O1", tempPath.c_str()});
         auto const argc  = static_cast<int>(arguments.size());
         auto const* argv = arguments.data();
 

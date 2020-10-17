@@ -25,19 +25,19 @@ public:
         auto end  = options_.Source.cend();
 
         using IteratorType = std::string::const_iterator;
-        auto errorHandler  = tcc::ErrorHandler<IteratorType> {iter, end, std::cerr};
+        auto errorHandler  = tcc::ErrorHandler<IteratorType> {iter, end, *options_.Out};
 
         auto parser = tcc::Parser {errorHandler};
         if (!parser.ParseSource(iter, end))
         {
-            fmt::print("Error while parsing!\n");
+            fmt::print(*options_.Out, "Error while parsing!\n");
             return EXIT_FAILURE;
         }
 
         auto irGenerator = tcc::IRGenerator {errorHandler};  // IR Generator
         if (!irGenerator(parser.GetAst()))
         {
-            fmt::print("Error while compiling!\n");
+            fmt::print(*options_.Out, "Error while compiling!\n");
             return EXIT_FAILURE;
         }
 
@@ -52,12 +52,12 @@ public:
 
         if (options_.PrintSource)
         {
-            fmt::print("source:\n{}\n", options_.Source);
+            fmt::print(*options_.Out, "source:\n{}\n", options_.Source);
         }
 
         if (options_.PrintIR)
         {
-            fmt::print("{}", irGenerator.CurrentPackage());
+            fmt::print(*options_.Out, "{}", irGenerator.CurrentPackage());
         }
 
         auto const& package = irGenerator.CurrentPackage();
@@ -65,7 +65,7 @@ public:
 
         if (options_.PrintAssembly)
         {
-            tcc::ASMUtils::PrettyPrint(std::cout, assembly_);
+            tcc::ASMUtils::PrettyPrint(*options_.Out, assembly_);
         }
 
         if (!options_.OutputName.empty())
@@ -74,7 +74,7 @@ public:
                 = tcc::BinaryProgram {1, options_.OutputName, assembly_.second, assembly_.first};
             if (!tcc::BinaryFormat::WriteToFile(options_.OutputName, binaryProgram))
             {
-                fmt::print("Error while writing binary!\n");
+                fmt::print(*options_.Out, "Error while writing binary!\n");
                 return EXIT_FAILURE;
             }
         }

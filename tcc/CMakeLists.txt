@@ -8,10 +8,10 @@ set(tcc_lib_source
     tcc/asm/asm_utils.hpp
     tcc/asm/asm.hpp
 
-    tcc/cmd/program_options.hpp
-
+    
     tcc/compiler/options.hpp
     tcc/compiler/compiler.hpp
+    tcc/compiler/program_options.hpp
 
     tcc/optimizer/optimizer.cpp
     tcc/optimizer/optimizer.hpp
@@ -83,6 +83,8 @@ if(TCC_BUILD_TESTS)
         main_test.cpp
 
         tcc/asm/asm_utils_test.cpp
+
+        tcc/compiler/compiler_test.cpp
 
         tcc/optimizer/optimizer_test.cpp
 

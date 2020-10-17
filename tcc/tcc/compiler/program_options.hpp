@@ -31,7 +31,7 @@ public:
      * @return First: Should exit program directly.
      * @return Second: Return code.
      */
-    std::pair<bool, int> ParseArguments(int argc, char** argv)
+    std::pair<bool, int> ParseArguments(int argc, char const* const* argv)
     {
         try
         {

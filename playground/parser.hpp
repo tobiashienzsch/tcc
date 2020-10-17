@@ -23,7 +23,7 @@ public:
     tokens_.push_back(token);
   }
 
-  [[nodiscard]] auto Parse() -> std::unique_ptr<ASTNode> {
+  [[nodiscard]] auto GenerateAST() -> std::unique_ptr<ASTNode> {
     auto exp = parseExpression();
     auto eof = matchToken(SyntaxTokenType::EndOfFile);
     return exp;

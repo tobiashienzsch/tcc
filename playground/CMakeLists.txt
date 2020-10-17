@@ -26,7 +26,7 @@ add_executable(${PROJECT_NAME} main.cpp)
 target_link_libraries(${PROJECT_NAME} PUBLIC playground_lib)
 
 if (TCC_BUILD_TESTS)
-    add_executable(playground_test main_test.cpp lexer_test.cpp)
+    add_executable(playground_test main_test.cpp lexer_test.cpp parser_test.cpp)
     target_link_libraries(playground_test
             PRIVATE
             playground_lib

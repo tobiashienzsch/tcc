@@ -2,8 +2,11 @@ project(tcc)
 
 # library
 set(tcc_lib_source
-    tcc/asm/assembly_generator.cpp
-    tcc/asm/assembly_generator.hpp
+    tcc/asm/asm_generator.cpp
+    tcc/asm/asm_generator.hpp
+    tcc/asm/asm_utils.cpp
+    tcc/asm/asm_utils.hpp
+    tcc/asm/asm.hpp
 
     tcc/cmd/program_options.hpp
 
@@ -78,6 +81,8 @@ target_link_libraries(${PROJECT_NAME}
 if(TCC_BUILD_TESTS)
     set (tcc_test_source
         main_test.cpp
+
+        tcc/asm/asm_utils_test.cpp
 
         tcc/optimizer/optimizer_test.cpp
 

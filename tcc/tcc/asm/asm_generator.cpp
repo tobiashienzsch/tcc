@@ -1,10 +1,9 @@
-#include "tcc/asm/assembly_generator.hpp"
+#include "tcc/asm/asm_generator.hpp"
 
 #include "tcsl/tcsl.hpp"
 
 #include <algorithm>
 #include <map>
-#include <set>
 #include <variant>
 
 class FunctionPosition
@@ -206,60 +205,6 @@ auto AssemblyGenerator::Build(tcc::IRPackage const& package) -> Assembly
     assembly.push_back(ByteCode::EXIT);
 
     return Assembly {assembly, entryPoint};
-}
-
-auto AssemblyGenerator::Print(std::vector<int64_t> const& assembly) -> void
-{
-    auto ops = std::set<tcc::ByteCode> {};
-    auto out = std::string {};
-
-    for (auto i = 0UL; i < assembly.size();)
-    {
-        auto const op = static_cast<tcc::ByteCode>(assembly.at(i));
-        ops.emplace(op);
-        out.append(fmt::format("\t{0}", op));
-
-        switch (op)
-        {
-            case ByteCode::RET: break;
-            case ByteCode::EXIT: break;
-            case ByteCode::IADD: break;
-            case ByteCode::IMUL: break;
-            case ByteCode::ISUB: break;
-            case ByteCode::LOAD:
-            {
-                out.append(fmt::format(",\t{}", assembly.at(++i)));
-                break;
-            }
-            case ByteCode::STORE:
-            {
-                out.append(fmt::format(",\t{}", assembly.at(++i)));
-                break;
-            }
-            case ByteCode::ICONST:
-            {
-                out.append(fmt::format(",\t{}", assembly.at(++i)));
-                break;
-            }
-            case ByteCode::CALL:
-            {
-                out.append(fmt::format(",\t{}", assembly.at(++i)));
-                out.append(fmt::format(",\t{}", assembly.at(++i)));
-                break;
-            }
-            default:
-            {
-                TCC_ASSERT(false, fmt::format("Unknown operation {}", op));
-                std::exit(EXIT_FAILURE);
-            }
-        }
-
-        i++;
-        out.append(fmt::format("\n"));
-    }
-
-    fmt::print("\n// asm: length={0} ops={1}/{2}\n{3}\n", assembly.size(), ops.size(),
-               static_cast<int>(ByteCode::NUM_OPCODES), out);
 }
 
 }  // namespace tcc

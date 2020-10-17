@@ -14,7 +14,7 @@ option(TCC_BUILD_TESTS      "Build the unit tests with Catch2"  ON)
 option(TCC_BUILD_WERROR     "Build with warnings as errors"     OFF)
 option(TCC_BUILD_COVERAGE   "Build with code coverage"          OFF)
 option(TCC_BUILD_LTO        "Build with lto enabled"            OFF)
-option(TCC_BUILD_PLAYGROUND "Build playground project"          ON)
+option(TCC_BUILD_PLAYGROUND "Build playground project"          OFF)
 option(TCC_BUILD_BENCHMARK  "Build benchmark tests"             OFF)
 
 # Only do these if this is the main project, and not if it is included through add_subdirectory

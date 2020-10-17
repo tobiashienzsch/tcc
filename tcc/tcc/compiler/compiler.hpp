@@ -1,12 +1,16 @@
 #if !defined(TCC_COMPILER_COMPILER_HPP)
 #define TCC_COMPILER_COMPILER_HPP
 
-#include "tcc/asm/assembly_generator.hpp"
+#include "tcc/asm/asm_generator.hpp"
+#include "tcc/asm/asm_utils.hpp"
+
 #include "tcc/compiler/options.hpp"
 #include "tcc/ir/generator.hpp"
 #include "tcc/optimizer/optimizer.hpp"
 #include "tcc/parser/parser.hpp"
 #include "tcsl/tcsl.hpp"
+
+#include <iostream>
 
 namespace tcc
 {
@@ -61,7 +65,7 @@ public:
 
         if (options_.PrintAssembly)
         {
-            tcc::AssemblyGenerator::Print(assembly_.first);
+            tcc::ASMUtils::PrettyPrint(std::cout, assembly_);
         }
 
         if (!options_.OutputName.empty())

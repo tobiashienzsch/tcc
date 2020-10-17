@@ -10,12 +10,12 @@ namespace tcc
 auto ASMUtils::PrettyPrint(std::ostream& out, Assembly const& assembly) -> void
 {
     auto const& code = assembly.first;
-    auto ops         = std::set<tcc::ByteCode> {};
+    auto ops         = std::set<tcc::ByteCode::Type> {};
     auto str         = std::string {};
 
     for (auto i = 0UL; i < code.size();)
     {
-        auto const op = static_cast<tcc::ByteCode>(code.at(i));
+        auto const op = static_cast<tcc::ByteCode::Type>(code.at(i));
         ops.emplace(op);
         str.append(fmt::format("\t{0}", op));
 

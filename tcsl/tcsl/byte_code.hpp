@@ -12,32 +12,35 @@
 
 namespace tcc
 {
-enum ByteCode : int64_t
+struct ByteCode
 {
-    NOOP = 0,
-    IADD = 1,
-    ISUB,
-    IMUL,
-    ILT,
-    IEQ,
-    BR,
-    BRT,
-    BRF,
-    ICONST,
-    LOAD,
-    GLOAD,
-    STORE,
-    GSTORE,
-    PRINT,
-    POP,
-    CALL,
-    RET,
-    EXIT,
-    HALT,
-    NUM_OPCODES,
+    enum Type : int64_t
+    {
+        NOOP = 0,
+        IADD = 1,
+        ISUB,
+        IMUL,
+        ILT,
+        IEQ,
+        BR,
+        BRT,
+        BRF,
+        ICONST,
+        LOAD,
+        GLOAD,
+        STORE,
+        GSTORE,
+        PRINT,
+        POP,
+        CALL,
+        RET,
+        EXIT,
+        HALT,
+        NUM_OPCODES,
+    };
 };
 
-std::ostream& operator<<(std::ostream& out, ByteCode byteCode);
+std::ostream& operator<<(std::ostream& out, ByteCode::Type byteCode);
 
 struct Instruction
 {

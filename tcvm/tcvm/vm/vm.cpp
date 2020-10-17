@@ -212,7 +212,7 @@ void VirtualMachine::EnableTracing(bool const shouldTrace) { m_shouldTrace = sho
 void VirtualMachine::disassemble(int64_t const opcode)
 {
     auto const instruction = gsl::at(Instructions, opcode);
-    out_ << fmt::format("{:04}: {}", m_instructionPointer, ByteCode {opcode});
+    out_ << fmt::format("{:04}: {}", m_instructionPointer, ByteCode::Type {opcode});
     if (instruction.numberOfOperands == 1)
     {
         out_ << fmt::format(" {}", m_code.at(m_instructionPointer + 1));

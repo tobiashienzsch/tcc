@@ -10,7 +10,7 @@
 namespace tcc
 {
 
-auto operator<<(std::ostream& out, ByteCode byteCode) -> std::ostream&
+auto operator<<(std::ostream& out, ByteCode::Type byteCode) -> std::ostream&
 {
     switch (byteCode)
     {

@@ -9,6 +9,7 @@
 #include "catch2/catch.hpp"
 
 #include <iostream>
+#include <sstream>
 
 using namespace std::string_literals;
 using namespace Catch::Matchers;

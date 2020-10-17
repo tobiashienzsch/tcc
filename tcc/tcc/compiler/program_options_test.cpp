@@ -92,7 +92,7 @@ TEST_CASE("tcc/compiler: ProgramOptions", "[tcc][compiler]")
         auto arguments = std::vector<char const*>();
         arguments.push_back("binary");
         arguments.push_back("-O1");
-        arguments.push_back(tempPath.c_str());
+        arguments.push_back((char const*)tempPath.c_str());
         auto const argc  = static_cast<int>(arguments.size());
         auto const* argv = arguments.data();
 

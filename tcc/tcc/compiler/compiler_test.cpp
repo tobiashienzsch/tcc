@@ -55,7 +55,7 @@ TEST_CASE("tcc/compiler: Run", "[compiler]")
         CHECK_THAT(cliOutput, Contains("; program:"));
         // PrintAssembly
         CHECK_THAT(cliOutput, Contains("// asm: length="));
-        // Ever valid program must have at least one each of the following instructions.
+        // Every valid program must have at least one each of the following instructions.
         CHECK_THAT(cliOutput, Contains("RET"));
         CHECK_THAT(cliOutput, Contains("EXIT"));
     }

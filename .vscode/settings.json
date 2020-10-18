@@ -68,6 +68,7 @@
         "__tuple": "cpp",
         "ios": "cpp",
         "locale": "cpp",
-        "stack": "cpp"
+        "stack": "cpp",
+        "fstream": "cpp"
     }
 }

@@ -4,6 +4,7 @@ set(tcsl_source
     tcsl/tcsl.hpp
     tcsl/binary_format.hpp
     tcsl/binary_format.cpp
+    tcsl/file.hpp
     tcsl/byte_code.hpp
     tcsl/byte_code.cpp
     tcsl/testing.hpp
@@ -23,6 +24,7 @@ target_include_directories(${PROJECT_NAME} PUBLIC
 target_link_libraries(${PROJECT_NAME} 
     PUBLIC 
         Boost::serialization
+        Boost::filesystem
         fmt::fmt-header-only
     PRIVATE
         tcc::CompilerOptions
@@ -36,6 +38,7 @@ if(TCC_BUILD_TESTS)
         main_test.cpp
         tcsl/binary_format_test.cpp
         tcsl/byte_code_test.cpp
+        tcsl/file_test.cpp
     )
     source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} FILES ${tcsl_test_source})
 
@@ -47,7 +50,6 @@ if(TCC_BUILD_TESTS)
         tcc::CompilerOptions
         tcc::CompilerWarnings
         tcc::CodeCoverage
-        Boost::filesystem
         Catch2::Catch2
     )
 

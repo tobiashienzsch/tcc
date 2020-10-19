@@ -81,7 +81,7 @@ public:
     /**
      * @brief Removes the file if it exists.
      */
-    auto LoadAsString() noexcept -> std::string
+    [[nodiscard]] auto LoadAsString() noexcept -> std::string
     {
         if (Exists())
         {

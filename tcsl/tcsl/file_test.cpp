@@ -15,7 +15,7 @@ TEST_CASE("tcsl: File default", "[tcsl]")
 
 TEST_CASE("tcsl: File(string)", "[tcsl]")
 {
-    auto file = tcc::File {"testfile"};
+    auto file = tcc::File {"testfile", true};
     CHECK(file.Exists());
     CHECK(file.SizeInBytes() == 0);
     CHECK(file.LoadAsString().empty());

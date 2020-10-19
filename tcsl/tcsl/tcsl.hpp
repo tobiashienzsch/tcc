@@ -9,12 +9,14 @@
 #include "tcsl/assert.hpp"
 #include "tcsl/binary_format.hpp"
 #include "tcsl/byte_code.hpp"
+#include "tcsl/file.hpp"
 #include "tcsl/testing.hpp"
 #include "tcsl/variant.hpp"
 #include "tcsl/warning.hpp"
 
 // fmt
 #include "fmt/format.h"
+#include "fmt/ostream.h"
 #include "fmt/printf.h"
 
 // gsl

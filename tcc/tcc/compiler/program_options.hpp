@@ -69,17 +69,14 @@ public:
                     return {true, EXIT_FAILURE};
                 }
 
-                std::ifstream in(paths[0], std::ios_base::in);
-                if (!in)
+                tcc::File input {paths[0]};
+                if (!input.Exists())
                 {
                     fmt::print(out_, "Could not open input file: {}\n", paths[0]);
                     return {true, EXIT_FAILURE};
                 }
 
-                in.unsetf(std::ios::skipws);  // No white space skipping!
-                flags_.Source = "";
-                std::copy(std::istream_iterator<char>(in), std::istream_iterator<char>(),
-                          std::back_inserter(flags_.Source));
+                flags_.Source = input.LoadAsString();
             }
         }
         catch (std::exception& e)

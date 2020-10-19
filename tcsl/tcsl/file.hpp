@@ -9,6 +9,14 @@
 namespace tcc
 {
 namespace fs = boost::filesystem;
+
+/**
+ * @brief Handle to a file on the filesystem.
+ *
+ * @todo Use memory mapped file for loading string.
+ *
+ * https://stackoverflow.com/questions/17925051/fast-textfile-reading-in-c/17925143#17925143
+ */
 class File
 {
 public:
@@ -20,11 +28,14 @@ public:
     /**
      * @brief Create a file from the given absolute \p path.
      */
-    explicit File(fs::path path) : path_ {std::move(path)}
+    File(fs::path path, bool createIfNotExists = false) : path_ {std::move(path)}
     {
-        fs::fstream file {};
-        file.open(path_, std::ios::out);
-        file.close();
+        if (createIfNotExists)
+        {
+            fs::fstream file {};
+            file.open(path_, std::ios::out);
+            file.close();
+        }
     }
 
     /**
@@ -74,13 +85,17 @@ public:
     {
         if (Exists())
         {
-            fs::ifstream file {path_};
-            std::string str;
+            // open file
+            fs::ifstream file {path_, std::ios_base::in};
+            file.unsetf(std::ios::skipws);  // No white space skipping!
 
+            // reserve file size
+            std::string str;
             file.seekg(0, std::ios::end);
             str.reserve(file.tellg());
             file.seekg(0, std::ios::beg);
 
+            // copy to string
             str.assign((std::istreambuf_iterator<char>(file)), std::istreambuf_iterator<char>());
             return str;
         }

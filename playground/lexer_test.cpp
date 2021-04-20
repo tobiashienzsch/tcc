@@ -2,97 +2,97 @@
 
 #include "catch2/catch.hpp"
 
-TEST_CASE("lexer: Operator", "[lexer]") {
+TEST_CASE("lexer: operator", "[lexer]") {
   auto const source = GENERATE(as<std::string>(), "+", "-", "*", "/");
-  auto ctx = ParseContext{};
+  auto ctx = parse_context{};
 
-  CHECK(Lexer(ctx, "+").NextToken().Type == SyntaxTokenType::Plus);
-  CHECK(Lexer(ctx, "-").NextToken().Type == SyntaxTokenType::Minus);
-  CHECK(Lexer(ctx, "*").NextToken().Type == SyntaxTokenType::Star);
-  CHECK(Lexer(ctx, "/").NextToken().Type == SyntaxTokenType::Slash);
-  CHECK(Lexer(ctx, "(").NextToken().Type == SyntaxTokenType::OpenBrace);
-  CHECK(Lexer(ctx, ")").NextToken().Type == SyntaxTokenType::CloseBrace);
+  CHECK(lexer(ctx, "+").next_token().type == syntax_token_type::plus);
+  CHECK(lexer(ctx, "-").next_token().type == syntax_token_type::minus);
+  CHECK(lexer(ctx, "*").next_token().type == syntax_token_type::star);
+  CHECK(lexer(ctx, "/").next_token().type == syntax_token_type::slash);
+  CHECK(lexer(ctx, "(").next_token().type == syntax_token_type::open_brace);
+  CHECK(lexer(ctx, ")").next_token().type == syntax_token_type::close_brace);
 
-  CHECK_FALSE(ctx.HasErrors());
+  CHECK_FALSE(ctx.has_errors());
 }
 
 TEST_CASE("lexer: NextToken", "[lexer]") {
   SECTION("No spaces") {
     auto const source = GENERATE(as<std::string>(), "42+2", "12+3", "99+0");
-    auto ctx = ParseContext{};
-    auto lexer = Lexer(ctx, source);
+    auto ctx = parse_context{};
+    auto lex = lexer(ctx, source);
 
-    auto token = lexer.NextToken();
-    CHECK(token.Type == SyntaxTokenType::LiteralInteger);
-    CHECK(token.Position == 0);
-    CHECK(token.Text.size() == 2);
+    auto token = lex.next_token();
+    CHECK(token.type == syntax_token_type::literal_integer);
+    CHECK(token.position == 0);
+    CHECK(token.text.size() == 2);
 
-    token = lexer.NextToken();
-    CHECK(token.Type == SyntaxTokenType::Plus);
-    CHECK(token.Position == 2);
-    CHECK(token.Text.size() == 1);
+    token = lex.next_token();
+    CHECK(token.type == syntax_token_type::plus);
+    CHECK(token.position == 2);
+    CHECK(token.text.size() == 1);
 
-    token = lexer.NextToken();
-    CHECK(token.Type == SyntaxTokenType::LiteralInteger);
-    CHECK(token.Position == 3);
-    CHECK(token.Text.size() == 1);
+    token = lex.next_token();
+    CHECK(token.type == syntax_token_type::literal_integer);
+    CHECK(token.position == 3);
+    CHECK(token.text.size() == 1);
 
-    token = lexer.NextToken();
-    CHECK(token.Type == SyntaxTokenType::EndOfFile);
-    CHECK(token.Position == 4);
-    CHECK(token.Text.size() == 1);
+    token = lex.next_token();
+    CHECK(token.type == syntax_token_type::end_of_file);
+    CHECK(token.position == 4);
+    CHECK(token.text.size() == 1);
 
-    CHECK_FALSE(ctx.HasErrors());
+    CHECK_FALSE(ctx.has_errors());
   }
 
   SECTION("With spaces") {
     auto const source = GENERATE(as<std::string>(), " 42 + 2", " 12 + 3");
-    auto ctx = ParseContext{};
-    auto lexer = Lexer(ctx, source);
+    auto ctx = parse_context{};
+    auto lex = lexer(ctx, source);
 
-    auto token = lexer.NextToken();
-    CHECK(token.Type == SyntaxTokenType::Whitespace);
-    CHECK(token.Position == 0);
-    CHECK(token.Text.size() == 1);
+    auto token = lex.next_token();
+    CHECK(token.type == syntax_token_type::whitespace);
+    CHECK(token.position == 0);
+    CHECK(token.text.size() == 1);
 
-    token = lexer.NextToken();
-    CHECK(token.Type == SyntaxTokenType::LiteralInteger);
-    CHECK(token.Position == 1);
-    CHECK(token.Text.size() == 2);
+    token = lex.next_token();
+    CHECK(token.type == syntax_token_type::literal_integer);
+    CHECK(token.position == 1);
+    CHECK(token.text.size() == 2);
 
-    token = lexer.NextToken();
-    CHECK(token.Type == SyntaxTokenType::Whitespace);
-    CHECK(token.Position == 3);
-    CHECK(token.Text.size() == 1);
+    token = lex.next_token();
+    CHECK(token.type == syntax_token_type::whitespace);
+    CHECK(token.position == 3);
+    CHECK(token.text.size() == 1);
 
-    token = lexer.NextToken();
-    CHECK(token.Type == SyntaxTokenType::Plus);
-    CHECK(token.Position == 4);
-    CHECK(token.Text.size() == 1);
+    token = lex.next_token();
+    CHECK(token.type == syntax_token_type::plus);
+    CHECK(token.position == 4);
+    CHECK(token.text.size() == 1);
 
-    token = lexer.NextToken();
-    CHECK(token.Type == SyntaxTokenType::Whitespace);
-    CHECK(token.Position == 5);
-    CHECK(token.Text.size() == 1);
+    token = lex.next_token();
+    CHECK(token.type == syntax_token_type::whitespace);
+    CHECK(token.position == 5);
+    CHECK(token.text.size() == 1);
 
-    token = lexer.NextToken();
-    CHECK(token.Type == SyntaxTokenType::LiteralInteger);
-    CHECK(token.Position == 6);
-    CHECK(token.Text.size() == 1);
+    token = lex.next_token();
+    CHECK(token.type == syntax_token_type::literal_integer);
+    CHECK(token.position == 6);
+    CHECK(token.text.size() == 1);
 
-    CHECK_FALSE(ctx.HasErrors());
+    CHECK_FALSE(ctx.has_errors());
   }
 }
 
-TEST_CASE("lexer: NextToken(BadToken)", "[lexer]") {
+TEST_CASE("lexer: NextToken(bad_token)", "[lexer]") {
   auto const source = GENERATE(as<std::string>(), "@", "#", "%", "&", "~");
-  auto ctx = ParseContext{};
-  auto lexer = Lexer(ctx, source);
+  auto ctx = parse_context{};
+  auto lex = lexer(ctx, source);
 
-  auto token = lexer.NextToken();
-  CHECK(token.Type == SyntaxTokenType::BadToken);
-  CHECK(token.Position == 0);
-  CHECK(token.Text.size() == 1);
+  auto token = lex.next_token();
+  CHECK(token.type == syntax_token_type::bad_token);
+  CHECK(token.position == 0);
+  CHECK(token.text.size() == 1);
 
-  CHECK(ctx.HasErrors());
+  CHECK(ctx.has_errors());
 }

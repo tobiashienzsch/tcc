@@ -12,227 +12,229 @@
 #include <utility>
 #include <vector>
 
-enum class ASTNodeType {
-  Operator,
-  Constant,
-  BinaryExpression,
-  UnaryExpression,
-  BracedExpression,
+enum class ast_node_type {
+  op,
+  constant,
+  binary_expression,
+  unary_expression,
+  braced_expression,
 };
 
-auto operator<<(std::ostream &out, ASTNodeType type) -> std::ostream &;
+auto operator<<(std::ostream &out, ast_node_type type) -> std::ostream &;
 
-class ASTNode {
+// NOLINTNEXTLINE(hicpp-special-member-functions)
+class ast_node {
 public:
-  virtual ~ASTNode() = default;
+  virtual ~ast_node() = default;
 
-  [[nodiscard]] virtual ASTNodeType GetType() const = 0;
-  [[nodiscard]] virtual std::string GetSource() const = 0;
-  [[nodiscard]] virtual std::vector<ASTNode *> GetChildren() const = 0;
-  [[nodiscard]] virtual std::pair<std::size_t, std::size_t>
-  GetSourceLocation() const = 0;
+  [[nodiscard]] virtual auto get_type() const -> ast_node_type = 0;
+  [[nodiscard]] virtual auto get_source() const -> std::string = 0;
+  [[nodiscard]] virtual auto get_children() const
+      -> std::vector<ast_node *> = 0;
+  [[nodiscard]] virtual auto get_source_location() const
+      -> std::pair<std::size_t, std::size_t> = 0;
 };
 
-class ASTOperator final : public ASTNode {
+class ast_operator final : public ast_node {
 public:
-  ASTOperator(SyntaxToken token) : token_{std::move(token)} {}
-  ASTOperator(ASTOperator const &) = delete;
-  ASTOperator &operator=(ASTOperator const &) = delete;
-  ASTOperator(ASTOperator &&) noexcept = default;
-  ASTOperator &operator=(ASTOperator &&) noexcept = default;
-  ~ASTOperator() override = default;
+  explicit ast_operator(syntax_token token) : token_{std::move(token)} {}
+  ast_operator(ast_operator const &) = delete;
+  auto operator=(ast_operator const &) -> ast_operator & = delete;
+  ast_operator(ast_operator &&) noexcept = default;
+  auto operator=(ast_operator &&) noexcept -> ast_operator & = default;
+  ~ast_operator() override = default;
 
-  [[nodiscard]] auto GetType() const -> ASTNodeType override {
-    return ASTNodeType::Operator;
+  [[nodiscard]] auto get_type() const -> ast_node_type override {
+    return ast_node_type::op;
   }
 
-  [[nodiscard]] auto GetChildren() const -> std::vector<ASTNode *> override {
+  [[nodiscard]] auto get_children() const -> std::vector<ast_node *> override {
     return {};
   }
 
-  [[nodiscard]] auto GetSource() const -> std::string override {
-    return token_.Text;
+  [[nodiscard]] auto get_source() const -> std::string override {
+    return token_.text;
   }
 
-  [[nodiscard]] auto GetSourceLocation() const
+  [[nodiscard]] auto get_source_location() const
       -> std::pair<std::size_t, std::size_t> override {
-    return std::make_pair(token_.Position,
-                          token_.Position + token_.Text.size());
+    return std::make_pair(token_.position,
+                          token_.position + token_.text.size());
   }
 
-  [[nodiscard]] auto Token() const noexcept -> SyntaxToken { return token_; }
+  [[nodiscard]] auto token() const noexcept -> syntax_token { return token_; }
 
 private:
-  SyntaxToken token_;
+  syntax_token token_;
 };
 
-class ASTConstant final : public ASTNode {
+class ast_constant final : public ast_node {
 public:
-  ASTConstant(SyntaxToken token) : token_{std::move(token)} {}
-  ASTConstant(ASTConstant const &) = delete;
-  ASTConstant &operator=(ASTConstant const &) = delete;
-  ASTConstant(ASTConstant &&) noexcept = default;
-  ASTConstant &operator=(ASTConstant &&) noexcept = default;
-  ~ASTConstant() override = default;
+  explicit ast_constant(syntax_token token) : token_{std::move(token)} {}
+  ast_constant(ast_constant const &) = delete;
+  auto operator=(ast_constant const &) -> ast_constant & = delete;
+  ast_constant(ast_constant &&) noexcept = default;
+  auto operator=(ast_constant &&) noexcept -> ast_constant & = default;
+  ~ast_constant() override = default;
 
-  [[nodiscard]] auto GetType() const -> ASTNodeType override {
-    return ASTNodeType::Constant;
+  [[nodiscard]] auto get_type() const -> ast_node_type override {
+    return ast_node_type::constant;
   }
 
-  [[nodiscard]] auto GetChildren() const -> std::vector<ASTNode *> override {
+  [[nodiscard]] auto get_children() const -> std::vector<ast_node *> override {
     return {};
   }
-  [[nodiscard]] auto GetSource() const -> std::string override {
-    return token_.Text;
+  [[nodiscard]] auto get_source() const -> std::string override {
+    return token_.text;
   }
-  [[nodiscard]] auto GetSourceLocation() const
+  [[nodiscard]] auto get_source_location() const
       -> std::pair<std::size_t, std::size_t> override {
-    return std::make_pair(token_.Position,
-                          token_.Position + token_.Text.size());
+    return std::make_pair(token_.position,
+                          token_.position + token_.text.size());
   }
 
-  [[nodiscard]] auto Token() const noexcept -> SyntaxToken { return token_; }
+  [[nodiscard]] auto token() const noexcept -> syntax_token { return token_; }
 
 private:
-  SyntaxToken token_;
+  syntax_token token_;
 };
 
-class ASTBinaryExpr final : public ASTNode {
+class ast_binary_expr final : public ast_node {
 public:
-  ASTBinaryExpr(std::unique_ptr<ASTNode> lhs, SyntaxToken op,
-                std::unique_ptr<ASTNode> rhs)
-      : lhs_{std::move(lhs)},
-        operator_{std::make_unique<ASTOperator>(std::move(op))}, rhs_{std::move(
-                                                                     rhs)} {}
-  ASTBinaryExpr(ASTBinaryExpr const &) = delete;
-  ASTBinaryExpr &operator=(ASTBinaryExpr const &) = delete;
-  ASTBinaryExpr(ASTBinaryExpr &&) noexcept = default;
-  ASTBinaryExpr &operator=(ASTBinaryExpr &&) noexcept = default;
+  ast_binary_expr(std::unique_ptr<ast_node> lhs, syntax_token const &op,
+                  std::unique_ptr<ast_node> rhs)
+      : lhs_{std::move(lhs)}, operator_{std::make_unique<ast_operator>(op)},
+        rhs_{std::move(rhs)} {}
+  ast_binary_expr(ast_binary_expr const &) = delete;
+  auto operator=(ast_binary_expr const &) -> ast_binary_expr & = delete;
+  ast_binary_expr(ast_binary_expr &&) noexcept = default;
+  auto operator=(ast_binary_expr &&) noexcept -> ast_binary_expr & = default;
 
-  ~ASTBinaryExpr() override = default;
+  ~ast_binary_expr() override = default;
 
-  [[nodiscard]] auto GetType() const -> ASTNodeType override {
-    return ASTNodeType::BinaryExpression;
+  [[nodiscard]] auto get_type() const -> ast_node_type override {
+    return ast_node_type::binary_expression;
   }
 
-  [[nodiscard]] auto GetChildren() const -> std::vector<ASTNode *> override {
-    auto res = std::vector<ASTNode *>{lhs_.get(), operator_.get(), rhs_.get()};
+  [[nodiscard]] auto get_children() const -> std::vector<ast_node *> override {
+    auto res = std::vector<ast_node *>{lhs_.get(), operator_.get(), rhs_.get()};
     return res;
   }
 
-  [[nodiscard]] auto GetSource() const -> std::string override {
-    return fmt::format("{} {} {}", lhs_->GetSource(), operator_->GetSource(),
-                       rhs_->GetSource());
+  [[nodiscard]] auto get_source() const -> std::string override {
+    return fmt::format("{} {} {}", lhs_->get_source(), operator_->get_source(),
+                       rhs_->get_source());
   }
 
-  [[nodiscard]] auto GetSourceLocation() const
+  [[nodiscard]] auto get_source_location() const
       -> std::pair<std::size_t, std::size_t> override {
-    auto const start = lhs_->GetSourceLocation().first;
-    auto const end = rhs_->GetSourceLocation().second;
+    auto const start = lhs_->get_source_location().first;
+    auto const end = rhs_->get_source_location().second;
     return std::make_pair(start, end);
   }
 
 private:
-  std::unique_ptr<ASTNode> lhs_;
-  std::unique_ptr<ASTOperator> operator_;
-  std::unique_ptr<ASTNode> rhs_;
+  std::unique_ptr<ast_node> lhs_;
+  std::unique_ptr<ast_operator> operator_;
+  std::unique_ptr<ast_node> rhs_;
 };
 
-class ASTUnaryExpr final : public ASTNode {
+class ast_unary_expr final : public ast_node {
 public:
-  ASTUnaryExpr(SyntaxToken op, std::unique_ptr<ASTNode> operand)
-      : operator_{std::make_unique<ASTOperator>(std::move(op))},
-        operand_{std::move(operand)} {}
-  ASTUnaryExpr(ASTUnaryExpr const &) = delete;
-  ASTUnaryExpr &operator=(ASTUnaryExpr const &) = delete;
-  ASTUnaryExpr(ASTUnaryExpr &&) noexcept = default;
-  ASTUnaryExpr &operator=(ASTUnaryExpr &&) noexcept = default;
+  ast_unary_expr(syntax_token const &op, std::unique_ptr<ast_node> operand)
+      : operator_{std::make_unique<ast_operator>(op)}, operand_{std::move(
+                                                           operand)} {}
+  ast_unary_expr(ast_unary_expr const &) = delete;
+  auto operator=(ast_unary_expr const &) -> ast_unary_expr & = delete;
+  ast_unary_expr(ast_unary_expr &&) noexcept = default;
+  auto operator=(ast_unary_expr &&) noexcept -> ast_unary_expr & = default;
 
-  ~ASTUnaryExpr() override = default;
+  ~ast_unary_expr() override = default;
 
-  [[nodiscard]] auto GetType() const -> ASTNodeType override {
-    return ASTNodeType::UnaryExpression;
+  [[nodiscard]] auto get_type() const -> ast_node_type override {
+    return ast_node_type::unary_expression;
   }
 
-  [[nodiscard]] auto GetChildren() const -> std::vector<ASTNode *> override {
-    auto res = std::vector<ASTNode *>{operator_.get(), operand_.get()};
+  [[nodiscard]] auto get_children() const -> std::vector<ast_node *> override {
+    auto res = std::vector<ast_node *>{operator_.get(), operand_.get()};
     return res;
   }
 
-  [[nodiscard]] auto GetSource() const -> std::string override {
-    return fmt::format("{} {}", operator_->GetSource(), operand_->GetSource());
+  [[nodiscard]] auto get_source() const -> std::string override {
+    return fmt::format("{} {}", operator_->get_source(),
+                       operand_->get_source());
   }
 
-  [[nodiscard]] auto GetSourceLocation() const
+  [[nodiscard]] auto get_source_location() const
       -> std::pair<std::size_t, std::size_t> override {
-    auto const start = operator_->GetSourceLocation().first;
-    auto const end = operand_->GetSourceLocation().second;
+    auto const start = operator_->get_source_location().first;
+    auto const end = operand_->get_source_location().second;
     return std::make_pair(start, end);
   }
 
 private:
-  std::unique_ptr<ASTOperator> operator_;
-  std::unique_ptr<ASTNode> operand_;
+  std::unique_ptr<ast_operator> operator_;
+  std::unique_ptr<ast_node> operand_;
 };
 
-class ASTBracedExpr final : public ASTNode {
+class ast_braced_expr final : public ast_node {
 public:
-  ASTBracedExpr(SyntaxToken open, std::unique_ptr<ASTNode> exp,
-                SyntaxToken close)
+  ast_braced_expr(syntax_token open, std::unique_ptr<ast_node> exp,
+                  syntax_token close)
       : open_{std::move(open)}, expression_{std::move(exp)}, close_{std::move(
                                                                  close)} {}
-  ASTBracedExpr(ASTBracedExpr const &) = delete;
-  ASTBracedExpr &operator=(ASTBracedExpr const &) = delete;
-  ASTBracedExpr(ASTBracedExpr &&) noexcept = default;
-  ASTBracedExpr &operator=(ASTBracedExpr &&) noexcept = default;
+  ast_braced_expr(ast_braced_expr const &) = delete;
+  auto operator=(ast_braced_expr const &) -> ast_braced_expr & = delete;
+  ast_braced_expr(ast_braced_expr &&) noexcept = default;
+  auto operator=(ast_braced_expr &&) noexcept -> ast_braced_expr & = default;
 
-  ~ASTBracedExpr() override = default;
+  ~ast_braced_expr() override = default;
 
-  [[nodiscard]] auto GetType() const -> ASTNodeType override {
-    return ASTNodeType::BracedExpression;
+  [[nodiscard]] auto get_type() const -> ast_node_type override {
+    return ast_node_type::braced_expression;
   }
 
-  [[nodiscard]] auto GetChildren() const -> std::vector<ASTNode *> override {
-    return std::vector<ASTNode *>{expression_.get()};
+  [[nodiscard]] auto get_children() const -> std::vector<ast_node *> override {
+    return std::vector<ast_node *>{expression_.get()};
   }
 
-  [[nodiscard]] auto GetSource() const -> std::string override {
-    return fmt::format("({})", expression_->GetSource());
+  [[nodiscard]] auto get_source() const -> std::string override {
+    return fmt::format("({})", expression_->get_source());
   }
 
-  [[nodiscard]] auto GetSourceLocation() const
+  [[nodiscard]] auto get_source_location() const
       -> std::pair<std::size_t, std::size_t> override {
-    auto const start = open_.Position;
-    auto const end = close_.Position + 1;
+    auto const start = open_.position;
+    auto const end = close_.position + 1;
     return std::make_pair(start, end);
   }
 
 private:
-  SyntaxToken open_;
-  std::unique_ptr<ASTNode> expression_;
-  SyntaxToken close_;
+  syntax_token open_;
+  std::unique_ptr<ast_node> expression_;
+  syntax_token close_;
 };
 
-class ASTUtils {
+class ast_utils {
 public:
-  static auto PrettyPrint(std::ostream &out, ASTNode const &node,
-                          std::string indent = "", bool isLast = true) -> void {
-    auto const marker = isLast ? std::string("└── ") : std::string("├── ");
+  static auto pretty_print(std::ostream &out, ast_node const &node,
+                           std::string indent = "", bool is_last = true)
+      -> void {
+    auto const marker = is_last ? std::string("└── ") : std::string("├── ");
 
-    auto location = node.GetSourceLocation();
-    out << fmt::format("{0}{1}<{2}[{3}, {4}) \"{5}\">\n", indent, marker,
-                       node.GetType(), location.first, location.second,
-                       node.GetSource());
+    auto location = node.get_source_location();
+    out << fmt::format("{0}{1}<{2}[{3}, {4})>\n", indent, marker,
+                       node.get_type(), location.first, location.second);
 
-    indent += isLast ? std::string("    ") : std::string("│   ");
+    indent += is_last ? std::string("    ") : std::string("│   ");
 
-    if (auto const children = node.GetChildren(); not children.empty()) {
+    if (auto const children = node.get_children(); not children.empty()) {
       std::for_each(children.begin(), children.end() - 1,
                     [&](auto const *const child) {
-                      PrettyPrint(out, *child, indent, false);
+                      pretty_print(out, *child, indent, false);
                     });
 
-      PrettyPrint(out, *children.back(), indent, true);
+      pretty_print(out, *children.back(), indent, true);
     }
   }
 };

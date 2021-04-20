@@ -1,5 +1,33 @@
-Checks:          '*-,boost-*,bugprone-*,-bugprone-macro-parentheses,-bugprone-narrowing-conversions,cert-*,-cert-oop54-cpp,-cert-err58-cpp,clang-analyzer-*,concurrency-*,hicpp-*,-hicpp-avoid-c-arrays,-hicpp-explicit-conversions,modernize-*,-modernize-avoid-c-arrays,-modernize-use-trailing-return-type,performance-*,readability-*,-readability-uppercase-literal-suffix,-readability-magic-numbers,-readability-function-cognitive-complexity'
+Checks: '*-,boost-*,bugprone-*,cert-*,-cert-oop54-cpp,-cert-err58-cpp,clang-analyzer-*,concurrency-*,hicpp-*,modernize-*,performance-*,readability-*,-readability-function-cognitive-complexity,-readability-magic-numbers'
 WarningsAsErrors: '*'
-AnalyzeTemporaryDtors: false
 FormatStyle:     none
+CheckOptions:
+  - key:             readability-identifier-naming.ClassCase
+    value:           lower_case
+  - key:             readability-identifier-naming.ClassMemberCase
+    value:           lower_case
+  - key:             readability-identifier-naming.ClassConstantCase
+    value:           lower_case
+  - key:             readability-identifier-naming.PrivateMemberSuffix
+    value:           _
+  - key:             readability-identifier-naming.EnumCase
+    value:           lower_case
+  - key:             readability-identifier-naming.EnumConstantCase
+    value:           lower_case
+  - key:             readability-identifier-naming.FunctionCase
+    value:           lower_case
+  - key:             readability-identifier-naming.GlobalConstantCase
+    value:           lower_case
+  - key:             readability-identifier-naming.IgnoreMainLikeFunctions
+    value:           1
+  - key:             readability-identifier-naming.ParameterCase
+    value:           lower_case
+  - key:             readability-identifier-naming.PublicMemberCase
+    value:           lower_case
+  - key:             readability-identifier-naming.ScopedEnumConstantCase
+    value:           lower_case
+  - key:             readability-identifier-naming.UnionCase
+    value:           lower_case
+  - key:             readability-identifier-naming.VariableCase
+    value:           lower_case
 ...

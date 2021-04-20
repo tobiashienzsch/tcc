@@ -7,41 +7,41 @@
 
 // clang-format off
 #define TCC_TOKENS                  \
-    TCC_TOKEN_TYPE(BadToken)        \
-    TCC_TOKEN_TYPE(Whitespace)      \
-    TCC_TOKEN_TYPE(LiteralInteger)  \
-    TCC_TOKEN_TYPE(Identifier)      \
-    TCC_TOKEN_TYPE(Plus)            \
-    TCC_TOKEN_TYPE(Minus)           \
-    TCC_TOKEN_TYPE(Star)            \
-    TCC_TOKEN_TYPE(Slash)           \
-    TCC_TOKEN_TYPE(OpenBrace)       \
-    TCC_TOKEN_TYPE(CloseBrace)      \
-    TCC_TOKEN_TYPE(EndOfFile)
+    TCC_TOKEN_TYPE(bad_token)        \
+    TCC_TOKEN_TYPE(whitespace)      \
+    TCC_TOKEN_TYPE(literal_integer)  \
+    TCC_TOKEN_TYPE(identifier)      \
+    TCC_TOKEN_TYPE(plus)            \
+    TCC_TOKEN_TYPE(minus)           \
+    TCC_TOKEN_TYPE(star)            \
+    TCC_TOKEN_TYPE(slash)           \
+    TCC_TOKEN_TYPE(open_brace)       \
+    TCC_TOKEN_TYPE(close_brace)      \
+    TCC_TOKEN_TYPE(end_of_file)
 // clang-format on
 
 #define TCC_TOKEN_TYPE(x) x,
-enum class SyntaxTokenType { TCC_TOKENS };
+enum class syntax_token_type { TCC_TOKENS };
 #undef TCC_TOKEN_TYPE
 
-auto operator<<(std::ostream &out, SyntaxTokenType type) -> std::ostream &;
+auto operator<<(std::ostream &out, syntax_token_type type) -> std::ostream &;
 
-struct SyntaxToken {
-  SyntaxTokenType Type;
-  std::size_t Position;
-  std::string Text;
+struct syntax_token {
+  syntax_token_type type;
+  std::size_t position;
+  std::string text;
 };
 
 [[nodiscard]] inline constexpr auto
-GetBinaryOperatorPrecedence(SyntaxTokenType type) noexcept -> int {
+get_binary_opprecedence(syntax_token_type type) noexcept -> int {
   switch (type) {
-  case SyntaxTokenType::Star:
-  case SyntaxTokenType::Slash: {
+  case syntax_token_type::star:
+  case syntax_token_type::slash: {
     return 2;
   }
 
-  case SyntaxTokenType::Plus:
-  case SyntaxTokenType::Minus: {
+  case syntax_token_type::plus:
+  case syntax_token_type::minus: {
     return 1;
   }
 
@@ -52,10 +52,10 @@ GetBinaryOperatorPrecedence(SyntaxTokenType type) noexcept -> int {
 }
 
 [[nodiscard]] inline constexpr auto
-GetUnaryOperatorPrecedence(SyntaxTokenType type) noexcept -> int {
+get_unary_opprecedence(syntax_token_type type) noexcept -> int {
   switch (type) {
-  case SyntaxTokenType::Plus:
-  case SyntaxTokenType::Minus: {
+  case syntax_token_type::plus:
+  case syntax_token_type::minus: {
     return 1;
   }
 

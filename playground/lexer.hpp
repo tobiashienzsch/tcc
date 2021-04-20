@@ -9,22 +9,22 @@
 
 #include <cctype>
 #include <cstddef>
-#include <string>
+#include <string_view>
 
-class Lexer {
+class lexer {
 public:
-  Lexer(ParseContext &ctx, std::string text)
-      : context_{ctx}, text_{std::move(text)} {}
+  lexer(parse_context &ctx, std::string_view text)
+      : context_{ctx}, text_{text} {}
 
-  auto NextToken() -> SyntaxToken {
+  auto next_token() -> syntax_token {
     if (position_ >= text_.size()) {
-      return SyntaxToken{
-          .Type = SyntaxTokenType::EndOfFile,
-          .Position = position_,
-          .Text = std::string(1, '\0'),
+      return syntax_token{
+          .type = syntax_token_type::end_of_file,
+          .position = position_,
+          .text = std::string(1, '\0'),
       };
     }
-    // Whitespace
+    // whitespace
     if (std::isspace(current()) != 0) {
       auto const start = position_;
       while (std::isspace(current()) != 0) {
@@ -33,13 +33,13 @@ public:
 
       auto const length = position_ - start;
 
-      return SyntaxToken{
-          .Type = SyntaxTokenType::Whitespace,
-          .Position = start,
-          .Text = text_.substr(start, length),
+      return syntax_token{
+          .type = syntax_token_type::whitespace,
+          .position = start,
+          .text = std::string{text_.substr(start, length)},
       };
     }
-    // LiteralInteger
+    // literal_integer
     if (std::isdigit(current()) != 0) {
       auto const start = position_;
       while (std::isdigit(current()) == 1) {
@@ -47,43 +47,43 @@ public:
       }
 
       auto const length = position_ - start;
-      return SyntaxToken{
-          .Type = SyntaxTokenType::LiteralInteger,
-          .Position = start,
-          .Text = text_.substr(start, length),
+      return syntax_token{
+          .type = syntax_token_type::literal_integer,
+          .position = start,
+          .text = std::string{text_.substr(start, length)},
       };
     }
 
     if (current() == '+') {
-      return {SyntaxTokenType::Plus, position_++, "+"};
+      return {syntax_token_type::plus, position_++, "+"};
     }
 
     if (current() == '-') {
-      return {SyntaxTokenType::Minus, position_++, "-"};
+      return {syntax_token_type::minus, position_++, "-"};
     }
 
     if (current() == '*') {
-      return {SyntaxTokenType::Star, position_++, "*"};
+      return {syntax_token_type::star, position_++, "*"};
     }
 
     if (current() == '/') {
-      return {SyntaxTokenType::Slash, position_++, "/"};
+      return {syntax_token_type::slash, position_++, "/"};
     }
 
     if (current() == '(') {
-      return {SyntaxTokenType::OpenBrace, position_++, "("};
+      return {syntax_token_type::open_brace, position_++, "("};
     }
 
     if (current() == ')') {
-      return {SyntaxTokenType::CloseBrace, position_++, ")"};
+      return {syntax_token_type::close_brace, position_++, ")"};
     }
 
-    context_.AddError(fmt::format("bad character input: {0}", current()));
+    context_.add_error(fmt::format("bad character input: {0}", current()));
 
-    return SyntaxToken{
-        .Type = SyntaxTokenType::BadToken,
-        .Position = position_++,
-        .Text = text_.substr(position_ - 1, 1),
+    return syntax_token{
+        .type = syntax_token_type::bad_token,
+        .position = position_++,
+        .text = std::string{text_.substr(position_ - 1, 1)},
     };
   }
 
@@ -94,8 +94,8 @@ private:
 
   auto advance() noexcept -> std::size_t { return ++position_; }
 
-  ParseContext &context_;
-  std::string text_;
+  parse_context &context_;
+  std::string_view text_;
   std::size_t position_{0};
 };
 #endif // TCC_PLAYGROUND_LEXER_HPP

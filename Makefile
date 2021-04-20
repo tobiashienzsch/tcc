@@ -3,9 +3,11 @@ default: config build test
 export PATH := $(shell pwd)/scripts:$(PATH)
 CONFIG ?= Release
 BUILD_DIR_BASE = build
-BUILD_DIR = $(BUILD_DIR_BASE)_$(CONFIG)
+BUILD_DIR ?= $(BUILD_DIR_BASE)_$(CONFIG)
 
 CM_GENERATOR ?= Ninja
+
+CLANG_TIDY_ARGS = ./scripts/run-clang-tidy.py -clang-tidy-binary clang-tidy-12 -clang-apply-replacements-binary clang-apply-replacements-12 -j $(shell nproc) -quiet -p $(BUILD_DIR)
 
 .PHONY: win
 win: config-vs build test
@@ -56,11 +58,18 @@ coverage:
 	cd $(COVERAGE_DIR) && $(LCOV) --remove cov.info "*v1*" -o cov.info
 	cd $(COVERAGE_DIR) && $(LCOV) --remove cov.info "*Xcode.app*" -o cov.info
 
-.PHONY: tidy
-tidy:
-	cd $(BUILD_DIR) && run-clang-tidy.py ../tcc -p . -fix -header-filter="tcc/.*"
-	cd $(BUILD_DIR) && run-clang-tidy.py ../tcsl -p . -fix -header-filter="tcc/.*"
-	cd $(BUILD_DIR) && run-clang-tidy.py ../tcvm -p . -fix -header-filter="tcc/.*"
+.PHONY: tidy-check
+tidy-check:
+	${CLANG_TIDY_ARGS} -header-filter $(shell realpath ./tcc) $(shell realpath ./tcc)
+	${CLANG_TIDY_ARGS} -header-filter $(shell realpath ./tcc) $(shell realpath ./tcsl)
+	${CLANG_TIDY_ARGS} -header-filter $(shell realpath ./tcc) $(shell realpath ./tcvm)
+
+.PHONY: tidy-fix
+tidy-fix:
+	${CLANG_TIDY_ARGS} -fix -header-filter $(shell realpath ./playground) $(shell realpath ./playground)
+	# ${CLANG_TIDY_ARGS} -fix -header-filter $(shell realpath ./tcc) $(shell realpath ./tcc)
+	# ${CLANG_TIDY_ARGS} -fix -header-filter $(shell realpath ./tcc) $(shell realpath ./tcsl)
+	# ${CLANG_TIDY_ARGS} -fix -header-filter $(shell realpath ./tcc) $(shell realpath ./tcvm)
 
 .PHONY: report
 report:

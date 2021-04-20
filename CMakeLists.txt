@@ -6,7 +6,7 @@ project(TobanteCrappyCompilerCollection
 )
 
 # LTO
-cmake_policy(SET CMP0069 NEW) 
+cmake_policy(SET CMP0069 NEW)
 set(CMAKE_POLICY_DEFAULT_CMP0069 NEW)
 
 # project options
@@ -78,7 +78,7 @@ if(TCC_CLANG_TIDY)
   else()
     set(DO_CLANG_TIDY "${CLANG_TIDY_EXE}")
   endif()
-  
+
   # Create a preprocessor definition that depends on .clang-tidy content so
   # the compile command will change when .clang-tidy changes.  This ensures
   # that a subsequent build re-runs clang-tidy on all sources even if they
@@ -93,7 +93,7 @@ configure_file(.clang-tidy .clang-tidy COPYONLY)
 
 # set(Boost_USE_STATIC_LIBS ON)
 # set(Boost_USE_MULTITHREADED ON)
-find_package(Boost 1.71 REQUIRED COMPONENTS date_time filesystem program_options regex serialization system)
+find_package(Boost 1.75 REQUIRED COMPONENTS date_time filesystem program_options regex serialization system json iostreams)
 
 add_subdirectory(3rd_party/fmt EXCLUDE_FROM_ALL)
 add_subdirectory(3rd_party/gsl EXCLUDE_FROM_ALL)
@@ -119,7 +119,7 @@ if(TCC_BUILD_BENCHMARK)
     set(ALLOW_DOWNLOADING_GOOGLETEST FALSE CACHE BOOL "")
     set(BENCHMARK_ENABLE_GTEST_TESTS OFF CACHE BOOL "")
     set(BENCHMARK_ENABLE_TESTING OFF CACHE BOOL "")
-    add_subdirectory(3rd_party/google-benchmark EXCLUDE_FROM_ALL) 
+    add_subdirectory(3rd_party/google-benchmark EXCLUDE_FROM_ALL)
     set_target_properties(benchmark PROPERTIES FOLDER 3rd_party)
     add_subdirectory(benchmark)
 endif()

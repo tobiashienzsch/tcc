@@ -1,10 +1,10 @@
 #include "token.hpp"
 
-auto operator<<(std::ostream &out, SyntaxTokenType const type)
+auto operator<<(std::ostream &out, syntax_token_type const type)
     -> std::ostream & {
   switch (type) {
 #define TCC_TOKEN_TYPE(x)                                                      \
-  case SyntaxTokenType::x: {                                                   \
+  case syntax_token_type::x: {                                                 \
     out << #x;                                                                 \
     break;                                                                     \
   }

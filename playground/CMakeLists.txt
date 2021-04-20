@@ -16,6 +16,7 @@ target_link_libraries(playground_lib
         fmt
         GSL
         Boost::headers
+        Boost::iostreams
         tcc::CompilerOptions
         tcc::CompilerWarnings
         PRIVATE

@@ -1,24 +1,24 @@
 #include "ast.hpp"
 
-auto operator<<(std::ostream &out, ASTNodeType const type) -> std::ostream & {
+auto operator<<(std::ostream &out, ast_node_type const type) -> std::ostream & {
   switch (type) {
-  case ASTNodeType::Operator: {
+  case ast_node_type::op: {
     out << "Operator";
     break;
   }
-  case ASTNodeType::Constant: {
+  case ast_node_type::constant: {
     out << "Constant";
     break;
   }
-  case ASTNodeType::BinaryExpression: {
+  case ast_node_type::binary_expression: {
     out << "BinaryExpr";
     break;
   }
-  case ASTNodeType::UnaryExpression: {
+  case ast_node_type::unary_expression: {
     out << "UnaryExpr";
     break;
   }
-  case ASTNodeType::BracedExpression: {
+  case ast_node_type::braced_expression: {
     out << "BracedExpr";
     break;
   }

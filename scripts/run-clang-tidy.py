@@ -1,12 +1,12 @@
 #!/usr/bin/env python
 #
-#===- run-clang-tidy.py - Parallel clang-tidy runner --------*- python -*--===#
+# ===- run-clang-tidy.py - Parallel clang-tidy runner --------*- python -*--===#
 #
 # Part of the LLVM Project, under the Apache License v2.0 with LLVM Exceptions.
 # See https://llvm.org/LICENSE.txt for license information.
 # SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 #
-#===-----------------------------------------------------------------------===#
+# ===-----------------------------------------------------------------------===#
 # FIXME: Integrate with clang-tidy-diff.py
 
 
@@ -138,8 +138,7 @@ def merge_replacement_files(tmpdir, mergefile):
 def check_clang_apply_replacements_binary(args):
     """Checks if invoking supplied clang-apply-replacements binary works."""
     try:
-        subprocess.check_call(
-            [args.clang_apply_replacements_binary, '--version'])
+        subprocess.check_call([args.clang_apply_replacements_binary, '--version'])
     except:
         print('Unable to run clang-apply-replacements. Is clang-apply-replacements '
               'binary correctly specified?', file=sys.stderr)
@@ -168,14 +167,12 @@ def run_tidy(args, tmpdir, build_path, queue, lock, failed_files):
                                          args.extra_arg, args.extra_arg_before,
                                          args.quiet, args.config)
 
-        proc = subprocess.Popen(
-            invocation, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        proc = subprocess.Popen(invocation, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
         output, err = proc.communicate()
         if proc.returncode != 0:
             failed_files.append(name)
         with lock:
-            sys.stdout.write(' '.join(invocation) +
-                             '\n' + output.decode('utf-8'))
+            sys.stdout.write(' '.join(invocation) + '\n' + output.decode('utf-8'))
             if len(err) > 0:
                 sys.stdout.flush()
                 sys.stderr.write(err.decode('utf-8'))
@@ -184,9 +181,9 @@ def run_tidy(args, tmpdir, build_path, queue, lock, failed_files):
 
 def main():
     parser = argparse.ArgumentParser(description='Runs clang-tidy over all files '
-                                     'in a compilation database. Requires '
-                                     'clang-tidy and clang-apply-replacements in '
-                                     '$PATH.')
+                                                 'in a compilation database. Requires '
+                                                 'clang-tidy and clang-apply-replacements in '
+                                                 '$PATH.')
     parser.add_argument('-allow-enabling-alpha-checkers',
                         action='store_true', help='allow alpha checkers from '
                                                   'clang-analyzer.')
@@ -198,43 +195,43 @@ def main():
                         help='path to clang-apply-replacements binary')
     parser.add_argument('-checks', default=None,
                         help='checks filter, when not specified, use clang-tidy '
-                        'default')
+                             'default')
     parser.add_argument('-config', default=None,
                         help='Specifies a configuration in YAML/JSON format: '
-                        '  -config="{Checks: \'*\', '
-                        '                       CheckOptions: [{key: x, '
-                        '                                       value: y}]}" '
-                        'When the value is empty, clang-tidy will '
-                        'attempt to find a file named .clang-tidy for '
-                        'each source file in its parent directories.')
+                             '  -config="{Checks: \'*\', '
+                             '                       CheckOptions: [{key: x, '
+                             '                                       value: y}]}" '
+                             'When the value is empty, clang-tidy will '
+                             'attempt to find a file named .clang-tidy for '
+                             'each source file in its parent directories.')
     parser.add_argument('-header-filter', default=None,
                         help='regular expression matching the names of the '
-                        'headers to output diagnostics from. Diagnostics from '
-                        'the main file of each translation unit are always '
-                        'displayed.')
+                             'headers to output diagnostics from. Diagnostics from '
+                             'the main file of each translation unit are always '
+                             'displayed.')
     if yaml:
         parser.add_argument('-export-fixes', metavar='filename', dest='export_fixes',
                             help='Create a yaml file to store suggested fixes in, '
-                            'which can be applied with clang-apply-replacements.')
+                                 'which can be applied with clang-apply-replacements.')
     parser.add_argument('-j', type=int, default=0,
                         help='number of tidy instances to be run in parallel.')
     parser.add_argument('files', nargs='*', default=['.*'],
                         help='files to be processed (regex on path)')
     parser.add_argument('-fix', action='store_true', help='apply fix-its')
     parser.add_argument('-format', action='store_true', help='Reformat code '
-                        'after applying fixes')
+                                                             'after applying fixes')
     parser.add_argument('-style', default='file', help='The style of reformat '
-                        'code after applying fixes')
+                                                       'code after applying fixes')
     parser.add_argument('-p', dest='build_path',
                         help='Path used to read a compile command database.')
     parser.add_argument('-extra-arg', dest='extra_arg',
                         action='append', default=[],
                         help='Additional argument to append to the compiler '
-                        'command line.')
+                             'command line.')
     parser.add_argument('-extra-arg-before', dest='extra_arg_before',
                         action='append', default=[],
                         help='Additional argument to prepend to the compiler '
-                        'command line.')
+                             'command line.')
     parser.add_argument('-quiet', action='store_true',
                         help='Run clang-tidy in quiet mode')
     args = parser.parse_args()

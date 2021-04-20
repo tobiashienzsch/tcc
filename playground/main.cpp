@@ -1,15 +1,25 @@
 #include "ast.hpp"
 #include "parser.hpp"
 
-#include <cstdlib>
-#include <iostream>
+#include <boost/iostreams/device/mapped_file.hpp> // for mmap
 
-auto main(int /*argc*/, char ** /*argv*/) -> int {
-  auto parser = Parser{"(1+2)*(2*(123+456))"};
-  auto ast = parser.GenerateAST();
+#include <cstdlib>  // for EXIT_SUCCESS
+#include <iostream> // for std::cout
 
-  parser.PrintDiagnostics(std::cout);
-  ASTUtils::PrettyPrint(std::cout, *ast);
+namespace bio = boost::iostreams;
+
+auto main(int argc, char **argv) -> int {
+  if (argc != 2) {
+    std::cerr << "usage: " << argv[0] << " path/to/source.tcc\n";
+    std::exit(EXIT_FAILURE); // NOLINT(concurrency-mt-unsafe)
+  }
+
+  auto mmap = bio::mapped_file(argv[1], bio::mapped_file::readonly);
+  auto p = parser{std::string_view{mmap.const_data(), mmap.size()}};
+  auto ast = p.generate_ast();
+
+  p.print_diagnostics(std::cout);
+  ast_utils::pretty_print(std::cout, *ast);
 
   return EXIT_SUCCESS;
 }

@@ -22,17 +22,20 @@ public:
     using value_type = std::vector<IRRegister>;
 
     auto begin() noexcept -> value_type::iterator { return data_.begin(); }
-    auto begin() const noexcept -> value_type::const_iterator { return data_.begin(); }
-    auto cbegin() const noexcept -> value_type::const_iterator { return data_.cbegin(); }
+    [[nodiscard]] auto begin() const noexcept -> value_type::const_iterator { return data_.begin(); }
+    [[nodiscard]] auto cbegin() const noexcept -> value_type::const_iterator
+    {
+        return data_.cbegin();
+    }
 
     auto end() noexcept -> value_type::iterator { return data_.end(); }
-    auto end() const noexcept -> value_type::const_iterator { return data_.end(); }
-    auto cend() const noexcept -> value_type::const_iterator { return data_.cend(); }
+    [[nodiscard]] auto end() const noexcept -> value_type::const_iterator { return data_.end(); }
+    [[nodiscard]] auto cend() const noexcept -> value_type::const_iterator { return data_.cend(); }
 
     auto push_back(IRRegister const& str) -> void { data_.push_back(str); }
     auto push_back(IRRegister&& str) -> void { data_.push_back(std::forward<IRRegister>(str)); }
 
-    auto size() const noexcept -> value_type::size_type { return data_.size(); }
+    [[nodiscard]] auto size() const noexcept -> value_type::size_type { return data_.size(); }
 
 private:
     value_type data_;
@@ -56,13 +59,13 @@ using IRStatementList = std::vector<IRStatement>;
 
 struct IRBasicBlock
 {
-    IRIdentifier Name          = "";
+    IRIdentifier Name;
     IRStatementList Statements = {};
 };
 
 struct IRFunction
 {
-    IRIdentifier Name                    = "";
+    IRIdentifier Name;
     std::map<std::string, int> Args      = {};
     std::map<std::string, int> Variables = {};
     std::vector<IRBasicBlock> Blocks     = {};
@@ -72,7 +75,7 @@ auto operator<<(std::ostream& out, IRFunction const& data) -> std::ostream&;
 
 struct IRPackage
 {
-    IRIdentifier Name                 = "";
+    IRIdentifier Name;
     std::vector<IRFunction> Functions = {};
 };
 

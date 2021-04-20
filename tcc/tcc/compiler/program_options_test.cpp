@@ -85,9 +85,9 @@ TEST_CASE("tcc/compiler: ProgramOptions", "[tcc][compiler]")
 
     SECTION("temp source file")
     {
-        auto tempPath    = fs::temp_directory_path() / fs::unique_path();
-        auto tempPathStr = tempPath.string();
-        auto tempFile    = std::ofstream(tempPathStr.c_str());
+        auto tempPath           = fs::temp_directory_path() / fs::unique_path();
+        const auto& tempPathStr = tempPath.string();
+        auto tempFile           = std::ofstream(tempPathStr.c_str());
         tempFile.close();
 
         auto arguments = std::vector<char const*>();

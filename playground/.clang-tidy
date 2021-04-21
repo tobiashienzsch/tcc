@@ -3,31 +3,31 @@ WarningsAsErrors: '*'
 FormatStyle:     none
 CheckOptions:
   - key:             readability-identifier-naming.ClassCase
-    value:           CamelCase
+    value:           lower_case
   - key:             readability-identifier-naming.ClassMemberCase
-    value:           camelBack
+    value:           lower_case
   - key:             readability-identifier-naming.ClassConstantCase
-    value:           CamelCase
+    value:           lower_case
   - key:             readability-identifier-naming.PrivateMemberSuffix
     value:           _
   - key:             readability-identifier-naming.EnumCase
-    value:           CamelCase
+    value:           lower_case
   - key:             readability-identifier-naming.EnumConstantCase
-    value:           UPPER_CASE
+    value:           lower_case
   - key:             readability-identifier-naming.FunctionCase
-    value:           camelBack
+    value:           lower_case
   - key:             readability-identifier-naming.GlobalConstantCase
-    value:           CamelCase
+    value:           lower_case
   - key:             readability-identifier-naming.IgnoreMainLikeFunctions
     value:           1
   - key:             readability-identifier-naming.ParameterCase
-    value:           camelBack
+    value:           lower_case
   - key:             readability-identifier-naming.PublicMemberCase
-    value:           camelBack
+    value:           lower_case
   - key:             readability-identifier-naming.ScopedEnumConstantCase
-    value:           CamelCase
+    value:           lower_case
   - key:             readability-identifier-naming.UnionCase
-    value:           CamelCase
+    value:           lower_case
   - key:             readability-identifier-naming.VariableCase
-    value:           camelBack
+    value:           lower_case
 ...

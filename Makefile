@@ -66,10 +66,9 @@ tidy-check:
 
 .PHONY: tidy-fix
 tidy-fix:
-	${CLANG_TIDY_ARGS} -fix -header-filter $(shell realpath ./playground) $(shell realpath ./playground)
 	# ${CLANG_TIDY_ARGS} -fix -header-filter $(shell realpath ./tcc) $(shell realpath ./tcc)
-	# ${CLANG_TIDY_ARGS} -fix -header-filter $(shell realpath ./tcc) $(shell realpath ./tcsl)
-	# ${CLANG_TIDY_ARGS} -fix -header-filter $(shell realpath ./tcc) $(shell realpath ./tcvm)
+	${CLANG_TIDY_ARGS} -fix -header-filter $(shell realpath ./tcsl) $(shell realpath ./tcsl)
+	# ${CLANG_TIDY_ARGS} -fix -header-filter $(shell realpath ./tcvm) $(shell realpath ./tcvm)
 
 .PHONY: report
 report:

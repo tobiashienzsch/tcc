@@ -108,9 +108,9 @@ if(TCC_BUILD_TESTS)
 endif()
 
 # sub projects
-add_subdirectory(tcsl)
-add_subdirectory(tcc)
-add_subdirectory(tcvm)
+add_subdirectory(src/tcsl)
+add_subdirectory(src/tcc)
+add_subdirectory(src/tcvm)
 add_subdirectory(tests)
 
 

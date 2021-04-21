@@ -10,22 +10,22 @@ set(tcsl_source
     tcsl/testing.hpp
     tcsl/variant.hpp
     tcsl/warning.hpp
-)    
+)
 source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} FILES ${tcsl_source})
 
 add_library(${PROJECT_NAME} ${tcsl_source})
 add_library(tcc::tcsl ALIAS ${PROJECT_NAME})
 set_target_properties(${PROJECT_NAME} PROPERTIES CXX_CLANG_TIDY "${DO_CLANG_TIDY}")
 
-target_include_directories(${PROJECT_NAME} PUBLIC 
+target_include_directories(${PROJECT_NAME} PUBLIC
     ${CMAKE_CURRENT_SOURCE_DIR}
     ${CMAKE_SOURCE_DIR}/3rd_party/gsl/include
 )
-target_link_libraries(${PROJECT_NAME} 
-    PUBLIC 
+target_link_libraries(${PROJECT_NAME}
+    PUBLIC
         Boost::serialization
         Boost::filesystem
-        fmt::fmt-header-only
+        fmt::fmt
     PRIVATE
         tcc::CompilerOptions
         tcc::CompilerWarnings

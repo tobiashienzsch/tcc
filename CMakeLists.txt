@@ -55,48 +55,24 @@ if(CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME)
     set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
     set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 
+    # For conan
+    list(APPEND CMAKE_MODULE_PATH ${CMAKE_BINARY_DIR})
+    list(APPEND CMAKE_PREFIX_PATH ${CMAKE_BINARY_DIR})
 endif()
 
 
 # cmake modules
 list (APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
+include(tccConan)
 include(tccCodeCoverage)
 include(tccCompilerOptions)
 include(tccCompilerWarnings)
 include(tccThreads)
 
-# tidy, has to be enabled for each target.
-if(TCC_CLANG_TIDY)
-  if(CMake_SOURCE_DIR STREQUAL CMake_BINARY_DIR)
-    message(FATAL_ERROR "TCC_CLANG_TIDY requires an out-of-source build!")
-  endif()
-
-  find_program(CLANG_TIDY_EXE NAMES clang-tidy)
-  if(NOT CLANG_TIDY_EXE)
-    message(WARNING "TCC_CLANG_TIDY is ON but clang-tidy is not found!")
-    set(DO_CLANG_TIDY "")
-  else()
-    set(DO_CLANG_TIDY "${CLANG_TIDY_EXE}")
-  endif()
-
-  # Create a preprocessor definition that depends on .clang-tidy content so
-  # the compile command will change when .clang-tidy changes.  This ensures
-  # that a subsequent build re-runs clang-tidy on all sources even if they
-  # do not otherwise need to be recompiled.  Nothing actually uses this
-  # definition.  We add it to targets on which we run clang-tidy just to
-  # get the build dependency on the .clang-tidy file.
-  file(SHA1 ${CMAKE_CURRENT_SOURCE_DIR}/.clang-tidy clang_tidy_sha1)
-  set(CLANG_TIDY_DEFINITIONS "CLANG_TIDY_SHA1=${clang_tidy_sha1}")
-  unset(clang_tidy_sha1)
-endif(TCC_CLANG_TIDY)
-configure_file(.clang-tidy .clang-tidy COPYONLY)
-
-# set(Boost_USE_STATIC_LIBS ON)
-# set(Boost_USE_MULTITHREADED ON)
 find_package(Boost 1.75 REQUIRED COMPONENTS date_time filesystem program_options regex serialization system json iostreams)
+find_package(fmt)
+find_package(Microsoft.GSL)
 
-add_subdirectory(3rd_party/fmt EXCLUDE_FROM_ALL)
-add_subdirectory(3rd_party/gsl EXCLUDE_FROM_ALL)
 
 # catch2
 if(TCC_BUILD_TESTS)

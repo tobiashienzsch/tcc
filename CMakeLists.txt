@@ -73,7 +73,6 @@ find_package(Boost 1.75 REQUIRED COMPONENTS date_time filesystem program_options
 find_package(fmt)
 find_package(Microsoft.GSL)
 
-
 # catch2
 if(TCC_BUILD_TESTS)
     list (APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/3rd_party/Catch2/contrib")

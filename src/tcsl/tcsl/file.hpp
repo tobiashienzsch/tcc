@@ -28,7 +28,7 @@ public:
     /**
      * @brief Create a file from the given absolute \p path.
      */
-    File(fs::path path, bool createIfNotExists = false) : path_ {std::move(path)}
+    explicit File(fs::path path, bool createIfNotExists = false) : path_ {std::move(path)}
     {
         if (createIfNotExists)
         {
@@ -41,7 +41,7 @@ public:
     /**
      * @brief Returns true if the file exists.
      */
-    [[nodiscard]] auto Exists() const noexcept -> bool
+    [[nodiscard]] auto exists() const noexcept -> bool
     {
         auto ec           = boost::system::error_code {};
         auto const exists = fs::exists(path_, ec);
@@ -51,13 +51,13 @@ public:
     /**
      * @brief Returns the file size in bytes. -1 if the file doesn't exist or an error ocurred.
      */
-    [[nodiscard]] auto SizeInBytes() const noexcept -> std::int64_t
+    [[nodiscard]] auto sizeInBytes() const noexcept -> std::int64_t
     {
-        if (Exists())
+        if (exists())
         {
             auto ec         = boost::system::error_code {};
             auto const size = fs::file_size(path_, ec);
-            return !ec ? size : -1;
+            return !ec ? static_cast<std::int64_t>(size) : std::int64_t {-1};
         }
 
         return -1;
@@ -66,9 +66,9 @@ public:
     /**
      * @brief Removes the file if it exists.
      */
-    auto Remove() noexcept -> bool
+    auto remove() noexcept -> bool
     {
-        if (Exists())
+        if (exists())
         {
             auto ec            = boost::system::error_code {};
             auto const removed = fs::remove(path_, ec);
@@ -81,9 +81,9 @@ public:
     /**
      * @brief Removes the file if it exists.
      */
-    [[nodiscard]] auto LoadAsString() noexcept -> std::string
+    [[nodiscard]] auto loadAsString() noexcept -> std::string
     {
-        if (Exists())
+        if (exists())
         {
             // open file
             fs::ifstream file {path_, std::ios_base::in};

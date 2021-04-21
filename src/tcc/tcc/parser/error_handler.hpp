@@ -14,85 +14,74 @@ template<typename Iterator>
 struct ErrorHandler
 {
     template<typename, typename, typename>
-    struct result
+    struct Result
     {
         using type = void;
     };
 
-    ErrorHandler(Iterator f, Iterator l, std::ostream& o) : first(f), last(l), out(o) { }
+    ErrorHandler(Iterator f, Iterator l, std::ostream& o) : first_(f), last_(l), out_(o) { }
 
     template<typename Message, typename What>
-    void operator()(Message const& message, What const& what, Iterator err_pos) const
+    void operator()(Message const& message, What const& what, Iterator errPos) const
     {
-        int line            = 0;
-        Iterator line_start = get_pos(err_pos, line);
-        if (err_pos != last)
+        int line           = 0;
+        Iterator lineStart = getPos(errPos, line);
+        if (errPos != last_)
         {
-            auto msg
-                = fmt::format("{0}{1} line {2}:\n{3}\n", message, what, line, get_line(line_start));
-            for (; line_start != err_pos; ++line_start)
-            {
-                msg.append(" ");
-            }
+            auto msg = fmt::format("{0}{1} line {2}:\n{3}\n", message, what, line, getLine(lineStart));
+            for (; lineStart != errPos; ++lineStart) { msg.append(" "); }
             msg.append("^\n");
-            out << msg;
+            out_ << msg;
         }
         else
         {
-            auto const msg
-                = fmt::format("Unexpected end of file. {0}{1} line {2}:\n", message, what, line);
-            out << msg;
+            auto const msg = fmt::format("Unexpected end of file. {0}{1} line {2}:\n", message, what, line);
+            out_ << msg;
         }
     }
 
-    [[nodiscard]] Iterator get_pos(Iterator err_pos, int& line) const
+    [[nodiscard]] auto getPos(Iterator errPos, int& line) const -> Iterator
     {
-        line                = 1;
-        Iterator i          = first;
-        Iterator line_start = first;
-        while (i != err_pos)
+        line               = 1;
+        Iterator i         = first_;
+        Iterator lineStart = first_;
+        while (i != errPos)
         {
             bool eol = false;
-            if (i != err_pos && *i == '\r')  // CR
+            if (i != errPos && *i == '\r')  // CR
             {
-                eol        = true;
-                line_start = ++i;
+                eol       = true;
+                lineStart = ++i;
             }
-            if (i != err_pos && *i == '\n')  // LF
+            if (i != errPos && *i == '\n')  // LF
             {
-                eol        = true;
-                line_start = ++i;
+                eol       = true;
+                lineStart = ++i;
             }
-            if (eol)
-            {
-                ++line;
-            }
+            if (eol) { ++line; }
             else
             {
                 ++i;
             }
         }
-        return line_start;
+        return lineStart;
     }
 
-    [[nodiscard]] std::string get_line(Iterator err_pos) const
+    [[nodiscard]] auto getLine(Iterator errPos) const -> std::string
     {
-        Iterator i = err_pos;
+        Iterator i = errPos;
         // position i to the next EOL
-        while (i != last && (*i != '\r' && *i != '\n'))
-        {
-            ++i;
-        }
-        return std::string(err_pos, i);
+        while (i != last_ && (*i != '\r' && *i != '\n')) { ++i; }
+        return std::string(errPos, i);
     }
 
-    [[nodiscard]] std::vector<Iterator>& GetIterators() { return iters; }
+    [[nodiscard]] auto getIterators() -> std::vector<Iterator>& { return iters_; }
 
 private:
-    Iterator first              = {};
-    Iterator last               = {};
-    std::vector<Iterator> iters = {};
-    std::ostream& out;
+    Iterator first_              = {};
+    Iterator last_               = {};
+    std::vector<Iterator> iters_ = {};
+    std::ostream& out_;
 };
 }  // namespace tcc
 

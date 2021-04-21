@@ -6,123 +6,117 @@
 namespace tcc
 {
 
-bool IRGenerator::operator()(tcc::ast::Nil /*unused*/)
+auto IRGenerator::operator()(tcc::ast::Nil /*unused*/) -> bool
 {
     TCC_ASSERT(false, "");
     return false;
 }
 
-bool IRGenerator::operator()(unsigned int x)
+auto IRGenerator::operator()(unsigned int x) -> bool
 {
-    builder_.PushToStack(x);
+    builder_.pushToStack(x);
     return true;
 }
-bool IRGenerator::operator()(bool /*unused*/) { return true; }
+auto IRGenerator::operator()(bool /*unused*/) -> bool { return true; }
 
-bool IRGenerator::operator()(tcc::ast::Identifier const& x)
+auto IRGenerator::operator()(tcc::ast::Identifier const& x) -> bool
 {
-    if (!builder_.HasVariable(x.Name))
+    if (!builder_.hasVariable(x.name))
     {
-        errorHandler_(x.ID, "Undeclared variable: " + x.Name);
+        errorHandler_(x.id, "Undeclared variable: " + x.name);
         return false;
     }
-    auto const last = builder_.GetLastVariable(x.Name);
-    builder_.CreateLoadOperation(last);
+    auto const last = builder_.getLastVariable(x.name);
+    builder_.createLoadOperation(last);
     return true;
 }
 
-bool IRGenerator::operator()(tcc::ast::Operation const& x)
+auto IRGenerator::operator()(tcc::ast::Operation const& x) -> bool
 {
-    if (!boost::apply_visitor(*this, x.Operand_))
-    {
-        return false;
-    }
+    if (!boost::apply_visitor(*this, x.operand)) { return false; }
     switch (x.Operator)
     {
         case tcc::ast::OpToken::Plus:
         {
-            builder_.CreateBinaryOperation(IRByteCode::Addition);
+            builder_.createBinaryOperation(IRByteCode::Addition);
             break;
         }
         case tcc::ast::OpToken::Minus:
         {
-            builder_.CreateBinaryOperation(IRByteCode::Subtraction);
+            builder_.createBinaryOperation(IRByteCode::Subtraction);
             break;
         }
         case tcc::ast::OpToken::Times:
         {
-            builder_.CreateBinaryOperation(IRByteCode::Multiplication);
+            builder_.createBinaryOperation(IRByteCode::Multiplication);
             break;
         }
         case tcc::ast::OpToken::Divide:
         {
-            builder_.CreateBinaryOperation(IRByteCode::Division);
+            builder_.createBinaryOperation(IRByteCode::Division);
             break;
         }
 
         case tcc::ast::OpToken::Equal:
         {
-            builder_.CreateBinaryOperation(IRByteCode::Equal);
+            builder_.createBinaryOperation(IRByteCode::Equal);
             break;
         }
         case tcc::ast::OpToken::NotEqual:
         {
-            builder_.CreateBinaryOperation(IRByteCode::NotEqual);
+            builder_.createBinaryOperation(IRByteCode::NotEqual);
             break;
         }
         case tcc::ast::OpToken::Less:
         {
-            builder_.CreateBinaryOperation(IRByteCode::Less);
+            builder_.createBinaryOperation(IRByteCode::Less);
             break;
         }
         case tcc::ast::OpToken::LessEqual:
         {
-            builder_.CreateBinaryOperation(IRByteCode::LessEqual);
+            builder_.createBinaryOperation(IRByteCode::LessEqual);
             break;
         }
         case tcc::ast::OpToken::Greater:
         {
-            builder_.CreateBinaryOperation(IRByteCode::Greater);
+            builder_.createBinaryOperation(IRByteCode::Greater);
             break;
         }
         case tcc::ast::OpToken::GreaterEqual:
         {
-            builder_.CreateBinaryOperation(IRByteCode::GreaterEqual);
+            builder_.createBinaryOperation(IRByteCode::GreaterEqual);
             break;
         }
 
         case tcc::ast::OpToken::And:
         {
-            builder_.CreateBinaryOperation(IRByteCode::And);
+            builder_.createBinaryOperation(IRByteCode::And);
             break;
         }
         case tcc::ast::OpToken::Or:
         {
-            builder_.CreateBinaryOperation(IRByteCode::Or);
+            builder_.createBinaryOperation(IRByteCode::Or);
             break;
         }
         default: return false;
     }
     return true;
 }
-bool IRGenerator::operator()(tcc::ast::Unary const& x)
+auto IRGenerator::operator()(tcc::ast::Unary const& x) -> bool
 {
-    if (!boost::apply_visitor(*this, x.Operand_))
-    {
-        return false;
-    }
+    if (!boost::apply_visitor(*this, x.operand)) { return false; }
     switch (x.Operator)
     {
         case tcc::ast::OpToken::Positive: break;
 
         case tcc::ast::OpToken::Negative:
         {
-            builder_.CreateUnaryOperation(IRByteCode::Negate);
+            builder_.createUnaryOperation(IRByteCode::Negate);
             break;
         }
         case tcc::ast::OpToken::Not:
         {
-            builder_.CreateUnaryOperation(IRByteCode::Not);
+            builder_.createUnaryOperation(IRByteCode::Not);
             break;
         }
 
@@ -130,94 +124,73 @@ bool IRGenerator::operator()(tcc::ast::Unary const& x)
     }
     return true;
 }
-bool IRGenerator::operator()(tcc::ast::FunctionCall const& call)
+auto IRGenerator::operator()(tcc::ast::FunctionCall const& call) -> bool
 {
     auto argTemps = IRArgumentList {};
-    for (auto const& expr : call.Args)
+    for (auto const& expr : call.args)
     {
-        if (!(*this)(expr))
-        {
-            return false;
-        }
-        argTemps.push_back(builder_.GetLastTemporary());
+        if (!(*this)(expr)) { return false; }
+        argTemps.pushBack(builder_.getLastTemporary());
     }
 
-    return builder_.CreateFunctionCall(call.FuncName.Name, argTemps);
+    return builder_.createFunctionCall(call.funcName.name, argTemps);
 }
-bool IRGenerator::operator()(tcc::ast::Expression const& x)
+auto IRGenerator::operator()(tcc::ast::Expression const& x) -> bool
 {
-    if (!boost::apply_visitor(*this, x.First))
+    if (!boost::apply_visitor(*this, x.first)) { return false; }
+    for (tcc::ast::Operation const& oper : x.rest)
     {
-        return false;
-    }
-    for (tcc::ast::Operation const& oper : x.Rest)
-    {
-        if (!(*this)(oper))
-        {
-            return false;
-        }
+        if (!(*this)(oper)) { return false; }
     }
     return true;
 }
-bool IRGenerator::operator()(tcc::ast::Assignment const& x)
+auto IRGenerator::operator()(tcc::ast::Assignment const& x) -> bool
 {
-    if (!(*this)(x.Right))
+    if (!(*this)(x.right)) { return false; }
+    if (!builder_.hasVariable(x.left.name))
     {
+        errorHandler_(x.left.id, "Undeclared variable: " + x.left.name);
         return false;
     }
-    if (!builder_.HasVariable(x.Left.Name))
-    {
-        errorHandler_(x.Left.ID, "Undeclared variable: " + x.Left.Name);
-        return false;
-    }
-    auto const newKey = builder_.CreateAssignment(x.Left.Name);
-    builder_.CreateStoreOperation(newKey);
+    auto const newKey = builder_.createAssignment(x.left.name);
+    builder_.createStoreOperation(newKey);
     return true;
 }
 
-bool IRGenerator::operator()(tcc::ast::VariableDeclaration const& x)
+auto IRGenerator::operator()(tcc::ast::VariableDeclaration const& x) -> bool
 {
-    if (builder_.HasVariable(x.Left.Name))
+    if (builder_.hasVariable(x.left.name))
     {
-        errorHandler_(x.Left.ID, "Duplicate variable: " + x.Left.Name);
+        errorHandler_(x.left.id, "Duplicate variable: " + x.left.name);
         return false;
     }
-    bool r = (*this)(*x.Right);
+    bool r = (*this)(*x.right);
     if (r)  // don't add the variable if the RHS fails
     {
-        builder_.AddVariable(x.Left.Name);
-        auto const newKey = builder_.CreateAssignment(x.Left.Name);
-        builder_.CreateStoreOperation(newKey);
+        builder_.addVariable(x.left.name);
+        auto const newKey = builder_.createAssignment(x.left.name);
+        builder_.createStoreOperation(newKey);
     }
     return r;
 }
-bool IRGenerator::operator()(tcc::ast::Statement const& x) { return boost::apply_visitor(*this, x); }
-bool IRGenerator::operator()(tcc::ast::StatementList const& x)
+auto IRGenerator::operator()(tcc::ast::Statement const& x) -> bool { return boost::apply_visitor(*this, x); }
+auto IRGenerator::operator()(tcc::ast::StatementList const& x) -> bool
 {
     for (auto const& s : x)
     {
-        if (!(*this)(s))
-        {
-            return false;
-        }
+        if (!(*this)(s)) { return false; }
     }
     return true;
 }
-bool IRGenerator::operator()(tcc::ast::IfStatement const& x)
+auto IRGenerator::operator()(tcc::ast::IfStatement const& x) -> bool
 {
-    builder_.StartBasicBlock("if.begin");
-    builder_.StartBasicBlock("if.cond");
-    if (!(*this)(x.Condition))
-    {
-        return false;
-    }
-    builder_.CreateIfStatementCondition();
-    builder_.StartBasicBlock("if.then");
-    if (!(*this)(x.Then))
-    {
-        return false;
-    }
-    builder_.StartBasicBlock();
+    builder_.startBasicBlock("if.begin");
+    builder_.startBasicBlock("if.cond");
+    if (!(*this)(x.condition)) { return false; }
+    builder_.createIfStatementCondition();
+    builder_.startBasicBlock("if.then");
+    if (!(*this)(x.then)) { return false; }
+    builder_.startBasicBlock();
 
     // program_.op(IRByteCode::JumpIf, 0);              // we shall fill this
     // (0) in later std::size_t skip = program_.size() - 1;  // mark its
@@ -237,7 +210,7 @@ bool IRGenerator::operator()(tcc::ast::IfStatement const& x)
 
     return true;
 }
-bool IRGenerator::operator()(tcc::ast::WhileStatement const& /*unused*/)
+auto IRGenerator::operator()(tcc::ast::WhileStatement const& /*unused*/) -> bool
 {
     // std::size_t loop = program_.size();  // mark our position
     // if (!(*this)(x.Condition)) return false;
@@ -250,93 +223,76 @@ bool IRGenerator::operator()(tcc::ast::WhileStatement const& /*unused*/)
     // to jump to (to exit the loop)
     return true;
 }
-bool IRGenerator::operator()(tcc::ast::ReturnStatement const& x)
+auto IRGenerator::operator()(tcc::ast::ReturnStatement const& x) -> bool
 {
-    if (!(*this)(*x.Expr))
-    {
-        return false;
-    }
-    builder_.CreateReturnOperation();
+    if (!(*this)(*x.expr)) { return false; }
+    builder_.createReturnOperation();
     return true;
 }
 
-bool IRGenerator::operator()(tcc::ast::Function const& func)
+auto IRGenerator::operator()(tcc::ast::Function const& func) -> bool
 {
     auto args = IRArgumentList {};
-    for (auto const& arg : func.Args)
-    {
-        args.push_back(arg.Name);
-    }
+    for (auto const& arg : func.args) { args.pushBack(arg.name); }
 
-    if (!builder_.CreateFunction(func.FuncName.Name, args))
+    if (!builder_.createFunction(func.funcName.name, args))
     {
-        errorHandler_(func.FuncName.ID, "Duplicate function: " + func.FuncName.Name);
+        errorHandler_(func.funcName.id, "Duplicate function: " + func.funcName.name);
         return false;
     }
 
-    return (*this)(func.Body);
+    return (*this)(func.body);
 }
 
-bool IRGenerator::operator()(tcc::ast::FunctionList const& funcList)
+auto IRGenerator::operator()(tcc::ast::FunctionList const& funcList) -> bool
 {
     for (auto const& func : funcList)
     {
-        if (!(*this)(func))
-        {
-            return false;
-        }
+        if (!(*this)(func)) { return false; }
     }
 
     return true;
 }
 
-auto IRGenerator::Builder::HasVariable(std::string const& name) const -> bool
+auto IRGenerator::Builder::hasVariable(std::string const& name) const -> bool
 {
     // local var
-    auto isLocal = currentFunction_->Variables.find(name);
-    if (isLocal != currentFunction_->Variables.end())
-    {
-        return true;
-    }
+    auto isLocal = currentFunction_->variables.find(name);
+    if (isLocal != currentFunction_->variables.end()) { return true; }
 
     // function argument
-    auto const& args = currentFunction_->Args;
-    return std::any_of(std::begin(args), std::end(args),
-                       [&name](auto const& arg) { return arg.first == name; });
+    auto const& args = currentFunction_->args;
+    return std::any_of(std::begin(args), std::end(args), [&name](auto const& arg) { return arg.first == name; });
 }
 
-auto IRGenerator::Builder::PushToStack(std::uint32_t x) -> void { stack_.emplace_back(x); }
+auto IRGenerator::Builder::pushToStack(std::uint32_t x) -> void { stack_.emplace_back(x); }
 
-auto IRGenerator::Builder::PopFromStack() -> IRStatement::Argument
+auto IRGenerator::Builder::popFromStack() -> IRStatement::Argument
 {
     auto result = stack_.back();
     stack_.pop_back();
     return result;
 }
 
-auto IRGenerator::Builder::AddVariable(const std::string& name) -> void
+auto IRGenerator::Builder::addVariable(const std::string& name) -> void
 {
-    auto search = currentFunction_->Variables.find(name);
-    if (search == currentFunction_->Variables.end())
-    {
-        currentFunction_->Variables.insert({name, 0});
-    }
+    auto search = currentFunction_->variables.find(name);
+    if (search == currentFunction_->variables.end()) { currentFunction_->variables.insert({name, 0}); }
     else
     {
         fmt::print("Tried to add {} twice to variable map\n", name);
     }
 }
 
-auto IRGenerator::Builder::GetLastVariable(std::string const& key) const -> std::string
+auto IRGenerator::Builder::getLastVariable(std::string const& key) const -> std::string
 {
-    if (auto local = currentFunction_->Variables.find(key);
-        local != std::end(currentFunction_->Variables))
+    if (auto local = currentFunction_->variables.find(key); local != std::end(currentFunction_->variables))
     {
         auto newId = local->second - 1;
         return fmt::format("{}.{}", key, newId);
     }
 
-    if (auto arg = currentFunction_->Args.find(key); arg != std::end(currentFunction_->Args))
+    if (auto arg = currentFunction_->args.find(key); arg != std::end(currentFunction_->args))
     {
         auto newId = arg->second - 1;
         return fmt::format("{}.{}", key, newId);
@@ -347,89 +303,89 @@ auto IRGenerator::Builder::GetLastVariable(std::string const& key) const -> std:
     return "";
 }
 
-auto IRGenerator::Builder::CreateReturnOperation() -> void
+auto IRGenerator::Builder::createReturnOperation() -> void
 {
-    auto const first = PopFromStack();
-    currentBlock_->Statements.push_back(IRStatement {
-        .Type        = IRByteCode::Return,
-        .IsTemporary = false,
-        .Destination = "",
-        .First       = first,
-        .Second      = std::nullopt,
+    auto const first = popFromStack();
+    currentBlock_->statements.push_back(IRStatement {
+        .type        = IRByteCode::Return,
+        .isTemporary = false,
+        .destination = "",
+        .first       = first,
+        .second      = std::nullopt,
     });
 }
 
-auto IRGenerator::Builder::CreateBinaryOperation(IRByteCode op) -> void
+auto IRGenerator::Builder::createBinaryOperation(IRByteCode op) -> void
 {
-    auto second  = PopFromStack();
-    auto first   = PopFromStack();
-    auto tmpName = CreateTemporaryOnStack();
+    auto second  = popFromStack();
+    auto first   = popFromStack();
+    auto tmpName = createTemporaryOnStack();
 
-    currentBlock_->Statements.push_back(IRStatement {
-        .Type        = op,
-        .IsTemporary = true,
-        .Destination = std::move(tmpName),
-        .First       = std::move(first),
-        .Second      = std::move(second),
+    currentBlock_->statements.push_back(IRStatement {
+        .type        = op,
+        .isTemporary = true,
+        .destination = std::move(tmpName),
+        .first       = std::move(first),
+        .second      = std::move(second),
     });
 }
 
-auto IRGenerator::Builder::CreateUnaryOperation(IRByteCode op) -> void
+auto IRGenerator::Builder::createUnaryOperation(IRByteCode op) -> void
 {
-    currentBlock_->Statements.push_back(IRStatement {
-        .Type        = op,
-        .IsTemporary = true,
-        .Destination = CreateTemporaryOnStack(),
-        .First       = PopFromStack(),
-        .Second      = {},
+    currentBlock_->statements.push_back(IRStatement {
+        .type        = op,
+        .isTemporary = true,
+        .destination = createTemporaryOnStack(),
+        .first       = popFromStack(),
+        .second      = {},
     });
 }
 
-auto IRGenerator::Builder::CreateStoreOperation(std::string key) -> void
+auto IRGenerator::Builder::createStoreOperation(std::string key) -> void
 {
-    currentBlock_->Statements.push_back(IRStatement {
-        .Type        = IRByteCode::Store,
-        .IsTemporary = false,
-        .Destination = std::move(key),
-        .First       = PopFromStack(),
-        .Second      = {},
+    currentBlock_->statements.push_back(IRStatement {
+        .type        = IRByteCode::Store,
+        .isTemporary = false,
+        .destination = std::move(key),
+        .first       = popFromStack(),
+        .second      = {},
     });
 }
 
-auto IRGenerator::Builder::CreateLoadOperation(std::string key) -> void
+auto IRGenerator::Builder::createLoadOperation(std::string key) -> void
 {
-    currentBlock_->Statements.push_back(IRStatement {
-        .Type        = IRByteCode::Load,
-        .IsTemporary = true,
-        .Destination = CreateTemporaryOnStack(),
-        .First       = key,
-        .Second      = {},
+    currentBlock_->statements.push_back(IRStatement {
+        .type        = IRByteCode::Load,
+        .isTemporary = true,
+        .destination = createTemporaryOnStack(),
+        .first       = key,
+        .second      = {},
     });
 }
 
-auto IRGenerator::Builder::CreateArgStoreOperation(std::string key, std::string varName) -> void
+auto IRGenerator::Builder::createArgStoreOperation(std::string key, std::string varName) -> void
 {
-    currentBlock_->Statements.push_back(IRStatement {
-        .Type        = IRByteCode::ArgStore,
-        .IsTemporary = true,
-        .Destination = std::move(key),
-        .First       = std::move(varName),
-        .Second      = {},
+    currentBlock_->statements.push_back(IRStatement {
+        .type        = IRByteCode::ArgStore,
+        .isTemporary = true,
+        .destination = std::move(key),
+        .first       = std::move(varName),
+        .second      = {},
     });
 }
 
-auto IRGenerator::Builder::CreateAssignment(std::string const& key) -> std::string
+auto IRGenerator::Builder::createAssignment(std::string const& key) -> std::string
 {
     // local var
-    auto isLocal = currentFunction_->Variables.find(key);
-    if (isLocal != std::end(currentFunction_->Variables))
+    auto isLocal = currentFunction_->variables.find(key);
+    if (isLocal != std::end(currentFunction_->variables))
     {
         auto newId = isLocal->second++;
         return fmt::format("{}.{}", key, newId);
     }
     // func arg
-    auto isArg = currentFunction_->Args.find(key);
-    if (isArg != std::end(currentFunction_->Args))
+    auto isArg = currentFunction_->args.find(key);
+    if (isArg != std::end(currentFunction_->args))
     {
         auto newId = isArg->second++;
         return fmt::format("{}.{}", key, newId);
@@ -440,65 +396,59 @@ auto IRGenerator::Builder::CreateAssignment(std::string const& key) -> std::stri
     return "";
 }
 
-auto IRGenerator::Builder::CreateTemporaryOnStack() -> std::string
+auto IRGenerator::Builder::createTemporaryOnStack() -> std::string
 {
     auto tmp = fmt::format("t.{}", tmpCounter_++);
     stack_.emplace_back(tmp);
     return tmp;
 }
 
-auto IRGenerator::Builder::CreateFunction(std::string name, const IRArgumentList& argsV) -> bool
+auto IRGenerator::Builder::createFunction(std::string name, const IRArgumentList& argsV) -> bool
 {
     auto args = std::map<std::string, int> {};
-    for (auto const& arg : argsV)
-    {
-        args.insert({arg, 0});
-    }
+    for (auto const& arg : argsV) { args.insert({arg, 0}); }
 
-    package_.Functions.emplace_back(IRFunction {std::move(name), std::move(args), {}, {}});
-    currentFunction_ = &package_.Functions.back();
-    StartBasicBlock("entry");
-    for (auto const& arg : currentFunction_->Args)
-    {
-        CreateArgStoreOperation(CreateAssignment(arg.first), arg.first);
-    }
+    package_.functions.emplace_back(IRFunction {std::move(name), std::move(args), {}, {}});
+    currentFunction_ = &package_.functions.back();
+    startBasicBlock("entry");
+    for (auto const& arg : currentFunction_->args) { createArgStoreOperation(createAssignment(arg.first), arg.first); }
 
     return true;
 }
 
-auto IRGenerator::Builder::CreateFunctionCall(std::string name, IRArgumentList argTemps) -> bool
+auto IRGenerator::Builder::createFunctionCall(std::string name, IRArgumentList argTemps) -> bool
 {
-    currentBlock_->Statements.push_back(IRStatement {
-        .Type        = IRByteCode::Call,
-        .IsTemporary = {},
-        .Destination = CreateTemporaryOnStack(),
-        .First       = std::move(name),
-        .Second      = argTemps,
+    currentBlock_->statements.push_back(IRStatement {
+        .type        = IRByteCode::Call,
+        .isTemporary = {},
+        .destination = createTemporaryOnStack(),
+        .first       = std::move(name),
+        .second      = argTemps,
     });
     return true;
 }
 
-void IRGenerator::Builder::CreateIfStatementCondition()
+void IRGenerator::Builder::createIfStatementCondition()
 {
-    currentBlock_->Statements.push_back(IRStatement {
-        .Type        = IRByteCode::JumpIf,
-        .IsTemporary = false,
-        .Destination = "",
-        .First       = GetLastTemporary(),
-        .Second      = {},
+    currentBlock_->statements.push_back(IRStatement {
+        .type        = IRByteCode::JumpIf,
+        .isTemporary = false,
+        .destination = "",
+        .first       = getLastTemporary(),
+        .second      = {},
     });
 }
 
-void IRGenerator::Builder::StartBasicBlock(const std::string& suffix)
+void IRGenerator::Builder::startBasicBlock(const std::string& suffix)
 {
     auto const name = fmt::format("{}.{}", blockCounter_++, suffix);
-    currentFunction_->Blocks.push_back({name});
-    currentBlock_ = &currentFunction_->Blocks.back();
+    currentFunction_->blocks.push_back({name});
+    currentBlock_ = &currentFunction_->blocks.back();
 }
 
-[[nodiscard]] auto IRGenerator::Builder::GetLastTemporary() const -> std::string
+[[nodiscard]] auto IRGenerator::Builder::getLastTemporary() const -> std::string
 {
-    return currentBlock_->Statements.back().Destination;
+    return currentBlock_->statements.back().destination;
 }
 
 }  // namespace tcc

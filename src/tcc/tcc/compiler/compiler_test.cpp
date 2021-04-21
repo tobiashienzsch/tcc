@@ -18,13 +18,13 @@ TEST_CASE("tcc/compiler: Run", "[compiler]")
         auto source  = std::string {"int main() { return 1 + 2; }"};
         auto stream  = std::ostringstream {};
         auto options = tcc::CompilerOptions {
-            .Out      = &stream,
-            .Source   = source,
-            .OptLevel = 0,
+            .out      = &stream,
+            .source   = source,
+            .optLevel = 0,
         };
 
         auto compiler         = tcc::Compiler {options};
-        auto const returnCode = compiler.Run();
+        auto const returnCode = compiler.run();
         auto const cliOutput  = stream.str();
 
         CHECK(returnCode == EXIT_SUCCESS);
@@ -36,16 +36,18 @@ TEST_CASE("tcc/compiler: Run", "[compiler]")
         auto source  = std::string {"int main() { return 1 + 2; }"};
         auto stream  = std::ostringstream {};
         auto options = tcc::CompilerOptions {
-            .Out           = &stream,
-            .Source        = source,
-            .OptLevel      = 0,
-            .PrintSource   = true,
-            .PrintIR       = true,
-            .PrintAssembly = true,
+            .out           = &stream,
+            .source        = source,
+            .outputName    = "",
+            .optLevel      = 0,
+            .printSource   = true,
+            .printAst      = true,
+            .printIr       = true,
+            .printAssembly = true,
         };
 
         auto compiler         = tcc::Compiler {options};
-        auto const returnCode = compiler.Run();
+        auto const returnCode = compiler.run();
         auto const cliOutput  = stream.str();
 
         CHECK(returnCode == EXIT_SUCCESS);
@@ -65,13 +67,13 @@ TEST_CASE("tcc/compiler: Run", "[compiler]")
         auto source  = std::string {"int main() { return 1 + "};
         auto stream  = std::ostringstream {};
         auto options = tcc::CompilerOptions {
-            .Out      = &stream,
-            .Source   = source,
-            .OptLevel = 0,
+            .out      = &stream,
+            .source   = source,
+            .optLevel = 0,
         };
 
         auto compiler         = tcc::Compiler {options};
-        auto const returnCode = compiler.Run();
+        auto const returnCode = compiler.run();
         auto const cliOutput  = stream.str();
 
         CHECK(returnCode == EXIT_FAILURE);
@@ -83,13 +85,13 @@ TEST_CASE("tcc/compiler: Run", "[compiler]")
         auto source  = std::string {"int main() { return a + b; }"};
         auto stream  = std::ostringstream {};
         auto options = tcc::CompilerOptions {
-            .Out      = &stream,
-            .Source   = source,
-            .OptLevel = 0,
+            .out      = &stream,
+            .source   = source,
+            .optLevel = 0,
         };
 
         auto compiler         = tcc::Compiler {options};
-        auto const returnCode = compiler.Run();
+        auto const returnCode = compiler.run();
         auto const cliOutput  = stream.str();
 
         CHECK(returnCode == EXIT_FAILURE);

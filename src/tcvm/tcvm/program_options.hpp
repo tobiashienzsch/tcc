@@ -18,7 +18,7 @@ namespace tcvm
 
 struct ProgramOptions
 {
-    static auto Parse(int argc, char** argv, po::variables_map& outputVariableMap) -> bool
+    static auto parse(int argc, char** argv, po::variables_map& outputVariableMap) -> bool
     {
         try
         {

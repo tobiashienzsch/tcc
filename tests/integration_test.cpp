@@ -18,22 +18,21 @@ TEST_CASE("integration: CompileAndRunConstant", "[integration]")
     for (auto optLevel : {0, 1})
     {
         auto options     = tcc::CompilerOptions {};
-        options.Source   = source;
-        options.OptLevel = optLevel;
+        options.source   = source;
+        options.optLevel = optLevel;
 
         auto compiler = tcc::Compiler {options};
 
-        REQUIRE(compiler.Run() == EXIT_SUCCESS);
+        REQUIRE(compiler.run() == EXIT_SUCCESS);
 
         auto const stackSize    = 200;
-        auto const entryPoint   = compiler.GetEntryPoint();
+        auto const entryPoint   = compiler.getEntryPoint();
         auto const globalMemory = 0;
-        auto const assembly     = compiler.GetAssembly();
+        auto const assembly     = compiler.getAssembly();
         auto stream             = std::stringstream {};
-        auto vm = tcc::VirtualMachine(assembly, entryPoint, globalMemory,
-                                      stackSize, true, stream);
+        auto vm                 = tcc::VirtualMachine(assembly, entryPoint, globalMemory, stackSize, true, stream);
 
-        REQUIRE(vm.Cpu() == 1);
+        REQUIRE(vm.cpu() == 1);
         REQUIRE_THAT(stream.str(), Catch::Contains("exit code: 1"));
     }
 }
@@ -47,22 +46,21 @@ TEST_CASE("integration: CompileAndRunAddition", "[integration]")
     for (auto optLevel : {0, 1})
     {
         auto options     = tcc::CompilerOptions {};
-        options.Source   = source;
-        options.OptLevel = optLevel;
+        options.source   = source;
+        options.optLevel = optLevel;
 
         auto compiler = tcc::Compiler {options};
 
-        REQUIRE(compiler.Run() == EXIT_SUCCESS);
+        REQUIRE(compiler.run() == EXIT_SUCCESS);
 
         auto const stackSize    = 200;
-        auto const entryPoint   = compiler.GetEntryPoint();
+        auto const entryPoint   = compiler.getEntryPoint();
         auto const globalMemory = 0;
-        auto const assembly     = compiler.GetAssembly();
+        auto const assembly     = compiler.getAssembly();
         auto stream             = std::stringstream {};
-        auto vm = tcc::VirtualMachine(assembly, entryPoint, globalMemory,
-                                      stackSize, true, stream);
+        auto vm                 = tcc::VirtualMachine(assembly, entryPoint, globalMemory, stackSize, true, stream);
 
-        REQUIRE(vm.Cpu() == 10);
+        REQUIRE(vm.cpu() == 10);
         REQUIRE_THAT(stream.str(), Catch::Contains("exit code: 10"));
     }
 }
@@ -76,22 +74,21 @@ TEST_CASE("integration: CompileAndRunSubtraction", "[integration]")
     for (auto optLevel : {0, 1})
     {
         auto options     = tcc::CompilerOptions {};
-        options.Source   = source;
-        options.OptLevel = optLevel;
+        options.source   = source;
+        options.optLevel = optLevel;
 
         auto compiler = tcc::Compiler {options};
 
-        REQUIRE(compiler.Run() == EXIT_SUCCESS);
+        REQUIRE(compiler.run() == EXIT_SUCCESS);
 
         auto const stackSize    = 200;
-        auto const entryPoint   = compiler.GetEntryPoint();
+        auto const entryPoint   = compiler.getEntryPoint();
         auto const globalMemory = 0;
-        auto const assembly     = compiler.GetAssembly();
+        auto const assembly     = compiler.getAssembly();
         auto stream             = std::stringstream {};
-        auto vm = tcc::VirtualMachine(assembly, entryPoint, globalMemory,
-                                      stackSize, true, stream);
+        auto vm                 = tcc::VirtualMachine(assembly, entryPoint, globalMemory, stackSize, true, stream);
 
-        REQUIRE(vm.Cpu() == 1);
+        REQUIRE(vm.cpu() == 1);
         REQUIRE_THAT(stream.str(), Catch::Contains("exit code: 1"));
     }
 }
@@ -105,22 +102,21 @@ TEST_CASE("integration: CompileAndRunMultiplication", "[integration]")
     for (auto optLevel : {0, 1})
     {
         auto options     = tcc::CompilerOptions {};
-        options.Source   = source;
-        options.OptLevel = optLevel;
+        options.source   = source;
+        options.optLevel = optLevel;
 
         auto compiler = tcc::Compiler {options};
 
-        REQUIRE(compiler.Run() == EXIT_SUCCESS);
+        REQUIRE(compiler.run() == EXIT_SUCCESS);
 
         auto const stackSize    = 200;
-        auto const entryPoint   = compiler.GetEntryPoint();
+        auto const entryPoint   = compiler.getEntryPoint();
         auto const globalMemory = 0;
-        auto const assembly     = compiler.GetAssembly();
+        auto const assembly     = compiler.getAssembly();
         auto stream             = std::stringstream {};
-        auto vm = tcc::VirtualMachine(assembly, entryPoint, globalMemory,
-                                      stackSize, true, stream);
+        auto vm                 = tcc::VirtualMachine(assembly, entryPoint, globalMemory, stackSize, true, stream);
 
-        REQUIRE(vm.Cpu() == 500);
+        REQUIRE(vm.cpu() == 500);
         REQUIRE_THAT(stream.str(), Catch::Contains("exit code: 500"));
     }
 }
@@ -134,22 +130,21 @@ TEST_CASE("integration: CompileAndRunMixedExpression", "[integration]")
     for (auto optLevel : {0, 1})
     {
         auto options     = tcc::CompilerOptions {};
-        options.Source   = source;
-        options.OptLevel = optLevel;
+        options.source   = source;
+        options.optLevel = optLevel;
 
         auto compiler = tcc::Compiler {options};
 
-        REQUIRE(compiler.Run() == EXIT_SUCCESS);
+        REQUIRE(compiler.run() == EXIT_SUCCESS);
 
         auto const stackSize    = 200;
-        auto const entryPoint   = compiler.GetEntryPoint();
+        auto const entryPoint   = compiler.getEntryPoint();
         auto const globalMemory = 0;
-        auto const assembly     = compiler.GetAssembly();
+        auto const assembly     = compiler.getAssembly();
         auto stream             = std::stringstream {};
-        auto vm = tcc::VirtualMachine(assembly, entryPoint, globalMemory,
-                                      stackSize, true, stream);
+        auto vm                 = tcc::VirtualMachine(assembly, entryPoint, globalMemory, stackSize, true, stream);
 
-        REQUIRE(vm.Cpu() == 490);
+        REQUIRE(vm.cpu() == 490);
         REQUIRE_THAT(stream.str(), Catch::Contains("exit code: 490"));
     }
 }
@@ -157,7 +152,7 @@ TEST_CASE("integration: CompileAndRunMixedExpression", "[integration]")
 TEST_CASE("integration: CompileAndRunLocalVars", "[integration]")
 {
     auto source = std::string {R"(
-        int main() { 
+        int main() {
             int x = (1+2+3+4)*2;
             int y = 10*5-10;
             return x+y;
@@ -166,21 +161,20 @@ TEST_CASE("integration: CompileAndRunLocalVars", "[integration]")
     for (auto optLevel : {0, 1})
     {
         auto options     = tcc::CompilerOptions {};
-        options.Source   = source;
-        options.OptLevel = optLevel;
+        options.source   = source;
+        options.optLevel = optLevel;
 
         auto compiler = tcc::Compiler {options};
 
-        REQUIRE(compiler.Run() == EXIT_SUCCESS);
+        REQUIRE(compiler.run() == EXIT_SUCCESS);
 
         auto const stackSize    = 200;
-        auto const entryPoint   = compiler.GetEntryPoint();
+        auto const entryPoint   = compiler.getEntryPoint();
         auto const globalMemory = 0;
-        auto const assembly     = compiler.GetAssembly();
+        auto const assembly     = compiler.getAssembly();
         auto stream             = std::stringstream {};
-        auto vm = tcc::VirtualMachine(assembly, entryPoint, globalMemory,
-                                      stackSize, true, stream);
-        REQUIRE(vm.Cpu() == 60);
+        auto vm                 = tcc::VirtualMachine(assembly, entryPoint, globalMemory, stackSize, true, stream);
+        REQUIRE(vm.cpu() == 60);
         REQUIRE_THAT(stream.str(), Catch::Contains("exit code: 60"));
     }
 }
@@ -199,21 +193,20 @@ TEST_CASE("integration: CompileAndRunFCallMinimal", "[integration]")
     for (auto optLevel : {0, 1})
     {
         auto options     = tcc::CompilerOptions {};
-        options.Source   = source;
-        options.OptLevel = optLevel;
+        options.source   = source;
+        options.optLevel = optLevel;
 
         auto compiler = tcc::Compiler {options};
 
-        REQUIRE(compiler.Run() == EXIT_SUCCESS);
+        REQUIRE(compiler.run() == EXIT_SUCCESS);
 
         auto const stackSize    = 200;
-        auto const entryPoint   = compiler.GetEntryPoint();
+        auto const entryPoint   = compiler.getEntryPoint();
         auto const globalMemory = 0;
-        auto const assembly     = compiler.GetAssembly();
+        auto const assembly     = compiler.getAssembly();
         auto stream             = std::stringstream {};
-        auto vm = tcc::VirtualMachine(assembly, entryPoint, globalMemory,
-                                      stackSize, true, stream);
-        REQUIRE(vm.Cpu() == 3);
+        auto vm                 = tcc::VirtualMachine(assembly, entryPoint, globalMemory, stackSize, true, stream);
+        REQUIRE(vm.cpu() == 3);
         REQUIRE_THAT(stream.str(), Catch::Contains("exit code: 3"));
     }
 }
@@ -226,27 +219,26 @@ TEST_CASE("integration: CompileAndRunFCallNested", "[integration]")
         {
             int x = 1 + 4;
             int y = foo(foo(x * 2));
-            return x + y; 
+            return x + y;
         }
     )"};
     for (auto optLevel : {0, 1})
     {
         auto options     = tcc::CompilerOptions {};
-        options.Source   = source;
-        options.OptLevel = optLevel;
+        options.source   = source;
+        options.optLevel = optLevel;
 
         auto compiler = tcc::Compiler {options};
 
-        REQUIRE(compiler.Run() == EXIT_SUCCESS);
+        REQUIRE(compiler.run() == EXIT_SUCCESS);
 
         auto const stackSize    = 200;
-        auto const entryPoint   = compiler.GetEntryPoint();
+        auto const entryPoint   = compiler.getEntryPoint();
         auto const globalMemory = 0;
-        auto const assembly     = compiler.GetAssembly();
+        auto const assembly     = compiler.getAssembly();
         auto stream             = std::stringstream {};
-        auto vm = tcc::VirtualMachine(assembly, entryPoint, globalMemory,
-                                      stackSize, true, stream);
-        REQUIRE(vm.Cpu() == 45);
+        auto vm                 = tcc::VirtualMachine(assembly, entryPoint, globalMemory, stackSize, true, stream);
+        REQUIRE(vm.cpu() == 45);
         REQUIRE_THAT(stream.str(), Catch::Contains("exit code: 45"));
     }
 }
@@ -273,21 +265,20 @@ TEST_CASE("integration: CompileAndRunFCallLocals", "[integration]")
     for (auto optLevel : {0, 1})
     {
         auto options     = tcc::CompilerOptions {};
-        options.Source   = source;
-        options.OptLevel = optLevel;
+        options.source   = source;
+        options.optLevel = optLevel;
 
         auto compiler = tcc::Compiler {options};
 
-        REQUIRE(compiler.Run() == EXIT_SUCCESS);
+        REQUIRE(compiler.run() == EXIT_SUCCESS);
 
         auto const stackSize    = 200;
-        auto const entryPoint   = compiler.GetEntryPoint();
+        auto const entryPoint   = compiler.getEntryPoint();
         auto const globalMemory = 0;
-        auto const assembly     = compiler.GetAssembly();
+        auto const assembly     = compiler.getAssembly();
         auto stream             = std::stringstream {};
-        auto vm = tcc::VirtualMachine(assembly, entryPoint, globalMemory,
-                                      stackSize, true, stream);
-        REQUIRE(vm.Cpu() == 310);
+        auto vm                 = tcc::VirtualMachine(assembly, entryPoint, globalMemory, stackSize, true, stream);
+        REQUIRE(vm.cpu() == 310);
         REQUIRE_THAT(stream.str(), Catch::Contains("exit code: 310"));
     }
 }

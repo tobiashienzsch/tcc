@@ -10,7 +10,7 @@
 namespace tcc
 {
 
-auto BinaryFormat::WriteToFile(std::string const& path, BinaryProgram const& program) -> bool
+auto BinaryFormat::writeToFile(std::string const& path, BinaryProgram const& program) -> bool
 {
     // open
     auto file = std::ofstream(path, std::ios::out | std::ios::binary);
@@ -20,7 +20,7 @@ auto BinaryFormat::WriteToFile(std::string const& path, BinaryProgram const& pro
         return false;
     }
 
-    WriteToStream(file, program);
+    writeToStream(file, program);
 
     // close
     file.close();
@@ -33,7 +33,7 @@ auto BinaryFormat::WriteToFile(std::string const& path, BinaryProgram const& pro
     return true;
 }
 
-auto BinaryFormat::ReadFromFile(std::string const& path, BinaryProgram& program) -> bool
+auto BinaryFormat::readFromFile(std::string const& path, BinaryProgram& program) -> bool
 {
     auto file = std::ifstream(path, std::ios::out | std::ios::binary);
     if (!file)
@@ -42,7 +42,7 @@ auto BinaryFormat::ReadFromFile(std::string const& path, BinaryProgram& program)
         return false;
     }
 
-    return ReadFromStream(file, program);
+    return readFromStream(file, program);
 }
 
 }  // namespace tcc

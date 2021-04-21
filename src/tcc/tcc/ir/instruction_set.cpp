@@ -2,7 +2,7 @@
 
 namespace tcc
 {
-std::ostream& operator<<(std::ostream& out, IRByteCode const data)
+auto operator<<(std::ostream& out, IRByteCode const data) -> std::ostream&
 {
     switch (data)
     {

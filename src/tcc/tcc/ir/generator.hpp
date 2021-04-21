@@ -25,94 +25,93 @@ public:
     using result_type = bool;
 
     template<typename ErrorHandler>
-    IRGenerator(ErrorHandler& errorHandler)
+    explicit IRGenerator(ErrorHandler& errorHandler)
     {
         using namespace boost::phoenix::arg_names;
         namespace phx = boost::phoenix;
         using boost::phoenix::function;
 
-        errorHandler_ = function<ErrorHandler>(errorHandler)(
-            "Error! ", _2, phx::cref(errorHandler.GetIterators())[_1]);
+        errorHandler_ = function<ErrorHandler>(errorHandler)("Error! ", _2, phx::cref(errorHandler.getIterators())[_1]);
     }
 
-    bool operator()(unsigned int x);
+    auto operator()(unsigned int x) -> bool;
 
-    bool operator()(bool x);
+    auto operator()(bool x) -> bool;
 
-    bool operator()(tcc::ast::Nil x);
+    auto operator()(tcc::ast::Nil x) -> bool;
 
-    bool operator()(tcc::ast::Identifier const& x);
+    auto operator()(tcc::ast::Identifier const& x) -> bool;
 
-    bool operator()(tcc::ast::Operation const& x);
+    auto operator()(tcc::ast::Operation const& x) -> bool;
 
-    bool operator()(tcc::ast::Unary const& x);
+    auto operator()(tcc::ast::Unary const& x) -> bool;
 
-    bool operator()(tcc::ast::FunctionCall const& call);
+    auto operator()(tcc::ast::FunctionCall const& call) -> bool;
 
-    bool operator()(tcc::ast::Expression const& x);
+    auto operator()(tcc::ast::Expression const& x) -> bool;
 
-    bool operator()(tcc::ast::Assignment const& x);
+    auto operator()(tcc::ast::Assignment const& x) -> bool;
 
-    bool operator()(tcc::ast::VariableDeclaration const& x);
+    auto operator()(tcc::ast::VariableDeclaration const& x) -> bool;
 
-    bool operator()(tcc::ast::StatementList const& x);
+    auto operator()(tcc::ast::StatementList const& x) -> bool;
 
-    bool operator()(tcc::ast::Statement const& x);
+    auto operator()(tcc::ast::Statement const& x) -> bool;
 
-    bool operator()(tcc::ast::IfStatement const& x);
+    auto operator()(tcc::ast::IfStatement const& x) -> bool;
 
-    bool operator()(tcc::ast::WhileStatement const& x);
+    auto operator()(tcc::ast::WhileStatement const& x) -> bool;
 
-    bool operator()(tcc::ast::ReturnStatement const& x);
+    auto operator()(tcc::ast::ReturnStatement const& x) -> bool;
 
-    bool operator()(tcc::ast::Function const& func);
+    auto operator()(tcc::ast::Function const& func) -> bool;
 
-    bool operator()(tcc::ast::FunctionList const& funcList);
+    auto operator()(tcc::ast::FunctionList const& funcList) -> bool;
 
-    auto CurrentPackage() -> IRPackage& { return builder_.CurrentPackage(); }
+    auto currentPackage() -> IRPackage& { return builder_.currentPackage(); }
 
 private:
     struct Builder
     {
         Builder() = default;
 
-        [[nodiscard]] auto CurrentPackage() -> IRPackage& { return package_; }
+        [[nodiscard]] auto currentPackage() -> IRPackage& { return package_; }
 
-        [[nodiscard]] auto HasVariable(std::string const& name) const -> bool;
+        [[nodiscard]] auto hasVariable(std::string const& name) const -> bool;
 
-        auto PushToStack(std::uint32_t x) -> void;
+        auto pushToStack(std::uint32_t x) -> void;
 
-        [[nodiscard]] auto PopFromStack() -> IRStatement::Argument;
+        [[nodiscard]] auto popFromStack() -> IRStatement::Argument;
 
-        auto AddVariable(const std::string& name) -> void;
+        auto addVariable(const std::string& name) -> void;
 
-        [[nodiscard]] auto GetLastVariable(std::string const& key) const -> std::string;
+        [[nodiscard]] auto getLastVariable(std::string const& key) const -> std::string;
 
-        auto CreateReturnOperation() -> void;
+        auto createReturnOperation() -> void;
 
-        auto CreateBinaryOperation(IRByteCode op) -> void;
+        auto createBinaryOperation(IRByteCode op) -> void;
 
-        auto CreateUnaryOperation(IRByteCode op) -> void;
+        auto createUnaryOperation(IRByteCode op) -> void;
 
-        auto CreateStoreOperation(std::string key) -> void;
+        auto createStoreOperation(std::string key) -> void;
 
-        auto CreateLoadOperation(std::string key) -> void;
+        auto createLoadOperation(std::string key) -> void;
 
-        auto CreateArgStoreOperation(std::string key, std::string varName) -> void;
+        auto createArgStoreOperation(std::string key, std::string varName) -> void;
 
-        [[nodiscard]] auto CreateAssignment(std::string const& key) -> std::string;
+        [[nodiscard]] auto createAssignment(std::string const& key) -> std::string;
 
-        [[nodiscard]] auto CreateTemporaryOnStack() -> std::string;
+        [[nodiscard]] auto createTemporaryOnStack() -> std::string;
 
-        [[nodiscard]] auto CreateFunction(std::string name, const IRArgumentList& argsV) -> bool;
+        [[nodiscard]] auto createFunction(std::string name, const IRArgumentList& argsV) -> bool;
 
-        [[nodiscard]] auto CreateFunctionCall(std::string name, IRArgumentList argTemps) -> bool;
+        [[nodiscard]] auto createFunctionCall(std::string name, IRArgumentList argTemps) -> bool;
 
-        auto CreateIfStatementCondition() -> void;
+        auto createIfStatementCondition() -> void;
 
-        auto StartBasicBlock(const std::string& suffix = "") -> void;
+        auto startBasicBlock(const std::string& suffix = "") -> void;
 
-        [[nodiscard]] auto GetLastTemporary() const -> std::string;
+        [[nodiscard]] auto getLastTemporary() const -> std::string;
 
     private:
         int tmpCounter_   = 0;

@@ -20,7 +20,7 @@ namespace tcc
 struct BinaryProgram
 {
     int64_t version {0};
-    std::string name {""};
+    std::string name;
     int64_t entryPoint = {0};
     std::vector<int64_t> data;
 
@@ -37,7 +37,7 @@ struct BinaryProgram
 struct BinaryFormat
 {
     template<typename StreamType>
-    static auto WriteToStream(StreamType& stream, BinaryProgram const& program) -> bool
+    static auto writeToStream(StreamType& stream, BinaryProgram const& program) -> bool
     {
         boost::archive::binary_oarchive oa(stream);
         oa << program;
@@ -46,15 +46,15 @@ struct BinaryFormat
     }
 
     template<typename StreamType>
-    static auto ReadFromStream(StreamType& stream, BinaryProgram& program) -> bool
+    static auto readFromStream(StreamType& stream, BinaryProgram& program) -> bool
     {
         boost::archive::binary_iarchive inputArchive(stream);
         inputArchive >> program;
         return true;
     }
 
-    static auto WriteToFile(std::string const& path, BinaryProgram const& program) -> bool;
-    static auto ReadFromFile(std::string const& path, BinaryProgram& program) -> bool;
+    static auto writeToFile(std::string const& path, BinaryProgram const& program) -> bool;
+    static auto readFromFile(std::string const& path, BinaryProgram& program) -> bool;
 };
 
 }  // namespace tcc

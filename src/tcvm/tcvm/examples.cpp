@@ -9,7 +9,7 @@ using tcc::ByteCode;
 
 namespace tcvm
 {
-auto CreateCompiledProgram() -> tcc::BinaryProgram
+auto createCompiledProgram() -> tcc::BinaryProgram
 {
     return tcc::BinaryProgram {
         1,          // version
@@ -38,7 +38,7 @@ auto CreateCompiledProgram() -> tcc::BinaryProgram
     };
 }
 
-auto CreateAdditionProgram(int64_t const argument) -> tcc::BinaryProgram
+auto createAdditionProgram(int64_t const argument) -> tcc::BinaryProgram
 {
     return tcc::BinaryProgram {
         1,           // version
@@ -71,7 +71,7 @@ auto CreateAdditionProgram(int64_t const argument) -> tcc::BinaryProgram
         }                                //
     };
 }
-auto CreateFactorialProgram(int64_t const argument) -> tcc::BinaryProgram
+auto createFactorialProgram(int64_t const argument) -> tcc::BinaryProgram
 {
     return tcc::BinaryProgram {
         1,            // version
@@ -104,7 +104,7 @@ auto CreateFactorialProgram(int64_t const argument) -> tcc::BinaryProgram
     };
 }
 
-auto CreateFibonacciProgram(int64_t const argument) -> tcc::BinaryProgram
+auto createFibonacciProgram(int64_t const argument) -> tcc::BinaryProgram
 {
     return tcc::BinaryProgram {
         1,            // version
@@ -141,8 +141,7 @@ auto CreateFibonacciProgram(int64_t const argument) -> tcc::BinaryProgram
     };
 }
 
-auto CreateMultipleArgumentsProgram(int64_t const firstArg, int64_t const secondArg)
-    -> tcc::BinaryProgram
+auto createMultipleArgumentsProgram(int64_t const firstArg, int64_t const secondArg) -> tcc::BinaryProgram
 {
     return tcc::BinaryProgram {
         1,                     // version
@@ -170,7 +169,7 @@ auto CreateMultipleArgumentsProgram(int64_t const firstArg, int64_t const second
     };
 }
 
-auto CreateMultipleFunctionsProgram(int64_t const argument) -> tcc::BinaryProgram
+auto createMultipleFunctionsProgram(int64_t const argument) -> tcc::BinaryProgram
 {
     return tcc::BinaryProgram {
         1,                     // version

@@ -7,7 +7,7 @@
 
 namespace tcc
 {
-auto ASMUtils::PrettyPrint(std::ostream& out, Assembly const& assembly) -> void
+auto ASMUtils::prettyPrint(std::ostream& out, Assembly const& assembly) -> void
 {
     auto const& code = assembly.first;
     auto ops         = std::set<tcc::ByteCode::Type> {};
@@ -21,12 +21,15 @@ auto ASMUtils::PrettyPrint(std::ostream& out, Assembly const& assembly) -> void
 
         switch (op)
         {
-            case ByteCode::HALT: break;
-            case ByteCode::RET: break;
-            case ByteCode::EXIT: break;
-            case ByteCode::IADD: break;
-            case ByteCode::IMUL: break;
-            case ByteCode::ISUB: break;
+            case ByteCode::HALT:
+            case ByteCode::RET:
+            case ByteCode::EXIT:
+            case ByteCode::IADD:
+            case ByteCode::IMUL:
+            case ByteCode::ISUB:
+            {
+                break;
+            }
 
             case ByteCode::LOAD:
             {

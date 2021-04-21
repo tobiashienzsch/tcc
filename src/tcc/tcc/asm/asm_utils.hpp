@@ -9,6 +9,6 @@ namespace tcc
 class ASMUtils
 {
 public:
-    static auto PrettyPrint(std::ostream& out, Assembly const& assembly) -> void;
+    static auto prettyPrint(std::ostream& out, Assembly const& assembly) -> void;
 };
 }  // namespace tcc

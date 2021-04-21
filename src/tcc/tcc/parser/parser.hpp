@@ -11,15 +11,16 @@ class Parser
 public:
     using AstType = tcc::ast::FunctionList;
 
+    // NOLINTNEXTLINE(hicpp-explicit-conversions)
     Parser(tcc::ErrorHandler<IteratorType>& err) : errorHandler_(err) { }
 
-    bool ParseSource(IteratorType& iter, IteratorType& end)
+    auto parseSource(IteratorType& iter, IteratorType& end) -> bool
     {
         bool const success = phrase_parse(iter, end, +grammar_, skipper_, ast_);
         return !static_cast<bool>(!success || iter != end);
     }
 
-    AstType& GetAst() noexcept { return ast_; }
+    auto getAst() noexcept -> AstType& { return ast_; }
 
 private:
     tcc::ErrorHandler<IteratorType>& errorHandler_;

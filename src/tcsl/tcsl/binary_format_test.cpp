@@ -11,12 +11,12 @@ TEST_CASE("tcsl: BinaryFormat WriteReadStream", "[tcsl]")
 {
     auto stream       = std::stringstream {};
     auto const output = tcc::BinaryProgram {1, "test", 0, {}};
-    tcc::BinaryFormat::WriteToStream(stream, output);
+    tcc::BinaryFormat::writeToStream(stream, output);
 
     SECTION("read to stream")
     {
         auto input = tcc::BinaryProgram {};
-        tcc::BinaryFormat::ReadFromStream(stream, input);
+        tcc::BinaryFormat::readFromStream(stream, input);
 
         REQUIRE(input.version == 1);
         REQUIRE(input.name == std::string("test"));
@@ -33,13 +33,13 @@ TEST_CASE("tcsl: BinaryFormatWriteReadFile", "[tcsl]")
     // write to stream
     {
         auto const program = tcc::BinaryProgram {1, "test", 0, {1, 2, 3}};
-        tcc::BinaryFormat::WriteToFile(tempFile, program);
+        tcc::BinaryFormat::writeToFile(tempFile, program);
     }
 
     // read to stream
     {
         auto program = tcc::BinaryProgram {};
-        tcc::BinaryFormat::ReadFromFile(tempFile, program);
+        tcc::BinaryFormat::readFromFile(tempFile, program);
 
         REQUIRE(program.version == 1);
         REQUIRE(program.name == std::string("test"));

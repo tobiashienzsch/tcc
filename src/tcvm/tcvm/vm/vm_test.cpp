@@ -20,7 +20,7 @@ TEST_CASE("tcvm: Halt", "[tcvm]")
     };
 
     auto vm             = VirtualMachine(assembly, 0, 0, 200, false);
-    auto const exitCode = vm.Cpu();
+    auto const exitCode = vm.cpu();
 
     REQUIRE(exitCode == -1);
 }
@@ -33,7 +33,7 @@ TEST_CASE("tcvm: Exit", "[tcvm]")
     };
 
     auto vm             = VirtualMachine(assembly, 0, 0, 200, false);
-    auto const exitCode = vm.Cpu();
+    auto const exitCode = vm.cpu();
 
     REQUIRE(exitCode == 2);
 }
@@ -53,7 +53,7 @@ TEST_CASE("tcvm: GlobalMemory", "[tcvm]")
     auto const stackSize  = 50;
     auto const globalSize = 1;
     auto vm               = VirtualMachine(assembly, entryPoint, globalSize, stackSize, false);
-    auto const exitCode   = vm.Cpu();
+    auto const exitCode   = vm.cpu();
 
     REQUIRE(exitCode == 143);
 }
@@ -67,9 +67,9 @@ TEST_CASE("tcvm: Addition", "[tcvm]")
 
     for (auto const& test : testCases)
     {
-        auto const assembly = tcvm::CreateAdditionProgram(test.input);
+        auto const assembly = tcvm::createAdditionProgram(test.input);
         auto vm             = VirtualMachine(assembly.data, assembly.entryPoint, 0, 200, false);
-        auto const exitCode = vm.Cpu();
+        auto const exitCode = vm.cpu();
         REQUIRE(exitCode == test.expected);
     }
 }
@@ -84,9 +84,9 @@ TEST_CASE("tcvm: Factorial", "[tcvm]")
 
     for (auto const& test : testCases)
     {
-        auto const factorial = tcvm::CreateFactorialProgram(test.input);
+        auto const factorial = tcvm::createFactorialProgram(test.input);
         auto vm              = VirtualMachine(factorial.data, factorial.entryPoint, 0, 200, false);
-        auto const exitCode  = vm.Cpu();
+        auto const exitCode  = vm.cpu();
         REQUIRE(exitCode == test.expected);
     }
 }
@@ -101,25 +101,25 @@ TEST_CASE("tcvm: Fibonacci", "[tcvm]")
 
     for (auto const& test : testCases)
     {
-        auto const assembly = tcvm::CreateFibonacciProgram(test.input);
+        auto const assembly = tcvm::createFibonacciProgram(test.input);
         auto vm             = VirtualMachine(assembly.data, assembly.entryPoint, 0, 200, false);
-        REQUIRE(vm.Cpu() == test.expected);
+        REQUIRE(vm.cpu() == test.expected);
     }
 }
 
 TEST_CASE("tcvm: MultipleArguments", "[tcvm]")
 {
-    auto const assembly = tcvm::CreateMultipleArgumentsProgram(10, 2);
+    auto const assembly = tcvm::createMultipleArgumentsProgram(10, 2);
     auto vm             = VirtualMachine(assembly.data, assembly.entryPoint, 0, 100, false);
-    auto const exitCode = vm.Cpu();
+    auto const exitCode = vm.cpu();
 
     REQUIRE(exitCode == 3);
 }
 
 TEST_CASE("tcvm: MultipleFunctions", "[tcvm]")
 {
-    auto const assembly = tcvm::CreateMultipleFunctionsProgram(2);
+    auto const assembly = tcvm::createMultipleFunctionsProgram(2);
     auto vm             = VirtualMachine(assembly.data, assembly.entryPoint, 0, 200, false);
-    auto const exitCode = vm.Cpu();
+    auto const exitCode = vm.cpu();
     REQUIRE(exitCode == 16);
 }

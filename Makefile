@@ -60,15 +60,11 @@ coverage:
 
 .PHONY: tidy-check
 tidy-check:
-	${CLANG_TIDY_ARGS} -header-filter $(shell realpath ./tcc) $(shell realpath ./tcc)
-	${CLANG_TIDY_ARGS} -header-filter $(shell realpath ./tcc) $(shell realpath ./tcsl)
-	${CLANG_TIDY_ARGS} -header-filter $(shell realpath ./tcc) $(shell realpath ./tcvm)
+	${CLANG_TIDY_ARGS} -header-filter $(shell realpath ./src) $(shell realpath ./src)
 
 .PHONY: tidy-fix
 tidy-fix:
-	# ${CLANG_TIDY_ARGS} -fix -header-filter $(shell realpath ./tcc) $(shell realpath ./tcc)
-	${CLANG_TIDY_ARGS} -fix -header-filter $(shell realpath ./tcsl) $(shell realpath ./tcsl)
-	# ${CLANG_TIDY_ARGS} -fix -header-filter $(shell realpath ./tcvm) $(shell realpath ./tcvm)
+	${CLANG_TIDY_ARGS} -fix -header-filter $(shell realpath ./src) $(shell realpath ./src)
 
 .PHONY: report
 report:
@@ -80,9 +76,8 @@ clean:
 
 .PHONY: format
 format:
-	find tcc -iname '*.hpp' -o -iname '*.cpp' | xargs clang-format -i
-	find tcvm -iname '*.hpp' -o -iname '*.cpp' | xargs clang-format -i
-	find tcsl -iname '*.hpp' -o -iname '*.cpp' | xargs clang-format -i
+	find src -iname '*.hpp' -o -iname '*.cpp' | xargs clang-format -i
+	find tests -iname '*.hpp' -o -iname '*.cpp' | xargs clang-format -i
 
 .PHONY: stats
 stats:

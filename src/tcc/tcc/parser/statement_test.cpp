@@ -22,9 +22,9 @@ TEST_CASE("tcc/parser: StatementValid", "[tcc][parser][qi]")
     IteratorType iter  = testCase.begin();
     IteratorType end   = testCase.end();
 
-    NullBuffer null_buffer;
-    std::ostream null_stream(&null_buffer);
-    auto errorHandler = tcc::ErrorHandler<IteratorType>(iter, end, null_stream);
+    NullBuffer nullBuffer;
+    std::ostream nullStream(&nullBuffer);
+    auto errorHandler = tcc::ErrorHandler<IteratorType>(iter, end, nullStream);
 
     auto grammar = tcc::parser::Statement<IteratorType>(errorHandler);
     auto skipper = tcc::parser::Skipper<IteratorType> {};
@@ -40,9 +40,9 @@ TEST_CASE("tcc/parser: StatementInvalid", "[tcc][parser][qi]")
     IteratorType iter  = testCase.begin();
     IteratorType end   = testCase.end();
 
-    NullBuffer null_buffer;
-    std::ostream null_stream(&null_buffer);
-    auto errorHandler = tcc::ErrorHandler<IteratorType>(iter, end, null_stream);
+    NullBuffer nullBuffer;
+    std::ostream nullStream(&nullBuffer);
+    auto errorHandler = tcc::ErrorHandler<IteratorType>(iter, end, nullStream);
 
     auto statement = tcc::parser::Statement<IteratorType>(errorHandler);
     auto skipper   = tcc::parser::Skipper<IteratorType> {};
@@ -59,13 +59,13 @@ TEST_CASE("tcc/parser: ReturnStatementValid", "[tcc][parser][qi]")
     IteratorType iter  = testCase.begin();
     IteratorType end   = testCase.end();
 
-    NullBuffer null_buffer;
-    std::ostream null_stream(&null_buffer);
-    auto errorHandler = tcc::ErrorHandler<IteratorType>(iter, end, null_stream);
+    NullBuffer nullBuffer;
+    std::ostream nullStream(&nullBuffer);
+    auto errorHandler = tcc::ErrorHandler<IteratorType>(iter, end, nullStream);
 
     auto statement = tcc::parser::Statement<IteratorType>(errorHandler);
     auto skipper   = tcc::parser::Skipper<IteratorType> {};
     auto ast       = tcc::ast::ReturnStatement {};
 
-    REQUIRE(phrase_parse(iter, end, statement.ReturnStatement, skipper, ast) == true);
+    REQUIRE(phrase_parse(iter, end, statement.returnStatement, skipper, ast) == true);
 }

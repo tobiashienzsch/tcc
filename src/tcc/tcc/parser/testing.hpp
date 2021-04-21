@@ -8,7 +8,7 @@ namespace tcc::parser::testing
 class NullBuffer final : public std::streambuf
 {
 public:
-    int overflow(int c) override { return c; }
+    auto overflow(int c) -> int override { return c; }
 };
 
 }  // namespace tcc::parser::testing

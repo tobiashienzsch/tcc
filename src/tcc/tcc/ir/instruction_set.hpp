@@ -41,5 +41,5 @@ enum class IRByteCode
     Return        // return from function
 };
 
-std::ostream& operator<<(std::ostream& out, IRByteCode data);
+auto operator<<(std::ostream& out, IRByteCode data) -> std::ostream&;
 }  // namespace tcc

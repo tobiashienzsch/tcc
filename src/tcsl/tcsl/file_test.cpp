@@ -9,19 +9,19 @@
 TEST_CASE("tcsl: File default", "[tcsl]")
 {
     auto file = tcc::File {};
-    CHECK_FALSE(file.Exists());
-    CHECK(file.LoadAsString().empty());
+    CHECK_FALSE(file.exists());
+    CHECK(file.loadAsString().empty());
 }
 
 TEST_CASE("tcsl: File(string)", "[tcsl]")
 {
     auto file = tcc::File {"testfile", true};
-    CHECK(file.Exists());
-    CHECK(file.SizeInBytes() == 0);
-    CHECK(file.LoadAsString().empty());
+    CHECK(file.exists());
+    CHECK(file.sizeInBytes() == 0);
+    CHECK(file.loadAsString().empty());
 
-    CHECK(file.Remove());
-    CHECK(file.SizeInBytes() == -1);
-    CHECK_FALSE(file.Exists());
-    CHECK_FALSE(file.Remove());
+    CHECK(file.remove());
+    CHECK(file.sizeInBytes() == -1);
+    CHECK_FALSE(file.exists());
+    CHECK_FALSE(file.remove());
 }

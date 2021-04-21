@@ -22,7 +22,7 @@ namespace ast
  */
 struct Tagged
 {
-    int ID {};
+    int id {};
 };
 
 /**
@@ -43,8 +43,9 @@ struct Expression;
  */
 struct Identifier : Tagged
 {
-    Identifier(std::string n = "") : Name(std::move(n)) { }
-    std::string Name;
+    // NOLINTNEXTLINE(hicpp-explicit-conversions)
+    Identifier(std::string n = "") : name(std::move(n)) { }
+    std::string name;
 };
 
 /**
@@ -89,7 +90,7 @@ enum class OpToken
 struct Unary
 {
     OpToken Operator {OpToken::Invalid};
-    Operand Operand_;
+    Operand operand;
 };
 
 /**
@@ -98,7 +99,7 @@ struct Unary
 struct Operation
 {
     OpToken Operator {OpToken::Invalid};
-    Operand Operand_;
+    Operand operand;
 };
 
 /**
@@ -106,8 +107,8 @@ struct Operation
  */
 struct FunctionCall
 {
-    Identifier FuncName;
-    std::vector<Expression> Args;
+    Identifier funcName;
+    std::vector<Expression> args;
 };
 
 /**
@@ -115,8 +116,8 @@ struct FunctionCall
  */
 struct Expression
 {
-    Operand First;
-    std::vector<Operation> Rest;
+    Operand first;
+    std::vector<Operation> rest;
 };
 
 /**
@@ -124,8 +125,8 @@ struct Expression
  */
 struct Assignment
 {
-    Identifier Left;
-    Expression Right;
+    Identifier left;
+    Expression right;
 };
 
 /**
@@ -133,8 +134,8 @@ struct Assignment
  */
 struct VariableDeclaration
 {
-    Identifier Left;
-    boost::optional<Expression> Right;
+    Identifier left;
+    boost::optional<Expression> right;
 };
 
 struct IfStatement;
@@ -166,8 +167,8 @@ struct StatementList : std::vector<Statement>
  */
 struct IfStatement
 {
-    Expression Condition;
-    Statement Then;
+    Expression condition;
+    Statement then;
     boost::optional<Statement> Else;
 };
 
@@ -176,8 +177,8 @@ struct IfStatement
  */
 struct WhileStatement
 {
-    Expression Condition;
-    Statement Body;
+    Expression condition;
+    Statement body;
 };
 
 /**
@@ -185,7 +186,7 @@ struct WhileStatement
  */
 struct ReturnStatement : Tagged
 {
-    boost::optional<Expression> Expr;
+    boost::optional<Expression> expr;
 };
 
 /**
@@ -193,10 +194,10 @@ struct ReturnStatement : Tagged
  */
 struct Function
 {
-    std::string ReturnType;
-    Identifier FuncName;
-    std::vector<Identifier> Args;
-    StatementList Body;
+    std::string returnType;
+    Identifier funcName;
+    std::vector<Identifier> args;
+    StatementList body;
 };
 
 /**
@@ -207,7 +208,7 @@ using FunctionList = std::vector<Function>;
 /**
  * @brief Nil ostream operator.
  */
-inline std::ostream& operator<<(std::ostream& out, Nil /*unused*/)
+inline auto operator<<(std::ostream& out, Nil /*unused*/) -> std::ostream&
 {
     out << "Nil";
     return out;
@@ -216,74 +217,84 @@ inline std::ostream& operator<<(std::ostream& out, Nil /*unused*/)
 /**
  * @brief Identifier ostream operator.
  */
-inline std::ostream& operator<<(std::ostream& out, Identifier const& id)
+inline auto operator<<(std::ostream& out, Identifier const& id) -> std::ostream&
 {
-    out << id.Name;
+    out << id.name;
     return out;
 }
 }  // namespace ast
 }  // namespace tcc
 
+// NOLINTNEXTLINE(modernize-use-trailing-return-type)
 BOOST_FUSION_ADAPT_STRUCT(         //
     tcc::ast::Unary,               //
     (tcc::ast::OpToken, Operator)  //
-    (tcc::ast::Operand, Operand_)  //
+    (tcc::ast::Operand, operand)   //
 )
 
+// NOLINTNEXTLINE(modernize-use-trailing-return-type)
 BOOST_FUSION_ADAPT_STRUCT(         //
     tcc::ast::Operation,           //
     (tcc::ast::OpToken, Operator)  //
-    (tcc::ast::Operand, Operand_)  //
+    (tcc::ast::Operand, operand)   //
 )
 
+// NOLINTNEXTLINE(modernize-use-trailing-return-type)
 BOOST_FUSION_ADAPT_STRUCT(                     //
     tcc::ast::FunctionCall,                    //
-    (tcc::ast::Identifier, FuncName)           //
-    (std::vector<tcc::ast::Expression>, Args)  //
+    (tcc::ast::Identifier, funcName)           //
+    (std::vector<tcc::ast::Expression>, args)  //
 )
 
+// NOLINTNEXTLINE(modernize-use-trailing-return-type)
 BOOST_FUSION_ADAPT_STRUCT(                    //
     tcc::ast::Expression,                     //
-    (tcc::ast::Operand, First)                //
-    (std::vector<tcc::ast::Operation>, Rest)  //
+    (tcc::ast::Operand, first)                //
+    (std::vector<tcc::ast::Operation>, rest)  //
 )
 
+// NOLINTNEXTLINE(modernize-use-trailing-return-type)
 BOOST_FUSION_ADAPT_STRUCT(                          //
     tcc::ast::VariableDeclaration,                  //
-    (tcc::ast::Identifier, Left)                    //
-    (boost::optional<tcc::ast::Expression>, Right)  //
+    (tcc::ast::Identifier, left)                    //
+    (boost::optional<tcc::ast::Expression>, right)  //
 )
 
+// NOLINTNEXTLINE(modernize-use-trailing-return-type)
 BOOST_FUSION_ADAPT_STRUCT(         //
     tcc::ast::Assignment,          //
-    (tcc::ast::Identifier, Left)   //
-    (tcc::ast::Expression, Right)  //
+    (tcc::ast::Identifier, left)   //
+    (tcc::ast::Expression, right)  //
 )
 
+// NOLINTNEXTLINE(modernize-use-trailing-return-type)
 BOOST_FUSION_ADAPT_STRUCT(                        //
     tcc::ast::IfStatement,                        //
-    (tcc::ast::Expression, Condition)             //
-    (tcc::ast::Statement, Then)                   //
+    (tcc::ast::Expression, condition)             //
+    (tcc::ast::Statement, then)                   //
     (boost::optional<tcc::ast::Statement>, Else)  //
 )
 
+// NOLINTNEXTLINE(modernize-use-trailing-return-type)
 BOOST_FUSION_ADAPT_STRUCT(             //
     tcc::ast::WhileStatement,          //
-    (tcc::ast::Expression, Condition)  //
-    (tcc::ast::Statement, Body)        //
+    (tcc::ast::Expression, condition)  //
+    (tcc::ast::Statement, body)        //
 )
 
+// NOLINTNEXTLINE(modernize-use-trailing-return-type)
 BOOST_FUSION_ADAPT_STRUCT(                         //
     tcc::ast::ReturnStatement,                     //
-    (boost::optional<tcc::ast::Expression>, Expr)  //
+    (boost::optional<tcc::ast::Expression>, expr)  //
 )
 
+// NOLINTNEXTLINE(modernize-use-trailing-return-type)
 BOOST_FUSION_ADAPT_STRUCT(                     //
     tcc::ast::Function,                        //
-    (std::string, ReturnType)                  //
-    (tcc::ast::Identifier, FuncName)           //
-    (std::vector<tcc::ast::Identifier>, Args)  //
-    (tcc::ast::StatementList, Body)            //
+    (std::string, returnType)                  //
+    (tcc::ast::Identifier, funcName)           //
+    (std::vector<tcc::ast::Identifier>, args)  //
+    (tcc::ast::StatementList, body)            //
 )
 
 #endif

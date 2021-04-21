@@ -23,7 +23,7 @@ public:
     /**
      * @brief Defaulted constructor.
      */
-    ProgramOptions(std::ostream& out = std::cout) : out_ {out} { }
+    explicit ProgramOptions(std::ostream& out = std::cout) : out_ {out} { }
 
     /**
      * @brief Parses commandline arguments via argc & argv.
@@ -31,7 +31,7 @@ public:
      * @return First: Should exit program directly.
      * @return Second: Return code.
      */
-    std::pair<bool, int> ParseArguments(int argc, char const* const* argv)
+    auto parseArguments(int argc, char const* const* argv) -> std::pair<bool, int>
     {
         try
         {
@@ -40,12 +40,12 @@ public:
             auto options = desc.add_options();
             options("help,h", "produce this help message");
             options("input,i",          po::value<std::vector<std::string>>(),      "input source file");
-            options("output,o",         po::value<std::string>(&flags_.OutputName), "output binary file");
-            options("optimization,O",   po::value<int>(&flags_.OptLevel),           "optimization level 0-1");
-            options("print-source",     po::bool_switch(&flags_.PrintSource),       "print source code");
-            options("print-ast",        po::bool_switch(&flags_.PrintAst),          "print parsed ast");
-            options("print-ir",         po::bool_switch(&flags_.PrintIR),           "print generated ir");
-            options("print-asm",        po::bool_switch(&flags_.PrintAssembly),     "print generated asm");
+            options("output,o",         po::value<std::string>(&flags_.outputName), "output binary file");
+            options("optimization,O",   po::value<int>(&flags_.optLevel),           "optimization level 0-1");
+            options("print-source",     po::bool_switch(&flags_.printSource),       "print source code");
+            options("print-ast",        po::bool_switch(&flags_.printAst),          "print parsed ast");
+            options("print-ir",         po::bool_switch(&flags_.printIr),           "print generated ir");
+            options("print-asm",        po::bool_switch(&flags_.printAssembly),     "print generated asm");
             // clang-format on
 
             po::positional_options_description p;
@@ -70,13 +70,13 @@ public:
                 }
 
                 tcc::File input {paths[0]};
-                if (!input.Exists())
+                if (!input.exists())
                 {
                     fmt::print(out_, "Could not open input file: {}\n", paths[0]);
                     return {true, EXIT_FAILURE};
                 }
 
-                flags_.Source = input.LoadAsString();
+                flags_.source = input.loadAsString();
             }
         }
         catch (std::exception& e)
@@ -97,7 +97,7 @@ public:
      * @brief Returns the current compiler flags. They could change after
      * parsing argv.
      */
-    [[nodiscard]] CompilerOptions const& GetCompilerOptions() const noexcept { return flags_; }
+    [[nodiscard]] auto getCompilerOptions() const noexcept -> CompilerOptions const& { return flags_; }
 
 private:
     CompilerOptions flags_ {};

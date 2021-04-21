@@ -19,7 +19,7 @@ TEST_CASE("tcc/assembly: ASMUtil::PrettyPrint", "[tcc][assembly]")
     SECTION("1")
     {
         std::ostringstream stream;
-        tcc::ASMUtils::PrettyPrint(stream, tcc::Assembly {
+        tcc::ASMUtils::prettyPrint(stream, tcc::Assembly {
                                                std::vector<int64_t> {
                                                    tcc::ByteCode::ICONST, 2,   //
                                                    tcc::ByteCode::ICONST, 2,   //
@@ -44,7 +44,7 @@ TEST_CASE("tcc/assembly: ASMUtil::PrettyPrint", "[tcc][assembly]")
     SECTION("2")
     {
         std::ostringstream stream;
-        tcc::ASMUtils::PrettyPrint(stream, tcc::Assembly {
+        tcc::ASMUtils::prettyPrint(stream, tcc::Assembly {
                                                std::vector<int64_t> {
                                                    tcc::ByteCode::ICONST, 1,  //
                                                    tcc::ByteCode::ICONST, 2,  //

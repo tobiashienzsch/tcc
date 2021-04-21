@@ -13,16 +13,14 @@ class Optimizer
 public:
     explicit Optimizer(IRFunction& scope) : function_(scope) { }
 
-    auto Optimize() -> void;
+    auto optimize() -> void;
 
-    static auto DeleteUnusedStatements(IRStatementList& statementList) -> bool;
-    static auto IsUnusedStatement(IRStatement const& statement, IRStatementList const& statementList)
-        -> bool;
-    static auto ReplaceVariableIfConstant(IRStatement& statement, IRStatementList& statementList)
-        -> bool;
+    static auto deleteUnusedStatements(IRStatementList& statementList) -> bool;
+    static auto isUnusedStatement(IRStatement const& statement, IRStatementList const& statementList) -> bool;
+    static auto replaceVariableIfConstant(IRStatement& statement, IRStatementList& statementList) -> bool;
 
     // replace constant expression with store of result.
-    static auto ReplaceWithConstantStore(IRStatement& statement) -> bool;
+    static auto replaceWithConstantStore(IRStatement& statement) -> bool;
     static auto isConstantArgument(IRStatement::Argument const& argument) -> bool;
     static auto isConstantArgument(IRStatement::OptionalArgument const& argument) -> bool;
     static auto isConstantStoreExpression(IRStatement const& statement) -> bool;

@@ -9,17 +9,16 @@ namespace parser
 {
 template<typename Iterator>
 Statement<Iterator>::Statement(ErrorHandler<Iterator>& errorHandler)
-    : Statement::base_type(StatementList)
-    , expr(errorHandler)
+    : Statement::base_type(statementList), expr(errorHandler)
 {
     qi::_1_type _1;
     qi::_2_type _2;
     qi::_3_type _3;
     qi::_4_type _4;
 
-    tcc::IgnoreUnused(_2);
+    tcc::ignoreUnused(_2);
 
-    qi::_val_type _val;
+    qi::_val_type val;
     qi::raw_type raw;
     qi::lexeme_type lexeme;
     qi::alpha_type alpha;
@@ -35,64 +34,64 @@ Statement<Iterator>::Statement(ErrorHandler<Iterator>& errorHandler)
     using AnnotateFunction     = function<tcc::Annotation<Iterator>>;
 
     // clang-format off
-    StatementList =
-        +Statement_
+    statementList =
+        +statement
         ;
 
-    Statement_ =
-            VariableDeclaration
-        |   Assignment
-        |   CompoundStatement
-        |   IfStatement
-        |   WhileStatement
-        |   ReturnStatement
+    statement =
+            variableDeclaration
+        |   assignment
+        |   compoundStatement
+        |   ifStatement
+        |   whileStatement
+        |   returnStatement
         ;
 
-    Identifier =
+    identifier =
             !expr.keywords
         >>  raw[lexeme[(alpha | '_') >> *(alnum | '_')]]
         ;
 
-    VariableDeclaration =
+    variableDeclaration =
             lexeme["int" >> !(alnum | '_')] // make sure we have whole words
-        >   Identifier
+        >   identifier
         >   -('=' > expr)
         >   ';'
         ;
 
-    Assignment =
-            Identifier
+    assignment =
+            identifier
         >   '='
         >   expr
         >   ';'
         ;
 
-    IfStatement =
+    ifStatement =
             lit("if")
         >   '('
         >   expr
         >   ')'
-        >   Statement_
+        >   statement
         >
             -(
                 lexeme["else" >> !(alnum | '_')] // make sure we have whole words
-            >   Statement_
+            >   statement
             )
         ;
 
-    WhileStatement =
+    whileStatement =
             lit("while")
         >   '('
         >   expr
         >   ')'
-        >   Statement_
+        >   statement
         ;
 
-    CompoundStatement =
-        '{' >> -StatementList >> '}'
+    compoundStatement =
+        '{' >> -statementList >> '}'
         ;
 
-    ReturnStatement =
+    returnStatement =
             lexeme["return" >> !(alnum | '_')] // make sure we have whole words
         >  -expr
         >   ';'
@@ -100,16 +99,16 @@ Statement<Iterator>::Statement(ErrorHandler<Iterator>& errorHandler)
     // clang-format on
 
     // Debugging and error handling and reporting support.
-    BOOST_SPIRIT_DEBUG_NODES((StatementList)(Identifier)(VariableDeclaration)(Assignment));
+    BOOST_SPIRIT_DEBUG_NODES((statementList)(identifier)(variableDeclaration)(assignment));
 
     // Error handling: on error in StatementList, call error handler.
-    on_error<fail>(StatementList, ErrorHandlerFunction(errorHandler)("Error! Expecting ", _4, _3));
+    on_error<fail>(statementList, ErrorHandlerFunction(errorHandler)("Error! Expecting ", _4, _3));
 
     // Annotation: on success in VariableDeclaration,
     // Assignment and ReturnStatement, call annotation.
-    on_success(VariableDeclaration, AnnotateFunction(errorHandler.GetIterators())(_val, _1));
-    on_success(Assignment, AnnotateFunction(errorHandler.GetIterators())(_val, _1));
-    on_success(ReturnStatement, AnnotateFunction(errorHandler.GetIterators())(_val, _1));
+    on_success(variableDeclaration, AnnotateFunction(errorHandler.getIterators())(val, _1));
+    on_success(assignment, AnnotateFunction(errorHandler.getIterators())(val, _1));
+    on_success(returnStatement, AnnotateFunction(errorHandler.getIterators())(val, _1));
 }
 }  // namespace parser
 }  // namespace tcc

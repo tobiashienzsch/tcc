@@ -26,15 +26,15 @@ public:
                             bool shouldTrace  = true,   //
                             std::ostream& out = std::cout);
 
-    int64_t Cpu();
+    auto cpu() -> int64_t;
 
-    void EnableTracing(bool shouldTrace);
+    void enableTracing(bool shouldTrace);
 
-    void Reset(int64_t const entryPoint)
+    void reset(int64_t const entryPoint)
     {
-        m_stackPointer       = -1;
-        m_instructionPointer = entryPoint;
-        m_framePointer       = 0;
+        m_stackPointer_       = -1;
+        m_instructionPointer_ = entryPoint;
+        m_framePointer_       = 0;
     }
 
 private:
@@ -42,15 +42,15 @@ private:
     void printStack();
     void printGlobalMemory();
 
-    int64_t m_stackPointer {-1};
-    int64_t m_instructionPointer;
-    int64_t m_framePointer {0};
+    int64_t m_stackPointer_ {-1};
+    int64_t m_instructionPointer_;
+    int64_t m_framePointer_ {0};
 
-    std::vector<int64_t> m_code;
-    std::vector<int64_t> m_data;
-    std::vector<int64_t> m_stack;
+    std::vector<int64_t> m_code_;
+    std::vector<int64_t> m_data_;
+    std::vector<int64_t> m_stack_;
 
-    bool m_shouldTrace {true};
+    bool m_shouldTrace_ {true};
     std::ostream& out_;
 };
 }  // namespace tcc

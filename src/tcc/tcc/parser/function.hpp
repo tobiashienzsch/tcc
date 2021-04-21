@@ -11,12 +11,13 @@ namespace parser
 template<typename Iterator>
 struct Function : qi::grammar<Iterator, ast::Function(), Skipper<Iterator>>
 {
+    // NOLINTNEXTLINE(hicpp-explicit-conversions)
     Function(ErrorHandler<Iterator>& errorHandler);
 
-    Statement<Iterator> Body;
+    Statement<Iterator> body;
     qi::rule<Iterator, std::string(), Skipper<Iterator>> name;
-    qi::rule<Iterator, ast::Identifier(), Skipper<Iterator>> Identifier;
-    qi::rule<Iterator, std::vector<ast::Identifier>(), Skipper<Iterator>> argument_list;
+    qi::rule<Iterator, ast::Identifier(), Skipper<Iterator>> identifier;
+    qi::rule<Iterator, std::vector<ast::Identifier>(), Skipper<Iterator>> argumentList;
     qi::rule<Iterator, ast::Function(), Skipper<Iterator>> start;
 };
 }  // namespace parser

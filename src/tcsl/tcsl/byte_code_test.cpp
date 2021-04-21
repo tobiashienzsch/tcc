@@ -33,10 +33,7 @@ TEST_CASE("tcsl: ByteCode ostream", "[tcsl]")
     };
 
     auto stream = std::stringstream {};
-    for (auto const& x : input)
-    {
-        stream << x;
-    }
+    for (auto const& x : input) { stream << x; }
     auto const str = stream.str();
 
     REQUIRE(str

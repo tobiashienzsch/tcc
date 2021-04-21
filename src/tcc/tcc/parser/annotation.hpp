@@ -21,65 +21,67 @@ class Annotation
 {
 public:
     template<typename, typename>
-    struct result
+    struct Result
     {
         using type = void;
     };
 
-    Annotation(std::vector<Iterator>& it) : iters(it) { }
+    // NOLINTNEXTLINE(hicpp-explicit-conversions)
+    Annotation(std::vector<Iterator>& it) : iters_(it) { }
 
     void operator()(ast::Operand& ast, Iterator pos) const
     {
-        auto const id = static_cast<int>(iters.size());
-        iters.push_back(pos);
-        boost::apply_visitor(set_id(id), ast);
+        auto const id = static_cast<int>(iters_.size());
+        iters_.push_back(pos);
+        boost::apply_visitor(SetId(id), ast);
     }
 
     void operator()(ast::VariableDeclaration& ast, Iterator pos) const
     {
-        auto const id = static_cast<int>(iters.size());
-        iters.push_back(pos);
-        ast.Left.ID = id;
+        auto const id = static_cast<int>(iters_.size());
+        iters_.push_back(pos);
+        ast.left.id = id;
     }
 
     void operator()(ast::Assignment& ast, Iterator pos) const
     {
-        auto const id = static_cast<int>(iters.size());
-        iters.push_back(pos);
-        ast.Left.ID = id;
+        auto const id = static_cast<int>(iters_.size());
+        iters_.push_back(pos);
+        ast.left.id = id;
     }
 
     void operator()(ast::ReturnStatement& ast, Iterator pos) const
     {
-        auto const id = static_cast<int>(iters.size());
-        iters.push_back(pos);
-        ast.ID = id;
+        auto const id = static_cast<int>(iters_.size());
+        iters_.push_back(pos);
+        ast.id = id;
     }
 
     void operator()(ast::Identifier& ast, Iterator pos) const
     {
-        auto const id = static_cast<int>(iters.size());
-        iters.push_back(pos);
-        ast.ID = id;
+        auto const id = static_cast<int>(iters_.size());
+        iters_.push_back(pos);
+        ast.id = id;
     }
 
 private:
-    struct set_id
+    struct SetId
     {
         using result_type = void;
         int id;
 
-        set_id(int i) : id(i) { }
+        // NOLINTNEXTLINE(hicpp-explicit-conversions)
+        SetId(int i) : id(i) { }
 
         template<typename T>
         void operator()(T& /*unused*/) const
         {
         }
-        void operator()(ast::FunctionCall& x) const { x.FuncName.ID = id; }
-        void operator()(ast::Identifier& x) const { x.ID = id; }
+        void operator()(ast::FunctionCall& x) const { x.funcName.id = id; }
+        void operator()(ast::Identifier& x) const { x.id = id; }
     };
 
-    std::vector<Iterator>& iters;
+    std::vector<Iterator>& iters_;
 };
 }  // namespace tcc
 

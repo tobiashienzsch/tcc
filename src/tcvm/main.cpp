@@ -11,10 +11,7 @@ auto main(int argc, char** argv) -> int
 {
 
     auto cliArguments = po::variables_map {};
-    if (!tcvm::ProgramOptions::Parse(argc, argv, cliArguments))
-    {
-        return EXIT_FAILURE;
-    }
+    if (!tcvm::ProgramOptions::parse(argc, argv, cliArguments)) { return EXIT_FAILURE; }
 
     auto arg = std::int64_t {};
     if (cliArguments.count("input") != 0U)
@@ -24,10 +21,7 @@ auto main(int argc, char** argv) -> int
     }
 
     auto path = std::string {};
-    if (cliArguments.count("file") != 0U)
-    {
-        path = cliArguments["file"].as<std::string>();
-    }
+    if (cliArguments.count("file") != 0U) { path = cliArguments["file"].as<std::string>(); }
 
     // // write binary
     // {
@@ -37,7 +31,7 @@ auto main(int argc, char** argv) -> int
 
     // binary
     auto program = tcc::BinaryProgram {};
-    tcc::BinaryFormat::ReadFromFile(path, program);
+    tcc::BinaryFormat::readFromFile(path, program);
     auto const stackSize = 200;
     auto vm              = tcc::VirtualMachine(program.data, program.entryPoint, 0, stackSize, true);
 
@@ -46,6 +40,6 @@ auto main(int argc, char** argv) -> int
     // auto vm = tcc::VirtualMachine(factorial.data, factorial.entryPoint, 0,
     // 1000, true);
 
-    vm.Cpu();
+    vm.cpu();
     return EXIT_SUCCESS;
 }

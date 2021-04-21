@@ -10,14 +10,14 @@ namespace tcc
  */
 struct CompilerOptions
 {
-    std::ostream* Out = &std::cout;
-    std::string Source {};
-    std::string OutputName {};
-    int OptLevel {0};
-    bool PrintSource {false};
-    bool PrintAst {false};
-    bool PrintIR {false};
-    bool PrintAssembly {false};
+    std::ostream* out = &std::cout;
+    std::string source {};
+    std::string outputName {};
+    int optLevel {0};
+    bool printSource {false};
+    bool printAst {false};
+    bool printIr {false};
+    bool printAssembly {false};
 };
 
 }  // namespace tcc

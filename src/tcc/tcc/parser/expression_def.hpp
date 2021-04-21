@@ -17,11 +17,11 @@ Expression<Iterator>::Expression(ErrorHandler<Iterator>& errorHandler) : Express
     qi::_3_type _3;
     qi::_4_type _4;
 
-    tcc::IgnoreUnused(_2);
+    tcc::ignoreUnused(_2);
 
     qi::char_type char_;
-    qi::uint_type uint_;
-    qi::_val_type _val;
+    qi::uint_type uint;
+    qi::_val_type val;
     qi::raw_type raw;
     qi::lexeme_type lexeme;
     qi::alpha_type alpha;
@@ -37,37 +37,37 @@ Expression<Iterator>::Expression(ErrorHandler<Iterator>& errorHandler) : Express
     using AnnotationFunction   = function<tcc::Annotation<Iterator>>;
 
     // clang-format off
-    logical_or_op.add
+    logicalOrOp.add
         ("||", ast::OpToken::Or)
         ;
 
-    logical_and_op.add
+    logicalAndOp.add
         ("&&", ast::OpToken::And)
         ;
 
-    equality_op.add
+    equalityOp.add
         ("==", ast::OpToken::Equal)
         ("!=", ast::OpToken::NotEqual)
         ;
 
-    relational_op.add
+    relationalOp.add
         ("<", ast::OpToken::Less)
         ("<=", ast::OpToken::LessEqual)
         (">", ast::OpToken::Greater)
         (">=", ast::OpToken::GreaterEqual)
         ;
 
-    additive_op.add
+    additiveOp.add
         ("+", ast::OpToken::Plus)
         ("-", ast::OpToken::Minus)
         ;
 
-    multiplicative_op.add
+    multiplicativeOp.add
         ("*", ast::OpToken::Times)
         ("/", ast::OpToken::Divide)
         ;
 
-    UnaryOp.add
+    unaryOp.add
         ("+", ast::OpToken::Positive)
         ("-", ast::OpToken::Negative)
         ("!", ast::OpToken::Not)
@@ -86,61 +86,61 @@ Expression<Iterator>::Expression(ErrorHandler<Iterator>& errorHandler) : Express
 
     // Main expression grammar
     expr =
-        logical_or_expr.alias()
+        logicalOrExpr.alias()
         ;
 
-    logical_or_expr =
-            logical_and_expr
-        >> *(logical_or_op > logical_and_expr)
+    logicalOrExpr =
+            logicalAndExpr
+        >> *(logicalOrOp > logicalAndExpr)
         ;
 
-    logical_and_expr =
-            equality_expr
-        >> *(logical_and_op > equality_expr)
+    logicalAndExpr =
+            equalityExpr
+        >> *(logicalAndOp > equalityExpr)
         ;
 
-    equality_expr =
-            relational_expr
-        >> *(equality_op > relational_expr)
+    equalityExpr =
+            relationalExpr
+        >> *(equalityOp > relationalExpr)
         ;
 
-    relational_expr =
-            additive_expr
-        >> *(relational_op > additive_expr)
+    relationalExpr =
+            additiveExpr
+        >> *(relationalOp > additiveExpr)
         ;
 
-    additive_expr =
-            multiplicative_expr
-        >> *(additive_op > multiplicative_expr)
+    additiveExpr =
+            multiplicativeExpr
+        >> *(additiveOp > multiplicativeExpr)
         ;
 
-    multiplicative_expr =
-            UnaryExpr
-        >> *(multiplicative_op > UnaryExpr)
+    multiplicativeExpr =
+            unaryExpr
+        >> *(multiplicativeOp > unaryExpr)
         ;
 
-    UnaryExpr =
-            primary_expr
-        |   (UnaryOp > UnaryExpr)
+    unaryExpr =
+            primaryExpr
+        |   (unaryOp > unaryExpr)
         ;
 
-    primary_expr =
-            uint_
-        |   FunctionCall
-        |   Identifier
+    primaryExpr =
+            uint
+        |   functionCall
+        |   identifier
         |   bool_
         |   '(' > expr > ')'
         ;
 
-    FunctionCall =
-            (Identifier >> '(')
-        >   argument_list
+    functionCall =
+            (identifier >> '(')
+        >   argumentList
         >   ')'
         ;
 
-    argument_list = -(expr % ',');
+    argumentList = -(expr % ',');
 
-    Identifier =
+    identifier =
             !lexeme[keywords >> !(alnum | '_')]
         >>  raw[lexeme[(alpha | '_') >> *(alnum | '_')]]
         ;
@@ -148,17 +148,17 @@ Expression<Iterator>::Expression(ErrorHandler<Iterator>& errorHandler) : Express
     // Debugging and error handling and reporting support.
     BOOST_SPIRIT_DEBUG_NODES(
         (expr)
-        (logical_or_expr)
-        (logical_and_expr)
-        (equality_expr)
-        (relational_expr)
-        (additive_expr)
-        (multiplicative_expr)
-        (UnaryExpr)
-        (primary_expr)
-        (FunctionCall)
-        (argument_list)
-        (Identifier)
+        (logicalOrExpr)
+        (logicalAndExpr)
+        (equalityExpr)
+        (relationalExpr)
+        (additiveExpr)
+        (multiplicativeExpr)
+        (unaryExpr)
+        (primaryExpr)
+        (functionCall)
+        (argumentList)
+        (identifier)
     );
 
     // Error handling: on error in expr, call errorHandler.
@@ -167,8 +167,8 @@ Expression<Iterator>::Expression(ErrorHandler<Iterator>& errorHandler) : Express
             "Error! Expecting ", _4, _3));
 
     // Annotation: on success in primary_expr, call Annotation.
-    on_success(primary_expr,
-        AnnotationFunction(errorHandler.GetIterators())(_val, _1));
+    on_success(primaryExpr,
+        AnnotationFunction(errorHandler.getIterators())(val, _1));
 
     // clang-format off
 

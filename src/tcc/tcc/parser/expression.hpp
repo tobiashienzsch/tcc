@@ -29,21 +29,22 @@ namespace ascii = boost::spirit::ascii;
 template<typename Iterator>
 struct Expression : qi::grammar<Iterator, ast::Expression(), Skipper<Iterator>>
 {
+    // NOLINTNEXTLINE(hicpp-explicit-conversions)
     Expression(ErrorHandler<Iterator>& errorHandler);
 
-    qi::rule<Iterator, ast::Expression(), Skipper<Iterator>> expr, equality_expr, relational_expr,
-        logical_or_expr, logical_and_expr, additive_expr, multiplicative_expr;
+    qi::rule<Iterator, ast::Expression(), Skipper<Iterator>> expr, equalityExpr, relationalExpr, logicalOrExpr,
+        logicalAndExpr, additiveExpr, multiplicativeExpr;
 
-    qi::rule<Iterator, ast::Operand(), Skipper<Iterator>> UnaryExpr, primary_expr;
+    qi::rule<Iterator, ast::Operand(), Skipper<Iterator>> unaryExpr, primaryExpr;
 
-    qi::rule<Iterator, ast::FunctionCall(), Skipper<Iterator>> FunctionCall;
+    qi::rule<Iterator, ast::FunctionCall(), Skipper<Iterator>> functionCall;
 
-    qi::rule<Iterator, std::vector<ast::Expression>(), Skipper<Iterator>> argument_list;
+    qi::rule<Iterator, std::vector<ast::Expression>(), Skipper<Iterator>> argumentList;
 
-    qi::rule<Iterator, std::string(), Skipper<Iterator>> Identifier;
+    qi::rule<Iterator, std::string(), Skipper<Iterator>> identifier;
 
-    qi::symbols<char, ast::OpToken> logical_or_op, logical_and_op, equality_op, relational_op,
-        additive_op, multiplicative_op, UnaryOp;
+    qi::symbols<char, ast::OpToken> logicalOrOp, logicalAndOp, equalityOp, relationalOp, additiveOp, multiplicativeOp,
+        unaryOp;
 
     qi::symbols<char> keywords;
 };

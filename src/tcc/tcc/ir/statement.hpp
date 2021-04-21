@@ -23,17 +23,14 @@ public:
 
     auto begin() noexcept -> value_type::iterator { return data_.begin(); }
     [[nodiscard]] auto begin() const noexcept -> value_type::const_iterator { return data_.begin(); }
-    [[nodiscard]] auto cbegin() const noexcept -> value_type::const_iterator
-    {
-        return data_.cbegin();
-    }
+    [[nodiscard]] auto cbegin() const noexcept -> value_type::const_iterator { return data_.cbegin(); }
 
     auto end() noexcept -> value_type::iterator { return data_.end(); }
     [[nodiscard]] auto end() const noexcept -> value_type::const_iterator { return data_.end(); }
     [[nodiscard]] auto cend() const noexcept -> value_type::const_iterator { return data_.cend(); }
 
-    auto push_back(IRRegister const& str) -> void { data_.push_back(str); }
-    auto push_back(IRRegister&& str) -> void { data_.push_back(std::forward<IRRegister>(str)); }
+    auto pushBack(IRRegister const& str) -> void { data_.push_back(str); }
+    auto pushBack(IRRegister&& str) -> void { data_.push_back(std::forward<IRRegister>(str)); }
 
     [[nodiscard]] auto size() const noexcept -> value_type::size_type { return data_.size(); }
 
@@ -46,11 +43,11 @@ struct IRStatement
     using Argument         = std::variant<IRConstant, IRRegister, IRArgumentList>;
     using OptionalArgument = std::optional<Argument>;
 
-    tcc::IRByteCode Type;
-    bool IsTemporary {true};
-    IRRegister Destination;
-    Argument First;
-    OptionalArgument Second;
+    tcc::IRByteCode type;
+    bool isTemporary {true};
+    IRRegister destination;
+    Argument first;
+    OptionalArgument second;
 };
 
 auto operator<<(std::ostream& out, IRStatement const& data) -> std::ostream&;
@@ -59,24 +56,24 @@ using IRStatementList = std::vector<IRStatement>;
 
 struct IRBasicBlock
 {
-    IRIdentifier Name;
-    IRStatementList Statements = {};
+    IRIdentifier name;
+    IRStatementList statements = {};
 };
 
 struct IRFunction
 {
-    IRIdentifier Name;
-    std::map<std::string, int> Args      = {};
-    std::map<std::string, int> Variables = {};
-    std::vector<IRBasicBlock> Blocks     = {};
+    IRIdentifier name;
+    std::map<std::string, int> args      = {};
+    std::map<std::string, int> variables = {};
+    std::vector<IRBasicBlock> blocks     = {};
 };
 
 auto operator<<(std::ostream& out, IRFunction const& data) -> std::ostream&;
 
 struct IRPackage
 {
-    IRIdentifier Name;
-    std::vector<IRFunction> Functions = {};
+    IRIdentifier name;
+    std::vector<IRFunction> functions = {};
 };
 
 auto operator<<(std::ostream& out, IRPackage const& pkg) -> std::ostream&;

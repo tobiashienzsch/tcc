@@ -11,7 +11,7 @@ namespace tcc
  * @brief Handy function for avoiding unused variable warnings.
  */
 template<typename... Types>
-constexpr auto IgnoreUnused(Types&&... /*unused*/) noexcept -> void
+constexpr auto ignoreUnused(Types&&... /*unused*/) noexcept -> void
 {
 }
 }  // namespace tcc

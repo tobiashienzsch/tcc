@@ -26,7 +26,7 @@ TEST_CASE("tcc/compiler: ProgramOptions", "[tcc][compiler]")
 
         std::ostringstream stream;
         auto programOptions               = tcc::ProgramOptions {stream};
-        auto const [shouldExit, exitCode] = programOptions.ParseArguments(argc, argv);
+        auto const [shouldExit, exitCode] = programOptions.parseArguments(argc, argv);
         auto const cliOutput              = stream.str();
 
         CHECK(shouldExit);
@@ -43,7 +43,7 @@ TEST_CASE("tcc/compiler: ProgramOptions", "[tcc][compiler]")
 
         auto stream                       = std::ostringstream();
         auto programOptions               = tcc::ProgramOptions {stream};
-        auto const [shouldExit, exitCode] = programOptions.ParseArguments(argc, argv);
+        auto const [shouldExit, exitCode] = programOptions.parseArguments(argc, argv);
         auto const cliOutput              = stream.str();
 
         // input file was not found
@@ -51,12 +51,12 @@ TEST_CASE("tcc/compiler: ProgramOptions", "[tcc][compiler]")
         CHECK(exitCode == EXIT_FAILURE);
         CHECK_THAT(cliOutput, Contains("Could not open input file: unkown_file.tcc\n"));
 
-        auto compilerOptions = programOptions.GetCompilerOptions();
-        CHECK(compilerOptions.OptLevel == 0);
-        CHECK_FALSE(compilerOptions.PrintAssembly);
-        CHECK_FALSE(compilerOptions.PrintAst);
-        CHECK_FALSE(compilerOptions.PrintIR);
-        CHECK_FALSE(compilerOptions.PrintSource);
+        auto compilerOptions = programOptions.getCompilerOptions();
+        CHECK(compilerOptions.optLevel == 0);
+        CHECK_FALSE(compilerOptions.printAssembly);
+        CHECK_FALSE(compilerOptions.printAst);
+        CHECK_FALSE(compilerOptions.printIr);
+        CHECK_FALSE(compilerOptions.printSource);
     }
 
     SECTION("-O1")
@@ -67,7 +67,7 @@ TEST_CASE("tcc/compiler: ProgramOptions", "[tcc][compiler]")
 
         auto stream                       = std::ostringstream();
         auto programOptions               = tcc::ProgramOptions {stream};
-        auto const [shouldExit, exitCode] = programOptions.ParseArguments(argc, argv);
+        auto const [shouldExit, exitCode] = programOptions.parseArguments(argc, argv);
         auto const cliOutput              = stream.str();
 
         // input file was not found
@@ -75,12 +75,12 @@ TEST_CASE("tcc/compiler: ProgramOptions", "[tcc][compiler]")
         CHECK(exitCode == EXIT_FAILURE);
         CHECK_THAT(cliOutput, Contains("Could not open input file: unkown_file.tcc\n"));
 
-        auto compilerOptions = programOptions.GetCompilerOptions();
-        CHECK(compilerOptions.OptLevel == 1);
-        CHECK_FALSE(compilerOptions.PrintAssembly);
-        CHECK_FALSE(compilerOptions.PrintAst);
-        CHECK_FALSE(compilerOptions.PrintIR);
-        CHECK_FALSE(compilerOptions.PrintSource);
+        auto compilerOptions = programOptions.getCompilerOptions();
+        CHECK(compilerOptions.optLevel == 1);
+        CHECK_FALSE(compilerOptions.printAssembly);
+        CHECK_FALSE(compilerOptions.printAst);
+        CHECK_FALSE(compilerOptions.printIr);
+        CHECK_FALSE(compilerOptions.printSource);
     }
 
     SECTION("temp source file")
@@ -98,7 +98,7 @@ TEST_CASE("tcc/compiler: ProgramOptions", "[tcc][compiler]")
         auto const* argv = arguments.data();
 
         auto programOptions               = tcc::ProgramOptions {};
-        auto const [shouldExit, exitCode] = programOptions.ParseArguments(argc, argv);
+        auto const [shouldExit, exitCode] = programOptions.parseArguments(argc, argv);
 
         CHECK_FALSE(shouldExit);
         CHECK(exitCode == EXIT_SUCCESS);
@@ -106,13 +106,13 @@ TEST_CASE("tcc/compiler: ProgramOptions", "[tcc][compiler]")
 
     SECTION("multiple source files not allowed currently")
     {
-        auto const args = std::vector<char const*> {"binary", "unkown_file1.tcc", "unkown_file2.tcc"};
-        auto const argc = static_cast<int>(args.size());
+        auto const args  = std::vector<char const*> {"binary", "unkown_file1.tcc", "unkown_file2.tcc"};
+        auto const argc  = static_cast<int>(args.size());
         auto const* argv = args.data();
 
         auto stream                       = std::ostringstream();
         auto programOptions               = tcc::ProgramOptions {stream};
-        auto const [shouldExit, exitCode] = programOptions.ParseArguments(argc, argv);
+        auto const [shouldExit, exitCode] = programOptions.parseArguments(argc, argv);
         auto const cliOutput              = stream.str();
 
         CHECK(shouldExit);
@@ -128,7 +128,7 @@ TEST_CASE("tcc/compiler: ProgramOptions", "[tcc][compiler]")
 
         auto stream                       = std::ostringstream();
         auto programOptions               = tcc::ProgramOptions {stream};
-        auto const [shouldExit, exitCode] = programOptions.ParseArguments(argc, argv);
+        auto const [shouldExit, exitCode] = programOptions.parseArguments(argc, argv);
         auto const cliOutput              = stream.str();
 
         CHECK(shouldExit);

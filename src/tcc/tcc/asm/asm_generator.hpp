@@ -8,6 +8,6 @@ namespace tcc
 class AssemblyGenerator
 {
 public:
-    static auto Build(tcc::IRPackage const& package) -> Assembly;
+    static auto build(tcc::IRPackage const& package) -> Assembly;
 };
 }  // namespace tcc
